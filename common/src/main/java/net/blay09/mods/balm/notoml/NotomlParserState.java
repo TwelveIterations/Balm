@@ -116,7 +116,9 @@ public enum NotomlParserState {
                 state.transition(List);
             } else {
                 String value = buffer.readUntil(",", "]").trim();
-                consumer.emitPropertyValue(value);
+                if (!value.isBlank()) {
+                    consumer.emitPropertyValue(value);
+                }
                 state.transition(List);
             }
         }
