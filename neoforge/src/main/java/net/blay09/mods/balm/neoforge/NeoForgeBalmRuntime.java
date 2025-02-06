@@ -47,7 +47,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -225,12 +225,12 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
 
     @Override
     public void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        NeoForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> event.addListener(reloadListener.apply(event.getRegistryAccess())));
+        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier, reloadListener.apply(event.getRegistryAccess())));
     }
 
     @Override
     public void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        NeoForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> event.addListener((ResourceManagerReloadListener) reloadListener::accept));
+        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier, (ResourceManagerReloadListener) reloadListener::accept));
     }
 
     @Override

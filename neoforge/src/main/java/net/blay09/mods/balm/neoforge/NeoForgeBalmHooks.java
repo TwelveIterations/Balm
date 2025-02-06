@@ -4,6 +4,7 @@ import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
@@ -136,7 +137,8 @@ public class NeoForgeBalmHooks implements BalmHooks {
 
     @Override
     public boolean isRepairable(ItemStack itemStack) {
-        return itemStack.isRepairable();
+        final var repairCost = itemStack.getItem().components().get(DataComponents.REPAIR_COST);
+        return repairCost != null && repairCost > 0;
     }
 
     @Override
