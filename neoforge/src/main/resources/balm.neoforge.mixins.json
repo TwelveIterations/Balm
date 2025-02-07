@@ -10,6 +10,7 @@
     "SlotAccessor",
     "MinecraftServerMixin",
     "EntityMixin",
+    "LootTableMixin",
     "PlayerListMixin"
   ],
   "client": [
@@ -20,7 +21,6 @@
     "KeyMappingMixin",
     "MouseHandlerAccessor",
     "ScreenAccessor",
-    "LootTableMixin",
     "ModelBakeryMixin"
   ],
   "injectors": {
