@@ -1,1 +1,2 @@
 - Fixed loot modifiers not applying on dedicated servers
+- Fixed potential issues with some container blocks
