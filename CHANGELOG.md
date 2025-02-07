@@ -1,2 +1,3 @@
 - **Requires NeoForge 21.4.84-beta or above**.
 - Fixed loot modifiers not applying on dedicated servers
+- Fixed potential issues with some container blocks
