@@ -1,4 +1,2 @@
-- **Requires NeoForge 21.4.84-beta or above**. Updated for breaking change in NeoForge.
-- Added disconnect on join when client mod version does not match server mod version on Fabric
-- Added support for Configured on Fabric
-- Fixed extraneous fields appearing on Fabric config screens
+- **Requires NeoForge 21.4.84-beta or above**.
+- Fixed loot modifiers not applying on dedicated servers
