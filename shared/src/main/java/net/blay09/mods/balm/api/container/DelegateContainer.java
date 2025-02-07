@@ -1,13 +1,17 @@
 package net.blay09.mods.balm.api.container;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
-public class DelegateContainer implements Container, ExtractionAwareContainer {
+public class DelegateContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
     private final Container delegate;
 
     public DelegateContainer(Container delegate) {
@@ -95,5 +99,37 @@ public class DelegateContainer implements Container, ExtractionAwareContainer {
             return extractionAwareContainer.canExtractItem(slot);
         }
         return true;
+    }
+
+    @Override
+    public boolean canTakeItem(Container container, int slot, ItemStack itemStack) {
+        return delegate.canTakeItem(this, slot, itemStack);
+    }
+
+    @Override
+    public boolean hasAnyMatching(Predicate<ItemStack> predicate) {
+        return delegate.hasAnyMatching(predicate);
+    }
+
+    @Override
+    public int[] getSlotsForFace(Direction direction) {
+        if (delegate instanceof WorldlyContainer worldContainer) {
+            return worldContainer.getSlotsForFace(direction);
+        }
+        final var slots = new int[delegate.getContainerSize()];
+        for (int i = 0; i < slots.length; i++) {
+            slots[i] = i;
+        }
+        return slots;
+    }
+
+    @Override
+    public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
+        return delegate instanceof WorldlyContainer worldContainer && worldContainer.canPlaceItemThroughFace(i, itemStack, direction);
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction) {
+        return delegate instanceof WorldlyContainer worldContainer && worldContainer.canTakeItemThroughFace(i, itemStack, direction);
     }
 }

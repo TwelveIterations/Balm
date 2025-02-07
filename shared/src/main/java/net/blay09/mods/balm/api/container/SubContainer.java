@@ -1,10 +1,13 @@
 package net.blay09.mods.balm.api.container;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-public class SubContainer implements Container, ExtractionAwareContainer {
+public class SubContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
     private final Container container;
     private final int minSlot;
     private final int maxSlot;
@@ -108,5 +111,44 @@ public class SubContainer implements Container, ExtractionAwareContainer {
             return containsSlot(slot) && extractionAwareContainer.canExtractItem(slot + minSlot);
         }
         return containsSlot(slot);
+    }
+
+    @Override
+    public boolean canTakeItem(Container container, int slot, ItemStack itemStack) {
+        return containsSlot(slot) && this.container.canTakeItem(this.container, slot + minSlot, itemStack);
+    }
+
+    @Override
+    public int[] getSlotsForFace(Direction direction) {
+        if (container instanceof WorldlyContainer worldContainer) {
+            final var original = worldContainer.getSlotsForFace(direction);
+            final var copy = new int[original.length];
+            for (int i = 0; i < original.length; i++) {
+                copy[i] = original[i] + minSlot;
+            }
+            return copy;
+        } else {
+            final var slots = new int[maxSlot - minSlot];
+            for (int i = 0; i < slots.length; i++) {
+                slots[i] = i + minSlot;
+            }
+            return slots;
+        }
+    }
+
+    @Override
+    public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, @Nullable Direction direction) {
+        if (container instanceof WorldlyContainer worldlyContainer) {
+            return containsSlot(slot) && worldlyContainer.canPlaceItemThroughFace(slot + minSlot, itemStack, direction);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int slot, ItemStack itemStack, Direction direction) {
+        if (container instanceof WorldlyContainer worldlyContainer) {
+            return containsSlot(slot) && worldlyContainer.canTakeItemThroughFace(slot + minSlot, itemStack, direction);
+        }
+        return true;
     }
 }
