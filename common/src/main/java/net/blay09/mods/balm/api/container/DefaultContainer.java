@@ -47,11 +47,11 @@ public class DefaultContainer implements ImplementedContainer, WorldlyContainer 
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, @Nullable Direction direction) {
-        return true;
+        return canPlaceItem(slot, itemStack);
     }
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack itemStack, Direction direction) {
-        return true;
+        return canTakeItem(this, slot, itemStack);
     }
 }
