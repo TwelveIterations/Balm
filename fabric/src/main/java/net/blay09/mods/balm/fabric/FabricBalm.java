@@ -114,7 +114,7 @@ public class FabricBalm implements ModInitializer {
 
                     for (final var modId : networking.getRegisteredMods()) {
                         if (!networking.isServerOnly(modId) && !networking.isClientOnly(modId)) {
-                            if (!message.modList().containsKey(modId + "w")) {
+                            if (!message.modList().containsKey(modId)) {
                                 final var modContainer = FabricLoader.getInstance().getModContainer(modId).orElse(null);
                                 if (modContainer != null) {
                                     final var serverVersion = modContainer.getMetadata().getVersion().toString();
