@@ -140,15 +140,17 @@ public class SubContainer implements Container, WorldlyContainer, ExtractionAwar
     public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, @Nullable Direction direction) {
         if (container instanceof WorldlyContainer worldlyContainer) {
             return containsSlot(slot) && worldlyContainer.canPlaceItemThroughFace(slot + minSlot, itemStack, direction);
+        } else {
+            return canPlaceItem(slot, itemStack);
         }
-        return true;
     }
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack itemStack, Direction direction) {
         if (container instanceof WorldlyContainer worldlyContainer) {
             return containsSlot(slot) && worldlyContainer.canTakeItemThroughFace(slot + minSlot, itemStack, direction);
+        } else {
+            return canTakeItem(this, slot, itemStack);
         }
-        return true;
     }
 }

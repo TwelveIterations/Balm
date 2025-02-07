@@ -171,9 +171,10 @@ public class CombinedContainer implements Container, WorldlyContainer, Extractio
         int containerIndex = getContainerIndexForSlot(slot);
         Container container = getContainerFromIndex(containerIndex);
         if (container instanceof WorldlyContainer worldlyContainer) {
-            return worldlyContainer.canPlaceItemThroughFace(slot, itemStack, direction);
+            return worldlyContainer.canPlaceItemThroughFace(getInnerSlotFromIndex(slot, containerIndex), itemStack, direction);
+        } else {
+            return canPlaceItem(slot, itemStack);
         }
-        return true;
     }
 
     @Override
@@ -182,7 +183,8 @@ public class CombinedContainer implements Container, WorldlyContainer, Extractio
         Container container = getContainerFromIndex(containerIndex);
         if (container instanceof WorldlyContainer worldlyContainer) {
             return worldlyContainer.canTakeItemThroughFace(slot, itemStack, direction);
+        } else {
+            return canTakeItem(this, slot, itemStack);
         }
-        return true;
     }
 }
