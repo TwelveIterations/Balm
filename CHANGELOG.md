@@ -1,3 +1,1 @@
-- Added disconnect on join when client mod version does not match server mod version on Fabric
-- Added support for Configured on Fabric
-- Fixed extraneous fields appearing on Fabric config screens
+- Fixed loot modifiers not applying on dedicated servers
