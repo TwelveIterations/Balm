@@ -168,7 +168,7 @@ public class FabricBalmCommonEvents {
             events.fireEventHandlers(event);
         }));
 
-        events.registerEvent(EntityAddedEvent.class, () -> ServerLivingEntityEvents.ALLOW_DEATH.register((entity, damageSource, damageAmount) -> {
+        events.registerEvent(LivingDeathEvent.class, () -> ServerLivingEntityEvents.ALLOW_DEATH.register((entity, damageSource, damageAmount) -> {
             final var event = new LivingDeathEvent(entity, damageSource);
             events.fireEventHandlers(event);
             return !event.isCanceled();
