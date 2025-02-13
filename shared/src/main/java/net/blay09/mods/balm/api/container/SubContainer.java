@@ -7,6 +7,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 public class SubContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
     private final Container container;
     private final int minSlot;
@@ -122,11 +124,32 @@ public class SubContainer implements Container, WorldlyContainer, ExtractionAwar
     public int[] getSlotsForFace(Direction direction) {
         if (container instanceof WorldlyContainer worldContainer) {
             final var original = worldContainer.getSlotsForFace(direction);
-            final var copy = new int[original.length];
-            for (int i = 0; i < original.length; i++) {
-                copy[i] = original[i] + minSlot;
+            final var result = new ArrayList<Integer>();
+            for (int outerSlot : original) {
+                if (containsOuterSlot(outerSlot)) {
+                    result.add(outerSlot - minSlot);
+                }
             }
-            return copy;
+            return result.stream().mapToInt(i -> i).toArray();
+        } else {
+            final var result = new int[getContainerSize()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = i;
+            }
+            return result;
+        }
+    }
+
+    public int[] getOuterSlotsForFace(Direction direction) {
+        if (container instanceof WorldlyContainer worldContainer) {
+            final var original = worldContainer.getSlotsForFace(direction);
+            final var result = new ArrayList<Integer>();
+            for (int outerSlot : original) {
+                if (containsOuterSlot(outerSlot)) {
+                    result.add(outerSlot);
+                }
+            }
+            return result.stream().mapToInt(i -> i).toArray();
         } else {
             final var slots = new int[maxSlot - minSlot];
             for (int i = 0; i < slots.length; i++) {
