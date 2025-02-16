@@ -2,4 +2,6 @@ dependencies {
     jarJar(group: "net.blay09.mods", name: "kuma-api-forge", version: "[20.1.0,20.2.0)") {
         transitive = false
     }
+
+    compileOnly("top.theillusivec4.curios:curios-forge:5.11.1+1.20.1:api")
 }
