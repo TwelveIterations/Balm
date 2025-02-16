@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.fabric;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.BalmRuntime;
@@ -12,6 +13,9 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
+import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
+import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
+import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.fabric.component.FabricBalmComponents;
@@ -53,6 +57,8 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -79,8 +85,22 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     private final BalmComponents components = new FabricBalmComponents();
     private final BalmModSupport modSupport = new FabricBalmModSupport();
 
+    private final List<String> addonClasses = new ArrayList<>();
+
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
+
+        events.onEvent(ServerStartingEvent.class, event -> {
+            if (event.getServer().isDedicatedServer()) {
+                for (final var className : addonClasses) {
+                    try {
+                        Class.forName(className).getConstructor().newInstance();
+                    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -202,11 +222,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     @Override
     public void initializeIfLoaded(String modId, String className) {
         if (isModLoaded(modId)) {
-            try {
-                Class.forName(className).getConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            addonClasses.add(className);
         }
     }
 
@@ -250,5 +266,9 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     @Override
     public BalmModSupport getModSupport() {
         return modSupport;
+    }
+
+    public List<String> getAddonClasses() {
+        return addonClasses;
     }
 }
