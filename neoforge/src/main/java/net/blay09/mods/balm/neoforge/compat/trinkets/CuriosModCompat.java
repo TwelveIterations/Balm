@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.forge.compat.trinkets;
+package net.blay09.mods.balm.neoforge.compat.trinkets;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -14,12 +14,11 @@ public class CuriosModCompat {
     }
 
     public static ItemStack findEquipped(Player player, Predicate<ItemStack> predicate) {
-        return CuriosApi.getCuriosInventory(player).resolve().flatMap(trinkets -> trinkets.findFirstCurio(predicate)).map(SlotResult::stack).orElse(ItemStack.EMPTY);
+        return CuriosApi.getCuriosInventory(player).flatMap(trinkets -> trinkets.findFirstCurio(predicate)).map(SlotResult::stack).orElse(ItemStack.EMPTY);
     }
 
     public static List<ItemStack> findAllEquipped(Player player, Predicate<ItemStack> predicate) {
         return CuriosApi.getCuriosInventory(player)
-                .resolve()
                 .map(trinkets -> trinkets.findCurios(predicate).stream().map(SlotResult::stack).toList())
                 .orElse(List.of());
     }

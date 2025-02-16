@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.command.BalmCommands;
+import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
@@ -25,6 +26,7 @@ import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
+import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
 import net.blay09.mods.balm.neoforge.component.NeoForgeBalmComponents;
 import net.blay09.mods.balm.neoforge.config.NeoForgeBalmConfig;
 import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntities;
@@ -72,6 +74,7 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final BalmStats stats = new NeoForgeBalmStats();
     private final BalmRecipes recipes = new NeoForgeBalmRecipes();
     private final BalmComponents components = new NeoForgeBalmComponents();
+    private final BalmModSupport modSupport = new NeoForgeBalmModSupport();
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -234,5 +237,10 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     @Override
     public BalmComponents getComponents() {
         return components;
+    }
+
+    @Override
+    public BalmModSupport getModSupport() {
+        return modSupport;
     }
 }
