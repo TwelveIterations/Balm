@@ -29,10 +29,12 @@ repositories {
         }
     }
 
+    // ModMenu, Trinkets
     maven {
         url = "https://maven.terraformersmc.com/releases"
         content {
             includeGroup "com.terraformersmc"
+            includeGroup "dev.emi"
         }
     }
 
@@ -54,6 +56,22 @@ repositories {
         url = "https://repo.mikeprimm.com/"
         content {
             includeGroup "us.dynmap"
+        }
+    }
+
+    // Required by Trinkets
+    maven {
+        url = 'https://maven.ladysnake.org/releases'
+        content {
+            includeGroup "dev.onyxstudios.cardinal-components-api"
+            includeGroup "org.ladysnake.cardinal-components-api"
+        }
+    }
+
+    maven {
+        url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup "top.theillusivec4.curios"
         }
     }
 
