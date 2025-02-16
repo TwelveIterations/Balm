@@ -1,1 +1,2 @@
 - Added compatibility layer for Curios and Trinkets
+- Fixed addon classes for Fabric mods loading too early
