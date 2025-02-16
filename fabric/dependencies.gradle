@@ -25,4 +25,6 @@ dependencies {
     modCompileOnly "curse.maven:configured-457570:6023970"
     // runtimeOnly 'com.electronwill.night-config:core:3.8.1'
     // runtimeOnly 'com.electronwill.night-config:toml:3.8.1'
+
+    modCompileOnly "dev.emi:trinkets:3.10.0"
 }
