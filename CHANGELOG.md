@@ -1,2 +1,1 @@
-- Fixed crash related to pushing/pulling items using hoppers or similar
-- Fixed LivingDeathEvent not firing on Fabric
+- Added compatibility layer for Curios and Trinkets
