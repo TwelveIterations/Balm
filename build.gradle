@@ -78,6 +78,15 @@ subprojects {
             url = "https://maven.terraformersmc.com/releases"
             content {
                 includeGroup "com.terraformersmc"
+                includeGroup "dev.emi"
+            }
+        }
+
+        maven {
+            url = 'https://maven.ladysnake.org/releases'
+            content {
+                includeGroup "dev.onyxstudios.cardinal-components-api"
+                includeGroup "org.ladysnake.cardinal-components-api"
             }
         }
 
@@ -99,6 +108,13 @@ subprojects {
             url = "https://repo.mikeprimm.com/"
             content {
                 includeGroup "us.dynmap"
+            }
+        }
+
+        maven {
+            url = "https://maven.theillusivec4.top/"
+            content {
+                includeGroup "top.theillusivec4.curios"
             }
         }
     }
