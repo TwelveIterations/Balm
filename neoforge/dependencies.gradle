@@ -4,4 +4,6 @@ dependencies {
     if (jei_minecraft_version == minecraft_version) {
         runtimeOnly "mezz.jei:jei-$jei_minecraft_version-forge:$jei_version"
     }
+
+    compileOnly("top.theillusivec4.curios:curios-neoforge:9.2.2+1.21.1:api")
 }
