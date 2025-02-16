@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.compat.trinkets.BalmModSupportTrinkets;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class FabricBalmModSupportTrinkets implements BalmModSupportTrinkets {
@@ -15,4 +16,21 @@ public class FabricBalmModSupportTrinkets implements BalmModSupportTrinkets {
         }
         return false;
     }
+
+    @Override
+    public ItemStack findEquipped(Player player, Predicate<ItemStack> predicate) {
+        if (Balm.isModLoaded("trinkets")) {
+            return TrinketsModCompat.findEquipped(player, predicate);
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public List<ItemStack> findAllEquipped(Player player, Predicate<ItemStack> predicate) {
+        if (Balm.isModLoaded("trinkets")) {
+            return TrinketsModCompat.findAllEquipped(player, predicate);
+        }
+        return List.of();
+    }
+
 }
