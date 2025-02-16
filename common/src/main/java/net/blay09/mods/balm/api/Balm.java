@@ -4,6 +4,7 @@ import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.component.BalmComponents;
+import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
@@ -17,7 +18,6 @@ import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.config.ExampleConfig;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -136,5 +136,9 @@ public class Balm {
 
     public static BalmStats getStats() {
         return runtime.getStats();
+    }
+
+    public static BalmModSupport getModSupport() {
+        return runtime.getModSupport();
     }
 }
