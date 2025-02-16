@@ -136,4 +136,8 @@ public class Balm {
     public static BalmModSupport getModSupport() {
         return runtime.getModSupport();
     }
+
+    public static BalmRuntime getRuntime() {
+        return runtime;
+    }
 }
