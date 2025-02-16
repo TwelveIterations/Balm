@@ -6,11 +6,13 @@ import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.command.BalmCommands;
+import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.stats.BalmStats;
+import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
@@ -70,6 +72,7 @@ public class FabricBalmRuntime implements BalmRuntime {
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmStats stats = new FabricBalmStats();
     private final BalmRecipes recipes = new FabricBalmRecipes();
+    private final BalmModSupport modSupport = new FabricBalmModSupport();
 
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
@@ -230,5 +233,10 @@ public class FabricBalmRuntime implements BalmRuntime {
                 return identifier;
             }
         });
+    }
+
+    @Override
+    public BalmModSupport getModSupport() {
+        return modSupport;
     }
 }

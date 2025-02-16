@@ -6,12 +6,14 @@ import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.command.BalmCommands;
+import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -69,6 +71,7 @@ public class ForgeBalmRuntime implements BalmRuntime {
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmStats stats = new ForgeBalmStats();
     private final BalmRecipes recipes = new ForgeBalmRecipes();
+    private final BalmModSupport modSupport = new ForgeBalmModSupport();
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -229,4 +232,8 @@ public class ForgeBalmRuntime implements BalmRuntime {
         MinecraftForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> event.addListener((ResourceManagerReloadListener) reloadListener::accept));
     }
 
+    @Override
+    public BalmModSupport getModSupport() {
+        return modSupport;
+    }
 }
