@@ -21,26 +21,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalmItems implements BalmItems {
 
     private final Set<ResourceLocation> managedCreativeTabs = Collections.synchronizedSet(new HashSet<>());
     private final Multimap<ResourceLocation, ItemLike> creativeTabContents = Multimaps.synchronizedMultimap(ArrayListMultimap.create());
+    private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
 
     @Override
-    public Item.Properties itemProperties() {
-        return new FabricItemSettings();
-    }
-
-    @Override
-    public DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
+    public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         return new DeferredObject<>(identifier, () -> {
-            Item item = supplier.get();
+            Item item = supplier.apply(identifier);
             item = Registry.register(BuiltInRegistries.ITEM, identifier, item);
             if (creativeTab != null) {
                 manageCreativeModeTab(creativeTab);
@@ -71,12 +65,19 @@ public class FabricBalmItems implements BalmItems {
         }
     }
 
+    @Override
+    public void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator) {
+        creativeTabSorting.put(tabIdentifier, comparator);
+    }
+
     private void manageCreativeModeTab(ResourceLocation creativeTab) {
         if (!managedCreativeTabs.contains(creativeTab)) {
             ItemGroupEvents.modifyEntriesEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB, creativeTab)).register(entries -> {
                 Collection<ItemLike> itemStacks = creativeTabContents.get(creativeTab);
+                final var comparator = creativeTabSorting.get(creativeTab);
+                final var sortedItemStacks = comparator != null ? itemStacks.stream().sorted(comparator).toList() : itemStacks;
                 synchronized (creativeTabContents) {
-                    itemStacks.forEach(entries::accept);
+                    sortedItemStacks.forEach(entries::accept);
                 }
             });
             managedCreativeTabs.add(creativeTab);
