@@ -14,13 +14,13 @@ import java.util.function.Supplier;
 public class FabricBalmRecipes implements BalmRecipes {
 
     @Override
-    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> typeSupplier, Supplier<RecipeSerializer<T>> serializerSupplier, ResourceLocation identifier) {
-        return new DeferredObject<>(identifier, () -> {
-            Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, identifier, serializerSupplier.get());
-            RecipeType<T> recipeType = typeSupplier.get();
-            recipeType = Registry.register(BuiltInRegistries.RECIPE_TYPE, identifier, recipeType);
-            return recipeType;
-        }).resolveImmediately();
+    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> supplier, ResourceLocation identifier) {
+        return new DeferredObject<>(identifier, () -> Registry.register(BuiltInRegistries.RECIPE_TYPE, identifier, supplier.get())).resolveImmediately();
+    }
+
+    @Override
+    public <T extends Recipe<?>> DeferredObject<RecipeSerializer<T>> registerRecipeSerializer(Supplier<RecipeSerializer<T>> supplier, ResourceLocation identifier) {
+        return new DeferredObject<>(identifier, () -> Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, identifier, supplier.get())).resolveImmediately();
     }
 
 }
