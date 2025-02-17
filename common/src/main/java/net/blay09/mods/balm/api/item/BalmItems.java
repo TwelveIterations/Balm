@@ -4,10 +4,12 @@ import net.blay09.mods.balm.api.DeferredObject;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -49,5 +51,9 @@ public interface BalmItems {
 
     static ResourceKey<Item> itemId(ResourceLocation identifier) {
         return ResourceKey.create(Registries.ITEM, identifier);
+    }
+
+    static BlockItem blockItem(Block block, ResourceLocation identifier) {
+        return new BlockItem(block, itemProperties(identifier));
     }
 }
