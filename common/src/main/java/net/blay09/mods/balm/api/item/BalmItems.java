@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.api.item;
 
 import net.blay09.mods.balm.api.DeferredObject;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -25,4 +27,12 @@ public interface BalmItems {
     void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier);
 
     void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator);
+
+    static Item.Properties itemProperties(ResourceLocation identifier) {
+        return new Item.Properties();
+    }
+
+    static ResourceKey<Item> itemId(ResourceLocation identifier) {
+        return ResourceKey.create(Registries.ITEM, identifier);
+    }
 }
