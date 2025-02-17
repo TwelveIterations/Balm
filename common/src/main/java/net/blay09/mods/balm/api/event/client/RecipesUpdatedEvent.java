@@ -3,7 +3,10 @@ package net.blay09.mods.balm.api.event.client;
 import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.client.multiplayer.ClientRecipeContainer;
 
-@Deprecated
+/**
+ * @deprecated This event is no longer fired.
+ */
+@Deprecated(forRemoval = true, since = "1.22")
 public class RecipesUpdatedEvent extends BalmEvent {
     private final ClientRecipeContainer clientRecipeContainer;
 
