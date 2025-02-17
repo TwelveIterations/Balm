@@ -15,15 +15,19 @@ import net.minecraft.world.item.crafting.display.SlotDisplay;
 import java.util.function.Supplier;
 
 public class ForgeBalmRecipes implements BalmRecipes {
+
     @Override
-    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> typeSupplier, Supplier<RecipeSerializer<T>> serializerSupplier, ResourceLocation identifier) {
+    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> supplier, ResourceLocation identifier) {
         final var register = DeferredRegisters.get(Registries.RECIPE_TYPE, identifier.getNamespace());
-        final var registryObject = register.register(identifier.getPath(), typeSupplier);
+        final var registryObject = register.register(identifier.getPath(), supplier);
+        return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
+    }
 
-        final var serializerRegister = DeferredRegisters.get(Registries.RECIPE_SERIALIZER, identifier.getNamespace());
-        final var serializerRegistryObject = serializerRegister.register(identifier.getPath(), serializerSupplier);
-
-        return new DeferredObject<>(identifier, registryObject, () -> registryObject.isPresent() && serializerRegistryObject.isPresent());
+    @Override
+    public <T extends Recipe<?>> DeferredObject<RecipeSerializer<T>> registerRecipeSerializer(Supplier<RecipeSerializer<T>> supplier, ResourceLocation identifier) {
+        final var register = DeferredRegisters.get(Registries.RECIPE_SERIALIZER, identifier.getNamespace());
+        final var registryObject = register.register(identifier.getPath(), supplier);
+        return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
     @Override

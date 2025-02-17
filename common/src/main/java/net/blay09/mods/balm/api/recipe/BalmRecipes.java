@@ -12,7 +12,18 @@ import net.minecraft.world.item.crafting.display.SlotDisplay;
 import java.util.function.Supplier;
 
 public interface BalmRecipes {
-    <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> typeSupplier, Supplier<RecipeSerializer<T>> serializerSupplier, ResourceLocation identifier);
+    /**
+     * @deprecated Use {@link #registerRecipeType(Supplier, ResourceLocation)} and {@link #registerRecipeSerializer(Supplier, ResourceLocation)} instead.
+     */
+    @Deprecated
+    default <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> typeSupplier, Supplier<RecipeSerializer<T>> serializerSupplier, ResourceLocation identifier) {
+        registerRecipeSerializer(serializerSupplier, identifier);
+        return registerRecipeType(typeSupplier, identifier);
+    }
+
+    <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> supplier, ResourceLocation identifier);
+
+    <T extends Recipe<?>> DeferredObject<RecipeSerializer<T>> registerRecipeSerializer(Supplier<RecipeSerializer<T>> supplier, ResourceLocation identifier);
 
     <T extends RecipeDisplay.Type<?>> DeferredObject<T> registerRecipeDisplayType(Supplier<T> supplier, ResourceLocation identifier);
 
