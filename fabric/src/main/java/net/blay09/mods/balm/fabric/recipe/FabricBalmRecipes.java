@@ -12,13 +12,15 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalmRecipes implements BalmRecipes {
 
     @Override
-    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> supplier, ResourceLocation identifier) {
-        return new DeferredObject<>(identifier, () -> Registry.register(BuiltInRegistries.RECIPE_TYPE, identifier, supplier.get())).resolveImmediately();
+    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Function<ResourceLocation, RecipeType<T>> supplier, ResourceLocation identifier) {
+        return new DeferredObject<>(identifier,
+                () -> Registry.register(BuiltInRegistries.RECIPE_TYPE, identifier, supplier.apply(identifier))).resolveImmediately();
     }
 
     @Override

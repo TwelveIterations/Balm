@@ -12,14 +12,15 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ForgeBalmRecipes implements BalmRecipes {
 
     @Override
-    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> supplier, ResourceLocation identifier) {
+    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Function<ResourceLocation, RecipeType<T>> supplier, ResourceLocation identifier) {
         final var register = DeferredRegisters.get(Registries.RECIPE_TYPE, identifier.getNamespace());
-        final var registryObject = register.register(identifier.getPath(), supplier);
+        final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
