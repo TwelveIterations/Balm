@@ -42,7 +42,8 @@
     "MouseHandlerAccessor",
     "MouseHandlerMixin",
     "PlayerTabOverlayMixin",
-    "ScreenAccessor"
+    "ScreenAccessor",
+    "ClientLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
