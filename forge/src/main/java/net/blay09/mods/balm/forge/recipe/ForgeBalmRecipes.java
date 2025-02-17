@@ -9,13 +9,14 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ForgeBalmRecipes implements BalmRecipes {
 
-    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> supplier, ResourceLocation identifier) {
+    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Function<ResourceLocation, RecipeType<T>> supplier, ResourceLocation identifier) {
         final var register = DeferredRegisters.get(ForgeRegistries.RECIPE_TYPES, identifier.getNamespace());
-        final var registryObject = register.register(identifier.getPath(), supplier);
+        final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
