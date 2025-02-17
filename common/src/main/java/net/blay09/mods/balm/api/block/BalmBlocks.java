@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.api.block;
 
 import net.blay09.mods.balm.api.DeferredObject;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -59,4 +61,11 @@ public interface BalmBlocks {
         registerBlockItem((id) -> blockItemSupplier.get(), identifier, creativeTab);
     }
 
+    static BlockBehaviour.Properties blockProperties(ResourceLocation identifier) {
+        return BlockBehaviour.Properties.of().setId(blockId(identifier));
+    }
+
+    static ResourceKey<Block> blockId(ResourceLocation identifier) {
+        return ResourceKey.create(Registries.BLOCK, identifier);
+    }
 }

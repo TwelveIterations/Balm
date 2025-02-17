@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.api.item;
 
 import net.blay09.mods.balm.api.DeferredObject;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -39,5 +41,13 @@ public interface BalmItems {
     @Deprecated
     default DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         return registerItem((id) -> supplier.get(), identifier, creativeTab);
+    }
+
+    static Item.Properties itemProperties(ResourceLocation identifier) {
+        return new Item.Properties().setId(itemId(identifier));
+    }
+
+    static ResourceKey<Item> itemId(ResourceLocation identifier) {
+        return ResourceKey.create(Registries.ITEM, identifier);
     }
 }
