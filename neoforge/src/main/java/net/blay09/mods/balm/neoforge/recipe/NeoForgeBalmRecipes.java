@@ -9,11 +9,12 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class NeoForgeBalmRecipes implements BalmRecipes {
     @Override
-    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Supplier<RecipeType<T>> supplier, ResourceLocation identifier) {
+    public <T extends Recipe<?>> DeferredObject<RecipeType<T>> registerRecipeType(Function<ResourceLocation, RecipeType<T>> supplier, ResourceLocation identifier) {
         final var register = DeferredRegisters.get(Registries.RECIPE_TYPE, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), supplier);
         return new DeferredObject<>(identifier, registryObject, registryObject::isBound);
