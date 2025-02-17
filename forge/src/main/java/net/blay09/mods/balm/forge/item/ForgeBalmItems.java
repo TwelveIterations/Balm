@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ForgeBalmItems implements BalmItems {
@@ -48,14 +49,9 @@ public class ForgeBalmItems implements BalmItems {
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
-    public Item.Properties itemProperties() {
-        return new Item.Properties();
-    }
-
-    @Override
-    public DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
-        DeferredRegister<Item> register = DeferredRegisters.get(ForgeRegistries.ITEMS, identifier.getNamespace());
-        RegistryObject<Item> registryObject = register.register(identifier.getPath(), supplier);
+    public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
+        final var register = DeferredRegisters.get(Registries.ITEM, identifier.getNamespace());
+        final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
         if (creativeTab != null) {
             getActiveRegistrations().creativeTabContents.put(creativeTab, () -> new ItemLike[]{registryObject.get()});
         }

@@ -20,6 +20,7 @@ import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalmItems implements BalmItems {
@@ -29,14 +30,9 @@ public class FabricBalmItems implements BalmItems {
     private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
 
     @Override
-    public Item.Properties itemProperties() {
-        return new Item.Properties();
-    }
-
-    @Override
-    public DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
+    public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         return new DeferredObject<>(identifier, () -> {
-            Item item = supplier.get();
+            Item item = supplier.apply(identifier);
             item = Registry.register(BuiltInRegistries.ITEM, identifier, item);
             if (creativeTab != null) {
                 manageCreativeModeTab(creativeTab);

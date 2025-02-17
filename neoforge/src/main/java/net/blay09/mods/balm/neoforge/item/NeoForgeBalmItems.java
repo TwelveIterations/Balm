@@ -4,8 +4,6 @@ import com.google.common.collect.*;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.neoforge.DeferredRegisters;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class NeoForgeBalmItems implements BalmItems {
@@ -44,12 +43,7 @@ public class NeoForgeBalmItems implements BalmItems {
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
-    public Item.Properties itemProperties() {
-        return new Item.Properties();
-    }
-
-    @Override
-    public DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
+    public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         final var register = DeferredRegisters.get(Registries.ITEM, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), supplier);
         if (creativeTab != null) {
