@@ -27,7 +27,8 @@ public class ForgeBalm {
         Balm.getCommands().register(BalmCommand::register);
 
         ForgeBalmWorldGen.initializeBalmBiomeModifiers();
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ForgeBalmClient::onInitializeClient);
+        final var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(ForgeBalmClient::onInitializeClient);
 
         ForgeBalmProviders providers = (ForgeBalmProviders) Balm.getProviders();
         providers.register(IItemHandler.class, new CapabilityToken<>() {
@@ -45,5 +46,4 @@ public class ForgeBalm {
         providers.register(EnergyStorage.class, new CapabilityToken<>() {
         });
     }
-
 }

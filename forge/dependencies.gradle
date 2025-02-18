@@ -9,4 +9,7 @@ dependencies {
 
     // temporary hacky fix as suggested by Forge
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
+
+    compileOnly("top.theillusivec4.curios:curios-forge:5.11.1+1.20.1:api")
+    compileOnly fg.deobf("mcp.mobius.waila:wthit:forge-$wthit_version")
 }
