@@ -46,5 +46,4 @@ public class ForgeBalm {
         providers.register(EnergyStorage.class, new CapabilityToken<>() {
         });
     }
-
 }

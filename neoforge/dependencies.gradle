@@ -11,4 +11,7 @@ dependencies {
     }
 
     compileOnly("top.theillusivec4.curios:curios-neoforge:9.2.2+1.21.1:api")
+    compileOnly("curse.maven:jade-324717:$jade_neoforge_version")
+    compileOnly("mcp.mobius.waila:wthit:neo-$wthit_version")
+    compileOnly("curse.maven:the-one-probe-245211:6106996")
 }

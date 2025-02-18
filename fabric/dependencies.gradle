@@ -27,4 +27,8 @@ dependencies {
     // runtimeOnly 'com.electronwill.night-config:toml:3.8.1'
 
     modCompileOnly "dev.emi:trinkets:3.10.0"
+    modCompileOnly "mcp.mobius.waila:wthit:fabric-$wthit_version"
+    modCompileOnly "curse.maven:jade-324717:$jade_fabric_version"
+
+    modCompileOnly "dev.emi:trinkets:3.7.2"
 }

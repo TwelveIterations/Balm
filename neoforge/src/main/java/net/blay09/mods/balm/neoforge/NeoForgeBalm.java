@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.common.command.BalmCommand;
 import net.blay09.mods.balm.config.ExampleConfig;
 import net.blay09.mods.balm.neoforge.client.NeoForgeBalmClient;
+import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.minecraft.core.Direction;
@@ -14,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -40,6 +42,7 @@ public class NeoForgeBalm {
 
         NeoForgeBalmWorldGen.initializeBalmBiomeModifiers(modBus);
         modBus.addListener(NeoForgeBalmClient::onInitializeClient);
+        modBus.addListener(this::enqueueIMC);
 
         NeoForgeBalmProviders providers = (NeoForgeBalmProviders) Balm.getProviders();
         providers.registerBlockProvider(IItemHandler.class, Capabilities.ItemHandler.BLOCK);
@@ -50,6 +53,12 @@ public class NeoForgeBalm {
         providers.registerBlockProvider(Container.class, CONTAINER_CAPABILITY);
         providers.registerBlockProvider(FluidTank.class, FLUID_TANK_CAPABILITY);
         providers.registerBlockProvider(EnergyStorage.class, ENERGY_STORAGE_CAPABILITY);
+    }
+
+    private void enqueueIMC(InterModEnqueueEvent event) {
+        if (Balm.isModLoaded("theoneprobe")) {
+            TheOneProbeModCompat.register();
+        }
     }
 
 }
