@@ -24,6 +24,9 @@
     ],
     "modmenu": [
       "net.blay09.mods.balm.fabric.compat.ModMenuIntegration"
+    ],
+    "jade": [
+      "net.blay09.mods.balm.fabric.compat.hudinfo.FabricJadeModCompat"
     ]
   },
   "mixins": [

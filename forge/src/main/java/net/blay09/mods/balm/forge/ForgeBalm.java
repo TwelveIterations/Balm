@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.config.ExampleConfig;
 import net.blay09.mods.balm.forge.client.ForgeBalmClient;
+import net.blay09.mods.balm.forge.compat.hudinfo.TheOneProbeModCompat;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.minecraft.world.Container;
@@ -14,6 +15,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
 
@@ -25,7 +27,9 @@ public class ForgeBalm {
         ExampleConfig.initialize();
 
         ForgeBalmWorldGen.initializeBalmBiomeModifiers();
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ForgeBalmClient::onInitializeClient);
+        final var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(ForgeBalmClient::onInitializeClient);
+        modEventBus.addListener(this::enqueueIMC);
 
         ForgeBalmProviders providers = (ForgeBalmProviders) Balm.getProviders();
         providers.register(IItemHandler.class, new CapabilityToken<>() {
@@ -44,4 +48,9 @@ public class ForgeBalm {
         });
     }
 
+    private void enqueueIMC(InterModEnqueueEvent event) {
+        if (Balm.isModLoaded("theoneprobe")) {
+            TheOneProbeModCompat.register();
+        }
+    }
 }

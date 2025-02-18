@@ -70,6 +70,7 @@ subprojects {
         maven {
             url = "https://maven.bai.lol"
             content {
+                includeGroup "lol.bai"
                 includeGroup "mcp.mobius.waila"
             }
         }

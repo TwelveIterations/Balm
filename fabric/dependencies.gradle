@@ -21,5 +21,8 @@ dependencies {
     // runtimeOnly 'com.electronwill.night-config:core:3.8.1'
     // runtimeOnly 'com.electronwill.night-config:toml:3.8.1'
 
+    modImplementation "mcp.mobius.waila:wthit:fabric-$wthit_version"
+    //modImplementation "curse.maven:jade-324717:$jade_fabric_version"
+
     modCompileOnly "dev.emi:trinkets:3.7.2"
 }
