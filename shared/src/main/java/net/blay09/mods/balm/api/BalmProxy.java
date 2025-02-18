@@ -12,4 +12,12 @@ public class BalmProxy {
     public boolean isConnectedToServer() {
         return false;
     }
+
+    public boolean isIngame() {
+        return false;
+    }
+
+    public boolean isClient() {
+        return false;
+    }
 }
