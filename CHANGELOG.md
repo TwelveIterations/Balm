@@ -1,2 +1,3 @@
+- Fixed crash on startup on Fabric
 - Added network registration methods with StreamCodecs, deprecate old ones
 - Renamed `openGui` to `openMenu`, deprecated old method
