@@ -1,10 +1,9 @@
 package net.blay09.mods.balm.api.network;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +15,15 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface BalmNetworking {
-    void openGui(Player player, MenuProvider menuProvider);
+    void openMenu(Player player, MenuProvider menuProvider);
+
+    /**
+     * @deprecated Use {@link #openMenu(Player, MenuProvider)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.22")
+    default void openGui(Player player, MenuProvider menuProvider) {
+        openMenu(player, menuProvider);
+    }
 
     default void allowClientAndServerOnly(String modId) {
         allowClientOnly(modId);
@@ -39,7 +46,23 @@ public interface BalmNetworking {
 
     <T extends CustomPacketPayload> void sendToServer(T message);
 
-    <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<Player, T> handler);
+    <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler);
 
-    <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<ServerPlayer, T> handler);
+    <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<ServerPlayer, T> handler);
+
+    /**
+     * @deprecated Use {@link #registerClientboundPacket(CustomPacketPayload.Type, Class, StreamCodec, BiConsumer)} instead.
+     */
+    @Deprecated
+    default <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<Player, T> handler) {
+        registerClientboundPacket(type, clazz, StreamCodec.of(encodeFunc::accept, decodeFunc::apply), handler);
+    }
+
+    /**
+     * @deprecated Use {@link #registerServerboundPacket(CustomPacketPayload.Type, Class, StreamCodec, BiConsumer)} instead.
+     */
+    @Deprecated
+    default <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<ServerPlayer, T> handler) {
+        registerServerboundPacket(type, clazz, StreamCodec.of(encodeFunc::accept, decodeFunc::apply), handler);
+    }
 }

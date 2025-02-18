@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.network.MessageRegistration;
 import net.blay09.mods.balm.api.network.ServerboundMessageRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -25,13 +26,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class ForgeBalmNetworking implements BalmNetworking {
 
     private static final Logger logger = LoggerFactory.getLogger(ForgeBalmNetworking.class);
 
-    private static final Map<Class<?>, MessageRegistration<RegistryFriendlyByteBuf, ?>> messagesByClass = new ConcurrentHashMap<>();
     private static final Map<CustomPacketPayload.Type<?>, MessageRegistration<RegistryFriendlyByteBuf, ?>> messagesByType = new ConcurrentHashMap<>();
     private static final Map<String, Integer> discriminatorCounter = new ConcurrentHashMap<>();
 
@@ -48,7 +47,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public void openGui(Player player, MenuProvider menuProvider) {
+    public void openMenu(Player player, MenuProvider menuProvider) {
         if (player instanceof ServerPlayer serverPlayer) {
             if (menuProvider instanceof BalmMenuProvider<?> balmMenuProvider) {
                 openGui(serverPlayer, balmMenuProvider);
@@ -122,7 +121,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     @SuppressWarnings("unchecked")
     private <T extends CustomPacketPayload> MessageRegistration<RegistryFriendlyByteBuf, T> getMessageRegistrationOrThrow(T message) {
-        final var messageRegistration = (MessageRegistration<RegistryFriendlyByteBuf, T>) messagesByClass.get(message.getClass());
+        final var messageRegistration = (MessageRegistration<RegistryFriendlyByteBuf, T>) messagesByType.get(message.type());
         if (messageRegistration == null) {
             throw new IllegalArgumentException("Cannot send message " + message.getClass() + " as it is not registered");
         }
@@ -130,31 +129,27 @@ public class ForgeBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<Player, T> handler) {
-        final var messageRegistration = new ClientboundMessageRegistration<>(type, clazz, encodeFunc, decodeFunc, handler);
+    public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {
+        final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
 
-        messagesByClass.put(clazz, messageRegistration);
         messagesByType.put(type, messageRegistration);
 
         SimpleChannel channel = NetworkChannels.get(type.id().getNamespace());
         channel.messageBuilder(clazz, nextDiscriminator(type.id().getNamespace()), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(decodeFunc)
-                .encoder((payload, buffer) -> encodeFunc.accept(buffer, payload))
+                .codec(codec)
                 .consumerMainThread((packet, context) -> handler.accept(Balm.getProxy().getClientPlayer(), packet))
                 .add();
     }
 
     @Override
-    public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<ServerPlayer, T> handler) {
-        final var messageRegistration = new ServerboundMessageRegistration<>(type, clazz, encodeFunc, decodeFunc, handler);
+    public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<ServerPlayer, T> handler) {
+        final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
 
-        messagesByClass.put(clazz, messageRegistration);
         messagesByType.put(type, messageRegistration);
 
         final var channel = NetworkChannels.get(type.id().getNamespace());
         channel.messageBuilder(clazz, nextDiscriminator(type.id().getNamespace()), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(decodeFunc)
-                .encoder((payload, buffer) -> encodeFunc.accept(buffer, payload))
+                .codec(codec)
                 .consumerMainThread((packet, context) -> {
                     replyContext = context;
                     handler.accept(context.getSender(), packet);
