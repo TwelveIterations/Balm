@@ -1,2 +1,5 @@
-- Added compatibility layer for Curios and Trinkets
-- Fixed addon classes for Fabric mods loading too early
+- Added compatibility layer for Jade/WTHIT/TheOneProbe
+- Fixed `LevelLoading.Load` event not firing for client levels on Fabric
+- Added `registerRecipeSerializer` and `registerRecipeType`, deprecate old `registerRecipeType` method that combined both
+- Fixed `/balm` command not registering on Fabric
+- Marked current deprecation for removal in Minecraft 1.22
