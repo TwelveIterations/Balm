@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fml.InterModComms;
+import net.neoforged.fml.InterModComms;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
@@ -35,7 +35,7 @@ public class TheOneProbeModCompat {
 
     private static class BalmProbeInfoProvider implements IProbeInfoProvider {
 
-        private static final ResourceLocation ID = new ResourceLocation("balm", "top");
+        private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("balm", "top");
 
         @Override
         public ResourceLocation getID() {
