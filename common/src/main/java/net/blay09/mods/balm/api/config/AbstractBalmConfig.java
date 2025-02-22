@@ -11,6 +11,8 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -22,6 +24,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class AbstractBalmConfig implements BalmConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractBalmConfig.class);
 
     private final Map<Class<?>, BalmConfigData> activeConfigs = new HashMap<>();
     private final Map<Class<?>, BalmConfigData> defaultConfigs = new HashMap<>();
@@ -68,6 +72,11 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     public <T extends BalmConfigData> void setActiveConfig(Class<T> clazz, T config) {
+        if (config == null) {
+            logger.error("Attempted to set active config to null", new IllegalArgumentException("config must not be null"));
+            return;
+        }
+
         activeConfigs.put(clazz, config);
     }
 
