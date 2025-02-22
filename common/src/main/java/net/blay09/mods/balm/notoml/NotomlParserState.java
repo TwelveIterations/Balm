@@ -106,7 +106,11 @@ public enum NotomlParserState {
         @Override
         void next(NotomlStateMachine state, NotomlParseBuffer buffer, NotomlTokenConsumer consumer) {
             buffer.consumeWhitespace();
-            if (buffer.next("\"", "'")) {
+            if (buffer.nextConsume("#")) {
+                String value = buffer.readUntil("\n", "\r\n", "\r").trim();
+                consumer.emitComment(value);
+                state.transition(List);
+            } else if (buffer.next("\"", "'")) {
                 String value = buffer.readQuoted();
                 consumer.emitPropertyValue(value);
                 state.transition(List);
