@@ -1,3 +1,5 @@
 - Fixed ScreenInitEvent not firing on options screen
 - Fixed ScreenInitEvent.Pre falsely running on AFTER_INIT on Fabric
 - Fixed comments in lists of configs being treated as corrupted config in Fabric
+- Fixed potential crashes with configs being null
+  - Will now log an error to help debug how they ended up becoming null
