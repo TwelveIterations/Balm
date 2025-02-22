@@ -1,3 +1,2 @@
-- Fixed crash on startup on Fabric
-- Added network registration methods with StreamCodecs, deprecate old ones
-- Renamed `openGui` to `openMenu`, deprecated old method
+- Fixed ScreenInitEvent not firing on options screen
+- Fixed ScreenInitEvent.Pre falsely running on AFTER_INIT on Fabric
