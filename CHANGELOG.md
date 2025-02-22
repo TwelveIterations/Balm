@@ -1,6 +1,1 @@
-- Added compatibility layer for Jade/WTHIT/TheOneProbe
-- Fixed `LevelLoading.Load` event not firing for client levels on Fabric
-- Added `registerRecipeSerializer` and `registerRecipeType`, deprecate old `registerRecipeType` method that combined both
-- Backported newer block/item registration methods with identifier in callback, deprecated old ones
-- Backported `BalmProxy.isIngame()` and `BalmProxy.isClient()`
-- Backported `/balm` commands
+- Fixed comments in lists of configs being treated as corrupted config in Fabric
