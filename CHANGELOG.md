@@ -1,6 +1,2 @@
-- Added compatibility layer for Jade/WTHIT/TheOneProbe
-- Fixed `LevelLoading.Load` event not firing for client levels on Fabric
-- Added `registerRecipeSerializer` and `registerRecipeType`, deprecate old `registerRecipeType` method that combined both
-- Backported newer block/item registration methods with identifier in callback, deprecated old ones
-- Backported `registerPoiType`
-- Fixed `/balm` command not registering on Fabric
+- Fixed ScreenInitEvent not firing on options screen
+- Fixed ScreenInitEvent.Pre falsely running on AFTER_INIT on Fabric
