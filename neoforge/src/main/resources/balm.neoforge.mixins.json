@@ -20,7 +20,8 @@
     "KeyMappingAccessor",
     "KeyMappingMixin",
     "MouseHandlerAccessor",
-    "ScreenAccessor"
+    "ScreenAccessor",
+    "OptionsScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

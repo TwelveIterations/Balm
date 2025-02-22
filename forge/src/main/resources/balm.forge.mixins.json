@@ -21,7 +21,8 @@
     "KeyMappingMixin",
     "MouseHandlerAccessor",
     "ScreenAccessor",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "OptionsScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
