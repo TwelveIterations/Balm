@@ -23,7 +23,8 @@
     "MouseHandlerAccessor",
     "ScreenAccessor",
     "MinecraftMixin",
-    "ModelBakeryMixin"
+    "ModelBakeryMixin",
+    "OptionsScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

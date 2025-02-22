@@ -21,7 +21,8 @@
     "KeyMappingMixin",
     "MouseHandlerAccessor",
     "ScreenAccessor",
-    "ModelBakeryMixin"
+    "ModelBakeryMixin",
+    "OptionsScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
