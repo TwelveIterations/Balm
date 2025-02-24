@@ -45,8 +45,8 @@ public abstract class LivingEntityMixin {
         LivingFallEvent event = balmCurrentFallEvent.get();
         if (event != null && event.getFallDamageOverride() != null) {
             cir.setReturnValue(event.getFallDamageOverride().intValue());
-            balmCurrentFallEvent.set(null);
         }
+        balmCurrentFallEvent.set(null);
     }
 
     @ModifyVariable(method = "heal(F)V", at = @At("HEAD"), argsOnly = true)
