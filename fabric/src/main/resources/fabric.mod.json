@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
-  "id": "balm-fabric",
+  "id": "balm",
+  "provides": ["balm-fabric"],
   "version": "${version}",
 
   "name": "${mod_name}",
