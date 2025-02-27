@@ -38,22 +38,7 @@ import java.util.function.Supplier;
 
 public class ForgeBalmRenderers implements BalmRenderers {
 
-    private static class ColorRegistration<THandler, TObject> {
-        private final THandler color;
-        private final Supplier<TObject[]> objects;
-
-        public ColorRegistration(THandler color, Supplier<TObject[]> objects) {
-            this.color = color;
-            this.objects = objects;
-        }
-
-        public THandler getColor() {
-            return color;
-        }
-
-        public Supplier<TObject[]> getObjects() {
-            return objects;
-        }
+    private record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {
     }
 
     private record ParticleProviderFactoryRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType,
@@ -97,14 +82,14 @@ public class ForgeBalmRenderers implements BalmRenderers {
         @SubscribeEvent
         public void initBlockColors(RegisterColorHandlersEvent.Block event) {
             for (ColorRegistration<BlockColor, Block> blockColor : blockColors) {
-                event.register(blockColor.getColor(), blockColor.getObjects().get());
+                event.register(blockColor.color(), blockColor.objects().get());
             }
         }
 
         @SubscribeEvent
         public void initItemColors(RegisterColorHandlersEvent.Item event) {
             for (ColorRegistration<ItemColor, ItemLike> itemColor : itemColors) {
-                event.register(itemColor.getColor(), itemColor.getObjects().get());
+                event.register(itemColor.color(), itemColor.objects().get());
             }
         }
 
