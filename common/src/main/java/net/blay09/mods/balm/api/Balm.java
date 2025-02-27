@@ -12,6 +12,7 @@ import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
+import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.provider.BalmProviders;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
@@ -134,6 +135,10 @@ public class Balm {
 
     public static BalmModSupport getModSupport() {
         return runtime.getModSupport();
+    }
+
+    public static BalmParticles getParticles() {
+        return runtime.getParticles();
     }
 
     public static BalmRuntime getRuntime() {
