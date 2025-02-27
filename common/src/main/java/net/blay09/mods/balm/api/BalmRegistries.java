@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.api;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
@@ -13,31 +15,103 @@ import net.minecraft.world.level.material.Fluid;
 import java.util.Collection;
 
 public interface BalmRegistries {
-    ResourceLocation getKey(Item item);
+    /**
+     * @deprecated Use BuiltInRegistries.ITEM.getKey(item) instead.
+     */
+    @Deprecated
+    default ResourceLocation getKey(Item item) {
+        return BuiltInRegistries.ITEM.getKey(item);
+    }
 
-    ResourceLocation getKey(Block block);
+    /**
+     * @deprecated Use BuiltInRegistries.BLOCK.getKey(block) instead.
+     */
+    @Deprecated
+    default ResourceLocation getKey(Block block) {
+        return BuiltInRegistries.BLOCK.getKey(block);
+    }
 
-    ResourceLocation getKey(Fluid fluid);
+    /**
+     * @deprecated Use BuiltInRegistries.FLUID.getKey(fluid) instead.
+     */
+    @Deprecated
+    default ResourceLocation getKey(Fluid fluid) {
+        return BuiltInRegistries.FLUID.getKey(fluid);
+    }
 
-    ResourceLocation getKey(EntityType<?> entityType);
+    /**
+     * @deprecated Use BuiltInRegistries.ENTITY_TYPE.getKey(mobEffect) instead.
+     */
+    @Deprecated
+    default ResourceLocation getKey(EntityType<?> entityType) {
+        return BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+    }
 
-    ResourceLocation getKey(MenuType<?> menuType);
+    /**
+     * @deprecated Use BuiltInRegistries.MENU.getKey(menuType) instead.
+     */
+    @Deprecated
+    default ResourceLocation getKey(MenuType<?> menuType) {
+        return BuiltInRegistries.MENU.getKey(menuType);
+    }
 
-    Collection<ResourceLocation> getItemKeys();
+    /**
+     * @deprecated Use BuiltInRegistries.ITEM.keySet() instead.
+     */
+    @Deprecated
+    default Collection<ResourceLocation> getItemKeys() {
+        return BuiltInRegistries.ITEM.keySet();
+    }
 
-    Item getItem(ResourceLocation key);
+    /**
+     * @deprecated Use BuiltInRegistries.ITEM.get(key) instead.
+     */
+    @Deprecated
+    default Item getItem(ResourceLocation key) {
+        return BuiltInRegistries.ITEM.get(key);
+    }
 
-    Block getBlock(ResourceLocation key);
+    /**
+     * @deprecated Use BuiltInRegistries.BLOCK.get(key) instead.
+     */
+    @Deprecated
+    default Block getBlock(ResourceLocation key) {
+        return BuiltInRegistries.BLOCK.get(key);
+    }
 
-    Fluid getFluid(ResourceLocation key);
+    /**
+     * @deprecated Use BuiltInRegistries.FLUID.get(key) instead.
+     */
+    @Deprecated
+    default Fluid getFluid(ResourceLocation key) {
+        return BuiltInRegistries.FLUID.get(key);
+    }
 
-    MobEffect getMobEffect(ResourceLocation key);
+    /**
+     * @deprecated Use BuiltInRegistries.MOB_EFFECT.get(key) instead.
+     */
+    @Deprecated
+    default MobEffect getMobEffect(ResourceLocation key) {
+        return BuiltInRegistries.MOB_EFFECT.get(key);
+    }
 
-    TagKey<Item> getItemTag(ResourceLocation key);
+    /**
+     * @deprecated Use TagKey.create(Registries.ITEM, key) instead.
+     */
+    @Deprecated
+    default TagKey<Item> getItemTag(ResourceLocation key) {
+        return TagKey.create(Registries.ITEM, key);
+    }
+
+    /**
+     * @deprecated Use BuiltInRegistries.ATTRIBUTE.get(key) instead.
+     */
+    @Deprecated
+    default Attribute getAttribute(ResourceLocation key) {
+        return BuiltInRegistries.ATTRIBUTE.get(key);
+    }
 
     void enableMilkFluid();
 
     Fluid getMilkFluid();
-
-    Attribute getAttribute(ResourceLocation key);
 }
