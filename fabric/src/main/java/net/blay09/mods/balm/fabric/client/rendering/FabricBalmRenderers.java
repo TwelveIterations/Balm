@@ -3,7 +3,6 @@ package net.blay09.mods.balm.fabric.client.rendering;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.block.BlockColor;
@@ -14,6 +13,7 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -52,7 +52,7 @@ public class FabricBalmRenderers implements BalmRenderers {
 
     @Override
     public <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
-        BlockEntityRendererRegistry.register(type.get(), provider);
+        BlockEntityRenderers.register(type.get(), provider);
     }
 
     @Override
