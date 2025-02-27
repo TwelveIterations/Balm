@@ -10,6 +10,7 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
+import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
@@ -33,6 +34,7 @@ import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.item.ForgeBalmItems;
 import net.blay09.mods.balm.forge.menu.ForgeBalmMenus;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
+import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
 import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
@@ -72,6 +74,7 @@ public class ForgeBalmRuntime implements BalmRuntime {
     private final BalmStats stats = new ForgeBalmStats();
     private final BalmRecipes recipes = new ForgeBalmRecipes();
     private final BalmModSupport modSupport = new ForgeBalmModSupport();
+    private final BalmParticles particles = new ForgeBalmParticles();
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -235,5 +238,10 @@ public class ForgeBalmRuntime implements BalmRuntime {
     @Override
     public BalmModSupport getModSupport() {
         return modSupport;
+    }
+
+    @Override
+    public BalmParticles getParticles() {
+        return particles;
     }
 }
