@@ -2,9 +2,11 @@ package net.blay09.mods.balm.fabric.particle;
 
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 
@@ -16,5 +18,10 @@ public class FabricBalmParticles implements BalmParticles {
     public <T extends ParticleOptions> DeferredObject<ParticleType<T>> registerParticle(Function<ResourceLocation, ParticleType<T>> supplier, ResourceLocation identifier) {
         return new DeferredObject<>(identifier,
                 () -> Registry.register(BuiltInRegistries.PARTICLE_TYPE, identifier, supplier.apply(identifier))).resolveImmediately();
+    }
+
+    @Override
+    public SimpleParticleType createSimple(boolean overrideLimiter) {
+        return FabricParticleTypes.simple(overrideLimiter);
     }
 }
