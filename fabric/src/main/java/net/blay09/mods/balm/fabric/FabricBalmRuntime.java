@@ -16,6 +16,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
+import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.fabric.component.FabricBalmComponents;
@@ -40,6 +41,7 @@ import net.blay09.mods.balm.fabric.item.FabricBalmItems;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
+import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
@@ -83,6 +85,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     private final BalmRecipes recipes = new FabricBalmRecipes();
     private final BalmComponents components = new FabricBalmComponents();
     private final BalmModSupport modSupport = new FabricBalmModSupport();
+    private final BalmParticles particles = new FabricBalmParticles();
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -263,6 +266,11 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     @Override
     public BalmModSupport getModSupport() {
         return modSupport;
+    }
+
+    @Override
+    public BalmParticles getParticles() {
+        return particles;
     }
 
     public List<String> getAddonClasses() {
