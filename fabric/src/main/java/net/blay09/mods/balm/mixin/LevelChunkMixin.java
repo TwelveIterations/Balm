@@ -19,7 +19,7 @@ public class LevelChunkMixin {
     @Shadow
     private Level level;
 
-    @Inject(method = "addAndRegisterBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V", at = @At("HEAD"))
+    @Inject(method = "addAndRegisterBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V", at = @At("RETURN"))
     private void addAndRegisterBlockEntity(BlockEntity blockEntity, CallbackInfo callbackInfo) {
         if ((this.loaded || this.level.isClientSide()) && blockEntity instanceof OnLoadHandler) {
             ((OnLoadHandler) blockEntity).onLoad();
