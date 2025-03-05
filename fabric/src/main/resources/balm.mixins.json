@@ -9,6 +9,7 @@
     "EntityMixin",
     "FabricCropBlockMixin",
     "FabricStemBlockMixin",
+    "LevelMixin",
     "LevelChunkMixin",
     "LivingEntityMixin",
     "LootTableMixin",
