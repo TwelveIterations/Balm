@@ -257,6 +257,12 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         IConfigSpec configSpec = createConfigSpec(clazz);
         final var modContainer = ModLoadingContext.get().getActiveContainer();
 
+        // We set this early in case event handlers run upon registering, so we don't reset back to defaults
+        T initialData = createConfigDataInstance(clazz);
+        setActiveConfig(clazz, initialData);
+        configData.put(clazz, initialData);
+        configsByMod.put(getConfigName(clazz), clazz);
+
         modContainer.getEventBus().addListener((ModConfigEvent.Loading event) -> {
             configs.put(clazz, event.getConfig());
             T newConfigData = readConfigValues(clazz, event.getConfig());
@@ -287,10 +293,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             initializeConfigurationScreen(modContainer);
         }
 
-        T initialData = createConfigDataInstance(clazz);
-        configData.put(clazz, initialData);
-        configsByMod.put(getConfigName(clazz), clazz);
-        return initialData;
+        return getActive(clazz);
     }
 
     @Override
