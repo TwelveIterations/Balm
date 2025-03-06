@@ -224,6 +224,12 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     public <T extends BalmConfigData> T initializeBackingConfig(Class<T> clazz) {
         IConfigSpec<?> configSpec = createConfigSpec(clazz);
 
+        // We set this early in case event handlers run upon registering, so we don't reset back to defaults
+        T initialData = createConfigDataInstance(clazz);
+        setActiveConfig(clazz, initialData);
+        configData.put(clazz, initialData);
+        configsByMod.put(getConfigName(clazz), clazz);
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener((ModConfigEvent.Loading event) -> {
             configs.put(clazz, event.getConfig());
             T newConfigData = readConfigValues(clazz, event.getConfig());
@@ -256,10 +262,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, configSpec);
 
-        T initialData = createConfigDataInstance(clazz);
-        configData.put(clazz, initialData);
-        configsByMod.put(getConfigName(clazz), clazz);
-        return initialData;
+        return getActive(clazz);
     }
 
     @Override
