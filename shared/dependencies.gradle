@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly "net.blay09.mods:kuma-api-common:[20.1.0,20.2.0)"
+    compileOnly "net.blay09.mods:kuma-api-common:$kuma_version"
 
     compileOnly "mcp.mobius.waila:wthit-api:mojmap-$wthit_version"
 }
