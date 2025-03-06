@@ -1,77 +1,15 @@
 package net.blay09.mods.balm.neoforge;
 
 import net.blay09.mods.balm.api.BalmRegistries;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.blay09.mods.balm.api.DeferredObject;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.NeoForgeMod;
 
-import java.util.Collection;
+import java.util.function.Function;
 
 public class NeoForgeBalmRegistries implements BalmRegistries {
-    @Override
-    public ResourceLocation getKey(Item item) {
-        return BuiltInRegistries.ITEM.getKey(item);
-    }
-
-    @Override
-    public ResourceLocation getKey(Block block) {
-        return BuiltInRegistries.BLOCK.getKey(block);
-    }
-
-    @Override
-    public ResourceLocation getKey(Fluid fluid) {
-        return BuiltInRegistries.FLUID.getKey(fluid);
-    }
-
-    @Override
-    public ResourceLocation getKey(EntityType<?> entityType) {
-        return BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-    }
-
-    @Override
-    public ResourceLocation getKey(MenuType<?> menuType) {
-        return BuiltInRegistries.MENU.getKey(menuType);
-    }
-
-    @Override
-    public Collection<ResourceLocation> getItemKeys() {
-        return BuiltInRegistries.ITEM.keySet();
-    }
-
-    @Override
-    public Item getItem(ResourceLocation key) {
-        return BuiltInRegistries.ITEM.getValue(key);
-    }
-
-    @Override
-    public Block getBlock(ResourceLocation key) {
-        return BuiltInRegistries.BLOCK.getValue(key);
-    }
-
-    @Override
-    public Fluid getFluid(ResourceLocation key) {
-        return BuiltInRegistries.FLUID.getValue(key);
-    }
-
-    @Override
-    public MobEffect getMobEffect(ResourceLocation key) {
-        return BuiltInRegistries.MOB_EFFECT.getValue(key);
-    }
-
-    @Override
-    public TagKey<Item> getItemTag(ResourceLocation key) {
-        return ItemTags.create(key);
-    }
-
     @Override
     public void enableMilkFluid() {
         NeoForgeMod.enableMilkFluid();
@@ -83,7 +21,9 @@ public class NeoForgeBalmRegistries implements BalmRegistries {
     }
 
     @Override
-    public Attribute getAttribute(ResourceLocation key) {
-        return BuiltInRegistries.ATTRIBUTE.getValue(key);
+    public <T> DeferredObject<T> register(Registry<T> registry, Function<ResourceLocation, T> supplier, ResourceLocation identifier) {
+        final var register = DeferredRegisters.get(registry.key(), identifier.getNamespace());
+        final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
+        return new DeferredObject<>(identifier, registryObject, registryObject::isBound);
     }
 }
