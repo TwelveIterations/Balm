@@ -1,5 +1,9 @@
-- Fixed ScreenInitEvent not firing on options screen
-- Fixed ScreenInitEvent.Pre falsely running on AFTER_INIT on Fabric
-- Fixed comments in lists of configs being treated as corrupted config in Fabric
-- Fixed potential crashes with configs being null
-  - Will now log an error to help debug how they ended up becoming null
+- Changed mod id on Fabric to "balm" ("balm-fabric" is still provided for backwards compatibility)
+- Deprecated most getters in BalmRegistries since Vanilla equivalents can be used nowadays
+- Added `BalmRegistries.register(...)` to allow registering objects into any registry
+- Added `BalmParticles` to allow registering particles
+- Added `BalmRenderers.registerParticleProvider(...)` to allow registering particle renderer providers
+- Fixed `OnLoadHandler` not working on block entities in Fabric
+- Added crash when active config is unexpectedly set to null to avoid confusing errors later on
+- Fixed in-memory config potentially being reset to default on Forge instead of using data from config load event
+- Pinned Kuma version to avoid shipping snapshots
