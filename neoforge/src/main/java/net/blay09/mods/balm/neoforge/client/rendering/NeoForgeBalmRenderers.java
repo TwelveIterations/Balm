@@ -6,9 +6,13 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,32 +26,26 @@ import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class NeoForgeBalmRenderers implements BalmRenderers {
 
-    private static class ColorRegistration<THandler, TObject> {
-        private final THandler color;
-        private final Supplier<TObject[]> objects;
+    private record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {
+    }
 
-        public ColorRegistration(THandler color, Supplier<TObject[]> objects) {
-            this.color = color;
-            this.objects = objects;
-        }
+    private record ParticleProviderFactoryRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType,
+                                                                                  Function<SpriteSet, ParticleProvider<T>> value) {
+    }
 
-        public THandler getColor() {
-            return color;
-        }
-
-        public Supplier<TObject[]> getObjects() {
-            return objects;
-        }
+    private record ParticleProviderRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType, ParticleProvider<T> value) {
     }
 
     private static class Registrations {
@@ -56,6 +54,8 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
         public final List<Pair<Supplier<EntityType<?>>, EntityRendererProvider<Entity>>> entityRenderers = new ArrayList<>();
         public final List<ColorRegistration<BlockColor, Block>> blockColors = new ArrayList<>();
         public final List<ColorRegistration<ItemColor, ItemLike>> itemColors = new ArrayList<>();
+        public final List<ParticleProviderFactoryRegistration<?>> particleProviderFactories = new ArrayList<>();
+        public final List<ParticleProviderRegistration<?>> particleProviders = new ArrayList<>();
 
         @SubscribeEvent
         public void setupClient(FMLClientSetupEvent event) {
@@ -82,15 +82,33 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
         @SubscribeEvent
         public void initBlockColors(RegisterColorHandlersEvent.Block event) {
             for (ColorRegistration<BlockColor, Block> blockColor : blockColors) {
-                event.register(blockColor.getColor(), blockColor.getObjects().get());
+                event.register(blockColor.color(), blockColor.objects().get());
             }
         }
 
         @SubscribeEvent
         public void initItemColors(RegisterColorHandlersEvent.Item event) {
             for (ColorRegistration<ItemColor, ItemLike> itemColor : itemColors) {
-                event.register(itemColor.getColor(), itemColor.getObjects().get());
+                event.register(itemColor.color(), itemColor.objects().get());
             }
+        }
+
+        @SubscribeEvent
+        public void initParticleProviders(RegisterParticleProvidersEvent event) {
+            for (final var factory : particleProviderFactories) {
+                registerParticleProviderFactory(event, factory);
+            }
+            for (final var provider : particleProviders) {
+                registerParticleProvider(event, provider);
+            }
+        }
+
+        private <T extends ParticleOptions> void registerParticleProviderFactory(RegisterParticleProvidersEvent event, ParticleProviderFactoryRegistration<T> registration) {
+            event.registerSpriteSet(registration.particleType.get(), spriteSet -> registration.value().apply(spriteSet));
+        }
+
+        private <T extends ParticleOptions> void registerParticleProvider(RegisterParticleProvidersEvent event, ParticleProviderRegistration<T> registration) {
+            event.registerSpriteSet(registration.particleType.get(), spriteSet -> registration.value());
         }
     }
 
@@ -129,6 +147,16 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
         // Do nothing in Forge. Forge unfortunately changes the Vanilla model format,
         // so we have to have both this call (for Fabric) and change the JSON (for Forge).
+    }
+
+    @Override
+    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+        getActiveRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
+    }
+
+    @Override
+    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+        getActiveRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
     }
 
     public void register(String modId, IEventBus eventBus) {
