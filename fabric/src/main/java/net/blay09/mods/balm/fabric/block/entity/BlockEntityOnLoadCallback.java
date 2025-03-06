@@ -13,7 +13,7 @@ public class BlockEntityOnLoadCallback {
     private static final List<BlockEntity> freshBlockEntities = new ArrayList<>();
     private static boolean callbacksRunning = false;
 
-    public static void scheduleOnLoad(Collection<BlockEntity> blockEntities) {
+    public static synchronized void scheduleOnLoad(Collection<BlockEntity> blockEntities) {
         if (callbacksRunning) {
             pendingFreshBlockEntities.addAll(blockEntities);
         } else {
@@ -21,9 +21,10 @@ public class BlockEntityOnLoadCallback {
         }
     }
 
-    public static void fireOnLoad() {
+    public static synchronized void fireOnLoad() {
         freshBlockEntities.addAll(pendingFreshBlockEntities);
         pendingFreshBlockEntities.clear();
+
         callbacksRunning = true;
         for (final var blockEntity : freshBlockEntities) {
             if (blockEntity instanceof OnLoadHandler handler) {
