@@ -70,7 +70,7 @@ public interface BalmRegistries {
      */
     @Deprecated
     default Item getItem(ResourceLocation key) {
-        return BuiltInRegistries.ITEM.get(key);
+        return BuiltInRegistries.ITEM.getValue(key);
     }
 
     /**
@@ -78,7 +78,7 @@ public interface BalmRegistries {
      */
     @Deprecated
     default Block getBlock(ResourceLocation key) {
-        return BuiltInRegistries.BLOCK.get(key);
+        return BuiltInRegistries.BLOCK.getValue(key);
     }
 
     /**
@@ -86,7 +86,7 @@ public interface BalmRegistries {
      */
     @Deprecated
     default Fluid getFluid(ResourceLocation key) {
-        return BuiltInRegistries.FLUID.get(key);
+        return BuiltInRegistries.FLUID.getValue(key);
     }
 
     /**
@@ -94,7 +94,7 @@ public interface BalmRegistries {
      */
     @Deprecated
     default MobEffect getMobEffect(ResourceLocation key) {
-        return BuiltInRegistries.MOB_EFFECT.get(key);
+        return BuiltInRegistries.MOB_EFFECT.getValue(key);
     }
 
     /**
@@ -110,7 +110,7 @@ public interface BalmRegistries {
      */
     @Deprecated
     default Attribute getAttribute(ResourceLocation key) {
-        return BuiltInRegistries.ATTRIBUTE.get(key);
+        return BuiltInRegistries.ATTRIBUTE.getValue(key);
     }
 
     void enableMilkFluid();
