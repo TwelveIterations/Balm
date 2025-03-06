@@ -86,7 +86,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
 
     @Override
     public <T extends BalmConfigData> void registerConfig(Class<T> clazz, Function<T, SyncConfigMessage<T>> syncMessageFactory) {
-        setActiveConfig(clazz, Balm.getConfig().initializeBackingConfig(clazz));
+        Balm.getConfig().initializeBackingConfig(clazz);
         defaultConfigs.put(clazz, createConfigDataInstance(clazz));
         if (syncMessageFactory != null) {
             registerSyncMessageFactory(clazz, syncMessageFactory);
