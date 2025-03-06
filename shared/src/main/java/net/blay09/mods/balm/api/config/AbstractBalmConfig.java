@@ -71,8 +71,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
 
     public <T extends BalmConfigData> void setActiveConfig(Class<T> clazz, T config) {
         if (config == null) {
-            logger.error("Attempted to set active config to null", new IllegalArgumentException("config must not be null"));
-            return;
+            throw new IllegalArgumentException("config must not be null");
         }
 
         activeConfigs.put(clazz, config);
