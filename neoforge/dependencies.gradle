@@ -1,5 +1,5 @@
 dependencies {
-    jarJar(group: "net.blay09.mods", name: "kuma-api-neoforge", version: "$kuma_version_range") {
+    jarJar("net.blay09.mods:kuma-api-neoforge") {
         version {
             strictly kuma_version_range
             prefer kuma_version
