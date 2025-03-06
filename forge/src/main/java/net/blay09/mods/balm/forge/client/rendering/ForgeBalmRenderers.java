@@ -25,7 +25,6 @@ import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +51,6 @@ public class ForgeBalmRenderers implements BalmRenderers {
         public final List<Pair<Supplier<BlockEntityType<?>>, BlockEntityRendererProvider<BlockEntity>>> blockEntityRenderers = new ArrayList<>();
         public final List<Pair<Supplier<EntityType<?>>, EntityRendererProvider<Entity>>> entityRenderers = new ArrayList<>();
         public final List<ColorRegistration<BlockColor, Block>> blockColors = new ArrayList<>();
-        public final List<ColorRegistration<ItemColor, ItemLike>> itemColors = new ArrayList<>();
         public final List<ParticleProviderFactoryRegistration<?>> particleProviderFactories = new ArrayList<>();
         public final List<ParticleProviderRegistration<?>> particleProviders = new ArrayList<>();
 
@@ -82,13 +80,6 @@ public class ForgeBalmRenderers implements BalmRenderers {
         public void initBlockColors(RegisterColorHandlersEvent.Block event) {
             for (ColorRegistration<BlockColor, Block> blockColor : blockColors) {
                 event.register(blockColor.color(), blockColor.objects().get());
-            }
-        }
-
-        @SubscribeEvent
-        public void initItemColors(RegisterColorHandlersEvent.Item event) {
-            for (ColorRegistration<ItemColor, ItemLike> itemColor : itemColors) {
-                event.register(itemColor.color(), itemColor.objects().get());
             }
         }
 
