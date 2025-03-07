@@ -31,4 +31,6 @@ dependencies {
     modCompileOnly "curse.maven:jade-324717:$jade_fabric_version"
 
     modCompileOnly "dev.emi:trinkets:3.7.2"
+
+    modCompileOnly 'me.lucko:fabric-permissions-api:0.3.3'
 }
