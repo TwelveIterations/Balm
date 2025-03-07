@@ -292,7 +292,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
 
     @Override
     public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>();
+        return new ModProxyImpl<>(this::isModLoaded);
     }
 
     public List<String> getAddonClasses() {
