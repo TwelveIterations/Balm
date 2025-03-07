@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.common.permission;
 
 import net.blay09.mods.balm.api.permission.PermissionContext;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
@@ -14,7 +15,12 @@ public record PlayerPermissionContext(ServerPlayer player) implements Permission
     }
 
     @Override
-    public UUID getPlayerUUID() {
-        return player.getUUID();
+    public Optional<UUID> getPlayerUUID() {
+        return Optional.of(player.getUUID());
+    }
+
+    @Override
+    public Optional<CommandSourceStack> getCommandSource() {
+        return Optional.of(player.createCommandSourceStack());
     }
 }

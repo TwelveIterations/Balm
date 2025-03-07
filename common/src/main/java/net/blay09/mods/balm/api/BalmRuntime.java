@@ -85,6 +85,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmComponents getComponents();
 
     <T> PlatformProxy<T> platformProxy();
-    
+
     <T> ModProxy<T> modProxy();
+
+    String getPlatform();
 }
