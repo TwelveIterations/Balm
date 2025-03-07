@@ -14,6 +14,7 @@ import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
@@ -79,4 +80,6 @@ public interface BalmRuntime {
     void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener);
 
     <T> PlatformProxy<T> platformProxy();
+    
+    <T> ModProxy<T> modProxy();
 }

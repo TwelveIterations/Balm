@@ -14,6 +14,7 @@ import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
@@ -47,8 +48,12 @@ public class Balm {
         return runtime.getModName(modId);
     }
 
-    public static <T> PlatformProxy<T> platformProxy(Class<T> clazz) {
+    public static <T> PlatformProxy<T> platformProxy() {
         return runtime.platformProxy();
+    }
+
+    public static <T> ModProxy<T> modProxy() {
+        return runtime.modProxy();
     }
 
     public static <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
