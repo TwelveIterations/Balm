@@ -44,7 +44,7 @@ public class BalmCommand {
                     source.sendSuccess(() -> Component.literal("Set the time to Daytime"), true);
                     return 0;
                 }))
-                .then(Commands.literal("export")
+                .then(Commands.literal("export").requires(BalmCommand::mayEnableDevMode)
                         .then(Commands.literal("config").then(Commands.argument("class", StringArgumentType.greedyString()).executes(context -> {
                                     final var className = context.getArgument("class", String.class);
                                     try {
