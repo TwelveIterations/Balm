@@ -17,9 +17,9 @@ import java.io.File;
 
 public class BalmCommand {
 
-    private static final ResourceLocation PERMISSION_BALM_DEV = new ResourceLocation("balm", "command.balm.dev");
-    private static final ResourceLocation PERMISSION_BALM_EXPORT_CONFIG = new ResourceLocation("balm", "command.balm.export.config");
-    private static final ResourceLocation PERMISSION_BALM_EXPORT_ICONS = new ResourceLocation("balm", "command.balm.export.icons");
+    private static final ResourceLocation PERMISSION_BALM_DEV = ResourceLocation.fromNamespaceAndPath("balm", "command.balm.dev");
+    private static final ResourceLocation PERMISSION_BALM_EXPORT_CONFIG = ResourceLocation.fromNamespaceAndPath("balm", "command.balm.export.config");
+    private static final ResourceLocation PERMISSION_BALM_EXPORT_ICONS = ResourceLocation.fromNamespaceAndPath("balm", "command.balm.export.icons");
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         BalmCommands.registerPermission(PERMISSION_BALM_DEV, 2);

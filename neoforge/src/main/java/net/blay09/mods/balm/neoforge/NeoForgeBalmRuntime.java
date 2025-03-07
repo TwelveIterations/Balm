@@ -16,16 +16,15 @@ import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
-import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
-import net.blay09.mods.balm.api.proxy.PlatformProxy;
-import net.blay09.mods.balm.api.proxy.ProxyResolutionException;
-import net.blay09.mods.balm.api.proxy.SidedProxy;
+import net.blay09.mods.balm.api.proxy.*;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
@@ -40,6 +39,7 @@ import net.blay09.mods.balm.neoforge.item.NeoForgeBalmItems;
 import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
+import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.sound.NeoForgeBalmSounds;
@@ -83,6 +83,7 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final BalmComponents components = new NeoForgeBalmComponents();
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport();
     private final BalmParticles particles = new NeoForgeBalmParticles();
+    private final BalmPermissions permissions = new NeoForgeBalmPermissions();
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -258,7 +259,22 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     }
 
     @Override
+    public BalmPermissions getPermissions() {
+        return permissions;
+    }
+
+    @Override
     public <T> PlatformProxy<T> platformProxy() {
         return new PlatformProxyImpl<>(LoaderPlatforms.NEOFORGE);
+    }
+
+    @Override
+    public <T> ModProxy<T> modProxy() {
+        return new ModProxyImpl<>(this::isModLoaded);
+    }
+
+    @Override
+    public String getPlatform() {
+        return LoaderPlatforms.NEOFORGE;
     }
 }
