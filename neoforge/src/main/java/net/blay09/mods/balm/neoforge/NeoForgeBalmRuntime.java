@@ -17,6 +17,8 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
+import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.ProxyResolutionException;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
@@ -24,6 +26,7 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
@@ -252,5 +255,10 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     @Override
     public BalmParticles getParticles() {
         return particles;
+    }
+
+    @Override
+    public <T> PlatformProxy<T> platformProxy() {
+        return new PlatformProxyImpl<>(LoaderPlatforms.NEOFORGE);
     }
 }

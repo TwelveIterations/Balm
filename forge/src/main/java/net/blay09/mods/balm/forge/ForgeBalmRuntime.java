@@ -12,10 +12,13 @@ import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
+import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
+import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
@@ -249,5 +252,10 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
     @Override
     public BalmParticles getParticles() {
         return particles;
+    }
+
+    @Override
+    public <T> PlatformProxy<T> platformProxy() {
+        return new PlatformProxyImpl<>(LoaderPlatforms.FORGE);
     }
 }
