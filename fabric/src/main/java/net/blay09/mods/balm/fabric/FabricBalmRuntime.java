@@ -17,6 +17,7 @@ import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
@@ -45,6 +46,7 @@ import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
+import net.blay09.mods.balm.fabric.permission.FabricBalmPermissions;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
@@ -90,6 +92,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     private final BalmComponents components = new FabricBalmComponents();
     private final BalmModSupport modSupport = new FabricBalmModSupport();
     private final BalmParticles particles = new FabricBalmParticles();
+    private final BalmPermissions permissions = new FabricBalmPermissions();
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -282,6 +285,11 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     @Override
     public <T> PlatformProxy<T> platformProxy() {
         return new PlatformProxyImpl<>(LoaderPlatforms.FABRIC);
+    }
+
+    @Override
+    public BalmPermissions getPermissions() {
+        return permissions;
     }
 
     public List<String> getAddonClasses() {
