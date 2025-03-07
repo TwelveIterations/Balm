@@ -80,6 +80,8 @@ public interface BalmRuntime {
     void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener);
 
     <T> PlatformProxy<T> platformProxy();
-    
+
     <T> ModProxy<T> modProxy();
+
+    String getPlatform();
 }

@@ -156,6 +156,10 @@ public class Balm {
         return runtime.getPermissions();
     }
 
+    public static String getPlatform() {
+        return runtime.getPlatform();
+    }
+
     public static BalmRuntime getRuntime() {
         return runtime;
     }

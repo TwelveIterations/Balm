@@ -38,7 +38,7 @@ import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
-import net.blay09.mods.balm.fabric.permission.DefaultFabricBalmPermissions;
+import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
@@ -84,7 +84,7 @@ public class FabricBalmRuntime implements BalmRuntime {
     private final BalmParticles particles = new FabricBalmParticles();
     private final BalmPermissions permissions = this.<BalmPermissions>modProxy()
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
-            .withFallback(new DefaultFabricBalmPermissions())
+            .withFallback(new CommonBalmPermissions())
             .build();
 
     private final List<String> addonClasses = new ArrayList<>();
@@ -281,6 +281,11 @@ public class FabricBalmRuntime implements BalmRuntime {
     @Override
     public <T> ModProxy<T> modProxy() {
         return new ModProxyImpl<>(this::isModLoaded);
+    }
+
+    @Override
+    public String getPlatform() {
+        return LoaderPlatforms.FABRIC;
     }
 
     public List<String> getAddonClasses() {
