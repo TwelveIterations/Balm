@@ -1,16 +1,20 @@
 package net.blay09.mods.balm.common.proxy;
 
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.proxy.ModProxy;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ModProxyImpl<T> implements ModProxy<T> {
+    public ModProxyImpl(Predicate<String> modLoadedPredicate) {
+        this.modLoadedPredicate = modLoadedPredicate;
+    }
+
     private final class ModEntry {
         private final String modId;
         private final String clazzName;
@@ -35,6 +39,7 @@ public class ModProxyImpl<T> implements ModProxy<T> {
         }
     }
 
+    private final Predicate<String> modLoadedPredicate;
     private final List<ModEntry> proxies = new ArrayList<>();
     private Function<List<T>, T> multiplexer;
     private T fallback;
@@ -42,7 +47,7 @@ public class ModProxyImpl<T> implements ModProxy<T> {
     @Override
     @SuppressWarnings("unchecked")
     public ModProxy<T> with(String modId, String clazzName) {
-        if (Balm.isModLoaded(modId)) {
+        if (modLoadedPredicate.test(modId)) {
             proxies.add(new ModEntry(modId, clazzName, () -> {
                 try {
                     return (T) Class.forName(clazzName).getConstructor().newInstance();
