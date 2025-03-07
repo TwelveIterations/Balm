@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.BalmRuntime;
@@ -11,8 +10,6 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
-import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
@@ -41,7 +38,7 @@ import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
-import net.blay09.mods.balm.fabric.permission.FabricBalmPermissions;
+import net.blay09.mods.balm.fabric.permission.DefaultFabricBalmPermissions;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
@@ -85,7 +82,10 @@ public class FabricBalmRuntime implements BalmRuntime {
     private final BalmRecipes recipes = new FabricBalmRecipes();
     private final BalmModSupport modSupport = new FabricBalmModSupport();
     private final BalmParticles particles = new FabricBalmParticles();
-    private final BalmPermissions permissions = new FabricBalmPermissions();
+    private final BalmPermissions permissions = this.<BalmPermissions>modProxy()
+            .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
+            .withFallback(new DefaultFabricBalmPermissions())
+            .build();
 
     private final List<String> addonClasses = new ArrayList<>();
 
