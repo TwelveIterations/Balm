@@ -12,6 +12,6 @@ public class LevelMixin {
 
     @Inject(method = "tickBlockEntities", at = @At("HEAD"))
     private void tickBlockEntities(CallbackInfo callbackInfo) {
-        BlockEntityOnLoadCallback.fireOnLoad();
+        BlockEntityOnLoadCallback.fireOnLoad((Level) (Object) this);
     }
 }
