@@ -17,9 +17,12 @@ import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
+import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.fabric.component.FabricBalmComponents;
+import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
@@ -271,6 +274,11 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     @Override
     public BalmParticles getParticles() {
         return particles;
+    }
+
+    @Override
+    public <T> PlatformProxy<T> platformProxy() {
+        return new PlatformProxyImpl<>(LoaderPlatforms.FABRIC);
     }
 
     public List<String> getAddonClasses() {
