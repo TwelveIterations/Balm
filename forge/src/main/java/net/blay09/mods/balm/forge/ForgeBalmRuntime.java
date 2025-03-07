@@ -13,12 +13,12 @@ import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
-import net.blay09.mods.balm.api.proxy.PlatformProxy;
+import net.blay09.mods.balm.api.proxy.*;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
+import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
@@ -27,8 +27,6 @@ import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.provider.BalmProviders;
-import net.blay09.mods.balm.api.proxy.ProxyResolutionException;
-import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
@@ -265,5 +263,10 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
     @Override
     public <T> PlatformProxy<T> platformProxy() {
         return new PlatformProxyImpl<>(LoaderPlatforms.FORGE);
+    }
+
+    @Override
+    public <T> ModProxy<T> modProxy() {
+        return new ModProxyImpl<>();
     }
 }
