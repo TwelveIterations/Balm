@@ -12,6 +12,7 @@ import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
@@ -63,6 +64,8 @@ public interface BalmRuntime {
     BalmModSupport getModSupport();
 
     BalmParticles getParticles();
+
+    BalmPermissions getPermissions();
 
     boolean isModLoaded(String modId);
     String getModName(String modId);
