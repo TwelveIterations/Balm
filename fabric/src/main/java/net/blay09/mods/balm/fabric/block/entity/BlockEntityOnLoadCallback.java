@@ -6,6 +6,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BlockEntityOnLoadCallback {
 
@@ -15,7 +16,7 @@ public class BlockEntityOnLoadCallback {
         private boolean onLoadRunning;
     }
 
-    private static final Map<ResourceKey<Level>, LevelScope> levelBlockEntities = new HashMap<>();
+    private static final Map<ResourceKey<Level>, LevelScope> levelBlockEntities = new ConcurrentHashMap<>();
 
     public static void scheduleOnLoad(Level level, Collection<BlockEntity> blockEntities) {
         final var scope = levelBlockEntities.computeIfAbsent(level.dimension(), (key) -> new LevelScope());
