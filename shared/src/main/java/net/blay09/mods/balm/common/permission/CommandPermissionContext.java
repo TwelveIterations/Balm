@@ -7,20 +7,20 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.Optional;
 import java.util.UUID;
 
-public record OfflinePermissionContext(UUID playerUUID) implements PermissionContext {
+public record CommandPermissionContext(CommandSourceStack source) implements PermissionContext {
 
     @Override
     public Optional<ServerPlayer> getPlayer() {
-        return Optional.empty();
+        return Optional.ofNullable(source.getPlayer());
     }
 
     @Override
     public Optional<UUID> getPlayerUUID() {
-        return Optional.of(playerUUID);
+        return Optional.ofNullable(source.getPlayer()).map(ServerPlayer::getUUID);
     }
 
     @Override
     public Optional<CommandSourceStack> getCommandSource() {
-        return Optional.empty();
+        return Optional.of(source);
     }
 }
