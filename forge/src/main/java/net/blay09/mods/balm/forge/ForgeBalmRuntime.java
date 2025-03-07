@@ -269,6 +269,6 @@ public class ForgeBalmRuntime implements BalmRuntime<EmptyLoadContext> {
 
     @Override
     public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>();
+        return new ModProxyImpl<>(this::isModLoaded);
     }
 }
