@@ -13,6 +13,7 @@ import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
@@ -144,6 +145,10 @@ public class Balm {
 
     public static BalmParticles getParticles() {
         return runtime.getParticles();
+    }
+
+    public static BalmPermissions getPermissions() {
+        return runtime.getPermissions();
     }
 
     public static BalmRuntime getRuntime() {

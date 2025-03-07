@@ -1,0 +1,11 @@
+package net.blay09.mods.balm.api.permission;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+
+import java.util.function.Function;
+
+public interface BalmPermissions {
+    void registerPermission(ResourceLocation permission, Function<PermissionContext, Boolean> defaultResolver);
+    boolean hasPermission(ServerPlayer player, ResourceLocation permission);
+}
