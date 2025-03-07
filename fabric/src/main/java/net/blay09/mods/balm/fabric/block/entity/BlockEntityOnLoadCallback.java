@@ -1,37 +1,43 @@
 package net.blay09.mods.balm.fabric.block.entity;
 
 import net.blay09.mods.balm.api.block.entity.OnLoadHandler;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class BlockEntityOnLoadCallback {
 
-    private static final List<BlockEntity> pendingFreshBlockEntities = new ArrayList<>();
-    private static final List<BlockEntity> freshBlockEntities = new ArrayList<>();
-    private static boolean callbacksRunning = false;
+    private static class LevelScope {
+        private final List<BlockEntity> pendingFreshBlockEntities = new ArrayList<>();
+        private final List<BlockEntity> freshBlockEntities = new ArrayList<>();
+        private boolean onLoadRunning;
+    }
 
-    public static synchronized void scheduleOnLoad(Collection<BlockEntity> blockEntities) {
-        if (callbacksRunning) {
-            pendingFreshBlockEntities.addAll(blockEntities);
+    private static final Map<ResourceKey<Level>, LevelScope> levelBlockEntities = new HashMap<>();
+
+    public static void scheduleOnLoad(Level level, Collection<BlockEntity> blockEntities) {
+        final var scope = levelBlockEntities.computeIfAbsent(level.dimension(), (key) -> new LevelScope());
+        if (scope.onLoadRunning) {
+            scope.pendingFreshBlockEntities.addAll(blockEntities);
         } else {
-            freshBlockEntities.addAll(blockEntities);
+            scope.freshBlockEntities.addAll(blockEntities);
         }
     }
 
-    public static synchronized void fireOnLoad() {
-        freshBlockEntities.addAll(pendingFreshBlockEntities);
-        pendingFreshBlockEntities.clear();
+    public static void fireOnLoad(Level level) {
+        final var scope = levelBlockEntities.computeIfAbsent(level.dimension(), (key) -> new LevelScope());
+        scope.freshBlockEntities.addAll(scope.pendingFreshBlockEntities);
+        scope.pendingFreshBlockEntities.clear();
 
-        callbacksRunning = true;
-        for (final var blockEntity : freshBlockEntities) {
+        scope.onLoadRunning = true;
+        for (final var blockEntity : scope.freshBlockEntities) {
             if (blockEntity instanceof OnLoadHandler handler) {
                 handler.onLoad();
             }
         }
-        freshBlockEntities.clear();
-        callbacksRunning = false;
+        scope.freshBlockEntities.clear();
+        scope.onLoadRunning = false;
     }
 }
