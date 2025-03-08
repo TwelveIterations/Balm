@@ -76,7 +76,7 @@ public class ForgeBalmRuntime implements BalmRuntime {
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmStats stats = new ForgeBalmStats();
     private final BalmRecipes recipes = new ForgeBalmRecipes();
-    private final BalmModSupport modSupport = new ForgeBalmModSupport();
+    private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
 
