@@ -49,7 +49,7 @@ public class FabricBalmWorldGen implements BalmWorldGen {
             final var resourceKey = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, identifier);
             final var registry = BuiltInRegistries.POINT_OF_INTEREST_TYPE;
             Registry.register(registry, resourceKey, poiType);
-            PoiTypesAccessor.callRegisterBlockStates(registry.getHolderOrThrow(resourceKey), poiType.matchingStates());
+            PoiTypesAccessor.callRegisterBlockStates(registry.getOrThrow(resourceKey), poiType.matchingStates());
             return poiType;
         }).resolveImmediately();
     }
