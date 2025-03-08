@@ -85,7 +85,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     private final BalmStats stats = new FabricBalmStats();
     private final BalmRecipes recipes = new FabricBalmRecipes();
     private final BalmComponents components = new FabricBalmComponents();
-    private final BalmModSupport modSupport = new FabricBalmModSupport();
+    private final BalmModSupport modSupport = new FabricBalmModSupport(this);
     private final BalmParticles particles = new FabricBalmParticles();
     private final BalmPermissions permissions = this.<BalmPermissions>modProxy()
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")

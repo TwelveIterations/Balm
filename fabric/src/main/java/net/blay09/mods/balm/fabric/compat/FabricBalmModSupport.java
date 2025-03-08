@@ -1,14 +1,24 @@
 package net.blay09.mods.balm.fabric.compat;
 
+import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.compat.hudinfo.BalmModSupportHudInfo;
 import net.blay09.mods.balm.api.compat.trinkets.BalmModSupportTrinkets;
+import net.blay09.mods.balm.common.compat.TrinketsMultiplexer;
 import net.blay09.mods.balm.common.compat.hudinfo.CommonBalmModSupportHudInfo;
-import net.blay09.mods.balm.fabric.compat.trinkets.FabricBalmModSupportTrinkets;
+import net.blay09.mods.balm.common.compat.NoopTrinkets;
 
 public class FabricBalmModSupport implements BalmModSupport {
-    private final FabricBalmModSupportTrinkets trinkets = new FabricBalmModSupportTrinkets();
+    private final BalmModSupportTrinkets trinkets;
     private final CommonBalmModSupportHudInfo hudInfo = new CommonBalmModSupportHudInfo();
+
+    public FabricBalmModSupport(BalmRuntime runtime) {
+        trinkets = runtime.<BalmModSupportTrinkets>modProxy()
+                .with("trinkets", "net.blay09.mods.balm.fabric.compat.trinkets.TrinketsIntegration")
+                .withMultiplexer(TrinketsMultiplexer::new)
+                .withFallback(new NoopTrinkets())
+                .build();
+    }
 
     @Override
     public BalmModSupportTrinkets trinkets() {
