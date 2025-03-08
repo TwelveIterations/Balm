@@ -80,7 +80,7 @@ public class ForgeBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     private final BalmStats stats = new ForgeBalmStats();
     private final BalmRecipes recipes = new ForgeBalmRecipes();
     private final BalmComponents components = new ForgeBalmComponents();
-    private final BalmModSupport modSupport = new ForgeBalmModSupport();
+    private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
 

@@ -12,7 +12,7 @@ public class FabricBalmModSupport implements BalmModSupport {
     private final BalmModSupportTrinkets trinkets;
     private final CommonBalmModSupportHudInfo hudInfo = new CommonBalmModSupportHudInfo();
 
-    public FabricBalmModSupport(BalmRuntime runtime) {
+    public FabricBalmModSupport(BalmRuntime<?> runtime) {
         trinkets = runtime.<BalmModSupportTrinkets>modProxy()
                 .with("trinkets", "net.blay09.mods.balm.fabric.compat.trinkets.TrinketsIntegration")
                 .withMultiplexer(TrinketsMultiplexer::new)
