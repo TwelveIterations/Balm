@@ -8,6 +8,7 @@
 - Added crash when active config is unexpectedly set to null to avoid confusing errors later on
 - Fixed `OnLoadHandler` not working on block entities in Fabric
 - Fixed in-memory config potentially being reset to default on Forge instead of using data from config load event
+- Fixed PoiTypes not registering properly on Fabric
 - Fixed Kuma version pinning to avoid shipping snapshots
 - Changed `balm export` commands to require op
 - Changed mod id on Fabric to "balm" ("balm-fabric" is still provided for backwards compatibility)
