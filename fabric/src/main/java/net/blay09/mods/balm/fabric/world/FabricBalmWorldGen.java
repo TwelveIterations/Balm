@@ -3,8 +3,8 @@ package net.blay09.mods.balm.fabric.world;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.api.world.BiomePredicate;
+import net.blay09.mods.balm.mixin.PoiTypesAccessor;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -46,7 +46,10 @@ public class FabricBalmWorldGen implements BalmWorldGen {
     public <T extends PoiType> DeferredObject<T> registerPoiType(ResourceLocation identifier, Supplier<T> supplier) {
         return new DeferredObject<>(identifier, () -> {
             T poiType = supplier.get();
-            Registry.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, identifier, poiType);
+            final var resourceKey = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, identifier);
+            final var registry = BuiltInRegistries.POINT_OF_INTEREST_TYPE;
+            Registry.register(registry, resourceKey, poiType);
+            PoiTypesAccessor.callRegisterBlockStates(registry.getHolderOrThrow(resourceKey), poiType.matchingStates());
             return poiType;
         }).resolveImmediately();
     }
