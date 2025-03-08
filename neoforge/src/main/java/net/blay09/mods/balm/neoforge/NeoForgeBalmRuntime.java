@@ -81,7 +81,7 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final BalmStats stats = new NeoForgeBalmStats();
     private final BalmRecipes recipes = new NeoForgeBalmRecipes();
     private final BalmComponents components = new NeoForgeBalmComponents();
-    private final BalmModSupport modSupport = new NeoForgeBalmModSupport();
+    private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
 
