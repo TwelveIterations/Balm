@@ -22,7 +22,8 @@
     "StemBlockMixin",
     "MinecraftServerMixin",
     "PlayerListMixin",
-    "CommandsMixin"
+    "CommandsMixin",
+    "PoiTypesAccessor"
   ],
   "client": [
     "AbstractClientPlayerMixin",
