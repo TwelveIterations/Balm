@@ -40,6 +40,7 @@ public class FabricBalmConfig extends AbstractBalmConfig {
         }
         configs.put(clazz, configData);
         configsByMod.put(configName, clazz);
+        setActiveConfig(clazz, configData);
         return configData;
     }
 
