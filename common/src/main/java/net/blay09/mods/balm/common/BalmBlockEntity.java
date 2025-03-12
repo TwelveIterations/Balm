@@ -19,6 +19,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -176,5 +177,14 @@ public class BalmBlockEntity extends BalmBlockEntityBase implements BalmProvider
     protected void writeUpdateTag(CompoundTag tag) {
     }
 
-
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (this instanceof BalmContainerProvider containerProvider) {
+            final var container = containerProvider.getContainer();
+            if (level != null && container != null) {
+                Containers.dropContents(level, pos, container);
+            }
+        }
+    }
 }
