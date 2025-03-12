@@ -11,7 +11,6 @@ import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.command.BalmCommand;
 import net.blay09.mods.balm.config.ExampleConfig;
-import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
@@ -24,6 +23,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 
@@ -76,7 +76,7 @@ public class FabricBalm implements ModInitializer {
         });
 
         Balm.getNetworking().registerServerboundPacket(ServerboundModListMessage.TYPE,
-                ServerboundModListMessage.class, (buf, message) -> {
+                ServerboundModListMessage.class, StreamCodec.of((buf, message) -> {
                     buf.writeVarInt(message.modList().size());
                     message.modList().forEach((modId, version) -> {
                         buf.writeUtf(modId);
@@ -89,7 +89,7 @@ public class FabricBalm implements ModInitializer {
                         modList.put(buf.readUtf(), buf.readUtf());
                     }
                     return new ServerboundModListMessage(modList);
-                }, (player, message) -> {
+                }), (player, message) -> {
                     final var networking = (FabricBalmNetworking) Balm.getNetworking();
                     for (final var entry : message.modList().entrySet()) {
                         final var modId = entry.getKey();
