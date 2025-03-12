@@ -181,9 +181,8 @@ public class BalmBlockEntity extends BalmBlockEntityBase implements BalmProvider
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
         if (this instanceof BalmContainerProvider containerProvider) {
-            final var container = containerProvider.getContainer();
-            if (level != null && container != null) {
-                Containers.dropContents(level, pos, container);
+            if (level != null) {
+                containerProvider.dropItems(level, pos);
             }
         }
     }
