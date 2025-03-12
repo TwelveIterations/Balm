@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public class SubContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
+public class SubContainer implements Container, WorldlyContainer {
     private final Container container;
     private final int minSlot;
     private final int maxSlot;
@@ -101,14 +101,6 @@ public class SubContainer implements Container, WorldlyContainer, ExtractionAwar
         for (int i = minSlot; i < maxSlot; i++) {
             container.setItem(i, ItemStack.EMPTY);
         }
-    }
-
-    @Override
-    public boolean canExtractItem(int slot) {
-        if (container instanceof ExtractionAwareContainer extractionAwareContainer) {
-            return containsSlot(slot) && extractionAwareContainer.canExtractItem(slot + minSlot);
-        }
-        return containsSlot(slot);
     }
 
     @Override

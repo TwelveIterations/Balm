@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CombinedContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
+public class CombinedContainer implements Container, WorldlyContainer {
     private final Container[] containers;
     private final int[] baseIndex;
     private final int totalSlots;
@@ -108,16 +108,6 @@ public class CombinedContainer implements Container, WorldlyContainer, Extractio
         for (Container container : containers) {
             container.clearContent();
         }
-    }
-
-    @Override
-    public boolean canExtractItem(int slot) {
-        int containerIndex = getContainerIndexForSlot(slot);
-        Container container = getContainerFromIndex(containerIndex);
-        if (container instanceof ExtractionAwareContainer extractionAwareContainer) {
-            return extractionAwareContainer.canExtractItem(getInnerSlotFromIndex(slot, containerIndex));
-        }
-        return true;
     }
 
     @Override

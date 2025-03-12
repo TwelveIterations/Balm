@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class DelegateContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
+public class DelegateContainer implements Container, WorldlyContainer {
     private final Container delegate;
 
     public DelegateContainer(Container delegate) {
@@ -91,14 +91,6 @@ public class DelegateContainer implements Container, WorldlyContainer, Extractio
     @Override
     public void clearContent() {
         delegate.clearContent();
-    }
-
-    @Override
-    public boolean canExtractItem(int slot) {
-        if (delegate instanceof ExtractionAwareContainer extractionAwareContainer) {
-            return extractionAwareContainer.canExtractItem(slot);
-        }
-        return true;
     }
 
     @Override

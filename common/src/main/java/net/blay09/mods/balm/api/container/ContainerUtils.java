@@ -9,10 +9,6 @@ import net.minecraft.world.level.Level;
 
 public class ContainerUtils {
     public static ItemStack extractItem(Container container, int slot, int amount, boolean simulate) {
-        if (container instanceof ExtractionAwareContainer extractionAwareContainer && !extractionAwareContainer.canExtractItem(slot)) {
-            return ItemStack.EMPTY;
-        }
-
         if (amount == 0) {
             return ItemStack.EMPTY;
         }
