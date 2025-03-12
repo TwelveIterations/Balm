@@ -50,7 +50,7 @@ public class ServerPlayerMixin {
     public void drop(boolean flag, CallbackInfoReturnable<Boolean> callbackInfo) {
         ServerPlayer player = (ServerPlayer) (Object) this;
         Inventory inventory = player.getInventory();
-        ItemStack selected = inventory.getSelected();
+        ItemStack selected = inventory.getSelectedItem();
         TossItemEvent event = new TossItemEvent(player, selected);
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {

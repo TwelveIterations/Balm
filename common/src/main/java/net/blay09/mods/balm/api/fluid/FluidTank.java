@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.fluid;
 
 import net.blay09.mods.balm.api.Balm;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
@@ -98,14 +99,14 @@ public class FluidTank {
 
     public CompoundTag serialize() {
         CompoundTag tag = new CompoundTag();
-        tag.putString("Fluid", Balm.getRegistries().getKey(fluid).toString());
+        tag.putString("Fluid", BuiltInRegistries.FLUID.getKey(fluid).toString());
         tag.putInt("Amount", amount);
         return tag;
     }
 
     public void deserialize(CompoundTag tag) {
-        fluid = Balm.getRegistries().getFluid(ResourceLocation.tryParse(tag.getString("Fluid")));
-        amount = tag.getInt("Amount");
+        fluid = tag.getString("Fluid").map(ResourceLocation::tryParse).map(BuiltInRegistries.FLUID::getValue).orElse(Fluids.EMPTY);
+        amount = tag.getInt("Amount").orElse(0);
     }
 
     public void setChanged() {

@@ -1,11 +1,16 @@
 package net.blay09.mods.balm.common.client;
 
 import com.mojang.blaze3d.ProjectionType;
+import com.mojang.blaze3d.buffers.BufferType;
+import com.mojang.blaze3d.buffers.BufferUsage;
+import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.vertex.VertexSorting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 
 public class IconExport {
     private static final Logger logger = LoggerFactory.getLogger(IconExport.class);
@@ -25,9 +31,8 @@ public class IconExport {
         minecraft.execute(() -> {
             RenderTarget renderTarget = null;
             try {
-                renderTarget = new TextureTarget(64, 64, true);
+                renderTarget = new TextureTarget("balm_icon_export", 64, 64, true);
 
-                renderTarget.setClearColor(0f, 0f, 0f, 0f);
                 CreativeModeTabs.tryRebuildTabContents(minecraft.player.connection.enabledFeatures(),
                         minecraft.options.operatorItemsTab().get(),
                         minecraft.level.registryAccess());
@@ -48,29 +53,54 @@ public class IconExport {
                             continue;
                         }
 
-                        renderTarget.clear();
-                        RenderSystem.enableDepthTest();
-                        renderTarget.bindWrite(false);
+                        // TODO renderTarget.clear();
+                        // TODO RenderSystem.enableDepthTest();
+                        // TODO renderTarget.bindWrite(false);
+// TODO
+                        // TODO final var matrix = new Matrix4f().setOrtho(0f, 16, 16, 0f, 1000f, 21000f);
+                        // TODO RenderSystem.setProjectionMatrix(matrix, ProjectionType.ORTHOGRAPHIC);
+                        // TODO final var modelViewStack = RenderSystem.getModelViewStack();
+                        // TODO modelViewStack.pushMatrix();
+                        // TODO modelViewStack.translation(0f, 0f, -11000f);
+                        // TODO Lighting.setupForFlatItems();
+// TODO
+                        // TODO guiGraphics.renderItem(itemStack, 0, 0);
+                        // TODO guiGraphics.flush();
+// TODO
+                        // TODO modelViewStack.popMatrix();
+                        // TODO renderTarget.unbindWrite();
+                        // TODO RenderSystem.disableDepthTest();
 
-                        final var matrix = new Matrix4f().setOrtho(0f, 16, 16, 0f, 1000f, 21000f);
-                        RenderSystem.setProjectionMatrix(matrix, ProjectionType.ORTHOGRAPHIC);
-                        final var modelViewStack = RenderSystem.getModelViewStack();
-                        modelViewStack.pushMatrix();
-                        modelViewStack.translation(0f, 0f, -11000f);
-                        Lighting.setupForFlatItems();
+                        final var width = renderTarget.width;
+                        final var height = renderTarget.height;
+                        final var colorTexture = renderTarget.getColorTexture();
+                        if (colorTexture == null) {
+                            throw new IllegalStateException("Tried to capture screenshot of an incomplete framebuffer");
+                        } else {
+                            final var buffer = RenderSystem.getDevice()
+                                    .createBuffer(() -> "Screenshot buffer",
+                                            BufferType.PIXEL_PACK,
+                                            BufferUsage.STATIC_READ,
+                                            width * height * colorTexture.getFormat().pixelSize());
+                            final var commandEncoder = RenderSystem.getDevice().createCommandEncoder();
+                            RenderSystem.getDevice().createCommandEncoder().copyTextureToBuffer(colorTexture, buffer, 0, () -> {
+                                try (final var readview = commandEncoder.readBuffer(buffer)) {
+                                    try (final var nativeImage = new NativeImage(width, height, false)) {
+                                        for (int y = 0; y < height; y++) {
+                                            for (int x = 0; x < width; x++) {
+                                                final var color = readview.data().getInt((x + y * width) * colorTexture.getFormat().pixelSize());
+                                                nativeImage.setPixelABGR(x, height - y - 1, color | -16777216);
+                                            }
+                                        }
 
-                        guiGraphics.renderItem(itemStack, 0, 0);
-                        guiGraphics.flush();
+                                        nativeImage.writeToFile(new File(exportFolder, itemId.getPath() + ".png"));
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
 
-                        modelViewStack.popMatrix();
-                        renderTarget.unbindWrite();
-                        RenderSystem.disableDepthTest();
-
-                        try (final var nativeImage = new NativeImage(renderTarget.width, renderTarget.height, false)) {
-                            RenderSystem.bindTexture(renderTarget.getColorTextureId());
-                            nativeImage.downloadTexture(0, false);
-                            nativeImage.flipY();
-                            nativeImage.writeToFile(new File(exportFolder, itemId.getPath() + ".png"));
+                                buffer.close();
+                            }, 0);
                         }
                     }
                 }

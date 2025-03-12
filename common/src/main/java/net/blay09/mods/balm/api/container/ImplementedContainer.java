@@ -4,7 +4,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
@@ -144,16 +143,18 @@ public interface ImplementedContainer extends Container {
     }
 
     static NonNullList<ItemStack> deserializeInventory(CompoundTag tag, int minimumSize, HolderLookup.Provider provider) {
-        int size = Math.max(minimumSize, tag.contains("Size", Tag.TAG_INT) ? tag.getInt("Size") : minimumSize);
+        int size = Math.max(minimumSize, tag.getInt("Size").orElse(minimumSize));
         NonNullList<ItemStack> items = NonNullList.withSize(size, ItemStack.EMPTY);
-        ListTag itemTags = tag.getList("Items", Tag.TAG_COMPOUND);
-        for (int i = 0; i < itemTags.size(); i++) {
-            CompoundTag itemTag = itemTags.getCompound(i);
-            int slot = itemTag.getInt("Slot");
-            if (slot >= 0 && slot < items.size()) {
-                items.set(slot, ItemStack.parse(provider, itemTag).orElse(ItemStack.EMPTY));
+        tag.getList("Items").ifPresent(itemTags -> {
+            for (int i = 0; i < itemTags.size(); i++) {
+                itemTags.getCompound(i).ifPresent(itemTag -> {
+                    int slot = itemTag.getInt("Slot").orElse(-1);
+                    if (slot >= 0 && slot < items.size()) {
+                        items.set(slot, ItemStack.parse(provider, itemTag).orElse(ItemStack.EMPTY));
+                    }
+                });
             }
-        }
+        });
         return items;
     }
 

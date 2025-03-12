@@ -11,11 +11,10 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class AbstractBalmConfig implements BalmConfig {
-
-    private static final Logger logger = LoggerFactory.getLogger(AbstractBalmConfig.class);
 
     private final Map<Class<?>, BalmConfigData> activeConfigs = new HashMap<>();
     private final Map<Class<?>, BalmConfigData> defaultConfigs = new HashMap<>();
@@ -129,10 +126,11 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     @NotNull
     protected <T> T createConfigDataInstance(Class<T> clazz) {
         try {
-            return clazz.newInstance();
-
-        } catch (InstantiationException | IllegalAccessException e) {
+            return clazz.getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
             throw new IllegalArgumentException("Config class or sub-class missing a public no-arg constructor.", e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException("Failed to create config data class", e);
         }
     }
 

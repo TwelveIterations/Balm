@@ -31,8 +31,8 @@ public abstract class LivingEntityMixin {
         }
     }
 
-    @Inject(method = "causeFallDamage(FFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At("HEAD"), cancellable = true)
-    private void causeFallDamage(float distance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> callbackInfo, @Share("eventRef") LocalRef<LivingFallEvent> eventRef) {
+    @Inject(method = "causeFallDamage(DFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At("HEAD"), cancellable = true)
+    private void causeFallDamage(double distance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> callbackInfo, @Share("eventRef") LocalRef<LivingFallEvent> eventRef) {
         LivingFallEvent event = new LivingFallEvent((LivingEntity) (Object) this);
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
@@ -41,8 +41,8 @@ public abstract class LivingEntityMixin {
         eventRef.set(event);
     }
 
-    @WrapOperation(method = "causeFallDamage(FFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;calculateFallDamage(FF)I"))
-    private int calculateFallDamage(LivingEntity self, float fallDistance, float multiplier, Operation<Integer> operation, @Share("eventRef") LocalRef<LivingFallEvent> eventRef) {
+    @WrapOperation(method = "causeFallDamage(DFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;calculateFallDamage(FF)I"))
+    private int calculateFallDamage(LivingEntity self, double fallDistance, float multiplier, Operation<Integer> operation, @Share("eventRef") LocalRef<LivingFallEvent> eventRef) {
         LivingFallEvent event = eventRef.get();
         if (event != null && event.getFallDamageOverride() != null) {
             return event.getFallDamageOverride().intValue();

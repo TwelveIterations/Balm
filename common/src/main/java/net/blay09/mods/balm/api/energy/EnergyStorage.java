@@ -81,7 +81,7 @@ public class EnergyStorage {
     }
 
     public void deserialize(Tag tag) {
-        energy = ((IntTag) tag).getAsInt();
+        energy = ((IntTag) tag).intValue();
     }
 
     public void setChanged() {

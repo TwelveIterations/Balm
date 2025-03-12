@@ -19,18 +19,22 @@ public class EntityMixin implements BalmEntity {
     @Inject(method = "load(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("HEAD"))
     private void load(CompoundTag compound, CallbackInfo callbackInfo) {
         if (compound.contains("BalmData")) {
-            balmData = compound.getCompound("BalmData");
-            if (balmData.size() == 0) {
-                CompoundTag forgeData = compound.getCompound("ForgeData");
-                CompoundTag playerPersisted = forgeData.getCompound("PlayerPersisted");
-                balmData = playerPersisted.getCompound("BalmData");
-            }
+            balmData = compound.getCompound("BalmData").orElseGet(() -> compound.getCompound("ForgeData")
+                    .flatMap(it -> it.getCompound("PlayerPersisted"))
+                    .flatMap(it -> it.getCompound("BalmData"))
+                    .orElse(new CompoundTag()));
         }
         if (compound.contains("ForgeData")) {
-            forgeBalmData = compound.getCompound("ForgeData").getCompound("PlayerPersisted").getCompound("BalmData");
+            forgeBalmData = compound.getCompound("ForgeData")
+                    .flatMap(it -> it.getCompound("PlayerPersisted"))
+                    .flatMap(it -> it.getCompound("BalmData"))
+                    .orElse(new CompoundTag());
         }
         if (compound.contains("NeoForgeData")) {
-            neoforgeBalmData = compound.getCompound("NeoForgeData").getCompound("PlayerPersisted").getCompound("BalmData");
+            neoforgeBalmData = compound.getCompound("NeoForgeData")
+                    .flatMap(it -> it.getCompound("PlayerPersisted"))
+                    .flatMap(it -> it.getCompound("BalmData"))
+                    .orElse(new CompoundTag());
         }
     }
 
