@@ -143,12 +143,12 @@ public interface ImplementedContainer extends Container {
     }
 
     static NonNullList<ItemStack> deserializeInventory(CompoundTag tag, int minimumSize, HolderLookup.Provider provider) {
-        int size = Math.max(minimumSize, tag.getInt("Size").orElse(minimumSize));
+        int size = Math.max(minimumSize, tag.getIntOr("Size", minimumSize));
         NonNullList<ItemStack> items = NonNullList.withSize(size, ItemStack.EMPTY);
         tag.getList("Items").ifPresent(itemTags -> {
             for (int i = 0; i < itemTags.size(); i++) {
                 itemTags.getCompound(i).ifPresent(itemTag -> {
-                    int slot = itemTag.getInt("Slot").orElse(-1);
+                    int slot = itemTag.getIntOr("Slot", -1);
                     if (slot >= 0 && slot < items.size()) {
                         items.set(slot, ItemStack.parse(provider, itemTag).orElse(ItemStack.EMPTY));
                     }

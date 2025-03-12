@@ -106,7 +106,7 @@ public class FluidTank {
 
     public void deserialize(CompoundTag tag) {
         fluid = tag.getString("Fluid").map(ResourceLocation::tryParse).map(BuiltInRegistries.FLUID::getValue).orElse(Fluids.EMPTY);
-        amount = tag.getInt("Amount").orElse(0);
+        amount = tag.getIntOr("Amount", 0);
     }
 
     public void setChanged() {
