@@ -41,7 +41,7 @@ public abstract class LivingEntityMixin {
         eventRef.set(event);
     }
 
-    @WrapOperation(method = "causeFallDamage(DFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;calculateFallDamage(FF)I"))
+    @WrapOperation(method = "causeFallDamage(DFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;calculateFallDamage(DF)I"))
     private int calculateFallDamage(LivingEntity self, double fallDistance, float multiplier, Operation<Integer> operation, @Share("eventRef") LocalRef<LivingFallEvent> eventRef) {
         LivingFallEvent event = eventRef.get();
         if (event != null && event.getFallDamageOverride() != null) {
