@@ -35,19 +35,6 @@ public class PlayerMixin implements BalmPlayer {
         }
     }
 
-    @Inject(method = "getDestroySpeed(Lnet/minecraft/world/level/block/state/BlockState;)F", at = @At("RETURN"), cancellable = true)
-    private void getDestroySpeed(BlockState state, CallbackInfoReturnable<Float> callbackInfo) {
-        Player player = (Player) (Object) this;
-        float digSpeed = callbackInfo.getReturnValueF();
-        DigSpeedEvent event = new DigSpeedEvent(player, state, digSpeed);
-        Balm.getEvents().fireEvent(event);
-        if (event.isCanceled()) {
-            callbackInfo.setReturnValue(-1f);
-        } else if (event.getSpeedOverride() != null) {
-            callbackInfo.setReturnValue(event.getSpeedOverride());
-        }
-    }
-
     @Inject(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
     private void attack(Entity entity, CallbackInfo callbackInfo) {
         Player player = (Player) (Object) this;

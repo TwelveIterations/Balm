@@ -4,23 +4,10 @@
   "package": "net.blay09.mods.balm.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "CropBlockMixin",
-    "StemBlockMixin",
-    "ReloadableServerResourcesMixin",
-    "SlotAccessor",
-    "MinecraftServerMixin",
     "EntityMixin",
-    "PlayerListMixin",
-    "LootTableMixin"
+    "PlayerListMixin"
   ],
   "client": [
-    "AbstractContainerScreenAccessor",
-    "CheckboxAccessor",
-    "ImageButtonAccessor",
-    "KeyMappingAccessor",
-    "KeyMappingMixin",
-    "MouseHandlerAccessor",
-    "ScreenAccessor",
     "OptionsScreenMixin"
   ],
   "injectors": {
