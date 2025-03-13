@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.api.client.rendering;
 
 import net.blay09.mods.balm.api.DeferredObject;
-import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.resources.ResourceLocation;
 
 public interface BalmModels {
-    DeferredObject<ItemModel> loadModel(ResourceLocation identifier);
+    DeferredObject<BlockStateModel> loadModel(ResourceLocation identifier);
 }

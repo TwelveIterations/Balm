@@ -4,7 +4,7 @@ import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
@@ -15,22 +15,20 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
 
     @Override
     public void initialize(Context context) {
-        // TODO context.addModels(additionalModels); is this even needed if we use item models?
+        // TODO context.addModels(additionalModels); not yet implemented in Fabric
     }
 
     @Override
-    public DeferredObject<ItemModel> loadModel(final ResourceLocation identifier) {
-        final var deferredObject = new DeferredObject<ItemModel>(identifier) {
+    public DeferredObject<BlockStateModel> loadModel(final ResourceLocation identifier) {
+        final var deferredObject = new DeferredObject<BlockStateModel>(identifier) {
             @Override
-            public ItemModel resolve() {
-                return Minecraft.getInstance().getModelManager().getItemModel(identifier);
+            public BlockStateModel resolve() {
+                return Minecraft.getInstance().getModelManager().getMissingBlockStateModel();
             }
 
             @Override
             public boolean canResolve() {
-                final var modelManager = Minecraft.getInstance().getModelManager();
-                final var foundModel = modelManager.getItemModel(identifier);
-                return foundModel != modelManager.getMissingBlockStateModel();
+                return true; // TODO We just resolve to missing model for now
             }
         };
         additionalModels.add(identifier);
