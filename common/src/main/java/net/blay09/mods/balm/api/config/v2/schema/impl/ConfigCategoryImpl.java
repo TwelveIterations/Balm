@@ -1,0 +1,39 @@
+package net.blay09.mods.balm.api.config.v2.schema.impl;
+
+import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategory;
+import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategoryBuilder;
+import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigPropertyBuilder;
+
+import java.util.function.Function;
+
+public class ConfigCategoryImpl implements ConfigCategoryBuilder, ConfigCategory {
+    private final ConfigSchemaImpl schema;
+    private final String name;
+    private String comment;
+
+    public ConfigCategoryImpl(ConfigSchemaImpl schema, String name) {
+        this.schema = schema;
+        this.name = name;
+    }
+
+    @Override
+    public ConfigCategoryImpl comment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    @Override
+    public String comment() {
+        return comment;
+    }
+
+    @Override
+    public ConfigPropertyBuilder property(String name) {
+        return new ConfigPropertyBuilder(schema, this.name, name);
+    }
+
+    @Override
+    public <T> T via(Function<ConfigCategoryBuilder, T> initializer) {
+        return initializer.apply(this);
+    }
+}

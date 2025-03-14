@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.config;
 
 import com.google.common.collect.Table;
+import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
 import net.blay09.mods.balm.api.network.SyncConfigMessage;
 import net.minecraft.world.entity.player.Player;
 
@@ -15,6 +16,8 @@ public interface BalmConfig {
     <T extends BalmConfigData> T getBackingConfig(Class<T> clazz);
 
     <T extends BalmConfigData> void saveBackingConfig(Class<T> clazz);
+
+    <T extends BalmConfigData> T getActive(ConfigSchemaImpl schema);
 
     <T extends BalmConfigData> T getActive(Class<T> clazz);
 
