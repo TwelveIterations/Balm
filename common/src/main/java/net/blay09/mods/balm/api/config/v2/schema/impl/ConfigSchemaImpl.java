@@ -2,6 +2,8 @@ package net.blay09.mods.balm.api.config.v2.schema.impl;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import net.blay09.mods.balm.api.config.v2.DefaultedConfig;
+import net.blay09.mods.balm.api.config.v2.LoadedConfig;
 import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.v2.schema.ConfigSchemaBuilder;
 import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
@@ -37,6 +39,11 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
         final var category = new ConfigCategoryImpl(this, name);
         categories.put(name, category);
         return category;
+    }
+
+    @Override
+    public LoadedConfig defaults() {
+        return DefaultedConfig.INSTANCE;
     }
 
     public <T extends ConfiguredProperty<?>> T addAndReturn(T property) {

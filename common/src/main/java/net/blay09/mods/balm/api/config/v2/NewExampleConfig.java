@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.api.config.v2;
 
+import net.blay09.mods.balm.api.config.v2.schema.builder.BalmConfigCategoryInitializer;
 import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
 import net.blay09.mods.balm.api.config.v2.schema.*;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategoryBuilder;
@@ -10,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.Set;
 
-public class NewExample {
+public class NewExampleConfig {
     public static final String EXAMPLE_STATIC = "test";
 
     public enum ExampleEnum {
@@ -81,13 +82,21 @@ public class NewExample {
         }
     }
 
-    public NewExample() {
-        final var inferredSchema = ConfigReflecton.schemaOf(ExampleConfigData.class);
-        final var filled = ConfigReflection.applyFrom(new ExampleConfigData(), inferredSchema);
-        final var loaded = schema.loadFrom(notoml.toTable());
-        final var synced = schema.loadFrom(message.toTable());
-        final var defaults = schema.defaults();
-        final var instance = ConfigReflection.applyTo(defaults, new ExampleConfigData());
-        final var table = loaded.toTable();
+    public NewExampleConfig() {
+        // Balm.getConfig().registerConfig(id("common"), ConfigReflection.schemaOf(ExampleConfigData.class))
+        // Balm.getConfig().registerConfig(ExampleConfigData.class);
+        // Balm.getConfig().getLocalConfig(id("common"))
+        // Balm.getConfig().getLocalConfig(ExampleConfigData.class)
+        // Balm.getConfig().getActiveConfig(id("common"))
+        // Balm.getConfig().getActiveConfig(ExampleConfigData.class)
+        // Balm.getConfig().getConfigDir()
+        // Balm.getConfig().getConfigDir()
+
+        // final var filled = ConfigReflection.applyFrom(new ExampleConfigData(), inferredSchema);
+        // final var loaded = schema.loadFrom(notoml.toTable());
+        // final var synced = schema.loadFrom(message.toTable());
+        // final var defaults = schema.defaults();
+        // final var instance = ConfigReflection.applyTo(defaults, new ExampleConfigData());
+        // final var table = loaded.toTable();
     }
 }

@@ -1,20 +1,21 @@
 package net.blay09.mods.balm.api.config.v2.schema;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.v2.TableBalmConfig;
+import net.blay09.mods.balm.api.config.v2.LoadedConfig;
+import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
 
 import java.util.List;
 
 public interface ConfiguredList<T> extends ConfiguredProperty<List<T>> {
-    default List<T> get(TableBalmConfig config) {
+    default List<T> get(LoadedConfig config) {
         return getRaw(config);
     }
 
     default List<T> get() {
-        return get(Balm.getConfig().getActive(parentSchema()));
+        return get(Balm.getConfig().getActiveConfig(parentSchema()));
     }
 
-    default void set(TableBalmConfig config, List<T> value) {
+    default void set(MutableLoadedConfig config, List<T> value) {
         setRaw(config, value);
     }
 }

@@ -3,7 +3,6 @@ package net.blay09.mods.balm.fabric.compat;
 import com.mrcrayfish.configured.api.*;
 import com.mrcrayfish.configured.api.util.ConfigScreenHelper;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.BalmConfigData;
 import net.blay09.mods.balm.api.config.BalmConfigProperty;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -19,7 +18,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         return configs.stream().map(it -> mapConfig(modContext.modId(), it)).collect(Collectors.toSet());
     }
 
-    private static IModConfig mapConfig(String modId, BalmConfigData configData) {
+    private static IModConfig mapConfig(String modId, BalmConfigHolder configData) {
         return new IModConfig() {
             @Override
             public ActionResult update(IConfigEntry entry) {
@@ -49,7 +48,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         };
     }
 
-    private static IConfigEntry mapConfigRoot(String modId, BalmConfigData configData) {
+    private static IConfigEntry mapConfigRoot(String modId, BalmConfigHolder configData) {
         final var properties = Balm.getConfig().getConfigProperties(configData.getClass());
         final var children = new ArrayList<IConfigEntry>();
         for (final var category : properties.rowKeySet()) {

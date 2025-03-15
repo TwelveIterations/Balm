@@ -4,25 +4,25 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.BalmConfigData;
 import net.blay09.mods.balm.api.config.BalmConfigProperty;
+import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.*;
 
 public class ClothConfigUtils {
-    public static <T extends BalmConfigData> ConfigScreenFactory<?> getConfigScreen(Class<T> clazz) {
+    public static ConfigScreenFactory<?> getConfigScreen(BalmConfigSchema schema) {
         return (ConfigScreenFactory<Screen>) screen -> {
-            var configName = Balm.getConfig().getConfigName(clazz);
+            final var i18nBase = "config." + schema.identifier().getNamespace() + "." + schema.identifier().getPath();
             ConfigBuilder builder = ConfigBuilder.create()
                     .setParentScreen(screen)
-                    .setTitle(Component.translatable("config." + configName + ".title"));
-            builder.setSavingRunnable(() -> Balm.getConfig().saveBackingConfig(clazz));
+                    .setTitle(Component.translatable(i18nBase + ".title"));
+            builder.setSavingRunnable(() -> Balm.getConfig().saveLocalConfig(schema));
 
-            var properties = Balm.getConfig().getConfigProperties(clazz);
+            var properties = Balm.getConfig().getLocalConfig(schema);
             for (String category : properties.rowKeySet()) {
-                var categoryI18nBase = category.isEmpty() ? "config." + configName : "config." + configName + "." + category;
+                var categoryI18nBase = category.isEmpty() ? i18nBase : i18nBase + "." + category;
                 var categoryDisplayName = Component.translatable(categoryI18nBase);
                 ConfigCategory categoryInstance = builder.getOrCreateCategory(categoryDisplayName);
                 for (Map.Entry<String, BalmConfigProperty<?>> entry : properties.row(category).entrySet()) {

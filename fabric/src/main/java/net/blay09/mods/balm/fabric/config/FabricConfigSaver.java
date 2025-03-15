@@ -3,8 +3,7 @@ package net.blay09.mods.balm.fabric.config;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.config.BalmConfigData;
-import net.blay09.mods.balm.api.config.Comment;
+import net.blay09.mods.balm.api.config.v2.reflection.Comment;
 import net.blay09.mods.balm.api.network.ConfigReflection;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlSerializer;
@@ -22,7 +21,7 @@ public class FabricConfigSaver {
 
     private static final Logger logger = LogUtils.getLogger();
 
-    public static Notoml toNotoml(BalmConfigData configData) {
+    public static Notoml toNotoml(BalmConfigHolder configData) {
         Table<String, String, Object> properties = HashBasedTable.create();
         Table<String, String, String> comments = HashBasedTable.create();
         for (Field rootField : ConfigReflection.getAllFields(configData.getClass())) {
@@ -68,7 +67,7 @@ public class FabricConfigSaver {
         return new Notoml(properties, comments);
     }
 
-    public static void save(File configFile, BalmConfigData configData) throws IOException {
+    public static void save(File configFile, BalmConfigHolder configData) throws IOException {
         var notoml = toNotoml(configData);
         try (FileWriter writer = new FileWriter(configFile)) {
             NotomlSerializer.serialize(writer, notoml);

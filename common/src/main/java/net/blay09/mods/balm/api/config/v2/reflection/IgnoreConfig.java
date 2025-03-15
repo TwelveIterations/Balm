@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.api.config;
+package net.blay09.mods.balm.api.config.v2.reflection;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

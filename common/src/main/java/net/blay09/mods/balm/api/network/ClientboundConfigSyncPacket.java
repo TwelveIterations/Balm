@@ -1,9 +1,8 @@
 package net.blay09.mods.balm.api.network;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.BalmConfigData;
-import net.blay09.mods.balm.api.config.ExpectedType;
-import net.blay09.mods.balm.api.config.Synced;
+import net.blay09.mods.balm.api.config.v2.reflection.NestedType;
+import net.blay09.mods.balm.api.config.v2.reflection.Synced;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,18 +15,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class SyncConfigMessage<TData> implements CustomPacketPayload {
+public class ClientboundConfigSyncPacket implements CustomPacketPayload {
 
     private final Type<? extends CustomPacketPayload> type;
-    private final TData data;
 
-    public SyncConfigMessage(Type<? extends CustomPacketPayload> type, TData data) {
+    public ClientboundConfigSyncPacket(Type<? extends CustomPacketPayload> type) {
         this.type = type;
-        this.data = data;
-    }
-
-    public TData getData() {
-        return data;
     }
 
     public static <TData> Supplier<TData> createDeepCopyFactory(Supplier<TData> from, Supplier<TData> factory) {
@@ -38,7 +31,7 @@ public class SyncConfigMessage<TData> implements CustomPacketPayload {
         };
     }
 
-    public static <TData, TMessage extends SyncConfigMessage<TData>> Function<FriendlyByteBuf, TMessage> createDecoder(Class<?> clazz, Function<TData, TMessage> messageFactory, Supplier<TData> dataFactory) {
+    public static <TData, TMessage extends ClientboundConfigSyncPacket> Function<FriendlyByteBuf, TMessage> createDecoder(Class<?> clazz, Function<TData, TMessage> messageFactory, Supplier<TData> dataFactory) {
         return buf -> {
             TData data = dataFactory.get();
             readSyncedFields(buf, data, false);
@@ -83,14 +76,14 @@ public class SyncConfigMessage<TData> implements CustomPacketPayload {
             final var count = buf.readVarInt();
             final var list = new ArrayList<>();
             for (int i = 0; i < count; i++) {
-                list.add(readValue(buf, data, field, field.getAnnotation(ExpectedType.class).value()));
+                list.add(readValue(buf, data, field, field.getAnnotation(NestedType.class).value()));
             }
             value = list;
         } else if (Set.class.isAssignableFrom(type)) {
             final var count = buf.readVarInt();
             final var set = new HashSet<>();
             for (int i = 0; i < count; i++) {
-                set.add(readValue(buf, data, field, field.getAnnotation(ExpectedType.class).value()));
+                set.add(readValue(buf, data, field, field.getAnnotation(NestedType.class).value()));
             }
             value = set;
         } else {
@@ -100,7 +93,7 @@ public class SyncConfigMessage<TData> implements CustomPacketPayload {
         return value;
     }
 
-    public static <TData, TMessage extends SyncConfigMessage<TData>> BiConsumer<FriendlyByteBuf, TMessage> createEncoder(Class<TData> clazz) {
+    public static <TData, TMessage extends ClientboundConfigSyncPacket> BiConsumer<FriendlyByteBuf, TMessage> createEncoder(Class<TData> clazz) {
         return (buf, message) -> {
             TData data = message.getData();
             writeSyncedFields(buf, data, false);
@@ -143,25 +136,25 @@ public class SyncConfigMessage<TData> implements CustomPacketPayload {
             final var list = (List<?>) value;
             buf.writeVarInt(list.size());
             for (Object element : list) {
-                writeValue(buf, data, field, field.getAnnotation(ExpectedType.class).value(), element);
+                writeValue(buf, data, field, field.getAnnotation(NestedType.class).value(), element);
             }
         } else if (Set.class.isAssignableFrom(type)) {
             final var set = (Set<?>) value;
             buf.writeVarInt(set.size());
             for (Object element : set) {
-                writeValue(buf, data, field, field.getAnnotation(ExpectedType.class).value(), element);
+                writeValue(buf, data, field, field.getAnnotation(NestedType.class).value(), element);
             }
         } else {
             writeSyncedFields(buf, field.get(data), field.getAnnotation(Synced.class) != null);
         }
     }
 
-    public static <TMessage extends SyncConfigMessage<TData>, TData extends BalmConfigData> void register(CustomPacketPayload.Type<TMessage> type,
-                                                                                                          Class<TMessage> messageClass,
-                                                                                                          Function<TData, TMessage> messageFactory,
-                                                                                                          Class<TData> dataClass,
-                                                                                                          Supplier<TData> dataFactory) {
-        Supplier<TData> copyFactory = SyncConfigMessage.createDeepCopyFactory(() -> Balm.getConfig().getBackingConfig(dataClass), dataFactory);
+    public static <TMessage extends ClientboundConfigSyncPacket, TData> void register(CustomPacketPayload.Type<TMessage> type,
+                                                                                             Class<TMessage> messageClass,
+                                                                                             Function<TData, TMessage> messageFactory,
+                                                                                             Class<TData> dataClass,
+                                                                                             Supplier<TData> dataFactory) {
+        Supplier<TData> copyFactory = ClientboundConfigSyncPacket.createDeepCopyFactory(() -> Balm.getConfig().getBackingConfig(dataClass), dataFactory);
         Balm.getNetworking().registerClientboundPacket(type, messageClass, StreamCodec.of((RegistryFriendlyByteBuf buf, TMessage message) -> {
             TData data = message.getData();
             writeSyncedFields(buf, data, false);

@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.config.v2.schema;
 
-import net.blay09.mods.balm.api.config.v2.LoadedBalmConfig;
+import net.blay09.mods.balm.api.config.v2.LoadedConfig;
+import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
 
 public interface ConfiguredProperty<T> {
@@ -10,10 +11,10 @@ public interface ConfiguredProperty<T> {
     String comment();
     Class<?> type();
     T defaultValue();
-    default T getRaw(LoadedBalmConfig config) {
+    default T getRaw(LoadedConfig config) {
         return config.getRaw(this);
     }
-    default void setRaw(LoadedBalmConfig config, T value) {
+    default void setRaw(MutableLoadedConfig config, T value) {
         config.setRaw(this, value);
     }
 }

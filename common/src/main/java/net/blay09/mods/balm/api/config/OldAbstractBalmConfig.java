@@ -1,90 +1,38 @@
 package net.blay09.mods.balm.api.config;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
-import net.blay09.mods.balm.api.event.PlayerLoginEvent;
-import net.blay09.mods.balm.api.network.ConfigReflection;
-import net.blay09.mods.balm.api.network.SyncConfigMessage;
-import net.minecraft.ResourceLocationException;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
+@Deprecated
+public abstract class OldAbstractBalmConfig {
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-public abstract class AbstractBalmConfig implements BalmConfig {
-
-    private final Map<Class<?>, BalmConfigData> activeConfigs = new HashMap<>();
-    private final Map<Class<?>, BalmConfigData> defaultConfigs = new HashMap<>();
+    /*private final Map<Class<?>, BalmConfigHolder> activeConfigs = new HashMap<>();
+    private final Map<Class<?>, BalmConfigHolder> defaultConfigs = new HashMap<>();
     private final Map<Class<?>, Function<?, ?>> syncMessageFactories = new HashMap<>();
-
-    public void initialize() {
-        Balm.getEvents().onEvent(PlayerLoginEvent.class, event -> {
-            for (BalmConfigData config : activeConfigs.values()) {
-                SyncConfigMessage<? extends BalmConfigData> message = getConfigSyncMessage(config.getClass());
-                if (message != null) {
-                    Balm.getNetworking().sendTo(event.getPlayer(), message);
-                }
-            }
-        });
-
-        Balm.getEvents().onEvent(ConfigReloadedEvent.class, event -> {
-            MinecraftServer server = Balm.getHooks().getServer();
-            if (server != null) {
-                for (BalmConfigData config : activeConfigs.values()) {
-                    SyncConfigMessage<? extends BalmConfigData> message = getConfigSyncMessage(config.getClass());
-                    if (message != null) {
-                        Balm.getNetworking().sendToAll(server, message);
-                    }
-                }
-            }
-        });
-    }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends BalmConfigData> T getActive(Class<T> clazz) {
+    public <T extends BalmConfigHolder> T getActive(Class<T> clazz) {
         return (T) activeConfigs.get(clazz);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends BalmConfigData> SyncConfigMessage<T> getConfigSyncMessage(Class<T> clazz) {
-        Function<BalmConfigData, SyncConfigMessage<BalmConfigData>> factory = getConfigSyncMessageFactory(clazz);
+    public <T extends BalmConfigHolder> SyncConfigMessage<T> getConfigSyncMessage(Class<T> clazz) {
+        Function<BalmConfigHolder, SyncConfigMessage<BalmConfigHolder>> factory = getConfigSyncMessageFactory(clazz);
         return factory != null ? (SyncConfigMessage<T>) factory.apply(getBackingConfig(clazz)) : null;
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends BalmConfigData> Function<BalmConfigData, SyncConfigMessage<BalmConfigData>> getConfigSyncMessageFactory(Class<T> clazz) {
-        return (Function<BalmConfigData, SyncConfigMessage<BalmConfigData>>) syncMessageFactories.get(clazz);
-    }
-
-    public <T extends BalmConfigData> void setActiveConfig(Class<T> clazz, T config) {
-        if (config == null) {
-            throw new IllegalArgumentException("config must not be null");
-        }
-
-        activeConfigs.put(clazz, config);
+    public <T extends BalmConfigHolder> Function<BalmConfigHolder, SyncConfigMessage<BalmConfigHolder>> getConfigSyncMessageFactory(Class<T> clazz) {
+        return (Function<BalmConfigHolder, SyncConfigMessage<BalmConfigHolder>>) syncMessageFactories.get(clazz);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends BalmConfigData> void handleSync(Player player, SyncConfigMessage<T> message) {
+    public <T extends BalmConfigHolder> void handleSync(Player player, SyncConfigMessage<T> message) {
         T data = message.getData();
         setActiveConfig((Class<T>) data.getClass(), data);
     }
 
     @Override
-    public <T extends BalmConfigData> void registerConfig(Class<T> clazz, Function<T, SyncConfigMessage<T>> syncMessageFactory) {
+    public <T extends BalmConfigHolder> void registerConfig(Class<T> clazz, Function<T, SyncConfigMessage<T>> syncMessageFactory) {
         Balm.getConfig().initializeBackingConfig(clazz);
         defaultConfigs.put(clazz, createConfigDataInstance(clazz));
         if (syncMessageFactory != null) {
@@ -97,7 +45,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     @Override
-    public <T extends BalmConfigData> void updateConfig(Class<T> clazz, Consumer<T> consumer) {
+    public <T extends BalmConfigHolder> void updateConfig(Class<T> clazz, Consumer<T> consumer) {
         T backingConfig = getBackingConfig(clazz);
         consumer.accept(backingConfig);
         Balm.getConfig().saveBackingConfig(clazz);
@@ -111,7 +59,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     @Override
-    public <T extends BalmConfigData> void resetToBackingConfig(Class<T> clazz) {
+    public <T extends BalmConfigHolder> void resetToBackingConfig(Class<T> clazz) {
         setActiveConfig(clazz, getBackingConfig(clazz));
     }
 
@@ -119,7 +67,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     @SuppressWarnings("unchecked")
     public void resetToBackingConfigs() {
         for (Class<?> clazz : activeConfigs.keySet()) {
-            resetToBackingConfig((Class<? extends BalmConfigData>) clazz);
+            resetToBackingConfig((Class<? extends BalmConfigHolder>) clazz);
         }
     }
 
@@ -140,16 +88,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     @Override
-    public <T extends BalmConfigData> String getConfigName(Class<T> clazz) {
-        Config configAnnotation = clazz.getAnnotation(Config.class);
-        if (configAnnotation == null) {
-            throw new IllegalArgumentException("Config class " + clazz.getName() + " is missing @Config annotation");
-        }
-        return configAnnotation.value();
-    }
-
-    @Override
-    public <T extends BalmConfigData> Table<String, String, BalmConfigProperty<?>> getConfigProperties(Class<T> clazz) {
+    public <T extends BalmConfigHolder> Table<String, String, BalmConfigProperty<?>> getConfigProperties(Class<T> clazz) {
         var backingConfig = Balm.getConfig().getBackingConfig(clazz);
         var defaultConfig = defaultConfigs.get(clazz);
         Table<String, String, BalmConfigProperty<?>> properties = HashBasedTable.create();
@@ -170,7 +109,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
         return properties;
     }
 
-    private static BalmConfigProperty<?> createConfigProperty(BalmConfigData configData, Field categoryField, Field propertyField, BalmConfigData defaultConfig) {
+    private static BalmConfigProperty<?> createConfigProperty(BalmConfigHolder configData, Field categoryField, Field propertyField, BalmConfigHolder defaultConfig) {
         return new BalmConfigPropertyImpl<String>(configData, categoryField, propertyField, defaultConfig);
     }
 
@@ -183,7 +122,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
                 || type == Double.class
                 || type == List.class
                 || type == Set.class
-                || type == ResourceLocationException.class
+                || type == ResourceLocation.class
                 || Enum.class.isAssignableFrom(type);
-    }
+    }*/
 }

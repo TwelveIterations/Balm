@@ -1,18 +1,19 @@
 package net.blay09.mods.balm.api.config.v2.schema;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.v2.TableBalmConfig;
+import net.blay09.mods.balm.api.config.v2.LoadedConfig;
+import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
 
 public interface ConfiguredBoolean extends ConfiguredProperty<Boolean> {
-    default boolean get(TableBalmConfig config) {
+    default boolean get(LoadedConfig config) {
         return getRaw(config);
     }
 
     default boolean get() {
-        return get(Balm.getConfig().getActive(parentSchema()));
+        return get(Balm.getConfig().getActiveConfig(parentSchema()));
     }
 
-    default void set(TableBalmConfig config, boolean value) {
+    default void set(MutableLoadedConfig config, boolean value) {
         setRaw(config, value);
     }
 }

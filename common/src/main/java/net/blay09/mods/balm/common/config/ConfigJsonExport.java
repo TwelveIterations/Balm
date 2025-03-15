@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.common.config;
 
 import com.google.gson.Gson;
-import net.blay09.mods.balm.api.config.Comment;
-import net.blay09.mods.balm.api.config.ExpectedType;
+import net.blay09.mods.balm.api.config.v2.reflection.Comment;
+import net.blay09.mods.balm.api.config.v2.reflection.NestedType;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,7 +65,7 @@ public class ConfigJsonExport {
             }
             return validValues;
         } else if (Collection.class.isAssignableFrom(field.getType())) {
-            final var expectedType = field.getAnnotation(ExpectedType.class);
+            final var expectedType = field.getAnnotation(NestedType.class);
             if (expectedType != null) {
                 final var type = expectedType.value();
                 if (type.isEnum()) {

@@ -1,8 +1,7 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.config.BalmConfigData;
-import net.blay09.mods.balm.api.config.ExpectedType;
+import net.blay09.mods.balm.api.config.v2.reflection.NestedType;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlError;
 import net.blay09.mods.balm.notoml.NotomlParser;
@@ -18,7 +17,7 @@ public class FabricConfigLoader {
 
     private static final Logger logger = LogUtils.getLogger();
 
-    public static void load(File configFile, BalmConfigData configData) throws IOException {
+    public static void load(File configFile, BalmConfigHolder configData) throws IOException {
         Notoml notoml = new Notoml();
         if (configFile.exists()) {
             try {
@@ -51,7 +50,7 @@ public class FabricConfigLoader {
                 var value = propertyEntry.getValue();
                 try {
                     var propertyField = categoryInstance.getClass().getField(property);
-                    var expectedTypeAnnotation = propertyField.getAnnotation(ExpectedType.class);
+                    var expectedTypeAnnotation = propertyField.getAnnotation(NestedType.class);
                     Class<?> innerType = expectedTypeAnnotation != null ? expectedTypeAnnotation.value() : null;
                     try {
                         Object convertedValue = convertValue(value, propertyField.getType(), innerType);

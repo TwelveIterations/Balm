@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.api.config.v2.schema;
 
+import net.blay09.mods.balm.api.config.v2.LoadedConfig;
 import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
 import net.minecraft.resources.ResourceLocation;
 
@@ -9,4 +10,6 @@ public interface BalmConfigSchema {
     }
 
     ResourceLocation identifier();
+
+    LoadedConfig defaults();
 }

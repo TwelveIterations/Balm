@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.config;
 
-import net.blay09.mods.balm.api.config.*;
+import net.blay09.mods.balm.api.config.v2.reflection.*;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 @Config("balm")
-public class ExampleConfigData implements BalmConfigData {
+public class ExampleConfigData implements BalmConfigHolder {
 
     public static final String EXAMPLE_STATIC = "test";
 
@@ -28,17 +28,17 @@ public class ExampleConfigData implements BalmConfigData {
     @Comment("This is an example enum property")
     public ExampleEnum exampleEnum = ExampleEnum.Hello;
     @Synced
-    @ExpectedType(String.class)
+    @NestedType(String.class)
     @Comment("This is an example string list property")
     public List<String> exampleStringList = Arrays.asList("Hello", "World");
     @Synced
-    @ExpectedType(ResourceLocation.class)
+    @NestedType(ResourceLocation.class)
     @Comment("This is an example resource location set property")
     public Set<ResourceLocation> exampleResourceLocationSet = Set.of(ResourceLocation.withDefaultNamespace("dirt"), ResourceLocation.withDefaultNamespace("diamond"));
-    @ExpectedType(Integer.class)
+    @NestedType(Integer.class)
     @Comment("This is an example int list property")
     public List<Integer> exampleIntList = Arrays.asList(12, 24);
-    @ExpectedType(ExampleEnum.class)
+    @NestedType(ExampleEnum.class)
     @Comment("This is an example enum list property")
     public List<ExampleEnum> exampleEnumList = Arrays.asList(ExampleEnum.Hello, ExampleEnum.World);
 
