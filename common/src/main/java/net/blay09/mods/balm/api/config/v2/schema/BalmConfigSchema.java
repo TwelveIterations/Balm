@@ -1,8 +1,12 @@
 package net.blay09.mods.balm.api.config.v2.schema;
 
 import net.blay09.mods.balm.api.config.v2.LoadedConfig;
+import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface BalmConfigSchema {
     static ConfigSchemaImpl create(ResourceLocation identifier) {
@@ -12,4 +16,8 @@ public interface BalmConfigSchema {
     ResourceLocation identifier();
 
     LoadedConfig defaults();
+
+    Collection<ConfiguredProperty<?>> rootProperties();
+
+    Collection<ConfigCategory> categories();
 }

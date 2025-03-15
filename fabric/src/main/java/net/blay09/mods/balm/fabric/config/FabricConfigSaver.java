@@ -3,7 +3,9 @@ package net.blay09.mods.balm.fabric.config;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.logging.LogUtils;
+import net.blay09.mods.balm.api.config.v2.LoadedConfig;
 import net.blay09.mods.balm.api.config.v2.reflection.Comment;
+import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.network.ConfigReflection;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlSerializer;
@@ -21,10 +23,10 @@ public class FabricConfigSaver {
 
     private static final Logger logger = LogUtils.getLogger();
 
-    public static Notoml toNotoml(BalmConfigHolder configData) {
+    public static Notoml toNotoml(BalmConfigSchema schema, LoadedConfig config) {
         Table<String, String, Object> properties = HashBasedTable.create();
         Table<String, String, String> comments = HashBasedTable.create();
-        for (Field rootField : ConfigReflection.getAllFields(configData.getClass())) {
+        for (Field rootField : ConfigReflection.getAllFields(config.getClass())) {
             var isCategory = !isPropertyType(rootField.getType());
             var category = isCategory ? rootField.getName() : "";
             if (isCategory) {
@@ -33,7 +35,7 @@ public class FabricConfigSaver {
                     comments.put(category, "", categoryComment.value());
                 }
                 try {
-                    var categoryInstance = rootField.get(configData);
+                    var categoryInstance = rootField.get(config);
                     for (Field propertyField : ConfigReflection.getAllFields(categoryInstance.getClass())) {
                         var property = propertyField.getName();
                         var propertyComment = propertyField.getAnnotation(Comment.class);
@@ -57,7 +59,7 @@ public class FabricConfigSaver {
                     if (propertyComment != null) {
                         comments.put(category, property, propertyComment.value());
                     }
-                    var value = rootField.get(configData);
+                    var value = rootField.get(config);
                     properties.put(category, property, value);
                 } catch (Exception e) {
                     logger.error("Failed to save config property {}", rootField.getName(), e);
@@ -67,8 +69,8 @@ public class FabricConfigSaver {
         return new Notoml(properties, comments);
     }
 
-    public static void save(File configFile, BalmConfigHolder configData) throws IOException {
-        var notoml = toNotoml(configData);
+    public static void save(File configFile, BalmConfigSchema schema, LoadedConfig config) throws IOException {
+        var notoml = toNotoml(schema, config);
         try (FileWriter writer = new FileWriter(configFile)) {
             NotomlSerializer.serialize(writer, notoml);
         }

@@ -47,5 +47,8 @@ public interface BalmConfig {
     }
 
     Collection<BalmConfigSchema> getSchemasByNamespace(String namespace);
+
     Collection<BalmConfigSchema> getSchemas();
+
+    void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config);
 }

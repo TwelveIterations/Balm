@@ -4,9 +4,8 @@ import net.blay09.mods.balm.api.config.v2.schema.builder.BalmConfigCategoryIniti
 import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
 import net.blay09.mods.balm.api.config.v2.schema.*;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategoryBuilder;
-import net.blay09.mods.balm.api.network.ConfigReflection;
-import net.blay09.mods.balm.config.ExampleConfigData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
 import java.util.Set;
@@ -14,9 +13,14 @@ import java.util.Set;
 public class NewExampleConfig {
     public static final String EXAMPLE_STATIC = "test";
 
-    public enum ExampleEnum {
+    public enum ExampleEnum implements StringRepresentable {
         Hello,
-        World
+        World;
+
+        @Override
+        public String getSerializedName() {
+            return name();
+        }
     }
 
     public static final ConfigSchemaImpl schema = BalmConfigSchema.create(ResourceLocation.fromNamespaceAndPath("balm", "common"));

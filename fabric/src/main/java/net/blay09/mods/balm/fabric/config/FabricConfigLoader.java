@@ -1,7 +1,9 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
+import net.blay09.mods.balm.api.config.v2.LoadedConfig;
 import net.blay09.mods.balm.api.config.v2.reflection.NestedType;
+import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlError;
 import net.blay09.mods.balm.notoml.NotomlParser;
@@ -17,7 +19,7 @@ public class FabricConfigLoader {
 
     private static final Logger logger = LogUtils.getLogger();
 
-    public static void load(File configFile, BalmConfigHolder configData) throws IOException {
+    public static LoadedConfig load(File configFile, BalmConfigSchema schema) throws IOException {
         Notoml notoml = new Notoml();
         if (configFile.exists()) {
             try {
@@ -30,11 +32,11 @@ public class FabricConfigLoader {
         for (String category : notoml.getProperties().rowKeySet()) {
             Object categoryInstance;
             if (category.isEmpty()) {
-                categoryInstance = configData;
+                categoryInstance = schema;
             } else {
                 try {
-                    var categoryField = configData.getClass().getField(category);
-                    categoryInstance = categoryField.get(configData);
+                    var categoryField = schema.getClass().getField(category);
+                    categoryInstance = categoryField.get(schema);
                 } catch (NoSuchFieldException e) {
                     notoml.addError(new NotomlError("Unknown config category: '" + category + "'"));
                     continue;
@@ -80,16 +82,16 @@ public class FabricConfigLoader {
             }
             File backupFile = getBackupConfigFile(configFile);
             configFile.renameTo(backupFile);
-            FabricConfigSaver.save(configFile, configData);
+            FabricConfigSaver.save(configFile, schema);
             logger.error("The affected properties have been reset to their defaults and a backup of the corrupted version was created under {}",
                     backupFile.getName());
         } else {
-            Notoml updated = FabricConfigSaver.toNotoml(configData);
+            Notoml updated = FabricConfigSaver.toNotoml(schema);
             if (!notoml.containsProperties(updated)) {
                 logger.info("The config file {} is missing some properties.", configFile.getName());
                 File backupFile = getBackupConfigFile(configFile);
                 configFile.renameTo(backupFile);
-                FabricConfigSaver.save(configFile, configData);
+                FabricConfigSaver.save(configFile, schema);
                 logger.info("The missing properties have been added and a backup of the previous version was created under {}", backupFile.getName());
             }
         }

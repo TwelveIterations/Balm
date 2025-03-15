@@ -40,4 +40,13 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     public Collection<BalmConfigSchema> getSchemasByNamespace(String namespace) {
         return schemas.values().stream().filter(schema -> schema.identifier().getNamespace().equals(namespace)).toList();
     }
+
+    @Override
+    public Collection<BalmConfigSchema> getSchemas() {
+        return schemas.values();
+    }
+
+    public void resetToLocalConfig() {
+        activeConfigs.putAll(localConfigs);
+    }
 }

@@ -1,9 +1,12 @@
 package net.blay09.mods.balm.api.config.v2.schema.impl;
 
+import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategoryBuilder;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigPropertyBuilder;
 
+import java.util.List;
 import java.util.function.Function;
 
 public class ConfigCategoryImpl implements ConfigCategoryBuilder, ConfigCategory {
@@ -23,8 +26,23 @@ public class ConfigCategoryImpl implements ConfigCategoryBuilder, ConfigCategory
     }
 
     @Override
+    public BalmConfigSchema parentSchema() {
+        return schema;
+    }
+
+    @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
     public String comment() {
         return comment;
+    }
+
+    @Override
+    public List<ConfiguredProperty<?>> properties() {
+        return List.of(); // TODO
     }
 
     @Override

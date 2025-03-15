@@ -7,17 +7,19 @@ import net.blay09.mods.balm.api.config.v2.LoadedConfig;
 import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.v2.schema.ConfigSchemaBuilder;
 import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
+import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategoryBuilder;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigPropertyBuilder;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
 
     private final ResourceLocation identifier;
-    private final Map<String, ConfigCategoryImpl> categories = new HashMap<>();
+    private final Map<String, ConfigCategory> categories = new HashMap<>();
     private final Table<String, String, ConfiguredProperty<?>> properties = HashBasedTable.create();
 
     public ConfigSchemaImpl(ResourceLocation identifier) {
@@ -44,6 +46,16 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
     @Override
     public LoadedConfig defaults() {
         return DefaultedConfig.INSTANCE;
+    }
+
+    @Override
+    public Collection<ConfiguredProperty<?>> rootProperties() {
+        return properties.values();
+    }
+
+    @Override
+    public Collection<ConfigCategory> categories() {
+        return categories.values();
     }
 
     public <T extends ConfiguredProperty<?>> T addAndReturn(T property) {

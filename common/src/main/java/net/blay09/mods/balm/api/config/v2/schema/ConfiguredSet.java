@@ -6,7 +6,7 @@ import net.blay09.mods.balm.api.config.v2.TableBalmConfig;
 
 import java.util.Set;
 
-public interface ConfiguredSet<T> extends ConfiguredProperty<Set<T>> {
+public interface ConfiguredSet<T> extends ConfiguredProperty<Set<T>>, NestedTypeHolder<T> {
     default Set<T> get(LoadedConfig config) {
         return getRaw(config);
     }

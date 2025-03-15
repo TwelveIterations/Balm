@@ -1,15 +1,19 @@
 package net.blay09.mods.balm.api.config.v2.schema;
 
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.blay09.mods.balm.api.config.v2.LoadedConfig;
 import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
+import net.minecraft.network.codec.StreamCodec;
 
 public interface ConfiguredProperty<T> {
-    ConfigSchemaImpl parentSchema();
+    BalmConfigSchema parentSchema();
     String category();
     String name();
     String comment();
     Class<?> type();
+    Codec<T> codec();
+    StreamCodec<ByteBuf, T> streamCodec();
     T defaultValue();
     default T getRaw(LoadedConfig config) {
         return config.getRaw(this);

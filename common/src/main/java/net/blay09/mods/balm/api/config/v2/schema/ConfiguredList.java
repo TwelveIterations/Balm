@@ -6,7 +6,7 @@ import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
 
 import java.util.List;
 
-public interface ConfiguredList<T> extends ConfiguredProperty<List<T>> {
+public interface ConfiguredList<T> extends ConfiguredProperty<List<T>>, NestedTypeHolder<T> {
     default List<T> get(LoadedConfig config) {
         return getRaw(config);
     }
