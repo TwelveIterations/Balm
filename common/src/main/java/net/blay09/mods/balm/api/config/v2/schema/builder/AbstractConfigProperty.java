@@ -8,12 +8,14 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
     private final String category;
     private final String name;
     private final String comment;
+    private final boolean synced;
 
     public AbstractConfigProperty(ConfigPropertyBuilder parent) {
         schema = parent.schema;
         category = parent.category;
         name = parent.name;
         comment = parent.comment;
+        synced = parent.synced;
     }
 
     @Override
@@ -34,5 +36,10 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
     @Override
     public String comment() {
         return comment;
+    }
+
+    @Override
+    public boolean synced() {
+        return synced;
     }
 }

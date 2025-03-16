@@ -11,6 +11,7 @@ public interface ConfiguredProperty<T> {
     String category();
     String name();
     String comment();
+    boolean synced();
     Class<?> type();
     Codec<T> codec();
     StreamCodec<ByteBuf, T> streamCodec();
