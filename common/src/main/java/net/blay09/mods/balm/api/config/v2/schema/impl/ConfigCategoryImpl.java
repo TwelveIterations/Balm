@@ -6,10 +6,13 @@ import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigCategoryBuilder;
 import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigPropertyBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 public class ConfigCategoryImpl implements ConfigCategoryBuilder, ConfigCategory {
+    private final List<ConfiguredProperty<?>> properties = new ArrayList<>();
+
     private final ConfigSchemaImpl schema;
     private final String name;
     private String comment;
@@ -42,7 +45,7 @@ public class ConfigCategoryImpl implements ConfigCategoryBuilder, ConfigCategory
 
     @Override
     public List<ConfiguredProperty<?>> properties() {
-        return List.of(); // TODO
+        return properties;
     }
 
     @Override
@@ -53,5 +56,9 @@ public class ConfigCategoryImpl implements ConfigCategoryBuilder, ConfigCategory
     @Override
     public <T> T via(Function<ConfigCategoryBuilder, T> initializer) {
         return initializer.apply(this);
+    }
+
+    public <T extends ConfiguredProperty<?>> void addProperty(T property) {
+        properties.add(property);
     }
 }

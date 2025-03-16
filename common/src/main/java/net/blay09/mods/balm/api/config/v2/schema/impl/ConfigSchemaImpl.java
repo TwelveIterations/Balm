@@ -60,6 +60,9 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
 
     public <T extends ConfiguredProperty<?>> T addAndReturn(T property) {
         properties.put(property.category(), property.name(), property);
+        if(categories.get(property.category()) instanceof ConfigCategoryImpl category) {
+            category.addProperty(property);
+        }
         return property;
     }
 }

@@ -44,8 +44,16 @@ public class ConfigPropertyBuilder {
         return schema.addAndReturn(new IntConfigProperty(this, defaultValue));
     }
 
+    public LongConfigProperty longOf(long defaultValue) {
+        return schema.addAndReturn(new LongConfigProperty(this, defaultValue));
+    }
+
     public FloatConfigProperty floatOf(float defaultValue) {
         return schema.addAndReturn(new FloatConfigProperty(this, defaultValue));
+    }
+
+    public DoubleConfigProperty doubleOf(double defaultValue) {
+        return schema.addAndReturn(new DoubleConfigProperty(this, defaultValue));
     }
 
     public StringConfigProperty stringOf(String defaultValue) {

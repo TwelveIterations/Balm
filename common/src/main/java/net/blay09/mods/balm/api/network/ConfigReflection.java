@@ -1,15 +1,13 @@
 package net.blay09.mods.balm.api.network;
 
 import net.blay09.mods.balm.api.config.v2.LoadedConfig;
-import net.blay09.mods.balm.api.config.v2.reflection.Comment;
-import net.blay09.mods.balm.api.config.v2.reflection.Config;
-import net.blay09.mods.balm.api.config.v2.reflection.IgnoreConfig;
-import net.blay09.mods.balm.api.config.v2.reflection.Synced;
+import net.blay09.mods.balm.api.config.v2.reflection.*;
 import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.v2.schema.builder.PropertyHolderBuilder;
 import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
@@ -20,7 +18,7 @@ public class ConfigReflection {
         final var rootDataFields = rootFields.stream().filter(it -> !ConfigReflection.isCategoryField(it)).toList();
         final var identifier = getIdentifier(configDataClass);
         final var schema = BalmConfigSchema.create(identifier);
-        buildFieldsIntoSchema(schema, rootDataFields);
+        buildFieldsIntoSchema(schema, configDataClass, rootDataFields);
         final var categoryFields = rootFields.stream().filter(ConfigReflection::isCategoryField).toList();
         for (final var categoryField : categoryFields) {
             final var fields = getAllFields(categoryField.getClass());
@@ -29,12 +27,13 @@ public class ConfigReflection {
             if (commentAnnotation != null) {
                 category.comment(commentAnnotation.value());
             }
-            buildFieldsIntoSchema(category, fields);
+            buildFieldsIntoSchema(category, categoryField.getClass(), fields);
         }
         return schema;
     }
 
-    private static void buildFieldsIntoSchema(PropertyHolderBuilder builder, List<Field> fields) {
+    private static void buildFieldsIntoSchema(PropertyHolderBuilder builder, Class<?> clazz, List<Field> fields) {
+        final var defaults = createInstance(clazz);
         for (final var field : fields) {
             final var property = builder.property(field.getName());
             final var commentAnnotation = field.getAnnotation(Comment.class);
@@ -44,7 +43,42 @@ public class ConfigReflection {
             if (field.getAnnotation(Synced.class) != null) {
                 property.synced();
             }
-            // TODO
+            final var type = field.getType();
+            final var nestedTypeAnnotation = field.getAnnotation(NestedType.class);
+            final var nestedType = nestedTypeAnnotation != null ? nestedTypeAnnotation.value() : null;
+            try {
+                final var defaultValue = field.get(defaults);
+                if (type == String.class) {
+                    property.stringOf((String) defaultValue);
+                } else if (type == ResourceLocation.class) {
+                    property.resourceLocationOf((ResourceLocation) defaultValue);
+                } else if(type == Integer.class || type == int.class) {
+                    property.intOf((int) defaultValue);
+                } else if(type == Long.class || type == long.class) {
+                    property.longOf((long) defaultValue);
+                } else if(type == Float.class || type == float.class) {
+                    property.floatOf((float) defaultValue);
+                } else if(type == Double.class || type == double.class) {
+                    property.doubleOf((double) defaultValue);
+                } else if(type == Boolean.class || type == boolean.class) {
+                    property.boolOf((boolean) defaultValue);
+                } else {
+                    throw new IllegalArgumentException("Unsupported config field type " + type.getName() + " in class " + clazz.getName());
+                }
+                // TODO list, set, enum
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Error accessing config field " + field.getName() + " in class " + clazz.getName(), e);
+            }
+        }
+    }
+
+    private static <T> T createInstance(Class<T> clazz) {
+        try {
+            return clazz.getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new IllegalArgumentException("Config class " + clazz.getName() + " must have a public no-arg constructor.", e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException("Error instantiating config class " + clazz.getName(), e);
         }
     }
 
