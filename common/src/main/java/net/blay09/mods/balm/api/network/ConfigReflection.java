@@ -7,7 +7,6 @@ import net.blay09.mods.balm.api.config.v2.reflection.IgnoreConfig;
 import net.blay09.mods.balm.api.config.v2.reflection.Synced;
 import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.v2.schema.builder.PropertyHolderBuilder;
-import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
 import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.Field;
@@ -73,31 +72,6 @@ public class ConfigReflection {
                 .isEnum() && field.getType() != String.class && field.getType() != List.class && field.getType() != Set.class && field.getType() != ResourceLocation.class;
     }
 
-    public static Object deepCopy(Object from, Object to) {
-        Field[] fields = from.getClass().getFields();
-        for (Field field : fields) {
-            if (!isConfigDataField(field)) {
-                continue;
-            }
-
-            Class<?> type = field.getType();
-            try {
-                if (String.class.isAssignableFrom(type) || ResourceLocation.class.isAssignableFrom(type) || Enum.class.isAssignableFrom(type) || type.isPrimitive()) {
-                    field.set(to, field.get(from));
-                } else if (List.class.isAssignableFrom(type)) {
-                    field.set(to, new ArrayList((Collection) field.get(from)));
-                } else if (Set.class.isAssignableFrom(type)) {
-                    field.set(to, new HashSet(((Collection) field.get(from))));
-                } else {
-                    field.set(to, deepCopy(field.get(from), field.get(to)));
-                }
-            } catch (IllegalAccessException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-        return to;
-    }
-
     public static ResourceLocation getIdentifier(Class<?> configDataClass) {
         final var configAnnotation = configDataClass.getAnnotation(Config.class);
         if (configAnnotation == null) {
@@ -107,6 +81,6 @@ public class ConfigReflection {
     }
 
     public static <T> T of(Class<T> configDataClass, LoadedConfig loadedConfig) {
-        return null;
+        return null; // TODO
     }
 }

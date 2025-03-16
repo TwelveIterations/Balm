@@ -1,9 +1,10 @@
 package net.blay09.mods.balm.api.config.v2;
 
 import com.google.common.collect.Table;
+import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
 
-public record TableBalmConfig(Table<String, String, Object> table) implements MutableLoadedConfig {
+public record LoadedTableConfig(BalmConfigSchema schema, Table<String, String, Object> table) implements MutableLoadedConfig {
     @Override
     public <T> void setRaw(ConfiguredProperty<T> property, T value) {
         if (property.type().isAssignableFrom(value.getClass())) {

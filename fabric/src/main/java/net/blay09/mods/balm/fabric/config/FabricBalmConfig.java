@@ -1,11 +1,14 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
+import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 
 public class FabricBalmConfig extends AbstractBalmConfig {
 
@@ -49,6 +52,16 @@ public class FabricBalmConfig extends AbstractBalmConfig {
     @Override
     public File getConfigDir() {
         return FabricLoader.getInstance().getConfigDir().toFile();
+    }
+
+    @Override
+    public void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
+        final var configFile = new File(getConfigDir(), schema.identifier().getNamespace() + "-" + schema.identifier().getPath() + ".toml");
+        try {
+            FabricConfigSaver.save(configFile, schema, config);
+        } catch (IOException e) {
+            logger.error("Failed to save config file {}", configFile, e);
+        }
     }
 
 }
