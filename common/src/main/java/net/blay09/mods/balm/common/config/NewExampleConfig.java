@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.api.config;
+package net.blay09.mods.balm.common.config;
 
 import net.blay09.mods.balm.api.config.schema.builder.BalmConfigCategoryInitializer;
 import net.blay09.mods.balm.api.config.schema.impl.ConfigSchemaImpl;

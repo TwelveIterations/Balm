@@ -2,7 +2,7 @@ package net.blay09.mods.balm.api.config.schema.builder;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.blay09.mods.balm.api.config.ConfigCodecs;
+import net.blay09.mods.balm.api.config.PrimitiveConfigCodecs;
 import net.blay09.mods.balm.api.config.schema.ConfiguredList;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -20,8 +20,8 @@ public class ListConfigProperty<T> extends AbstractConfigProperty<List<T>> imple
         super(parent);
         this.nestedType = nestedType;
         this.defaultValue = defaultValue;
-        this.codec = ConfigCodecs.codec(nestedType).listOf();
-        this.streamCodec = ByteBufCodecs.collection(ArrayList::new, ConfigCodecs.streamCodec(nestedType));
+        this.codec = PrimitiveConfigCodecs.codec(nestedType).listOf();
+        this.streamCodec = ByteBufCodecs.collection(ArrayList::new, PrimitiveConfigCodecs.streamCodec(nestedType));
     }
 
     @Override
