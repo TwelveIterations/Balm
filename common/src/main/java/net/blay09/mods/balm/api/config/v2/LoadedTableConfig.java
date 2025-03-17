@@ -1,10 +1,23 @@
 package net.blay09.mods.balm.api.config.v2;
 
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
 
-public record LoadedTableConfig(BalmConfigSchema schema, Table<String, String, Object> table) implements MutableLoadedConfig {
+import java.util.ArrayList;
+import java.util.List;
+
+public class LoadedTableConfig implements MutableLoadedConfig {
+
+    private final Table<String, String, Object> table;
+
+    public LoadedTableConfig(Table<String, String, Object> table) {
+        this.table = table;
+    }
+
     @Override
     public <T> void setRaw(ConfiguredProperty<T> property, T value) {
         if (property.type().isAssignableFrom(value.getClass())) {
@@ -26,5 +39,35 @@ public record LoadedTableConfig(BalmConfigSchema schema, Table<String, String, O
             return property.defaultValue();
         }
         return (T) value;
+    }
+
+    public static Pair<LoadedTableConfig, List<Throwable>> of(BalmConfigSchema schema, Table<String, String, Object> table) {
+        final var validatedTable = HashBasedTable.<String, String, Object>create();
+        final var errors = new ArrayList<Throwable>();
+        for (final var rootProperty : schema.rootProperties()) {
+            validate(rootProperty, table)
+                    .ifLeft(it -> validatedTable.put(rootProperty.category(), rootProperty.name(), it))
+                    .ifRight(e -> {
+                        validatedTable.put(rootProperty.category(), rootProperty.name(), rootProperty.defaultValue());
+                        errors.add(e);
+                    });
+        }
+        for (final var category : schema.categories()) {
+            for (final var property : category.properties()) {
+                validate(property, table)
+                        .ifLeft(it -> validatedTable.put(property.category(), property.name(), it))
+                        .ifRight(e -> {
+                            validatedTable.put(property.category(), property.name(), property.defaultValue());
+                            errors.add(e);
+                        });
+            }
+        }
+        return Pair.of(new LoadedTableConfig(table), errors);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Either<T, Throwable> validate(ConfiguredProperty<T> property, Table<String, String, Object> table) {
+        final var value = table.get(property.category(), property.name());
+        return Either.left((T) value);
     }
 }

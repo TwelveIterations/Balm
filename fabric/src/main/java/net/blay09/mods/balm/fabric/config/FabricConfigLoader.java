@@ -31,8 +31,11 @@ public class FabricConfigLoader {
             }
         }
         final var table = notoml.getProperties();
-        final var config = new LoadedTableConfig(schema, table);
-        // TODO errors from schema validation
+        final var configAndErrors = LoadedTableConfig.of(schema, table);
+        final var config = configAndErrors.getFirst();
+        for (final var throwable : configAndErrors.getSecond()) {
+            notoml.addError(new NotomlError(throwable.getMessage(), throwable));
+        }
         if (notoml.hasErrors()) {
             logger.error("Errors were encountered when loading the config file {}:", configFile.getName());
             for (NotomlError error : notoml.getErrors()) {
