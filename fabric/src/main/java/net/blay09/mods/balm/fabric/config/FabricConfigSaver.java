@@ -22,6 +22,7 @@ public class FabricConfigSaver {
             comments.put("", rootProperty.name(), rootProperty.comment());
         }
         for (final var category : schema.categories()) {
+            comments.put(category.name(), "", category.comment());
             for (final var property : category.properties()) {
                 final var value = config.getRaw(property);
                 properties.put(property.category(), property.name(), value);
