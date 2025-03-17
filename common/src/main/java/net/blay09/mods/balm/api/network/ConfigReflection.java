@@ -154,6 +154,10 @@ public class ConfigReflection {
     }
 
     public static <T> T of(Class<T> configDataClass, LoadedConfig loadedConfig) {
-        return null; // TODO
+        final var instance = createInstance(configDataClass);
+        final var schema = schemaOf(configDataClass);
+        final var config = new LoadedReflectionConfig<>(instance);
+        config.applyFrom(schema, loadedConfig);
+        return instance;
     }
 }

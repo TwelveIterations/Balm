@@ -6,7 +6,6 @@ import net.blay09.mods.balm.api.config.v2.schema.impl.ConfigSchemaImpl;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface BalmConfigSchema {
     static ConfigSchemaImpl create(ResourceLocation identifier) {
