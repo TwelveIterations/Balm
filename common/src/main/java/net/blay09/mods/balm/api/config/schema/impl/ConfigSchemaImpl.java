@@ -20,6 +20,7 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
 
     private final ResourceLocation identifier;
     private final Map<String, ConfigCategory> categories = new HashMap<>();
+    private final Map<String, ConfiguredProperty<?>> rootProperties = new HashMap<>();
     private final Table<String, String, ConfiguredProperty<?>> properties = HashBasedTable.create();
 
     public ConfigSchemaImpl(ResourceLocation identifier) {
@@ -50,7 +51,7 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
 
     @Override
     public Collection<ConfiguredProperty<?>> rootProperties() {
-        return properties.values();
+        return rootProperties.values();
     }
 
     @Override
@@ -70,8 +71,12 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
 
     public <T extends ConfiguredProperty<?>> T addAndReturn(T property) {
         properties.put(property.category(), property.name(), property);
-        if (categories.get(property.category()) instanceof ConfigCategoryImpl category) {
-            category.addProperty(property);
+        if (property.category().isEmpty()) {
+            rootProperties.put(property.name(), property);
+        } else {
+            if (categories.get(property.category()) instanceof ConfigCategoryImpl category) {
+                category.addProperty(property);
+            }
         }
         return property;
     }
