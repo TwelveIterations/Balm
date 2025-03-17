@@ -249,7 +249,6 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
             configData.put(clazz, newConfigData);
 
             // Only rewrite active configs with reload if we're the hosting server or there is no syncing
-            // TODO would be good if this still applied non-synced properties
             boolean hasSyncMessage = getConfigSyncMessageFactory(clazz) != null;
             boolean isHostingServer = ServerLifecycleHooks.getCurrentServer() != null;
             boolean isIngame = Balm.getProxy().isIngame();

@@ -46,7 +46,7 @@ public class IconExport {
                             continue;
                         }
 
-                        // TODO Render item to buffer
+                        // TODO 1.21.5: Render item to buffer
                         /*renderTarget.clear();
                         RenderSystem.enableDepthTest();
                         renderTarget.bindWrite(false);
