@@ -43,8 +43,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getFileName() {
-                final var modId = schema.identifier().getNamespace();
-                return modId + "-common.toml";
+                return Balm.getConfig().getConfigFile(schema).getName();
             }
 
             @Override
