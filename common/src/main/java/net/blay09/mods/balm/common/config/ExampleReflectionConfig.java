@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-@Config(value = "balm")
+@Config("balm")
 public class ExampleReflectionConfig {
 
     public static final String EXAMPLE_STATIC = "test";
@@ -34,9 +34,6 @@ public class ExampleReflectionConfig {
 
     @Comment("This is an example string property")
     public String exampleString = "Hello World";
-
-    @Comment("This is an example multiline string property")
-    public String exampleMultilineString = "Hello World";
 
     @Comment("This is an example enum property")
     public ExampleEnum exampleEnum = ExampleEnum.Hello;

@@ -41,7 +41,7 @@ public class FabricBalm implements ModInitializer {
     public void onInitialize() {
         ((FabricBalmHooks) Balm.getHooks()).initialize();
         ConfigSync.initialize();
-        //Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
+        Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
         Balm.getCommands().register(BalmCommand::register);
 

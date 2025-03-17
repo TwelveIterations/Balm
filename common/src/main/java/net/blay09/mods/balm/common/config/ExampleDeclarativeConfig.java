@@ -21,7 +21,7 @@ public class ExampleDeclarativeConfig {
         }
     }
 
-    public static final ConfigSchemaImpl schema = BalmConfigSchema.create(ResourceLocation.fromNamespaceAndPath("balm", "common"));
+    public static final ConfigSchemaBuilder schema = BalmConfigSchema.create(ResourceLocation.fromNamespaceAndPath("balm", "client"));
     public static final ConfiguredBoolean exampleBoolean = schema
             .property("exampleBoolean")
             .comment("This is an example boolean property")
