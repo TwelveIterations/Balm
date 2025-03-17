@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.config.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.blay09.mods.balm.common.config.ConfigSync;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -78,6 +79,9 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
         final var localConfig = Balm.getConfig().getLocalConfig(packet.schema);
         final var newConfig = localConfig.copy();
         newConfig.applyFrom(packet.schema, packet.config);
+        if (Balm.getConfig() instanceof AbstractBalmConfig config) {
+            config.setActiveConfig(packet.schema, newConfig);
+        }
     }
 
     @Override
