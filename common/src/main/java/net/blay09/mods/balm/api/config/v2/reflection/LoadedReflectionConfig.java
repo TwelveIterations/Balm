@@ -13,11 +13,39 @@ public class LoadedReflectionConfig<ConfigData> implements MutableLoadedConfig {
 
     @Override
     public <T> void setRaw(ConfiguredProperty<T> property, T value) {
-// TODO
+        try {
+            final var holder = locatePropertyHolder(property);
+            final var field = holder.getClass().getField(property.name());
+            field.set(holder, value);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to set config property '" +
+                    (property.category().isEmpty() ? "" : property.category() + ".") +
+                    property.name() + "'", e);
+        }
     }
 
     @Override
     public <T> T getRaw(ConfiguredProperty<T> property) {
-        return null;
+        try {
+            final var holder = locatePropertyHolder(property);
+            final var field = holder.getClass().getField(property.name());
+            @SuppressWarnings("unchecked")
+            T value = (T) field.get(holder);
+            return value;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to get config property '" +
+                    (property.category().isEmpty() ? "" : property.category() + ".") +
+                    property.name() + "'", e);
+        }
+    }
+
+    private Object locatePropertyHolder(ConfiguredProperty<?> property) throws NoSuchFieldException, IllegalAccessException {
+        final var category = property.category();
+        if (category != null && !category.isEmpty()) {
+            final var categoryField = configData.getClass().getField(category);
+            return categoryField.get(configData);
+        } else {
+            return configData;
+        }
     }
 }
