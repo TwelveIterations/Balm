@@ -1,7 +1,6 @@
 package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.OldAbstractBalmConfig;
 import net.blay09.mods.balm.api.config.v2.NewExampleConfig;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
