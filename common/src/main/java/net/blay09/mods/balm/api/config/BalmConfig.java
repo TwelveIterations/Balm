@@ -43,12 +43,7 @@ public interface BalmConfig {
 
     default <T> T getActiveConfig(Class<T> configDataClass) {
         final var loadedConfig = getActiveConfig(getSchema(configDataClass));
-        return ConfigReflection.of(configDataClass, loadedConfig); // TODO would be nice to cache this
-    }
-
-    default <T> T getLocalConfig(Class<T> configDataClass) {
-        final var loadedConfig = getLocalConfig(getSchema(configDataClass));
-        return ConfigReflection.of(configDataClass, loadedConfig); // TODO would be nice to cache this
+        return ConfigReflection.of(configDataClass, loadedConfig);
     }
 
     Collection<BalmConfigSchema> getSchemasByNamespace(String namespace);
