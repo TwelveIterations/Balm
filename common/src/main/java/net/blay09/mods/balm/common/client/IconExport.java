@@ -1,22 +1,15 @@
 package net.blay09.mods.balm.common.client;
 
-import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.BufferType;
 import com.mojang.blaze3d.buffers.BufferUsage;
-import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTexture;
-import com.mojang.blaze3d.vertex.VertexSorting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.CreativeModeTabs;
-import org.joml.Matrix4f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,23 +46,24 @@ public class IconExport {
                             continue;
                         }
 
-                        // TODO renderTarget.clear();
-                        // TODO RenderSystem.enableDepthTest();
-                        // TODO renderTarget.bindWrite(false);
-// TODO
-                        // TODO final var matrix = new Matrix4f().setOrtho(0f, 16, 16, 0f, 1000f, 21000f);
-                        // TODO RenderSystem.setProjectionMatrix(matrix, ProjectionType.ORTHOGRAPHIC);
-                        // TODO final var modelViewStack = RenderSystem.getModelViewStack();
-                        // TODO modelViewStack.pushMatrix();
-                        // TODO modelViewStack.translation(0f, 0f, -11000f);
-                        // TODO Lighting.setupForFlatItems();
-// TODO
-                        // TODO guiGraphics.renderItem(itemStack, 0, 0);
-                        // TODO guiGraphics.flush();
-// TODO
-                        // TODO modelViewStack.popMatrix();
-                        // TODO renderTarget.unbindWrite();
-                        // TODO RenderSystem.disableDepthTest();
+                        // TODO Render item to buffer
+                        /*renderTarget.clear();
+                        RenderSystem.enableDepthTest();
+                        renderTarget.bindWrite(false);
+
+                        final var matrix = new Matrix4f().setOrtho(0f, 16, 16, 0f, 1000f, 21000f);
+                        RenderSystem.setProjectionMatrix(matrix, ProjectionType.ORTHOGRAPHIC);
+                        final var modelViewStack = RenderSystem.getModelViewStack();
+                        modelViewStack.pushMatrix();
+                        modelViewStack.translation(0f, 0f, -11000f);
+                        Lighting.setupForFlatItems();
+
+                        guiGraphics.renderItem(itemStack, 0, 0);
+                        guiGraphics.flush();
+
+                        modelViewStack.popMatrix();
+                        renderTarget.unbindWrite();
+                        RenderSystem.disableDepthTest();*/
 
                         final var width = renderTarget.width;
                         final var height = renderTarget.height;

@@ -3,8 +3,10 @@ package net.blay09.mods.balm.api.network;
 import net.blay09.mods.balm.api.config.v2.LoadedConfig;
 import net.blay09.mods.balm.api.config.v2.reflection.*;
 import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigPropertyBuilder;
 import net.blay09.mods.balm.api.config.v2.schema.builder.PropertyHolderBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -32,6 +34,7 @@ public class ConfigReflection {
         return schema;
     }
 
+    @SuppressWarnings("unchecked")
     private static void buildFieldsIntoSchema(PropertyHolderBuilder builder, Class<?> clazz, List<Field> fields) {
         final var defaults = createInstance(clazz);
         for (final var field : fields) {
@@ -52,24 +55,60 @@ public class ConfigReflection {
                     property.stringOf((String) defaultValue);
                 } else if (type == ResourceLocation.class) {
                     property.resourceLocationOf((ResourceLocation) defaultValue);
-                } else if(type == Integer.class || type == int.class) {
+                } else if (type == Integer.class || type == int.class) {
                     property.intOf((int) defaultValue);
-                } else if(type == Long.class || type == long.class) {
+                } else if (type == Long.class || type == long.class) {
                     property.longOf((long) defaultValue);
-                } else if(type == Float.class || type == float.class) {
+                } else if (type == Float.class || type == float.class) {
                     property.floatOf((float) defaultValue);
-                } else if(type == Double.class || type == double.class) {
+                } else if (type == Double.class || type == double.class) {
                     property.doubleOf((double) defaultValue);
-                } else if(type == Boolean.class || type == boolean.class) {
+                } else if (type == Boolean.class || type == boolean.class) {
                     property.boolOf((boolean) defaultValue);
+                } else if (type.isEnum()) {
+                    propertyOfEnum(property, defaultValue);
+                } else if (List.class.isAssignableFrom(type)) {
+                    if (nestedType != null) {
+                        @SuppressWarnings("rawtypes")
+                        List listValue = (List) defaultValue;
+                        property.listOf(nestedType, listValue);
+                    } else {
+                        throw new IllegalArgumentException("List field " + field.getName() + " in class " + clazz.getName() + " is missing @NestedType annotation");
+                    }
+                } else if (Set.class.isAssignableFrom(type)) {
+                    if (nestedType != null) {
+                        @SuppressWarnings("rawtypes")
+                        Set setValue = (Set) defaultValue;
+                        property.setOf(nestedType, setValue);
+                    } else {
+                        throw new IllegalArgumentException("Set field " + field.getName() + " in class " + clazz.getName() + " is missing @NestedType annotation");
+                    }
                 } else {
                     throw new IllegalArgumentException("Unsupported config field type " + type.getName() + " in class " + clazz.getName());
                 }
-                // TODO list, set, enum
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("Error accessing config field " + field.getName() + " in class " + clazz.getName(), e);
             }
         }
+    }
+
+    public static <T extends Enum<T> & StringRepresentable> void propertyOfEnum(ConfigPropertyBuilder property, Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("Object cannot be null");
+        }
+
+        if (!(obj instanceof Enum)) {
+            throw new IllegalArgumentException("Object must be an Enum");
+        }
+
+        if (!(obj instanceof StringRepresentable)) {
+            throw new IllegalArgumentException("Object must implement StringRepresentable");
+        }
+
+        @SuppressWarnings("unchecked")
+        T enumValue = (T) obj;
+
+        property.enumOf(enumValue);
     }
 
     private static <T> T createInstance(Class<T> clazz) {

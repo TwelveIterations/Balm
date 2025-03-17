@@ -36,17 +36,6 @@ public class FabricBalmConfig extends AbstractBalmConfig {
         configsByMod.put(configName, clazz);
         setActiveConfig(clazz, configData);
         return configData;
-    }
-
-    @Override
-    public <T extends BalmConfigHolder> void saveBackingConfig(Class<T> clazz) {
-        var configName = getConfigName(clazz);
-        var configFile = getConfigFile(configName);
-        try {
-            FabricConfigSaver.save(configFile, configs.get(clazz));
-        } catch (IOException e) {
-            logger.error("Failed to save config file {}", configFile, e);
-        }
     }*/
 
     @Override
