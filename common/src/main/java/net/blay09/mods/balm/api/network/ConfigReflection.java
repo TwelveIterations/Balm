@@ -93,7 +93,7 @@ public class ConfigReflection {
         }
     }
 
-    public static <T extends Enum<T> & StringRepresentable> void propertyOfEnum(ConfigPropertyBuilder property, Object obj) {
+    private static <T extends Enum<T> & StringRepresentable> void propertyOfEnum(ConfigPropertyBuilder property, Object obj) {
         if (obj == null) {
             throw new IllegalArgumentException("Object cannot be null");
         }
@@ -122,26 +122,17 @@ public class ConfigReflection {
         }
     }
 
-    public static boolean isConfigDataField(Field field) {
+    private static boolean isConfigDataField(Field field) {
         return !Modifier.isFinal(field.getModifiers())
                 && !Modifier.isStatic(field.getModifiers())
                 && field.getAnnotation(IgnoreConfig.class) == null;
     }
 
-    public static List<Field> getAllFields(Class<?> clazz) {
+    private static List<Field> getAllFields(Class<?> clazz) {
         return Arrays.stream(clazz.getFields()).filter(ConfigReflection::isConfigDataField).toList();
     }
 
-    public static List<Field> getSyncedFields(Class<?> clazz) {
-        return getAllFields(clazz).stream().filter(ConfigReflection::isSyncedFieldOrCategory).toList();
-    }
-
-    public static boolean isSyncedFieldOrCategory(Field field) {
-        boolean hasSyncedAnnotation = field.getAnnotation(Synced.class) != null;
-        return hasSyncedAnnotation || isCategoryField(field);
-    }
-
-    public static boolean isCategoryField(Field field) {
+    private static boolean isCategoryField(Field field) {
         return !field.getType().isPrimitive() && !field.getType()
                 .isEnum() && field.getType() != String.class && field.getType() != List.class && field.getType() != Set.class && field.getType() != ResourceLocation.class;
     }

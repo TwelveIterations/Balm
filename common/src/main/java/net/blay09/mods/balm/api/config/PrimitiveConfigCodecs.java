@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ByIdMap;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 
 public class PrimitiveConfigCodecs {
@@ -22,6 +24,8 @@ public class PrimitiveConfigCodecs {
             return (Codec<T>) Codec.DOUBLE;
         } else if (type == Boolean.class || type == boolean.class) {
             return (Codec<T>) Codec.BOOL;
+        } else if (type == ResourceLocation.class) {
+            return (Codec<T>) ResourceLocation.CODEC;
         } else if (type.isEnum() && StringRepresentable.class.isAssignableFrom(type)) {
             return enumCodec((Class) type);
         } else {
@@ -47,6 +51,8 @@ public class PrimitiveConfigCodecs {
             return (StreamCodec<ByteBuf, T>) ByteBufCodecs.DOUBLE;
         } else if (type == Boolean.class || type == boolean.class) {
             return (StreamCodec<ByteBuf, T>) ByteBufCodecs.BOOL;
+        } else if (type == ResourceLocation.class) {
+            return (StreamCodec<ByteBuf, T>) ResourceLocation.STREAM_CODEC;
         } else if (type.isEnum() && StringRepresentable.class.isAssignableFrom(type)) {
             return enumStreamCodec((Class) type);
         } else {

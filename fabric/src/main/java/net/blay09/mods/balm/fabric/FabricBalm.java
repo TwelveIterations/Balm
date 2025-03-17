@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.common.config.NewExampleConfig;
+import net.blay09.mods.balm.common.config.ExampleConfig;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.entity.BalmEntity;
@@ -40,7 +40,7 @@ public class FabricBalm implements ModInitializer {
     public void onInitialize() {
         ((FabricBalmHooks) Balm.getHooks()).initialize();
         ConfigSync.initialize();
-        Balm.getConfig().registerConfig(NewExampleConfig.class);
+        Balm.getConfig().registerConfig(ExampleConfig.schema);
         Balm.getCommands().register(BalmCommand::register);
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {

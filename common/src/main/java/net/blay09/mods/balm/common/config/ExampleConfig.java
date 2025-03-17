@@ -10,7 +10,7 @@ import net.minecraft.util.StringRepresentable;
 import java.util.List;
 import java.util.Set;
 
-public class NewExampleConfig {
+public class ExampleConfig {
     public static final String EXAMPLE_STATIC = "test";
 
     public enum ExampleEnum implements StringRepresentable {
@@ -86,7 +86,7 @@ public class NewExampleConfig {
         }
     }
 
-    public NewExampleConfig() {
+    public ExampleConfig() {
         // Balm.getConfig().registerConfig(id("common"), ConfigReflection.schemaOf(ExampleConfigData.class))
         // Balm.getConfig().registerConfig(ExampleConfigData.class);
         // Balm.getConfig().getLocalConfig(id("common"))

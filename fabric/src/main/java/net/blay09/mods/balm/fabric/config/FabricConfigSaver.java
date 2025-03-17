@@ -2,68 +2,30 @@ package net.blay09.mods.balm.fabric.config;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.mojang.logging.LogUtils;
 import net.blay09.mods.balm.api.config.LoadedConfig;
-import net.blay09.mods.balm.api.config.reflection.Comment;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.api.network.ConfigReflection;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlSerializer;
-import net.minecraft.resources.ResourceLocation;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Set;
 
 public class FabricConfigSaver {
-
-    private static final Logger logger = LogUtils.getLogger();
 
     public static Notoml toNotoml(BalmConfigSchema schema, LoadedConfig config) {
         Table<String, String, Object> properties = HashBasedTable.create();
         Table<String, String, String> comments = HashBasedTable.create();
-        for (Field rootField : ConfigReflection.getAllFields(config.getClass())) {
-            var isCategory = !isPropertyType(rootField.getType());
-            var category = isCategory ? rootField.getName() : "";
-            if (isCategory) {
-                var categoryComment = rootField.getAnnotation(Comment.class);
-                if (categoryComment != null) {
-                    comments.put(category, "", categoryComment.value());
-                }
-                try {
-                    var categoryInstance = rootField.get(config);
-                    for (Field propertyField : ConfigReflection.getAllFields(categoryInstance.getClass())) {
-                        var property = propertyField.getName();
-                        var propertyComment = propertyField.getAnnotation(Comment.class);
-                        if (propertyComment != null) {
-                            comments.put(category, property, propertyComment.value());
-                        }
-                        try {
-                            var value = propertyField.get(categoryInstance);
-                            properties.put(category, property, value);
-                        } catch (Exception e) {
-                            logger.error("Failed to save config category {}", category, e);
-                        }
-                    }
-                } catch (Exception e) {
-                    logger.error("Failed to save config category {}", category, e);
-                }
-            } else {
-                try {
-                    var property = rootField.getName();
-                    var propertyComment = rootField.getAnnotation(Comment.class);
-                    if (propertyComment != null) {
-                        comments.put(category, property, propertyComment.value());
-                    }
-                    var value = rootField.get(config);
-                    properties.put(category, property, value);
-                } catch (Exception e) {
-                    logger.error("Failed to save config property {}", rootField.getName(), e);
-                }
+        for (final var rootProperty : schema.rootProperties()) {
+            final var value = config.getRaw(rootProperty);
+            properties.put("", rootProperty.name(), value);
+            comments.put("", rootProperty.name(), rootProperty.comment());
+        }
+        for (final var category : schema.categories()) {
+            for (final var property : category.properties()) {
+                final var value = config.getRaw(property);
+                properties.put(property.category(), property.name(), value);
+                comments.put(property.category(), property.name(), property.comment());
             }
         }
         return new Notoml(properties, comments);
@@ -74,18 +36,5 @@ public class FabricConfigSaver {
         try (FileWriter writer = new FileWriter(configFile)) {
             NotomlSerializer.serialize(writer, notoml);
         }
-    }
-
-    private static boolean isPropertyType(Class<?> type) {
-        return type.isPrimitive()
-                || type == String.class
-                || type == Integer.class
-                || type == Boolean.class
-                || type == Float.class
-                || type == Double.class
-                || type == List.class
-                || type == Set.class
-                || type == ResourceLocation.class
-                || Enum.class.isAssignableFrom(type);
     }
 }
