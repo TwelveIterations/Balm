@@ -24,13 +24,13 @@ public class ConfigReflection {
         buildFieldsIntoSchema(schema, configDataClass, rootDataFields);
         final var categoryFields = rootFields.stream().filter(ConfigReflection::isCategoryField).toList();
         for (final var categoryField : categoryFields) {
-            final var fields = getAllFields(categoryField.getClass());
+            final var fields = getAllFields(categoryField.getType());
             final var category = schema.category(categoryField.getName());
             final var commentAnnotation = categoryField.getAnnotation(Comment.class);
             if (commentAnnotation != null) {
                 category.comment(commentAnnotation.value());
             }
-            buildFieldsIntoSchema(category, categoryField.getClass(), fields);
+            buildFieldsIntoSchema(category, categoryField.getType(), fields);
         }
         return schema;
     }

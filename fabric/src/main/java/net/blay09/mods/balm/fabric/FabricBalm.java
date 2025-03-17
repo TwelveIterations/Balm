@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.common.config.ExampleConfig;
+import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.entity.BalmEntity;
@@ -11,6 +11,7 @@ import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.command.BalmCommand;
 import net.blay09.mods.balm.common.config.ConfigSync;
+import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
@@ -40,7 +41,8 @@ public class FabricBalm implements ModInitializer {
     public void onInitialize() {
         ((FabricBalmHooks) Balm.getHooks()).initialize();
         ConfigSync.initialize();
-        Balm.getConfig().registerConfig(ExampleConfig.schema);
+        //Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
+        Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
         Balm.getCommands().register(BalmCommand::register);
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {

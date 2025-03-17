@@ -10,7 +10,7 @@ import net.minecraft.util.StringRepresentable;
 import java.util.List;
 import java.util.Set;
 
-public class ExampleConfig {
+public class ExampleDeclarativeConfig {
     public enum ExampleEnum implements StringRepresentable {
         Hello,
         World;
