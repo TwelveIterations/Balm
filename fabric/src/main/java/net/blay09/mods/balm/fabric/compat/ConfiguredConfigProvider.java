@@ -266,8 +266,14 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
     public static Screen createConfigScreen(String modId, Screen parent) {
         final var configs = Balm.getConfig().getSchemasByNamespace(modId);
         final var configsByType = new HashMap<ConfigType, Set<IModConfig>>();
-        final var mappedConfigs = configs.stream().map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema))).collect(Collectors.toSet());
-        configsByType.put(ConfigType.UNIVERSAL, mappedConfigs);
+        final var universalConfigs = configs.stream()
+                .filter(it -> !it.identifier().getPath().equals("client"))
+                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema))).collect(Collectors.toSet());
+        final var clientConfigs = configs.stream()
+                .filter(it -> it.identifier().getPath().equals("client"))
+                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema))).collect(Collectors.toSet());
+        configsByType.put(ConfigType.UNIVERSAL, universalConfigs);
+        configsByType.put(ConfigType.CLIENT, clientConfigs);
         return ConfigScreenHelper.createSelectionScreen(parent,
                 Component.translatable("config." + modId + ".title"),
                 configsByType

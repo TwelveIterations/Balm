@@ -2,14 +2,21 @@ package net.blay09.mods.balm.fabric.compat;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
+import net.blay09.mods.balm.api.Balm;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
     @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return ModMenuUtils.getConfigScreen(ExampleDeclarativeConfig.schema);
-    }
-}
+    public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
+        final var result = new HashMap<String, ConfigScreenFactory<?>>();
+        for (final var schema : Balm.getConfig().getSchemas()) {
+            final var namespace = schema.identifier().getNamespace();
+            result.put(namespace, ModMenuUtils.getConfigScreen(namespace));
+        }
+        return result;
+    }}

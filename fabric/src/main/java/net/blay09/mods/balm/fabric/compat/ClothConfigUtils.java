@@ -8,32 +8,39 @@ import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
 public class ClothConfigUtils {
-    public static ConfigScreenFactory<?> getConfigScreen(BalmConfigSchema schema) {
+    public static ConfigScreenFactory<?> getConfigScreen(String modId) {
         return (ConfigScreenFactory<Screen>) screen -> {
-            final var config = Balm.getConfig().getLocalConfig(schema);
-            final var i18nBase = "config." + schema.identifier().getNamespace() + "." + schema.identifier().getPath();
             final var builder = ConfigBuilder.create()
                     .setParentScreen(screen)
-                    .setTitle(Component.translatable(i18nBase + ".title"));
-            builder.setSavingRunnable(() -> Balm.getConfig().saveLocalConfig(schema, config));
-
-            final var categories = schema.categories();
-            ConfigCategory rootCategory = null;
-            for (final var rootProperty : schema.rootProperties()) {
-                if(rootCategory == null) {
-                    rootCategory = builder.getOrCreateCategory(Component.translatable(i18nBase));
+                    .setTitle(Component.translatable("config." + modId + ".title"));
+            final var schemas = Balm.getConfig().getSchemasByNamespace(modId);
+            builder.setSavingRunnable(() -> {
+                for (final var schema : schemas) {
+                    Balm.getConfig().saveLocalConfig(schema, Balm.getConfig().getLocalConfig(schema));
                 }
-                addPropertyToBuilder(config, rootProperty, rootCategory, builder);
-            }
-            for (final var category : categories) {
-                var categoryI18nBase = i18nBase + "." + category;
-                final var categoryInstance = builder.getOrCreateCategory(Component.translatable(categoryI18nBase));
-                for (final var property : category.properties()) {
-                    addPropertyToBuilder(config, property, categoryInstance, builder);
+            });
+            for (final var schema : schemas) {
+                final var config = Balm.getConfig().getLocalConfig(schema);
+                final var i18nBase = "config." + schema.identifier().getNamespace() + "." + schema.identifier().getPath();
+                final var categories = schema.categories();
+                ConfigCategory rootCategory = null;
+                for (final var rootProperty : schema.rootProperties()) {
+                    if (rootCategory == null) {
+                        rootCategory = builder.getOrCreateCategory(Component.translatable(i18nBase));
+                    }
+                    addPropertyToBuilder(config, rootProperty, rootCategory, builder);
+                }
+                for (final var category : categories) {
+                    var categoryI18nBase = i18nBase + "." + category;
+                    final var categoryInstance = builder.getOrCreateCategory(Component.translatable(categoryI18nBase));
+                    for (final var property : category.properties()) {
+                        addPropertyToBuilder(config, property, categoryInstance, builder);
+                    }
                 }
             }
 
