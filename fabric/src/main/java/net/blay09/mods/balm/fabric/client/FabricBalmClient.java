@@ -3,7 +3,6 @@ package net.blay09.mods.balm.fabric.client;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.BalmClient;
 import net.blay09.mods.balm.api.event.client.ConnectedToServerEvent;
-import net.blay09.mods.balm.api.event.client.DisconnectedFromServerEvent;
 import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
@@ -18,8 +17,6 @@ public class FabricBalmClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
-
-        Balm.getEvents().onEvent(DisconnectedFromServerEvent.class, event -> Balm.getConfig().resetToBackingConfigs());
 
         ModelLoadingPlugin.register((FabricBalmModels) BalmClient.getModels());
 

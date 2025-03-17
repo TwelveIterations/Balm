@@ -1,40 +1,54 @@
 package net.blay09.mods.balm.api.config;
 
-import com.google.common.collect.Table;
-import net.blay09.mods.balm.api.network.SyncConfigMessage;
-import net.minecraft.world.entity.player.Player;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.network.ConfigReflection;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.File;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.Collection;
 
 public interface BalmConfig {
-    <T extends BalmConfigData> T initializeBackingConfig(Class<T> clazz);
+    void registerConfig(BalmConfigSchema schema);
 
-    <T extends BalmConfigData> T getBackingConfig(Class<T> clazz);
+    BalmConfigSchema getSchema(ResourceLocation identifier);
 
-    <T extends BalmConfigData> void saveBackingConfig(Class<T> clazz);
+    MutableLoadedConfig getLocalConfig(ResourceLocation identifier);
 
-    <T extends BalmConfigData> T getActive(Class<T> clazz);
-
-    <T extends BalmConfigData> void handleSync(Player player, SyncConfigMessage<T> message);
-
-    <T extends BalmConfigData> void registerConfig(Class<T> clazz, Function<T, SyncConfigMessage<T>> syncMessageFactory);
-
-    <T extends BalmConfigData> void updateConfig(Class<T> clazz, Consumer<T> consumer);
-
-    <T extends BalmConfigData> void resetToBackingConfig(Class<T> clazz);
-
-    void resetToBackingConfigs();
+    LoadedConfig getActiveConfig(ResourceLocation identifier);
 
     File getConfigDir();
 
-    File getConfigFile(String configName);
+    default File getConfigFile(BalmConfigSchema schema) {
+        final var identifier = schema.identifier();
+        return new File(getConfigDir(), identifier.getNamespace() + "-" + identifier.getPath() + ".toml");
+    }
 
-    <T extends BalmConfigData> Table<String, String, BalmConfigProperty<?>> getConfigProperties(Class<T> clazz);
+    default MutableLoadedConfig getLocalConfig(BalmConfigSchema schema) {
+        return getLocalConfig(schema.identifier());
+    }
 
-    <T extends BalmConfigData> String getConfigName(Class<T> clazz);
+    default LoadedConfig getActiveConfig(BalmConfigSchema schema) {
+        return getActiveConfig(schema.identifier());
+    }
 
-    List<? extends BalmConfigData> getConfigsByMod(String modId);
+    default BalmConfigSchema registerConfig(Class<?> configDataClass) {
+        final var schema = ConfigReflection.schemaOf(configDataClass);
+        registerConfig(schema);
+        return schema;
+    }
+
+    default BalmConfigSchema getSchema(Class<?> configDataClass) {
+        return getSchema(ConfigReflection.getIdentifier(configDataClass));
+    }
+
+    default <T> T getActiveConfig(Class<T> configDataClass) {
+        final var loadedConfig = getActiveConfig(getSchema(configDataClass));
+        return ConfigReflection.of(configDataClass, loadedConfig);
+    }
+
+    Collection<BalmConfigSchema> getSchemasByNamespace(String namespace);
+
+    Collection<BalmConfigSchema> getSchemas();
+
+    void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config);
 }

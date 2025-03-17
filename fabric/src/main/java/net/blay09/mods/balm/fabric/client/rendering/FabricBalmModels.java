@@ -15,7 +15,7 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
 
     @Override
     public void initialize(Context context) {
-        // TODO context.addModels(additionalModels); not yet implemented in Fabric
+        // TODO 1.21.5: context.addModels(additionalModels); not yet implemented in Fabric
     }
 
     @Override
@@ -28,7 +28,7 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
 
             @Override
             public boolean canResolve() {
-                return true; // TODO We just resolve to missing model for now
+                return true; // TODO 1.21.5: We just resolve to missing model for now
             }
         };
         additionalModels.add(identifier);
