@@ -6,13 +6,7 @@ import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 
-public class LoadedReflectionConfig<ConfigData> implements MutableLoadedConfig {
-
-    private final ConfigData configData;
-
-    public LoadedReflectionConfig(ConfigData configData) {
-        this.configData = configData;
-    }
+public record LoadedReflectionConfig<ConfigData>(ConfigData data) implements MutableLoadedConfig {
 
     @Override
     public <T> void setRaw(ConfiguredProperty<T> property, T value) {
@@ -45,7 +39,7 @@ public class LoadedReflectionConfig<ConfigData> implements MutableLoadedConfig {
     @Override
     public MutableLoadedConfig copy() {
         final var newConfig = new LoadedTableConfig();
-        newConfig.applyFrom(Balm.getConfig().getSchema(configData.getClass()), newConfig);
+        newConfig.applyFrom(Balm.getConfig().getSchema(data.getClass()), newConfig);
         return newConfig;
     }
 
@@ -57,10 +51,10 @@ public class LoadedReflectionConfig<ConfigData> implements MutableLoadedConfig {
     private Object locatePropertyHolder(ConfiguredProperty<?> property) throws NoSuchFieldException, IllegalAccessException {
         final var category = property.category();
         if (category != null && !category.isEmpty()) {
-            final var categoryField = configData.getClass().getField(category);
-            return categoryField.get(configData);
+            final var categoryField = data.getClass().getField(category);
+            return categoryField.get(data);
         } else {
-            return configData;
+            return data;
         }
     }
 }

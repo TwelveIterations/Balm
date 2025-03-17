@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class AbstractBalmConfig implements BalmConfig {
 
@@ -32,6 +33,15 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     @Override
     public MutableLoadedConfig getLocalConfig(ResourceLocation identifier) {
         return localConfigs.get(identifier);
+    }
+
+    @Override
+    public <T> void updateLocalConfig(Class<T> configDataClass, Consumer<T> updater) {
+        final var schema = getSchema(configDataClass);
+        final var localConfig = getLocalConfig(schema);
+        final var reflectionConfig = ConfigReflection.of(configDataClass, localConfig);
+        updater.accept(reflectionConfig.data());
+        saveLocalConfig(schema, reflectionConfig);
     }
 
     @Override

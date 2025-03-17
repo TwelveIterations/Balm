@@ -145,11 +145,11 @@ public class ConfigReflection {
         return ResourceLocation.fromNamespaceAndPath(configAnnotation.value(), configAnnotation.type());
     }
 
-    public static <T> T of(Class<T> configDataClass, LoadedConfig loadedConfig) {
+    public static <T> LoadedReflectionConfig<T> of(Class<T> configDataClass, LoadedConfig loadedConfig) {
         final var instance = createInstance(configDataClass);
         final var schema = Balm.getConfig().getSchema(configDataClass);
         final var config = new LoadedReflectionConfig<>(instance);
         config.applyFrom(schema, loadedConfig);
-        return instance;
+        return config;
     }
 }

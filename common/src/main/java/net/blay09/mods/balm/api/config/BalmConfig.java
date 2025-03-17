@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 public interface BalmConfig {
     void registerConfig(BalmConfigSchema schema);
@@ -27,6 +28,8 @@ public interface BalmConfig {
         return getLocalConfig(schema.identifier());
     }
 
+    <T> void updateLocalConfig(Class<T> configDataClass, Consumer<T> updater);
+
     default LoadedConfig getActiveConfig(BalmConfigSchema schema) {
         return getActiveConfig(schema.identifier());
     }
@@ -43,7 +46,7 @@ public interface BalmConfig {
 
     default <T> T getActiveConfig(Class<T> configDataClass) {
         final var loadedConfig = getActiveConfig(getSchema(configDataClass));
-        return ConfigReflection.of(configDataClass, loadedConfig);
+        return ConfigReflection.of(configDataClass, loadedConfig).data();
     }
 
     Collection<BalmConfigSchema> getSchemasByNamespace(String namespace);
