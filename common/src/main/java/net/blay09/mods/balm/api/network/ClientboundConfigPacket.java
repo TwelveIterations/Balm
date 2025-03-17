@@ -69,7 +69,8 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
     }
 
     private static <T> void encodeProperty(ConfiguredProperty<T> property, ByteBuf buf, LoadedConfig config) {
-        property.streamCodec().encode(buf, config.getRaw(property));
+        final var value = config.getRaw(property);
+        property.streamCodec().encode(buf, value);
     }
 
     public static void handle(Player player, ClientboundConfigPacket packet) {

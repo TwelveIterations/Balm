@@ -2,9 +2,7 @@ package net.blay09.mods.balm.api.config;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JavaOps;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
@@ -74,7 +72,7 @@ public record LoadedTableConfig(Table<String, String, Object> table) implements 
                 }
             }
         }
-        return Pair.of(new LoadedTableConfig(table), errors);
+        return Pair.of(new LoadedTableConfig(validatedTable), errors);
     }
 
     private static <T> T validate(ConfiguredProperty<T> property, Table<String, String, Object> table) {
