@@ -7,7 +7,15 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 public class BooleanConfigProperty extends AbstractConfigProperty<Boolean> implements ConfiguredBoolean {
-    public static final Codec<Boolean> CODEC = Codec.withAlternative(Codec.BOOL, Codec.STRING.xmap(Boolean::parseBoolean, String::valueOf));
+    public static final Codec<Boolean> CODEC = Codec.withAlternative(Codec.BOOL, Codec.STRING.xmap(it -> {
+        if (it.equalsIgnoreCase("true")) {
+            return true;
+        } else if (it.equalsIgnoreCase("false")) {
+            return false;
+        } else {
+            throw new IllegalArgumentException("Invalid boolean value: " + it);
+        }
+    }, String::valueOf));
 
     private final boolean defaultValue;
 
