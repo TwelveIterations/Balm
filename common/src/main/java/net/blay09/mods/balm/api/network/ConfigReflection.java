@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.api.network;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.v2.LoadedConfig;
 import net.blay09.mods.balm.api.config.v2.reflection.*;
 import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
@@ -155,7 +156,7 @@ public class ConfigReflection {
 
     public static <T> T of(Class<T> configDataClass, LoadedConfig loadedConfig) {
         final var instance = createInstance(configDataClass);
-        final var schema = schemaOf(configDataClass);
+        final var schema = Balm.getConfig().getSchema(configDataClass);
         final var config = new LoadedReflectionConfig<>(instance);
         config.applyFrom(schema, loadedConfig);
         return instance;

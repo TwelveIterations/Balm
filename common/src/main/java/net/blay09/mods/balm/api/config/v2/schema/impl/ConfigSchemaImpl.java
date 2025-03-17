@@ -58,9 +58,19 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
         return categories.values();
     }
 
+    @Override
+    public ConfiguredProperty<?> findProperty(String category, String property) {
+        return properties.get(category, property);
+    }
+
+    @Override
+    public ConfiguredProperty<?> findRootProperty(String property) {
+        return properties.get("", property);
+    }
+
     public <T extends ConfiguredProperty<?>> T addAndReturn(T property) {
         properties.put(property.category(), property.name(), property);
-        if(categories.get(property.category()) instanceof ConfigCategoryImpl category) {
+        if (categories.get(property.category()) instanceof ConfigCategoryImpl category) {
             category.addProperty(property);
         }
         return property;

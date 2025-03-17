@@ -4,18 +4,17 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.Hash;
 import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadedTableConfig implements MutableLoadedConfig {
+public record LoadedTableConfig(Table<String, String, Object> table) implements MutableLoadedConfig {
 
-    private final Table<String, String, Object> table;
-
-    public LoadedTableConfig(Table<String, String, Object> table) {
-        this.table = table;
+    public LoadedTableConfig() {
+        this(HashBasedTable.create());
     }
 
     @Override
@@ -26,6 +25,11 @@ public class LoadedTableConfig implements MutableLoadedConfig {
             throw new IllegalArgumentException("Invalid type for property " + property.name() + " in category " + property.category() + ": " + value.getClass()
                     .getName() + ", expected " + property.type().getName());
         }
+    }
+
+    @Override
+    public MutableLoadedConfig copy() {
+        return new LoadedTableConfig(HashBasedTable.create(table));
     }
 
     @Override

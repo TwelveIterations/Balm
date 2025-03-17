@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.api.config.v2.reflection;
 
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.config.v2.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
 
@@ -37,6 +39,13 @@ public class LoadedReflectionConfig<ConfigData> implements MutableLoadedConfig {
                     (property.category().isEmpty() ? "" : property.category() + ".") +
                     property.name() + "'", e);
         }
+    }
+
+    @Override
+    public MutableLoadedConfig copy() {
+        final var newConfig = new LoadedTableConfig();
+        newConfig.applyFrom(Balm.getConfig().getSchema(configData.getClass()), newConfig);
+        return newConfig;
     }
 
     private Object locatePropertyHolder(ConfiguredProperty<?> property) throws NoSuchFieldException, IllegalAccessException {

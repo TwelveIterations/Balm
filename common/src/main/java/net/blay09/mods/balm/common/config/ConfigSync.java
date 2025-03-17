@@ -10,6 +10,8 @@ import net.blay09.mods.balm.api.network.ClientboundConfigPacket;
 
 public class ConfigSync {
     public static void initialize() {
+        Balm.getNetworking().registerClientboundPacket(ClientboundConfigPacket.TYPE, ClientboundConfigPacket.class, ClientboundConfigPacket.STREAM_CODEC, ClientboundConfigPacket::handle);
+
         Balm.getEvents().onEvent(PlayerLoginEvent.class, event -> {
             final var schemas = Balm.getConfig().getSchemas();
             for (final var schema : schemas) {

@@ -17,4 +17,6 @@ public interface MutableLoadedConfig extends LoadedConfig {
             }
         }
     }
+
+    MutableLoadedConfig copy();
 }

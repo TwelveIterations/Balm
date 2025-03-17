@@ -19,4 +19,8 @@ public interface BalmConfigSchema {
     Collection<ConfiguredProperty<?>> rootProperties();
 
     Collection<ConfigCategory> categories();
+
+    ConfiguredProperty<?> findProperty(String category, String property);
+
+    ConfiguredProperty<?> findRootProperty(String property);
 }
