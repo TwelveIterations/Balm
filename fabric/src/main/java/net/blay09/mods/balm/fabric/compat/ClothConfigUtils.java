@@ -4,8 +4,8 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.v2.schema.*;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 

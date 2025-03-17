@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.common.config;
 
-import net.blay09.mods.balm.api.config.v2.BalmConfig;
-import net.blay09.mods.balm.api.config.v2.LoadedConfig;
-import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.BalmConfig;
+import net.blay09.mods.balm.api.config.LoadedConfig;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;

@@ -2,11 +2,11 @@ package net.blay09.mods.balm.api.network;
 
 import io.netty.buffer.ByteBuf;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.v2.LoadedConfig;
-import net.blay09.mods.balm.api.config.v2.LoadedTableConfig;
-import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
-import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
+import net.blay09.mods.balm.api.config.LoadedConfig;
+import net.blay09.mods.balm.api.config.LoadedTableConfig;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

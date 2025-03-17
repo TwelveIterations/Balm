@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.common.config;
 
 import com.google.gson.Gson;
-import net.blay09.mods.balm.api.config.v2.reflection.Comment;
-import net.blay09.mods.balm.api.config.v2.reflection.NestedType;
+import net.blay09.mods.balm.api.config.reflection.Comment;
+import net.blay09.mods.balm.api.config.reflection.NestedType;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 

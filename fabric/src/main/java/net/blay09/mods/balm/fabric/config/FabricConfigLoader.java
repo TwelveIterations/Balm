@@ -1,10 +1,9 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.config.v2.LoadedConfig;
-import net.blay09.mods.balm.api.config.v2.LoadedTableConfig;
-import net.blay09.mods.balm.api.config.v2.reflection.NestedType;
-import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.LoadedConfig;
+import net.blay09.mods.balm.api.config.LoadedTableConfig;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlError;
 import net.blay09.mods.balm.notoml.NotomlParser;

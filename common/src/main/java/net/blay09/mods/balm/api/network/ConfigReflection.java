@@ -1,11 +1,11 @@
 package net.blay09.mods.balm.api.network;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.v2.LoadedConfig;
-import net.blay09.mods.balm.api.config.v2.reflection.*;
-import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
-import net.blay09.mods.balm.api.config.v2.schema.builder.ConfigPropertyBuilder;
-import net.blay09.mods.balm.api.config.v2.schema.builder.PropertyHolderBuilder;
+import net.blay09.mods.balm.api.config.LoadedConfig;
+import net.blay09.mods.balm.api.config.reflection.*;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.schema.builder.ConfigPropertyBuilder;
+import net.blay09.mods.balm.api.config.schema.builder.PropertyHolderBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 

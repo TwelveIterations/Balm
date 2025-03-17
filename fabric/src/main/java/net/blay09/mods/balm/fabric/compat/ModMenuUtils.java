@@ -2,7 +2,7 @@ package net.blay09.mods.balm.fabric.compat;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 
 public class ModMenuUtils {
     public static <T> ConfigScreenFactory<?> getConfigScreen(BalmConfigSchema schema) {

@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.config.v2.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;

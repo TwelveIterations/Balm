@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.common.config;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.v2.schema.BalmConfigSchema;
-import net.blay09.mods.balm.api.config.v2.schema.ConfiguredProperty;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
 import net.blay09.mods.balm.api.event.PlayerLoginEvent;
 import net.blay09.mods.balm.api.event.client.DisconnectedFromServerEvent;
