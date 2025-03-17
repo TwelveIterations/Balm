@@ -15,7 +15,7 @@ public class ConfigCategoryImpl implements ConfigCategoryBuilder, ConfigCategory
 
     private final ConfigSchemaImpl schema;
     private final String name;
-    private String comment;
+    private String comment = "";
 
     public ConfigCategoryImpl(ConfigSchemaImpl schema, String name) {
         this.schema = schema;

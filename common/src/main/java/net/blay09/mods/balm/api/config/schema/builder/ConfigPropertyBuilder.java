@@ -11,7 +11,7 @@ public class ConfigPropertyBuilder {
     protected final ConfigSchemaImpl schema;
     protected final String category;
     protected final String name;
-    protected String comment;
+    protected String comment = "";
     protected boolean synced;
 
     public ConfigPropertyBuilder(ConfigSchemaImpl schema, String name) {
