@@ -3,6 +3,7 @@ package net.blay09.mods.balm.api.config.reflection;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 
 public class LoadedReflectionConfig<ConfigData> implements MutableLoadedConfig {
@@ -46,6 +47,11 @@ public class LoadedReflectionConfig<ConfigData> implements MutableLoadedConfig {
         final var newConfig = new LoadedTableConfig();
         newConfig.applyFrom(Balm.getConfig().getSchema(configData.getClass()), newConfig);
         return newConfig;
+    }
+
+    @Override
+    public MutableLoadedConfig mutable(BalmConfigSchema schema) {
+        return this;
     }
 
     private Object locatePropertyHolder(ConfiguredProperty<?> property) throws NoSuchFieldException, IllegalAccessException {

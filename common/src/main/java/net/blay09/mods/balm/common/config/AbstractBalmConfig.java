@@ -46,6 +46,14 @@ public abstract class AbstractBalmConfig implements BalmConfig {
         return schemas.values();
     }
 
+    protected void setLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
+        localConfigs.put(schema.identifier(), config);
+    }
+
+    protected void setActiveConfig(BalmConfigSchema schema, LoadedConfig config) {
+        activeConfigs.put(schema.identifier(), config);
+    }
+
     public void resetToLocalConfig() {
         activeConfigs.putAll(localConfigs);
     }

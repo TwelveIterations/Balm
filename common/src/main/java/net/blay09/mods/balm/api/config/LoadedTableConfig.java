@@ -32,6 +32,11 @@ public record LoadedTableConfig(Table<String, String, Object> table) implements 
     }
 
     @Override
+    public MutableLoadedConfig mutable(BalmConfigSchema schema) {
+        return this;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getRaw(ConfiguredProperty<T> property) {
         final var value = table.get(property.category(), property.name());
