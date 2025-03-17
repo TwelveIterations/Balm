@@ -3,6 +3,7 @@ package net.blay09.mods.balm.common.config;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.api.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
 import net.blay09.mods.balm.api.event.PlayerLoginEvent;
 import net.blay09.mods.balm.api.event.client.DisconnectedFromServerEvent;
@@ -10,7 +11,11 @@ import net.blay09.mods.balm.api.network.ClientboundConfigPacket;
 
 public class ConfigSync {
     public static void initialize() {
-        Balm.getNetworking().registerClientboundPacket(ClientboundConfigPacket.TYPE, ClientboundConfigPacket.class, ClientboundConfigPacket.STREAM_CODEC, ClientboundConfigPacket::handle);
+        Balm.getNetworking()
+                .registerClientboundPacket(ClientboundConfigPacket.TYPE,
+                        ClientboundConfigPacket.class,
+                        ClientboundConfigPacket.STREAM_CODEC,
+                        ClientboundConfigPacket::handle);
 
         Balm.getEvents().onEvent(PlayerLoginEvent.class, event -> {
             final var schemas = Balm.getConfig().getSchemas();
@@ -45,10 +50,13 @@ public class ConfigSync {
         });
     }
 
-    private static boolean hasSyncedProperties(BalmConfigSchema schema) {
+    public static boolean hasSyncedProperties(BalmConfigSchema schema) {
         return schema.rootProperties().stream().anyMatch(ConfiguredProperty::synced) || schema.categories()
                 .stream()
-                .flatMap(it -> it.properties().stream())
-                .anyMatch(ConfiguredProperty::synced);
+                .anyMatch(ConfigSync::hasSyncedProperties);
+    }
+
+    public static boolean hasSyncedProperties(ConfigCategory category) {
+        return category.properties().stream().anyMatch(ConfiguredProperty::synced);
     }
 }

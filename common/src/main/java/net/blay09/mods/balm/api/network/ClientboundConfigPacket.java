@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.config.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.common.config.ConfigSync;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -44,17 +45,17 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
 
     private static void encode(RegistryFriendlyByteBuf buf, ClientboundConfigPacket packet) {
         ResourceLocation.STREAM_CODEC.encode(buf, packet.schema.identifier());
-        final var rootProperties = packet.schema.rootProperties();
+        final var rootProperties = packet.schema.rootProperties().stream().filter(ConfiguredProperty::synced).toList();
         buf.writeVarInt(rootProperties.size());
         for (final var rootProperty : rootProperties) {
             buf.writeUtf(rootProperty.name());
             encodeProperty(rootProperty, buf, packet.config);
         }
-        final var categories = packet.schema.categories();
+        final var categories = packet.schema.categories().stream().filter(ConfigSync::hasSyncedProperties).toList();
         buf.writeVarInt(categories.size());
         for (final var category : categories) {
             buf.writeUtf(category.name());
-            final var properties = category.properties();
+            final var properties = category.properties().stream().filter(ConfiguredProperty::synced).toList();
             buf.writeVarInt(properties.size());
             for (final var property : properties) {
                 buf.writeUtf(property.name());

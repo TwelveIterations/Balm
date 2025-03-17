@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ExampleConfig {
-    public static final String EXAMPLE_STATIC = "test";
-
     public enum ExampleEnum implements StringRepresentable {
         Hello,
         World;
@@ -79,28 +77,11 @@ public class ExampleConfig {
         public final ConfiguredFloat exampleFloat = category
                 .property("exampleFloat")
                 .comment("This is an example float inside a category")
+                .synced()
                 .floatOf(42.84f);
 
         public ExampleCategory(ConfigCategoryBuilder category) {
             super(category);
         }
-    }
-
-    public ExampleConfig() {
-        // Balm.getConfig().registerConfig(id("common"), ConfigReflection.schemaOf(ExampleConfigData.class))
-        // Balm.getConfig().registerConfig(ExampleConfigData.class);
-        // Balm.getConfig().getLocalConfig(id("common"))
-        // Balm.getConfig().getLocalConfig(ExampleConfigData.class)
-        // Balm.getConfig().getActiveConfig(id("common"))
-        // Balm.getConfig().getActiveConfig(ExampleConfigData.class)
-        // Balm.getConfig().getConfigDir()
-        // Balm.getConfig().getConfigDir()
-
-        // final var filled = ConfigReflection.applyFrom(new ExampleConfigData(), inferredSchema);
-        // final var loaded = schema.loadFrom(notoml.toTable());
-        // final var synced = schema.loadFrom(message.toTable());
-        // final var defaults = schema.defaults();
-        // final var instance = ConfigReflection.applyTo(defaults, new ExampleConfigData());
-        // final var table = loaded.toTable();
     }
 }
