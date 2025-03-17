@@ -142,7 +142,7 @@ public class ConfigReflection {
         if (configAnnotation == null) {
             throw new IllegalArgumentException("Class " + configDataClass.getName() + " is missing a @Config annotation");
         }
-        return ResourceLocation.fromNamespaceAndPath(configAnnotation.value(), "common");
+        return ResourceLocation.fromNamespaceAndPath(configAnnotation.value(), configAnnotation.type());
     }
 
     public static <T> T of(Class<T> configDataClass, LoadedConfig loadedConfig) {

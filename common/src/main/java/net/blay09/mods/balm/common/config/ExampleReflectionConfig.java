@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-@Config("balm")
+@Config(value = "balm")
 public class ExampleReflectionConfig {
 
     public static final String EXAMPLE_STATIC = "test";
