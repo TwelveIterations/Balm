@@ -30,6 +30,7 @@ public class FabricBalmConfig extends AbstractBalmConfig {
 
     @Override
     public void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
+        super.saveLocalConfig(schema, config);
         final var configFile = getConfigFile(schema);
         try {
             FabricConfigSaver.save(configFile, schema, config);

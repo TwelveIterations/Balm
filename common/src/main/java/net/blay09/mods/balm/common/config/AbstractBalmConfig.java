@@ -56,6 +56,11 @@ public abstract class AbstractBalmConfig implements BalmConfig {
         return (T) activeReflectionConfigs.computeIfAbsent(identifier, it -> BalmConfig.super.getActiveConfig(configDataClass));
     }
 
+    @Override
+    public void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
+        activeReflectionConfigs.remove(schema.identifier());
+    }
+
     protected void setLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
         localConfigs.put(schema.identifier(), config);
     }
