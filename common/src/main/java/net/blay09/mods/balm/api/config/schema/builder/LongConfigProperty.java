@@ -7,6 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 public class LongConfigProperty extends AbstractConfigProperty<Long> implements ConfiguredLong {
+    public static final Codec<Long> CODEC = Codec.withAlternative(Codec.LONG, Codec.STRING.xmap(Long::parseLong, String::valueOf));
     private final long defaultValue;
 
     public LongConfigProperty(ConfigPropertyBuilder parent, long defaultValue) {
@@ -21,7 +22,7 @@ public class LongConfigProperty extends AbstractConfigProperty<Long> implements 
 
     @Override
     public Codec<Long> codec() {
-        return Codec.LONG;
+        return CODEC;
     }
 
     @Override

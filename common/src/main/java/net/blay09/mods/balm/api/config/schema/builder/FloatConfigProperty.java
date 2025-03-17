@@ -7,6 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 public class FloatConfigProperty extends AbstractConfigProperty<Float> implements ConfiguredFloat {
+    public static final Codec<Float> CODEC = Codec.withAlternative(Codec.FLOAT, Codec.STRING.xmap(Float::parseFloat, String::valueOf));
     private final float defaultValue;
 
     public FloatConfigProperty(ConfigPropertyBuilder parent, float defaultValue) {
@@ -21,7 +22,7 @@ public class FloatConfigProperty extends AbstractConfigProperty<Float> implement
 
     @Override
     public Codec<Float> codec() {
-        return Codec.FLOAT;
+        return CODEC;
     }
 
     @Override

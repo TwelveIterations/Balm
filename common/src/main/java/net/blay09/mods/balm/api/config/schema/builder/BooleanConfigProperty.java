@@ -7,6 +7,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 public class BooleanConfigProperty extends AbstractConfigProperty<Boolean> implements ConfiguredBoolean {
+    public static final Codec<Boolean> CODEC = Codec.withAlternative(Codec.BOOL, Codec.STRING.xmap(Boolean::parseBoolean, String::valueOf));
+
     private final boolean defaultValue;
 
     public BooleanConfigProperty(ConfigPropertyBuilder parent, boolean defaultValue) {
@@ -21,7 +23,7 @@ public class BooleanConfigProperty extends AbstractConfigProperty<Boolean> imple
 
     @Override
     public Codec<Boolean> codec() {
-        return Codec.BOOL;
+        return CODEC;
     }
 
     @Override

@@ -2,11 +2,11 @@ package net.blay09.mods.balm.api.config;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.blay09.mods.balm.api.config.schema.builder.*;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ByIdMap;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 
 public class PrimitiveConfigCodecs {
@@ -15,15 +15,15 @@ public class PrimitiveConfigCodecs {
         if (type == String.class) {
             return (Codec<T>) Codec.STRING;
         } else if (type == Integer.class || type == int.class) {
-            return (Codec<T>) Codec.INT;
+            return (Codec<T>) IntConfigProperty.CODEC;
         } else if (type == Long.class || type == long.class) {
-            return (Codec<T>) Codec.LONG;
+            return (Codec<T>) LongConfigProperty.CODEC;
         } else if (type == Float.class || type == float.class) {
-            return (Codec<T>) Codec.FLOAT;
+            return (Codec<T>) FloatConfigProperty.CODEC;
         } else if (type == Double.class || type == double.class) {
-            return (Codec<T>) Codec.DOUBLE;
+            return (Codec<T>) DoubleConfigProperty.CODEC;
         } else if (type == Boolean.class || type == boolean.class) {
-            return (Codec<T>) Codec.BOOL;
+            return (Codec<T>) BooleanConfigProperty.CODEC;
         } else if (type == ResourceLocation.class) {
             return (Codec<T>) ResourceLocation.CODEC;
         } else if (type.isEnum() && StringRepresentable.class.isAssignableFrom(type)) {

@@ -4,6 +4,8 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JavaOps;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 
@@ -53,29 +55,30 @@ public record LoadedTableConfig(Table<String, String, Object> table) implements 
         final var validatedTable = HashBasedTable.<String, String, Object>create();
         final var errors = new ArrayList<Throwable>();
         for (final var rootProperty : schema.rootProperties()) {
-            validate(rootProperty, table)
-                    .ifLeft(it -> validatedTable.put(rootProperty.category(), rootProperty.name(), it))
-                    .ifRight(e -> {
-                        validatedTable.put(rootProperty.category(), rootProperty.name(), rootProperty.defaultValue());
-                        errors.add(e);
-                    });
+            try {
+                final var value = validate(rootProperty, table);
+                validatedTable.put(rootProperty.category(), rootProperty.name(), value);
+            } catch (Throwable e) {
+                validatedTable.put(rootProperty.category(), rootProperty.name(), rootProperty.defaultValue());
+                errors.add(e);
+            }
         }
         for (final var category : schema.categories()) {
             for (final var property : category.properties()) {
-                validate(property, table)
-                        .ifLeft(it -> validatedTable.put(property.category(), property.name(), it))
-                        .ifRight(e -> {
-                            validatedTable.put(property.category(), property.name(), property.defaultValue());
-                            errors.add(e);
-                        });
+                try {
+                    final var value = validate(property, table);
+                    validatedTable.put(property.category(), property.name(), value);
+                } catch (Throwable e) {
+                    validatedTable.put(property.category(), property.name(), property.defaultValue());
+                    errors.add(e);
+                }
             }
         }
         return Pair.of(new LoadedTableConfig(table), errors);
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> Either<T, Throwable> validate(ConfiguredProperty<T> property, Table<String, String, Object> table) {
+    private static <T> T validate(ConfiguredProperty<T> property, Table<String, String, Object> table) {
         final var value = table.get(property.category(), property.name());
-        return Either.left((T) value);
+        return property.codec().decode(JavaOps.INSTANCE, value).getOrThrow().getFirst();
     }
 }

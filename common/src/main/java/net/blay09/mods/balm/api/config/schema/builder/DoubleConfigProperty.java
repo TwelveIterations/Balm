@@ -7,6 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 public class DoubleConfigProperty extends AbstractConfigProperty<Double> implements ConfiguredDouble {
+    public static final Codec<Double> CODEC = Codec.withAlternative(Codec.DOUBLE, Codec.STRING.xmap(Double::parseDouble, String::valueOf));
     private final double defaultValue;
 
     public DoubleConfigProperty(ConfigPropertyBuilder parent, double defaultValue) {
@@ -21,7 +22,7 @@ public class DoubleConfigProperty extends AbstractConfigProperty<Double> impleme
 
     @Override
     public Codec<Double> codec() {
-        return Codec.DOUBLE;
+        return CODEC;
     }
 
     @Override

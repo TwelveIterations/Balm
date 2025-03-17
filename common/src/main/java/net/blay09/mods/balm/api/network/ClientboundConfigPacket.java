@@ -44,6 +44,12 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
 
     private static void encode(RegistryFriendlyByteBuf buf, ClientboundConfigPacket packet) {
         ResourceLocation.STREAM_CODEC.encode(buf, packet.schema.identifier());
+        final var rootProperties = packet.schema.rootProperties();
+        buf.writeVarInt(rootProperties.size());
+        for (final var rootProperty : rootProperties) {
+            buf.writeUtf(rootProperty.name());
+            encodeProperty(rootProperty, buf, packet.config);
+        }
         final var categories = packet.schema.categories();
         buf.writeVarInt(categories.size());
         for (final var category : categories) {
