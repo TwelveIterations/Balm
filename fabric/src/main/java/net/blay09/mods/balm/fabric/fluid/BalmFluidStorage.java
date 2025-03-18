@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric.fluid;
 
 import com.google.common.primitives.Ints;
+import net.blay09.mods.balm.api.fluid.DefaultFluidTank;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -71,7 +72,7 @@ public class BalmFluidStorage extends SnapshotParticipant<ResourceAmount<FluidVa
 
     @Override
     protected ResourceAmount<FluidVariant> createSnapshot() {
-        return new ResourceAmount(getResource(), getAmount());
+        return new ResourceAmount<>(getResource(), getAmount());
     }
 
     @Override
@@ -81,7 +82,9 @@ public class BalmFluidStorage extends SnapshotParticipant<ResourceAmount<FluidVa
 
     @Override
     public void onFinalCommit() {
-        fluidTank.setChanged();
+        if (fluidTank instanceof DefaultFluidTank defaultFluidTank) {
+            defaultFluidTank.setChanged();
+        }
     }
 
     @Override
