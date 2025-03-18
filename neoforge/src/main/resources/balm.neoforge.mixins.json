@@ -18,7 +18,6 @@
     "CheckboxAccessor",
     "ImageButtonAccessor",
     "KeyMappingAccessor",
-    "KeyMappingMixin",
     "MouseHandlerAccessor",
     "ScreenAccessor",
     "OptionsScreenMixin"

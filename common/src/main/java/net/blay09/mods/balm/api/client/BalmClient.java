@@ -23,6 +23,10 @@ public class BalmClient {
         return runtime.getTextures();
     }
 
+    /**
+     * @deprecated Use Kuma instead.
+     */
+    @Deprecated
     public static BalmKeyMappings getKeyMappings() {
         return runtime.getKeyMappings();
     }

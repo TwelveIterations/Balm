@@ -1,3 +1,8 @@
+- Removed outdated keymapping mixins as they never worked well and resulted in Balm being loaded too early with Essential
+  - Shouldn't have any effect on Balm mods since all that depended on this already migrated to Kuma
+
+---
+
 - Added `BalmRegistries.register(...)` to allow registering objects into any registry
 - Added `BalmParticles` to allow registering particles
 - Added `BalmRenderers.registerParticleProvider(...)` to allow registering particle renderer providers

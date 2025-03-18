@@ -37,8 +37,6 @@
     "ItemInHandRendererMixin",
     "KeyboardHandlerMixin",
     "KeyMappingAccessor",
-    "KeyMappingMixin",
-    "FabricKeyMappingMixin",
     "LevelRendererMixin",
     "MinecraftMixin",
     "MouseHandlerAccessor",
