@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.capability.CapabilityTypes;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
+import net.minecraft.world.Container;
 
 public class CommonCapabilities {
     public static void initialize(BalmCapabilities capabilities) {
@@ -15,6 +16,8 @@ public class CommonCapabilities {
                 } else {
                     return provider.getContainer();
                 }
+            } else if (blockEntity instanceof Container container) {
+                return container;
             }
             return null;
         }));

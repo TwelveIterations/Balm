@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.fabric.provider;
+package net.blay09.mods.balm.fabric.capability;
 
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.capability.CapabilityType;

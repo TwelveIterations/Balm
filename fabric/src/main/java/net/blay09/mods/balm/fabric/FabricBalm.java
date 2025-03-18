@@ -5,10 +5,8 @@ import net.blay09.mods.balm.api.capability.CapabilityTypes;
 import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
-import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.command.BalmCommand;
@@ -16,19 +14,26 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
-import net.blay09.mods.balm.fabric.provider.FabricBalmCapabilities;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -54,36 +59,58 @@ public class FabricBalm implements ModInitializer {
 
         CommonCapabilities.initialize(Balm.getCapabilities());
 
-        ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, direction) -> {
-            if (blockEntity instanceof BalmContainerProvider containerProvider) {
-                final var container = direction != null ? containerProvider.getContainer(direction) : containerProvider.getContainer();
-                if (container != null) {
-                    return InventoryStorage.of(container, direction);
-                }
-            } else {
-                final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.CONTAINER);
-                if (container != null) {
-                    return InventoryStorage.of(container, direction);
-                }
-            }
+        ItemStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
+            private boolean running;
 
-            return null;
+            @Override
+            public @Nullable Storage<ItemVariant> find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Direction direction) {
+                if (running) {
+                    return null;
+                }
+
+                if (blockEntity instanceof BalmContainerProvider containerProvider) {
+                    final var container = direction != null ? containerProvider.getContainer(direction) : containerProvider.getContainer();
+                    if (container != null) {
+                        return InventoryStorage.of(container, direction);
+                    }
+                } else {
+                    running = true;
+                    final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.CONTAINER);
+                    running = false;
+                    if (container != null) {
+                        return InventoryStorage.of(container, direction);
+                    }
+                }
+
+                return null;
+            }
         });
 
-        FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, direction) -> {
-            if (blockEntity instanceof BalmFluidTankProvider fluidTankProvider) {
-                final var fluidTank = direction != null ? fluidTankProvider.getFluidTank(direction) : fluidTankProvider.getFluidTank();
-                if (fluidTank != null) {
-                    return new BalmFluidStorage(fluidTank);
-                }
-            } else {
-                final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.FLUID_TANK);
-                if (fluidTank != null) {
-                    return new BalmFluidStorage(fluidTank);
-                }
-            }
+        FluidStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
+            private boolean running;
 
-            return null;
+            @Override
+            public @Nullable Storage<FluidVariant> find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Direction direction) {
+                if (running) {
+                    return null;
+                }
+
+                if (blockEntity instanceof BalmFluidTankProvider fluidTankProvider) {
+                    final var fluidTank = direction != null ? fluidTankProvider.getFluidTank(direction) : fluidTankProvider.getFluidTank();
+                    if (fluidTank != null) {
+                        return new BalmFluidStorage(fluidTank);
+                    }
+                } else {
+                    running = true;
+                    final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.FLUID_TANK);
+                    running = false;
+                    if (fluidTank != null) {
+                        return new BalmFluidStorage(fluidTank);
+                    }
+                }
+
+                return null;
+            }
         });
 
         Balm.getNetworking().registerServerboundPacket(ServerboundModListMessage.TYPE,
