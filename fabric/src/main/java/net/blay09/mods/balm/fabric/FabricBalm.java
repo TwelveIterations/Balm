@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.capability.CapabilityTypes;
+import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
@@ -14,7 +16,7 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
-import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
+import net.blay09.mods.balm.fabric.provider.FabricBalmCapabilities;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -50,14 +52,16 @@ public class FabricBalm implements ModInitializer {
             ((BalmEntity) newPlayer).setFabricBalmData(data);
         });
 
-        var providers = ((FabricBalmProviders) Balm.getProviders());
-        providers.registerProvider(ResourceLocation.fromNamespaceAndPath("balm", "container"), Container.class);
-        providers.registerProvider(ResourceLocation.fromNamespaceAndPath("balm", "fluid_tank"), FluidTank.class);
-        providers.registerProvider(ResourceLocation.fromNamespaceAndPath("balm", "energy_storage"), EnergyStorage.class);
+        CommonCapabilities.initialize(Balm.getCapabilities());
 
         ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, direction) -> {
             if (blockEntity instanceof BalmContainerProvider containerProvider) {
-                final var container = containerProvider.getContainer(direction);
+                final var container = direction != null ? containerProvider.getContainer(direction) : containerProvider.getContainer();
+                if (container != null) {
+                    return InventoryStorage.of(container, direction);
+                }
+            } else {
+                final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.CONTAINER);
                 if (container != null) {
                     return InventoryStorage.of(container, direction);
                 }
@@ -68,7 +72,12 @@ public class FabricBalm implements ModInitializer {
 
         FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, direction) -> {
             if (blockEntity instanceof BalmFluidTankProvider fluidTankProvider) {
-                final var fluidTank = fluidTankProvider.getFluidTank(direction);
+                final var fluidTank = direction != null ? fluidTankProvider.getFluidTank(direction) : fluidTankProvider.getFluidTank();
+                if (fluidTank != null) {
+                    return new BalmFluidStorage(fluidTank);
+                }
+            } else {
+                final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.FLUID_TANK);
                 if (fluidTank != null) {
                     return new BalmFluidStorage(fluidTank);
                 }

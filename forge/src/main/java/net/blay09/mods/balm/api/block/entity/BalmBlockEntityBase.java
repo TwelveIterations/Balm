@@ -6,8 +6,8 @@ import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
+import net.blay09.mods.balm.api.capability.BalmProvider;
+import net.blay09.mods.balm.api.capability.BalmProviderHolder;
 import net.blay09.mods.balm.forge.container.BalmInvWrapper;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
@@ -92,7 +92,5 @@ public abstract class BalmBlockEntityBase extends BlockEntity {
         }
         return result != null ? result.cast() : super.getCapability(cap, side);
     }
-
-    protected abstract void buildProviders(List<Object> providers);
 
 }

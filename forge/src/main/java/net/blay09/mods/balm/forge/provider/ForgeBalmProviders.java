@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.forge.provider;
 
-import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.capability.BalmProviders;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

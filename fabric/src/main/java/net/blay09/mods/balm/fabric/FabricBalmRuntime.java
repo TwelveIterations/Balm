@@ -28,7 +28,7 @@ import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -42,7 +42,7 @@ import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
-import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
+import net.blay09.mods.balm.fabric.provider.FabricBalmCapabilities;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
 import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
@@ -79,7 +79,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     private final BalmRegistries registries = new FabricBalmRegistries();
     private final BalmSounds sounds = new FabricBalmSounds();
     private final BalmEntities entities = new FabricBalmEntities();
-    private final BalmProviders providers = new FabricBalmProviders();
+    private final BalmCapabilities capabilities = new FabricBalmCapabilities();
     private final BalmCommands commands = new FabricBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmStats stats = new FabricBalmStats();
@@ -171,8 +171,8 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public BalmProviders getProviders() {
-        return providers;
+    public BalmCapabilities getCapabilities() {
+        return capabilities;
     }
 
     @Override

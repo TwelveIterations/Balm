@@ -2,6 +2,7 @@ package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmHooks;
+import net.blay09.mods.balm.api.capability.CapabilityTypes;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.blay09.mods.balm.api.entity.BalmPlayer;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
@@ -119,7 +120,7 @@ public class FabricBalmHooks implements BalmHooks {
     @Override
     public boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        FluidTank fluidTank = Balm.getProviders().getProvider(blockEntity, FluidTank.class);
+        final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, hitResult.getDirection(), CapabilityTypes.FLUID_TANK);
         if (fluidTank != null) {
             ItemStack handItem = player.getItemInHand(hand);
             if (handItem.getItem() == Items.BUCKET) {
