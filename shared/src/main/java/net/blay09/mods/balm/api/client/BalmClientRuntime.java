@@ -11,6 +11,12 @@ public interface BalmClientRuntime {
     BalmTextures getTextures();
     BalmScreens getScreens();
     BalmModels getModels();
+
+    /**
+     * @deprecated Use Kuma instead.
+     */
+    @Deprecated
     BalmKeyMappings getKeyMappings();
+
     void initialize(String modId, Runnable initializer);
 }

@@ -22,7 +22,7 @@ public class BalmClient {
     }
 
     /**
-     * Use Balm.getProxy() for extra side-safety
+     * @deprecated Use Balm.getProxy() for extra side-safety
      */
     @Deprecated
     public static Player getClientPlayer() {
@@ -37,6 +37,10 @@ public class BalmClient {
         return runtime.getTextures();
     }
 
+    /**
+     * @deprecated Use Kuma instead.
+     */
+    @Deprecated
     public static BalmKeyMappings getKeyMappings() {
         return runtime.getKeyMappings();
     }
