@@ -2,7 +2,7 @@ package net.blay09.mods.balm.neoforge.provider;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.capability.BalmProviders;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;

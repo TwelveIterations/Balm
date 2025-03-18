@@ -17,7 +17,7 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.capability.BalmProviders;
 import net.blay09.mods.balm.api.proxy.*;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;

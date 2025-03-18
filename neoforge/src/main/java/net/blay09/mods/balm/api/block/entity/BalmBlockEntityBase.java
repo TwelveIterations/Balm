@@ -12,6 +12,4 @@ public abstract class BalmBlockEntityBase extends BlockEntity {
         super(blockEntityType, blockPos, blockState);
     }
 
-    protected abstract void buildProviders(List<Object> providers);
-
 }

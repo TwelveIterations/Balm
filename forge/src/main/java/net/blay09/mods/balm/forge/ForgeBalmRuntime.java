@@ -26,7 +26,7 @@ import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.capability.BalmProviders;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
