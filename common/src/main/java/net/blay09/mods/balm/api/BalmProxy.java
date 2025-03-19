@@ -9,7 +9,11 @@ public class BalmProxy {
         return null;
     }
 
-    public boolean isConnectedToServer() {
+    public boolean isLocalServer() {
+        return false;
+    }
+
+    public boolean isConnected() {
         return false;
     }
 

@@ -12,7 +12,12 @@ public class BalmClientProxy extends BalmProxy {
     }
 
     @Override
-    public boolean isConnectedToServer() {
+    public boolean isLocalServer() {
+        return Minecraft.getInstance().isLocalServer();
+    }
+
+    @Override
+    public boolean isConnected() {
         return Minecraft.getInstance().getConnection() != null;
     }
 

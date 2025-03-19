@@ -1,9 +1,11 @@
 package net.blay09.mods.balm.common.config;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.config.LoadedConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.api.network.ConfigReflection;
 import net.minecraft.resources.ResourceLocation;
 
@@ -67,8 +69,26 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
         activeReflectionConfigs.remove(schema.identifier());
+        localConfigs.put(schema.identifier(), config);
+        // Reapply active config while retaining synced properties if in multiplayer
+        final var newConfig = config.copy();
+        if (!Balm.getProxy().isLocalServer()) {
+            final var activeConfig = activeConfigs.get(schema.identifier());
+            for (final var rootProperty : schema.rootProperties()) {
+                if (rootProperty.synced()) {
+                    newConfig.setRaw((ConfiguredProperty) rootProperty, activeConfig.getRaw(rootProperty));
+                }
+            }
+            for (final var category : schema.categories()) {
+                for (final var property : category.properties()) {
+                    newConfig.setRaw((ConfiguredProperty) property, activeConfig.getRaw(property));
+                }
+            }
+        }
+        setActiveConfig(schema, newConfig);
     }
 
     protected void setLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
