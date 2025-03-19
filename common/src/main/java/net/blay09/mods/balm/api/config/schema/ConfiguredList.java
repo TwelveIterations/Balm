@@ -18,4 +18,8 @@ public interface ConfiguredList<T> extends ConfiguredProperty<List<T>>, NestedTy
     default void set(MutableLoadedConfig config, List<T> value) {
         setRaw(config, value);
     }
+
+    default void set(List<T> value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

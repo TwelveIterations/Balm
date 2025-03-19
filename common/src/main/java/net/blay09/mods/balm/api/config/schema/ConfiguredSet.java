@@ -18,4 +18,8 @@ public interface ConfiguredSet<T> extends ConfiguredProperty<Set<T>>, NestedType
     default void set(MutableLoadedConfig config, Set<T> value) {
         setRaw(config, value);
     }
+
+    default void set(Set<T> value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

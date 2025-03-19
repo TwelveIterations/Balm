@@ -16,4 +16,8 @@ public interface ConfiguredLong extends ConfiguredProperty<Long> {
     default void set(MutableLoadedConfig config, long value) {
         setRaw(config, value);
     }
+
+    default void set(long value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

@@ -16,4 +16,8 @@ public interface ConfiguredDouble extends ConfiguredProperty<Double> {
     default void set(MutableLoadedConfig config, double value) {
         setRaw(config, value);
     }
+
+    default void set(double value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

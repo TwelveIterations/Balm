@@ -16,4 +16,8 @@ public interface ConfiguredInt extends ConfiguredProperty<Integer> {
     default void set(MutableLoadedConfig config, int value) {
         setRaw(config, value);
     }
+
+    default void set(int value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

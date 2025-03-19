@@ -16,4 +16,8 @@ public interface ConfiguredBoolean extends ConfiguredProperty<Boolean> {
     default void set(MutableLoadedConfig config, boolean value) {
         setRaw(config, value);
     }
+
+    default void set(boolean value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

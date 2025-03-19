@@ -16,4 +16,8 @@ public interface ConfiguredString extends ConfiguredProperty<String> {
     default void set(MutableLoadedConfig config, String value) {
         setRaw(config, value);
     }
+
+    default void set(String value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

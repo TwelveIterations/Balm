@@ -53,5 +53,9 @@ public interface BalmConfig {
 
     Collection<BalmConfigSchema> getSchemas();
 
+    default void saveLocalConfig(BalmConfigSchema schema) {
+        saveLocalConfig(schema, getLocalConfig(schema));
+    }
+
     void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config);
 }

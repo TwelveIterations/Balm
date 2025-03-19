@@ -16,4 +16,8 @@ public interface ConfiguredEnum<T extends Enum<T>> extends ConfiguredProperty<T>
     default void set(MutableLoadedConfig config, T value) {
         setRaw(config, value);
     }
+
+    default void set(T value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

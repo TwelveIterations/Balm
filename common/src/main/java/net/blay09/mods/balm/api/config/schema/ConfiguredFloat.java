@@ -16,4 +16,8 @@ public interface ConfiguredFloat extends ConfiguredProperty<Float> {
     default void set(MutableLoadedConfig config, float value) {
         setRaw(config, value);
     }
+
+    default void set(float value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }

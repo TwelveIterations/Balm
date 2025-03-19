@@ -17,4 +17,8 @@ public interface ConfiguredResourceLocation extends ConfiguredProperty<ResourceL
     default void set(MutableLoadedConfig config, ResourceLocation value) {
         setRaw(config, value);
     }
+
+    default void set(ResourceLocation value) {
+        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+    }
 }
