@@ -1,9 +1,7 @@
 package net.blay09.mods.balm.fabric.client;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.EmptyLoadContext;
-import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.client.BalmClientRuntime;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
@@ -31,7 +29,7 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
     private final BalmRenderers renderers = new FabricBalmRenderers();
     private final BalmTextures textures = new FabricBalmTextures();
     private final BalmScreens screens = new FabricBalmScreens();
-    private final BalmKeyMappings keyMappings = createKeyMappingsBindings();
+    private final BalmKeyMappings keyMappings = new FabricBalmKeyMappings();
     private final BalmModels models = new FabricBalmModels();
 
     public FabricBalmClientRuntime() {
@@ -42,7 +40,7 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
                 try {
                     Class.forName(className).getConstructor().newInstance();
                 } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    logger.error("Failed to initialize addon class '{}'", className, e);
                 }
             }
         });
@@ -76,22 +74,5 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
     @Override
     public void initialize(String modId, EmptyLoadContext context, Runnable initializer) {
         initializer.run();
-    }
-
-    private static BalmKeyMappings createKeyMappingsBindings() {
-        if (Balm.isModLoaded("amecs")) {
-            try {
-                Class.forName("de.siphalor.amecs.api.AmecsKeyBinding");
-                try {
-                    Class<?> amecs = Class.forName("net.blay09.mods.balm.fabric.compat.AmecsBalmKeyMappings");
-                    return (BalmKeyMappings) amecs.getConstructor().newInstance();
-                } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Failed to initialize amecs key mappings for Balm", e);
-                }
-            } catch (ClassNotFoundException ignored) {
-                // we silently ignore amecs if the api is missing which would only really be the case in a devenv pulling from cursemaven
-            }
-        }
-        return new FabricBalmKeyMappings();
     }
 }
