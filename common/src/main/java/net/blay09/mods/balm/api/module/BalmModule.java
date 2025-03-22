@@ -62,7 +62,7 @@ public interface BalmModule {
     default void registerCapabilities(BalmCapabilities capabilities) {
     }
 
-    default void registerPermissions(BalmPermissions config) {
+    default void registerPermissions(BalmPermissions permissions) {
     }
 
     default void registerConfig(BalmConfig config) {
