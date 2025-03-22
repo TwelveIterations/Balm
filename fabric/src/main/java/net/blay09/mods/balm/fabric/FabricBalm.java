@@ -38,6 +38,8 @@ public class FabricBalm implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Balm.initializeRuntime();
+
         ((FabricBalmHooks) Balm.getHooks()).initialize();
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
         ExampleConfig.initialize();
