@@ -5,15 +5,9 @@ import net.minecraft.client.KeyMapping;
 
 import java.util.Optional;
 
-/**
- * @deprecated Use Kuma instead.
- */
-@Deprecated
 public interface BalmKeyMappings {
-    @Deprecated
     KeyMapping registerKeyMapping(String name, int keyCode, String category);
 
-    @Deprecated
     KeyMapping registerKeyMapping(String name, InputConstants.Type type, int keyCode, String category);
 
     @Deprecated
