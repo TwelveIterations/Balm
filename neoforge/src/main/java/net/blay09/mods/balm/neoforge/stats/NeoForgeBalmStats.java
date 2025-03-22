@@ -41,10 +41,6 @@ public class NeoForgeBalmStats implements BalmStats {
         eventBus.register(getRegistrations(modId));
     }
 
-    private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
-    }
-
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations());
     }

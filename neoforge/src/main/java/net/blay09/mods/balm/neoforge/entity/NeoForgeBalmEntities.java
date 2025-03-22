@@ -46,7 +46,7 @@ public class NeoForgeBalmEntities implements BalmEntities {
     @Override
     public <T extends LivingEntity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder, Supplier<AttributeSupplier.Builder> attributeBuilder) {
         final var register = DeferredRegisters.get(Registries.ENTITY_TYPE, identifier.getNamespace());
-        final var registrations = getActiveRegistrations();
+        final var registrations = getRegistrations(identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), () -> {
             EntityType<T> entityType = typeBuilder.build(ResourceKey.create(Registries.ENTITY_TYPE, identifier));
             registrations.attributeSuppliers.put(entityType, attributeBuilder.get().build());
@@ -57,10 +57,6 @@ public class NeoForgeBalmEntities implements BalmEntities {
 
     public void register(String modId, IEventBus eventBus) {
         eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
     }
 
     private Registrations getRegistrations(String modId) {

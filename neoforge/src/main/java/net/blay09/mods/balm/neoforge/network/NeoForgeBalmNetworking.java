@@ -169,23 +169,19 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
     @Override
     public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {
         final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
-        final var registrations = getActiveRegistrations();
+        final var registrations = getRegistrations(type.id().getNamespace());
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 
     @Override
     public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<ServerPlayer, T> handler) {
         final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
-        final var registrations = getActiveRegistrations();
+        final var registrations = getRegistrations(type.id().getNamespace());
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 
     public void register(String modId, IEventBus eventBus) {
         eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
     }
 
     private Registrations getRegistrations(String modId) {

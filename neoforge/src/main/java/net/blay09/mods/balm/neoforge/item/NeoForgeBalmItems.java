@@ -47,7 +47,7 @@ public class NeoForgeBalmItems implements BalmItems {
         final var register = DeferredRegisters.get(Registries.ITEM, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), supplier);
         if (creativeTab != null) {
-            getActiveRegistrations().creativeTabContents.put(creativeTab, () -> new ItemLike[]{registryObject.get()});
+            getRegistrations(identifier.getNamespace()).creativeTabContents.put(creativeTab, () -> new ItemLike[]{registryObject.get()});
         }
         return new DeferredObject<>(identifier, registryObject, registryObject::isBound);
     }
@@ -57,7 +57,7 @@ public class NeoForgeBalmItems implements BalmItems {
         final var register = DeferredRegisters.get(Registries.CREATIVE_MODE_TAB, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), () -> {
             Component displayName = Component.translatable("itemGroup." + identifier.toString().replace(':', '.'));
-            final var registrations = getActiveRegistrations();
+            final var registrations = getRegistrations(identifier.getNamespace());
             return CreativeModeTab.builder()
                     .title(displayName)
                     .icon(iconSupplier)
@@ -69,15 +69,15 @@ public class NeoForgeBalmItems implements BalmItems {
 
     @Override
     public void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier) {
-        getActiveRegistrations().creativeTabContents.put(tabIdentifier, itemsSupplier);
+        getRegistrations(tabIdentifier.getNamespace()).creativeTabContents.put(tabIdentifier, itemsSupplier);
     }
 
     @Override
     public void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator) {
-        getActiveRegistrations().creativeTabSorting.put(tabIdentifier, comparator);
+        getRegistrations(tabIdentifier.getNamespace()).creativeTabSorting.put(tabIdentifier, comparator);
     }
 
-    private Registrations getActiveRegistrations() {
-        return registrations.computeIfAbsent(ModLoadingContext.get().getActiveNamespace(), it -> new Registrations());
+    private Registrations getRegistrations(String modId) {
+        return registrations.computeIfAbsent(modId, it -> new Registrations());
     }
 }

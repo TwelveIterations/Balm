@@ -40,7 +40,7 @@ public class NeoForgeBalmScreens implements BalmScreens {
 
     @Override
     public <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreen(Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory) {
-        getActiveRegistrations().menuTypes.add(Pair.of(type::get, screenFactory));
+        getRegistrations().menuTypes.add(Pair.of(type::get, screenFactory));
     }
 
     private static <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void registerScreenImmediate(RegisterMenuScreensEvent event, MenuType<TMenu> type, BalmScreenFactory<TMenu, TScreen> screenFactory) {
@@ -58,10 +58,6 @@ public class NeoForgeBalmScreens implements BalmScreens {
 
     public void register(String modId, IEventBus eventBus) {
         eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
     }
 
     private Registrations getRegistrations(String modId) {

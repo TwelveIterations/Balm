@@ -44,16 +44,12 @@ public class NeoForgeBalmModels implements BalmModels {
                 return getRegistrations(identifier.getNamespace()).bakedStandaloneModels.containsKey(identifier);
             }
         };
-        getActiveRegistrations().additionalModels.add(identifier);
+        getRegistrations().additionalModels.add(identifier);
         return deferredModel;
     }
 
     public void register(String modId, IEventBus eventBus) {
         eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
     }
 
     private Registrations getRegistrations(String modId) {

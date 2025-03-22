@@ -30,18 +30,18 @@ public class NeoForgeBalmKeyMappings extends CommonBalmKeyMappings {
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
-    public KeyMapping registerKeyMapping(String name, KeyConflictContext conflictContext, KeyModifier modifier, InputConstants.Type type, int keyCode, String category) {
-        KeyMapping keyMapping = new KeyMapping(name, toForge(conflictContext), toForge(modifier), type, keyCode, category);
-        getActiveRegistrations().keyMappings.add(keyMapping);
+    public KeyMapping registerKeyMapping(ResourceLocation id, KeyConflictContext conflictContext, KeyModifier modifier, InputConstants.Type type, int keyCode, String category) {
+        KeyMapping keyMapping = new KeyMapping(id.getPath(), toForge(conflictContext), toForge(modifier), type, keyCode, category);
+        getRegistrations(id.getNamespace()).keyMappings.add(keyMapping);
         return keyMapping;
     }
 
     @Override
-    public KeyMapping registerKeyMapping(String name, KeyConflictContext conflictContext, KeyModifiers modifiers, InputConstants.Type type, int keyCode, String category) {
+    public KeyMapping registerKeyMapping(ResourceLocation id, KeyConflictContext conflictContext, KeyModifiers modifiers, InputConstants.Type type, int keyCode, String category) {
         var keyModifiers = modifiers.asList();
         var mainModifier = !keyModifiers.isEmpty() ? keyModifiers.get(0) : KeyModifier.NONE;
-        KeyMapping keyMapping = new KeyMapping(name, toForge(conflictContext), toForge(mainModifier), type, keyCode, category);
-        getActiveRegistrations().keyMappings.add(keyMapping);
+        KeyMapping keyMapping = new KeyMapping(id.getPath(), toForge(conflictContext), toForge(mainModifier), type, keyCode, category);
+        getRegistrations(id.getNamespace()).keyMappings.add(keyMapping);
         if (keyModifiers.size() > 1) {
             registerModifierKeyMappings(keyMapping, conflictContext, keyModifiers.subList(1, keyModifiers.size()));
         }
@@ -111,10 +111,6 @@ public class NeoForgeBalmKeyMappings extends CommonBalmKeyMappings {
 
     public void register(String modId, IEventBus eventBus) {
         eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
     }
 
     private Registrations getRegistrations(String modId) {

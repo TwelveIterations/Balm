@@ -107,25 +107,25 @@ public class ForgeBalmRenderers implements BalmRenderers {
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
         ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, "main");
-        getActiveRegistrations().layerDefinitions.put(modelLayerLocation, layerDefinition);
+        getRegistrations(location.getNamespace()).layerDefinitions.put(modelLayerLocation, layerDefinition);
         return modelLayerLocation;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
-        getActiveRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
+        getRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
-        getActiveRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
+        getRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
     }
 
     @Override
     public void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks) {
-        getActiveRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
+        getRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
     }
 
     @Override
@@ -136,20 +136,16 @@ public class ForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
-        getActiveRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
+        getRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
     }
 
     @Override
     public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
-        getActiveRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
+        getRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
     }
 
     public void register(String modId, IEventBus eventBus) {
         eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
     }
 
     private Registrations getRegistrations(String modId) {
