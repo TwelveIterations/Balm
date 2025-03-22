@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.forge;
 
 import net.blay09.mods.balm.api.BalmHooks;
+import net.blay09.mods.balm.api.BalmProxy;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
@@ -82,6 +83,7 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
+    private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -273,5 +275,10 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
     @Override
     public String getPlatform() {
         return LoaderPlatforms.FORGE;
+    }
+
+    @Override
+    public BalmProxy getProxy() {
+        return proxy.get();
     }
 }

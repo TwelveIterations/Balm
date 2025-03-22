@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.BalmHooks;
+import net.blay09.mods.balm.api.BalmProxy;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.EmptyLoadContext;
@@ -91,6 +92,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
             .build();
+    private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -298,6 +300,11 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     @Override
     public String getPlatform() {
         return LoaderPlatforms.FABRIC;
+    }
+
+    @Override
+    public BalmProxy getProxy() {
+        return proxy.get();
     }
 
     public List<String> getAddonClasses() {

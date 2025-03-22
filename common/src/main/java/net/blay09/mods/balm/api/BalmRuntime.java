@@ -111,4 +111,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerEvents(getEvents());
         module.initialize();
     }
+
+    BalmProxy getProxy();
 }
