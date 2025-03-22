@@ -33,80 +33,82 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Balm {
-    private static final BalmRuntime<BalmRuntimeLoadContext> runtime = BalmRuntimeSpi.create();
     private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
+    private static BalmRuntime<BalmRuntimeLoadContext> runtime;
 
     public static void registerModule(BalmModule module) {
         modules.add(module);
-        runtime.initializeModule(module);
+        if (runtime != null) {
+            runtime.initializeModule(module);
+        }
     }
 
     public static void initialize(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
-        runtime.initialize(modId, context, initializer);
+        requireRuntime().initialize(modId, context, initializer);
     }
 
     public static boolean isModLoaded(String modId) {
-        return runtime.isModLoaded(modId);
+        return requireRuntime().isModLoaded(modId);
     }
 
     public static String getModName(String modId) {
-        return runtime.getModName(modId);
+        return requireRuntime().getModName(modId);
     }
 
     public static <T> PlatformProxy<T> platformProxy() {
-        return runtime.platformProxy();
+        return requireRuntime().platformProxy();
     }
 
     public static <T> ModProxy<T> modProxy() {
-        return runtime.modProxy();
+        return requireRuntime().modProxy();
     }
 
     public static <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        return runtime.sidedProxy(commonName, clientName);
+        return requireRuntime().sidedProxy(commonName, clientName);
     }
 
     public static void initializeIfLoaded(String modId, String className) {
-        runtime.initializeIfLoaded(modId, className);
+        requireRuntime().initializeIfLoaded(modId, className);
     }
 
     public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
-        runtime.addServerReloadListener(identifier, reloadListener);
+        requireRuntime().addServerReloadListener(identifier, reloadListener);
     }
 
     public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        runtime.addServerReloadListener(identifier, reloadListener);
+        requireRuntime().addServerReloadListener(identifier, reloadListener);
     }
 
     public static BalmProxy getProxy() {
-        return runtime.getProxy();
+        return requireRuntime().getProxy();
     }
 
     public static BalmEvents getEvents() {
-        return runtime.getEvents();
+        return requireRuntime().getEvents();
     }
 
     public static BalmConfig getConfig() {
-        return runtime.getConfig();
+        return requireRuntime().getConfig();
     }
 
     public static BalmNetworking getNetworking() {
-        return runtime.getNetworking();
+        return requireRuntime().getNetworking();
     }
 
     public static BalmWorldGen getWorldGen() {
-        return runtime.getWorldGen();
+        return requireRuntime().getWorldGen();
     }
 
     public static BalmBlocks getBlocks() {
-        return runtime.getBlocks();
+        return requireRuntime().getBlocks();
     }
 
     public static BalmBlockEntities getBlockEntities() {
-        return runtime.getBlockEntities();
+        return requireRuntime().getBlockEntities();
     }
 
     public static BalmItems getItems() {
-        return runtime.getItems();
+        return requireRuntime().getItems();
     }
 
     public static BalmComponents getComponents() {
@@ -114,62 +116,79 @@ public class Balm {
     }
 
     public static BalmMenus getMenus() {
-        return runtime.getMenus();
+        return requireRuntime().getMenus();
     }
 
     public static BalmHooks getHooks() {
-        return runtime.getHooks();
+        return requireRuntime().getHooks();
     }
 
     public static BalmRecipes getRecipes() {
-        return runtime.getRecipes();
+        return requireRuntime().getRecipes();
     }
 
     public static BalmRegistries getRegistries() {
-        return runtime.getRegistries();
+        return requireRuntime().getRegistries();
     }
 
     public static BalmSounds getSounds() {
-        return runtime.getSounds();
+        return requireRuntime().getSounds();
     }
 
     public static BalmEntities getEntities() {
-        return runtime.getEntities();
+        return requireRuntime().getEntities();
     }
 
     public static BalmProviders getProviders() {
-        return runtime.getProviders();
+        return requireRuntime().getProviders();
     }
 
     public static BalmCommands getCommands() {
-        return runtime.getCommands();
+        return requireRuntime().getCommands();
     }
 
     public static BalmLootTables getLootTables() {
-        return runtime.getLootTables();
+        return requireRuntime().getLootTables();
     }
 
     public static BalmStats getStats() {
-        return runtime.getStats();
+        return requireRuntime().getStats();
     }
 
     public static BalmModSupport getModSupport() {
-        return runtime.getModSupport();
+        return requireRuntime().getModSupport();
     }
 
     public static BalmParticles getParticles() {
-        return runtime.getParticles();
+        return requireRuntime().getParticles();
     }
 
     public static BalmPermissions getPermissions() {
-        return runtime.getPermissions();
+        return requireRuntime().getPermissions();
     }
 
     public static String getPlatform() {
-        return runtime.getPlatform();
+        return requireRuntime().getPlatform();
     }
 
-    public static BalmRuntime getRuntime() {
+    public static BalmRuntime<BalmRuntimeLoadContext> getRuntime() {
+        return requireRuntime();
+    }
+
+    private static BalmRuntime<BalmRuntimeLoadContext> requireRuntime() {
+        if (runtime == null) {
+            // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
+            initializeRuntime();
+        }
         return runtime;
+    }
+
+    public static void initializeRuntime() {
+        if (runtime == null) {
+            runtime = BalmRuntimeSpi.create();
+            for (final var module : modules) {
+                runtime.initializeModule(module);
+            }
+        }
     }
 }
