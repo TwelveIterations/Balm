@@ -1,7 +1,6 @@
 package net.blay09.mods.balm.api.client;
 
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
-import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
@@ -15,13 +14,13 @@ import java.util.List;
 
 public class BalmClient {
 
-    private static final List<BalmClientModule> modules = Collections.synchronizedList(new ArrayList<>());
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private static BalmClientRuntime runtime;
 
-    public static void registerModule(BalmClientModule module) {
-        modules.add(module);
+    public static void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
         if (runtime != null) {
-            runtime.initializeModule(module);
+            callback.run();
         }
     }
 
@@ -83,8 +82,8 @@ public class BalmClient {
     public static void initializeRuntime() {
         if (runtime == null) {
             runtime = BalmClientRuntimeSpi.create();
-            for (final var module : modules) {
-                runtime.initializeModule(module);
+            for (final var callback : initCallbacks) {
+                callback.run();
             }
         }
     }
