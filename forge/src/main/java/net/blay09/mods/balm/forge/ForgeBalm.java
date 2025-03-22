@@ -24,6 +24,8 @@ import net.minecraftforge.items.IItemHandler;
 public class ForgeBalm {
 
     public ForgeBalm() {
+        Balm.initializeRuntime();
+
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
         ExampleConfig.initialize();
         Balm.getCommands().register(BalmCommand::register);
