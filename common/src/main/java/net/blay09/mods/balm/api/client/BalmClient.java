@@ -13,12 +13,14 @@ import java.util.List;
 
 public class BalmClient {
 
-    private static final BalmClientRuntime<BalmRuntimeLoadContext> runtime = BalmClientRuntimeSpi.create();
     private static final List<BalmClientModule> modules = Collections.synchronizedList(new ArrayList<>());
+    private static BalmClientRuntime<BalmRuntimeLoadContext> runtime;
 
     public static void registerModule(BalmClientModule module) {
         modules.add(module);
-        runtime.initializeModule(module);
+        if (runtime != null) {
+            runtime.initializeModule(module);
+        }
     }
 
     public static <T extends BalmRuntimeLoadContext> void initialize(String modId, T context, Runnable initializer) {
@@ -26,22 +28,40 @@ public class BalmClient {
     }
 
     public static BalmRenderers getRenderers() {
-        return runtime.getRenderers();
+        return requireRuntime().getRenderers();
     }
 
-    /**
-     * @deprecated Use Kuma instead.
-     */
-    @Deprecated
     public static BalmKeyMappings getKeyMappings() {
-        return runtime.getKeyMappings();
+        return requireRuntime().getKeyMappings();
     }
 
     public static BalmScreens getScreens() {
-        return runtime.getScreens();
+        return requireRuntime().getScreens();
     }
 
     public static BalmModels getModels() {
-        return runtime.getModels();
+        return requireRuntime().getModels();
+    }
+
+
+    public static BalmClientRuntime<BalmRuntimeLoadContext> getRuntime() {
+        return requireRuntime();
+    }
+
+    private static BalmClientRuntime<BalmRuntimeLoadContext> requireRuntime() {
+        if (runtime == null) {
+            // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
+            initializeRuntime();
+        }
+        return runtime;
+    }
+
+    public static void initializeRuntime() {
+        if (runtime == null) {
+            runtime = BalmClientRuntimeSpi.create();
+            for (final var module : modules) {
+                runtime.initializeModule(module);
+            }
+        }
     }
 }
