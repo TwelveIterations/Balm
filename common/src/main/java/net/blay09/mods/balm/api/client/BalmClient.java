@@ -19,14 +19,14 @@ public class BalmClient {
         return runtime.getRenderers();
     }
 
+    /**
+     * @deprecated No functionality left here.
+     */
+    @Deprecated
     public static BalmTextures getTextures() {
         return runtime.getTextures();
     }
 
-    /**
-     * @deprecated Use Kuma instead.
-     */
-    @Deprecated
     public static BalmKeyMappings getKeyMappings() {
         return runtime.getKeyMappings();
     }
