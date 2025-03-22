@@ -17,6 +17,8 @@ import java.util.HashMap;
 public class FabricBalmClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        BalmClient.initializeRuntime();
+
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 
         Balm.getEvents().onEvent(DisconnectedFromServerEvent.class, event -> Balm.getConfig().resetToBackingConfigs());
