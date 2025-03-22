@@ -53,8 +53,28 @@ public class Balm {
         }
     }
 
+    /**
+     * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
+     */
+    @Deprecated
     public static void initialize(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
-        requireRuntime().initialize(modId, context, initializer);
+        initializeMod(modId, context, initializer);
+    }
+
+    public static void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+        requireRuntime().initializeMod(modId, context, initializer);
+    }
+
+    public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {
+        runtime.initializeMod(modId, context, () -> registerModule(module));
+    }
+
+    public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule... modules) {
+        runtime.initializeMod(modId, context, () -> {
+            for (final var module : modules) {
+                registerModule(module);
+            }
+        });
     }
 
     public static boolean isModLoaded(String modId) {

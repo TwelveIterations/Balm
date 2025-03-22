@@ -224,7 +224,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public void initialize(String modId, EmptyLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
         initializer.run();
     }
 

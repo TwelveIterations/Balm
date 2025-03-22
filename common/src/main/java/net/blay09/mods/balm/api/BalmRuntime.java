@@ -76,7 +76,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     String getModName(String modId);
     <TProxy> SidedProxy<TProxy> sidedProxy(String commonName, String clientName);
 
-    void initialize(String modId, TLoadContext context, Runnable initializer);
+    void initializeMod(String modId, TLoadContext context, Runnable initializer);
 
     void initializeIfLoaded(String modId, String className);
 
@@ -96,11 +96,12 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerBlocks(getBlocks());
         module.registerBlockEntities(getBlockEntities());
         module.registerItems(getItems());
+        module.registerComponents(getComponents());
         module.registerEntities(getEntities());
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());
         module.registerMenus(getMenus());
-        module.registerCapabilities(getProviders());
+        module.registerCapabilities(getCapabilities());
         module.registerCommands(getCommands());
         module.registerRecipes(getRecipes());
         module.registerLootTables(getLootTables());

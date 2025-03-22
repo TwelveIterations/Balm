@@ -15,13 +15,9 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
 
     BalmModels getModels();
 
-    /**
-     * @deprecated Use Kuma instead.
-     */
-    @Deprecated
     BalmKeyMappings getKeyMappings();
 
-    void initialize(String modId, TLoadContext context, Runnable initializer);
+    void initializeMod(String modId, TLoadContext context, Runnable initializer);
 
     default void initializeModule(BalmClientModule module) {
         module.registerEvents(Balm.getEvents());

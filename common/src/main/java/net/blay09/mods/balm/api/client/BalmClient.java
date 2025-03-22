@@ -31,8 +31,28 @@ public class BalmClient {
         }
     }
 
+    /**
+     * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
+     */
+    @Deprecated
     public static <T extends BalmRuntimeLoadContext> void initialize(String modId, T context, Runnable initializer) {
-        runtime.initialize(modId, context, initializer);
+        initializeMod(modId, context, initializer);
+    }
+
+    public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, Runnable initializer) {
+        runtime.initializeMod(modId, context, initializer);
+    }
+
+    public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmClientModule module) {
+        runtime.initializeMod(modId, context, () -> registerModule(module));
+    }
+
+    public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmClientModule... modules) {
+        runtime.initializeMod(modId, context, () -> {
+            for (final var module : modules) {
+                registerModule(module);
+            }
+        });
     }
 
     public static BalmRenderers getRenderers() {
