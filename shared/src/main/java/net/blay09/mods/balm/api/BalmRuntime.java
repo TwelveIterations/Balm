@@ -10,6 +10,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
+import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
@@ -84,4 +85,25 @@ public interface BalmRuntime {
     <T> ModProxy<T> modProxy();
 
     String getPlatform();
+
+    default void initializeModule(BalmModule module) {
+        module.registerConfig(getConfig());
+        module.registerBlocks(getBlocks());
+        module.registerBlockEntities(getBlockEntities());
+        module.registerItems(getItems());
+        module.registerEntities(getEntities());
+        module.registerWorldGen(getWorldGen());
+        module.registerNetworking(getNetworking());
+        module.registerMenus(getMenus());
+        module.registerCapabilities(getProviders());
+        module.registerCommands(getCommands());
+        module.registerRecipes(getRecipes());
+        module.registerLootTables(getLootTables());
+        module.registerStats(getStats());
+        module.registerSounds(getSounds());
+        module.registerPermissions(getPermissions());
+        module.registerParticles(getParticles());
+        module.registerEvents(getEvents());
+        module.initialize();
+    }
 }
