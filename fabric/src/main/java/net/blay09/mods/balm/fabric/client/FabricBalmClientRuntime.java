@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.client.BalmClientRuntime;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
+import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
