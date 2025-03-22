@@ -106,4 +106,6 @@ public interface BalmRuntime {
         module.registerEvents(getEvents());
         module.initialize();
     }
+
+    BalmProxy getProxy();
 }

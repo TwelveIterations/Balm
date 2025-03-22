@@ -34,7 +34,6 @@ import java.util.function.Consumer;
 public class Balm {
     private static final BalmRuntime runtime = BalmRuntimeSpi.create();
     private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
-    private static final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     public static void registerModule(BalmModule module) {
         modules.add(module);
@@ -83,7 +82,7 @@ public class Balm {
     }
 
     public static BalmProxy getProxy() {
-        return proxy.get();
+        return runtime.getProxy();
     }
 
     public static BalmEvents getEvents() {
