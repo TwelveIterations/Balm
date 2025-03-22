@@ -4,7 +4,6 @@ import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 
 public class BalmClient {
@@ -17,10 +16,6 @@ public class BalmClient {
 
     public static BalmRenderers getRenderers() {
         return runtime.getRenderers();
-    }
-
-    public static BalmTextures getTextures() {
-        return runtime.getTextures();
     }
 
     /**

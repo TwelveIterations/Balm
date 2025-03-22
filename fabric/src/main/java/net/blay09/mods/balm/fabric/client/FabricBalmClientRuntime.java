@@ -6,7 +6,6 @@ import net.blay09.mods.balm.api.client.BalmClientRuntime;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
 import net.blay09.mods.balm.fabric.FabricBalmRuntime;
@@ -15,7 +14,6 @@ import net.blay09.mods.balm.fabric.event.client.FabricBalmClientEvents;
 import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
-import net.blay09.mods.balm.fabric.client.rendering.FabricBalmTextures;
 import net.blay09.mods.balm.fabric.client.screen.FabricBalmScreens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +25,6 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
     private static final Logger logger = LoggerFactory.getLogger(FabricBalmClientRuntime.class);
 
     private final BalmRenderers renderers = new FabricBalmRenderers();
-    private final BalmTextures textures = new FabricBalmTextures();
     private final BalmScreens screens = new FabricBalmScreens();
     private final BalmKeyMappings keyMappings = new FabricBalmKeyMappings();
     private final BalmModels models = new FabricBalmModels();
@@ -49,11 +46,6 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
     @Override
     public BalmRenderers getRenderers() {
         return renderers;
-    }
-
-    @Override
-    public BalmTextures getTextures() {
-        return textures;
     }
 
     @Override
