@@ -33,7 +33,7 @@ import java.util.function.Consumer;
 
 public class Balm {
     private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
-    private static BalmRuntime runtime = BalmRuntimeSpi.create();
+    private static BalmRuntime runtime;
 
     public static void registerModule(BalmModule module) {
         modules.add(module);
