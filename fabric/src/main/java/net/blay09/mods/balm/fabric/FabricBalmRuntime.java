@@ -67,6 +67,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
@@ -89,10 +90,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmComponents components = new FabricBalmComponents();
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
     private final BalmParticles particles = new FabricBalmParticles();
-    private final BalmPermissions permissions = this.<BalmPermissions>modProxy()
+    private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy()
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
-            .build();
+            .buildLazily();
     private final BalmResources resources = new FabricBalmResources();
 
     private final List<String> addonClasses = new ArrayList<>();
@@ -290,7 +291,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
 
     @Override
     public BalmPermissions getPermissions() {
-        return permissions;
+        return permissions.get();
     }
 
     @Override

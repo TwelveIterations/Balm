@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api.proxy;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface ModProxy<T> {
 
@@ -12,4 +13,6 @@ public interface ModProxy<T> {
     ModProxy<T> withFallback(T fallback);
 
     T build();
+
+    Supplier<T> buildLazily();
 }

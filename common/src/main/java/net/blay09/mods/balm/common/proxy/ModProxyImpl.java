@@ -62,6 +62,20 @@ public class ModProxyImpl<T> implements ModProxy<T> {
         return applicableProxies.getFirst().proxy().get();
     }
 
+    public Supplier<T> buildLazily() {
+        return new Supplier<>() {
+            private T instance;
+
+            @Override
+            public T get() {
+                if (instance == null) {
+                    instance = build();
+                }
+                return instance;
+            }
+        };
+    }
+
     private final class ModEntry {
         private final String modId;
         private final String clazzName;
