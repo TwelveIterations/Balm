@@ -8,8 +8,10 @@ import net.blay09.mods.balm.common.compat.TrinketsMultiplexer;
 import net.blay09.mods.balm.common.compat.hudinfo.CommonBalmModSupportHudInfo;
 import net.blay09.mods.balm.common.compat.NoopTrinkets;
 
+import java.util.function.Supplier;
+
 public class FabricBalmModSupport implements BalmModSupport {
-    private final BalmModSupportTrinkets trinkets;
+    private final Supplier<BalmModSupportTrinkets> trinkets;
     private final CommonBalmModSupportHudInfo hudInfo = new CommonBalmModSupportHudInfo();
 
     public FabricBalmModSupport(BalmRuntime runtime) {
@@ -17,12 +19,12 @@ public class FabricBalmModSupport implements BalmModSupport {
                 .with("trinkets", "net.blay09.mods.balm.fabric.compat.trinkets.TrinketsIntegration")
                 .withMultiplexer(TrinketsMultiplexer::new)
                 .withFallback(new NoopTrinkets())
-                .build();
+                .buildLazily();
     }
 
     @Override
     public BalmModSupportTrinkets trinkets() {
-        return trinkets;
+        return trinkets.get();
     }
 
     @Override
