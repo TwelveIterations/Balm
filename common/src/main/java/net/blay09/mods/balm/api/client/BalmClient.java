@@ -24,7 +24,7 @@ public class BalmClient {
     }
 
     public static <T extends BalmRuntimeLoadContext> void initialize(String modId, T context, Runnable initializer) {
-        runtime.initialize(modId, context, initializer);
+        requireRuntime().initialize(modId, context, initializer);
     }
 
     public static BalmRenderers getRenderers() {
