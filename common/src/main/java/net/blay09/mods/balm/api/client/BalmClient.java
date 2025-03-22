@@ -44,16 +44,17 @@ public class BalmClient {
     }
 
 
-    public static BalmClientRuntime<BalmRuntimeLoadContext> getRuntime() {
+    public static BalmClientRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return requireRuntime();
     }
 
-    private static BalmClientRuntime<BalmRuntimeLoadContext> requireRuntime() {
+    @SuppressWarnings("unchecked")
+    private static <T extends BalmRuntimeLoadContext> BalmClientRuntime<T> requireRuntime() {
         if (runtime == null) {
             // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
             initializeRuntime();
         }
-        return runtime;
+        return (BalmClientRuntime<T>) runtime;
     }
 
     public static void initializeRuntime() {

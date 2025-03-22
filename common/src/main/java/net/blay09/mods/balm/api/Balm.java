@@ -177,16 +177,17 @@ public class Balm {
         return requireRuntime().getPlatform();
     }
 
-    public static BalmRuntime<BalmRuntimeLoadContext> getRuntime() {
+    public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return requireRuntime();
     }
 
-    private static BalmRuntime<BalmRuntimeLoadContext> requireRuntime() {
+    @SuppressWarnings("unchecked")
+    private static <T extends BalmRuntimeLoadContext> BalmRuntime<T> requireRuntime() {
         if (runtime == null) {
             // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
             initializeRuntime();
         }
-        return runtime;
+        return (BalmRuntime<T>) runtime;
     }
 
     public static void initializeRuntime() {
