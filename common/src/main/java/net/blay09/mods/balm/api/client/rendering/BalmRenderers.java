@@ -24,10 +24,10 @@ import java.util.function.Supplier;
 public interface BalmRenderers {
     ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition);
 
-    <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
-    <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
+    <T extends Entity> void registerEntityRenderer(ResourceLocation id, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
+    <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation id, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
 
-    void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks);
+    void registerBlockColorHandler(ResourceLocation id, BlockColor color, Supplier<Block[]> blocks);
 
     /**
      * @deprecated Works fine on Fabric, but on Forge and NeoForge they changed the vanilla format with no hook (sigh).
@@ -35,7 +35,7 @@ public interface BalmRenderers {
     @Deprecated
     void setBlockRenderType(Supplier<Block> block, RenderType renderType);
 
-    <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
+    <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
-    <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
+    <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 }

@@ -36,17 +36,17 @@ public class FabricBalmRenderers implements BalmRenderers {
     }
 
     @Override
-    public <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
+    public <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
         EntityRendererRegistry.register(type.get(), provider);
     }
 
     @Override
-    public <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
+    public <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
         BlockEntityRenderers.register(type.get(), provider);
     }
 
     @Override
-    public void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks) {
+    public void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
         ColorProviderRegistry.BLOCK.register(color, blocks.get());
     }
 
@@ -56,12 +56,12 @@ public class FabricBalmRenderers implements BalmRenderers {
     }
 
     @Override
-    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
         ParticleFactoryRegistry.getInstance().register(particleType.get(), factory::apply);
     }
 
     @Override
-    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
         ParticleFactoryRegistry.getInstance().register(particleType.get(), provider);
     }
 }
