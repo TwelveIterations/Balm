@@ -11,7 +11,6 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
-import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
@@ -35,13 +34,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Balm {
-    private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private static BalmRuntime<BalmRuntimeLoadContext> runtime;
 
-    public static void registerModule(BalmModule module) {
-        modules.add(module);
+    public static void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
         if (runtime != null) {
-            runtime.initializeModule(module);
+            callback.run();
         }
     }
 
@@ -192,8 +191,8 @@ public class Balm {
     public static void initializeRuntime() {
         if (runtime == null) {
             runtime = BalmRuntimeSpi.create();
-            for (final var module : modules) {
-                runtime.initializeModule(module);
+            for (final var callback : initCallbacks) {
+                callback.run();
             }
         }
     }
