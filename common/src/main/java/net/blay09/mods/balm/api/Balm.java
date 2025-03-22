@@ -111,7 +111,7 @@ public class Balm {
     }
 
     public static BalmComponents getComponents() {
-        return runtime.getComponents();
+        return requireRuntime().getComponents();
     }
 
     public static BalmMenus getMenus() {
