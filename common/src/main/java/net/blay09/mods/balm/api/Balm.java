@@ -35,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Balm {
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
     private static BalmRuntime<BalmRuntimeLoadContext> runtime;
 
@@ -42,6 +43,13 @@ public class Balm {
         modules.add(module);
         if (runtime != null) {
             runtime.initializeModule(module);
+        }
+    }
+
+    public static void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
+        if (runtime != null) {
+            callback.run();
         }
     }
 
@@ -193,6 +201,9 @@ public class Balm {
     public static void initializeRuntime() {
         if (runtime == null) {
             runtime = BalmRuntimeSpi.create();
+            for (final var callback : initCallbacks) {
+                callback.run();
+            }
             for (final var module : modules) {
                 runtime.initializeModule(module);
             }
