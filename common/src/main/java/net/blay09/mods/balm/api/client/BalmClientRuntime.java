@@ -10,16 +10,13 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmRenderers getRenderers();
 
+    @Deprecated
     BalmTextures getTextures();
 
     BalmScreens getScreens();
 
     BalmModels getModels();
 
-    /**
-     * @deprecated Use Kuma instead.
-     */
-    @Deprecated
     BalmKeyMappings getKeyMappings();
 
     void initialize(String modId, TLoadContext context, Runnable initializer);
