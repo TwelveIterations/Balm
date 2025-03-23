@@ -56,34 +56,13 @@ public interface BalmHooks {
 
     boolean canItemsStack(ItemStack first, ItemStack second);
 
-    int getBurnTime(Level level, ItemStack itemStack);
-
     void setBurnTime(Item item, int burnTime);
 
     void firePlayerCraftingEvent(Player player, ItemStack crafted, Container craftMatrix);
 
     boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult);
 
-    /**
-     * @deprecated Check for the BLOCKS_ATTACKS component yourself instead.
-     */
-    @Deprecated
-    default boolean isShield(ItemStack itemStack) {
-        return itemStack.get(DataComponents.BLOCKS_ATTACKS) != null;
-    }
-
-    /**
-     * @deprecated Check the REPAIR_COST component yourself instead.
-     */
-    @Deprecated
-    default boolean isRepairable(ItemStack itemStack) {
-        final var repairCost = itemStack.getItem().components().get(DataComponents.REPAIR_COST);
-        return repairCost != null && repairCost > 0;
-    }
-
     void setForcedPose(Player player, Pose pose);
 
     MinecraftServer getServer();
-
-    double getBlockReachDistance(Player player);
 }
