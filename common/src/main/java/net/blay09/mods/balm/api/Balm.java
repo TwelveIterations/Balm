@@ -35,21 +35,27 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Balm {
+    private static final Object RUNTIME_LOCK = new Object();
+
     private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
-    private static BalmRuntime<BalmRuntimeLoadContext> runtime;
+    private static volatile BalmRuntime<BalmRuntimeLoadContext> runtime;
 
     public static void registerModule(BalmModule module) {
         modules.add(module);
-        if (runtime != null) {
-            runtime.initializeModule(module);
+        synchronized (RUNTIME_LOCK) {
+            if (runtime != null) {
+                runtime.initializeModule(module);
+            }
         }
     }
 
     public static void onRuntimeAvailable(Runnable callback) {
         initCallbacks.add(callback);
-        if (runtime != null) {
-            callback.run();
+        synchronized (RUNTIME_LOCK) {
+            if (runtime != null) {
+                callback.run();
+            }
         }
     }
 
@@ -66,11 +72,11 @@ public class Balm {
     }
 
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {
-        runtime.initializeMod(modId, context, () -> registerModule(module));
+        requireRuntime().initializeMod(modId, context, () -> registerModule(module));
     }
 
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule... modules) {
-        runtime.initializeMod(modId, context, () -> {
+        requireRuntime().initializeMod(modId, context, () -> {
             for (final var module : modules) {
                 registerModule(module);
             }
@@ -146,7 +152,7 @@ public class Balm {
     }
 
     public static BalmComponents getComponents() {
-        return runtime.getComponents();
+        return requireRuntime().getComponents();
     }
 
     public static BalmMenus getMenus() {
@@ -212,20 +218,26 @@ public class Balm {
     @SuppressWarnings("unchecked")
     private static <T extends BalmRuntimeLoadContext> BalmRuntime<T> requireRuntime() {
         if (runtime == null) {
-            // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
-            initializeRuntime();
+            synchronized (RUNTIME_LOCK) {
+                if (runtime == null) { // intentional - first check is not synchronized for performance, but field may have changed by then
+                    // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
+                    initializeRuntime();
+                }
+            }
         }
         return (BalmRuntime<T>) runtime;
     }
 
     public static void initializeRuntime() {
-        if (runtime == null) {
-            runtime = BalmRuntimeSpi.create();
-            for (final var callback : initCallbacks) {
-                callback.run();
-            }
-            for (final var module : modules) {
-                runtime.initializeModule(module);
+        synchronized (RUNTIME_LOCK) {
+            if (runtime == null) {
+                runtime = BalmRuntimeSpi.create();
+                for (final var callback : initCallbacks) {
+                    callback.run();
+                }
+                for (final var module : modules) {
+                    runtime.initializeModule(module);
+                }
             }
         }
     }
