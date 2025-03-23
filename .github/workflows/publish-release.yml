@@ -105,7 +105,7 @@ jobs:
       - name: Upload common artifact
         uses: actions/upload-artifact@v4
         with:
-          name: common-artifact
+          name: shared-artifact
           path: shared/build
     needs: create-release
   build-release:
@@ -131,7 +131,7 @@ jobs:
       - name: Download common artifact
         uses: actions/download-artifact@v4
         with:
-          name: common-artifact
+          name: shared-artifact
           path: shared/build
       - name: Build ${{ matrix.loader }} artifact
         run: ./gradlew :${{ matrix.loader }}:build '-Pversion=${{needs.create-release.outputs.version}}'
