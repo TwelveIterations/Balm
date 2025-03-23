@@ -13,13 +13,16 @@ import java.util.List;
 
 public class BalmClient {
 
+    private static final Object RUNTIME_LOCK = new Object();
     private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
-    private static BalmClientRuntime<BalmRuntimeLoadContext> runtime;
+    private static volatile BalmClientRuntime<BalmRuntimeLoadContext> runtime;
 
     public static void onRuntimeAvailable(Runnable callback) {
         initCallbacks.add(callback);
-        if (runtime != null) {
-            callback.run();
+        synchronized (RUNTIME_LOCK) {
+            if (runtime != null) {
+                callback.run();
+            }
         }
     }
 
@@ -59,17 +62,23 @@ public class BalmClient {
     @SuppressWarnings("unchecked")
     private static <T extends BalmRuntimeLoadContext> BalmClientRuntime<T> requireRuntime() {
         if (runtime == null) {
-            // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
-            initializeRuntime();
+            synchronized (RUNTIME_LOCK) {
+                if (runtime == null) { // intentional - first check is not synchronized for performance, but field may have changed by then
+                    // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
+                    initializeRuntime();
+                }
+            }
         }
         return (BalmClientRuntime<T>) runtime;
     }
 
     public static void initializeRuntime() {
-        if (runtime == null) {
-            runtime = BalmClientRuntimeSpi.create();
-            for (final var callback : initCallbacks) {
-                callback.run();
+        synchronized (RUNTIME_LOCK) {
+            if (runtime == null) {
+                runtime = BalmClientRuntimeSpi.create();
+                for (final var callback : initCallbacks) {
+                    callback.run();
+                }
             }
         }
     }
