@@ -20,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -158,7 +157,7 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
-        if (!Balm.getProxy().isConnectedToServer()) {
+        if (!Balm.getProxy().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
             return;
         }

@@ -17,10 +17,13 @@ public class EntityMixin implements BalmEntity {
     @Inject(method = "load(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("HEAD"))
     private void load(CompoundTag compound, CallbackInfo callbackInfo) {
         if (compound.contains("BalmData")) {
-            fabricBalmData = compound.getCompound("BalmData");
+            fabricBalmData = compound.getCompound("BalmData").orElse(fabricBalmData);
         }
         if (compound.contains("ForgeData")) {
-            forgeBalmData = compound.getCompound("ForgeData").getCompound("PlayerPersisted").getCompound("BalmData");
+            forgeBalmData = compound.getCompound("ForgeData")
+                    .flatMap(it -> it.getCompound("PlayerPersisted"))
+                    .flatMap(it -> it.getCompound("BalmData"))
+                    .orElse(forgeBalmData);
         }
     }
 

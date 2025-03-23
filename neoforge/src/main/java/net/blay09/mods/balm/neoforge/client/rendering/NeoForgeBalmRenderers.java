@@ -15,13 +15,11 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
@@ -108,25 +106,25 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
         ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, "main");
-        getRegistrations().layerDefinitions.put(modelLayerLocation, layerDefinition);
+        getRegistrations(location.getNamespace()).layerDefinitions.put(modelLayerLocation, layerDefinition);
         return modelLayerLocation;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
-        getRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
+    public <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
+        getRegistrations(identifier.getNamespace()).entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
-        getRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
+    public <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
+        getRegistrations(identifier.getNamespace()).blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
     }
 
     @Override
-    public void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks) {
-        getRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
+    public void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
+        getRegistrations(identifier.getNamespace()).blockColors.add(new ColorRegistration<>(color, blocks));
     }
 
     @Override
@@ -136,13 +134,13 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
     }
 
     @Override
-    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
-        getRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
+    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+        getRegistrations(identifier.getNamespace()).particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
     }
 
     @Override
-    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
-        getRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
+    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+        getRegistrations(identifier.getNamespace()).particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
     }
 
     public void register(String modId, IEventBus eventBus) {

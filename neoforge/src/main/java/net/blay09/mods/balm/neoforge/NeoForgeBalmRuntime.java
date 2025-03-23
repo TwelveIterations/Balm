@@ -1,10 +1,12 @@
 package net.blay09.mods.balm.neoforge;
 
 import net.blay09.mods.balm.api.BalmHooks;
+import net.blay09.mods.balm.api.BalmProxy;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
@@ -17,7 +19,6 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.capability.BalmProviders;
 import net.blay09.mods.balm.api.proxy.*;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;
@@ -40,7 +41,7 @@ import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
-import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
+import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.sound.NeoForgeBalmSounds;
 import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmStats;
@@ -75,7 +76,7 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final BalmRegistries registries = new NeoForgeBalmRegistries();
     private final BalmSounds sounds = new NeoForgeBalmSounds();
     private final BalmEntities entities = new NeoForgeBalmEntities();
-    private final BalmProviders providers = new NeoForgeBalmProviders();
+    private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities();
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmStats stats = new NeoForgeBalmStats();
@@ -84,6 +85,7 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
+    private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -152,8 +154,8 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     }
 
     @Override
-    public BalmProviders getProviders() {
-        return providers;
+    public BalmCapabilities getCapabilities() {
+        return capabilities;
     }
 
     @Override
@@ -187,7 +189,7 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     }
 
     @Override
-    public void initialize(String modId, NeoForgeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
         ((NeoForgeBalmNetworking) networking).register(modId, context.modBus());
         ((NeoForgeBalmEntities) entities).register(modId, context.modBus());
         ((NeoForgeBalmStats) stats).register(modId, context.modBus());
@@ -240,7 +242,8 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
 
     @Override
     public void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier, (ResourceManagerReloadListener) reloadListener::accept));
+        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier,
+                (ResourceManagerReloadListener) reloadListener::accept));
     }
 
     @Override
@@ -276,5 +279,10 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     @Override
     public String getPlatform() {
         return LoaderPlatforms.NEOFORGE;
+    }
+
+    @Override
+    public BalmProxy getProxy() {
+        return proxy.get();
     }
 }

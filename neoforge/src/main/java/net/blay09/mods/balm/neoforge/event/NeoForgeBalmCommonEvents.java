@@ -8,9 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -235,19 +233,6 @@ public class NeoForgeBalmCommonEvents {
             NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (net.neoforged.neoforge.event.entity.living.LivingHealEvent orig) -> {
                 final LivingHealEvent event = new LivingHealEvent(orig.getEntity(), orig.getAmount());
                 events.fireEventHandlers(priority, event);
-                if (event.isCanceled()) {
-                    orig.setCanceled(true);
-                }
-            });
-        });
-
-        events.registerEvent(DigSpeedEvent.class, priority -> {
-            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (PlayerEvent.BreakSpeed orig) -> {
-                final DigSpeedEvent event = new DigSpeedEvent(orig.getEntity(), orig.getState(), orig.getOriginalSpeed());
-                events.fireEventHandlers(priority, event);
-                if (event.getSpeedOverride() != null) {
-                    orig.setNewSpeed(event.getSpeedOverride());
-                }
                 if (event.isCanceled()) {
                     orig.setCanceled(true);
                 }

@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
@@ -63,8 +64,22 @@ public interface BalmHooks {
 
     boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult);
 
-    boolean isShield(ItemStack itemStack);
-    boolean isRepairable(ItemStack itemStack);
+    /**
+     * @deprecated Check for the BLOCKS_ATTACKS component yourself instead.
+     */
+    @Deprecated
+    default boolean isShield(ItemStack itemStack) {
+        return itemStack.get(DataComponents.BLOCKS_ATTACKS) != null;
+    }
+
+    /**
+     * @deprecated Check the REPAIR_COST component yourself instead.
+     */
+    @Deprecated
+    default boolean isRepairable(ItemStack itemStack) {
+        final var repairCost = itemStack.getItem().components().get(DataComponents.REPAIR_COST);
+        return repairCost != null && repairCost > 0;
+    }
 
     void setForcedPose(Player player, Pose pose);
 

@@ -64,12 +64,12 @@ public class NeoForgeBalmHooks implements BalmHooks {
     public CompoundTag getPersistentData(Entity entity) {
         CompoundTag persistentData = entity.getPersistentData();
         if (entity instanceof Player) {
-            CompoundTag persistedTag = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
+            CompoundTag persistedTag = persistentData.getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
             persistentData.put(Player.PERSISTED_NBT_TAG, persistedTag);
             persistentData = persistedTag;
         }
 
-        CompoundTag balmData = persistentData.getCompound("BalmData");
+        CompoundTag balmData = persistentData.getCompoundOrEmpty("BalmData");
         if (balmData.isEmpty()) {
             // If we have no data, try to import from Fabric in case the world was migrated
             balmData = ((BalmEntity) entity).getFabricBalmData();
@@ -128,17 +128,6 @@ public class NeoForgeBalmHooks implements BalmHooks {
     @Override
     public boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         return FluidUtil.interactWithFluidHandler(player, hand, level, pos, hitResult.getDirection());
-    }
-
-    @Override
-    public boolean isShield(ItemStack itemStack) {
-        return itemStack.getItem().canPerformAction(itemStack, ItemAbilities.SHIELD_BLOCK);
-    }
-
-    @Override
-    public boolean isRepairable(ItemStack itemStack) {
-        final var repairCost = itemStack.getItem().components().get(DataComponents.REPAIR_COST);
-        return repairCost != null && repairCost > 0;
     }
 
     @Override

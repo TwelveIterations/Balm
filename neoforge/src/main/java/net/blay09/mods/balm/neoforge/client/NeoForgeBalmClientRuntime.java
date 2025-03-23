@@ -5,21 +5,18 @@ import net.blay09.mods.balm.api.client.BalmClientRuntime;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmRenderers;
-import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmTextures;
 import net.blay09.mods.balm.neoforge.client.screen.NeoForgeBalmScreens;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmClientEvents;
 
 public class NeoForgeBalmClientRuntime implements BalmClientRuntime<NeoForgeLoadContext> {
 
     private final BalmRenderers renderers = new NeoForgeBalmRenderers();
-    private final BalmTextures textures = new NeoForgeBalmTextures();
     private final BalmScreens screens = new NeoForgeBalmScreens();
     private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings();
     private final BalmModels models = new NeoForgeBalmModels();
@@ -31,11 +28,6 @@ public class NeoForgeBalmClientRuntime implements BalmClientRuntime<NeoForgeLoad
     @Override
     public BalmRenderers getRenderers() {
         return renderers;
-    }
-
-    @Override
-    public BalmTextures getTextures() {
-        return textures;
     }
 
     @Override
@@ -54,7 +46,7 @@ public class NeoForgeBalmClientRuntime implements BalmClientRuntime<NeoForgeLoad
     }
 
     @Override
-    public void initialize(String modId, NeoForgeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
         ((NeoForgeBalmRenderers) renderers).register(modId, context.modBus());
         ((NeoForgeBalmScreens) screens).register(modId, context.modBus());
         ((NeoForgeBalmModels) models).register(modId, context.modBus());

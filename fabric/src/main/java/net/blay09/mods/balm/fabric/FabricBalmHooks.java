@@ -172,17 +172,6 @@ public class FabricBalmHooks implements BalmHooks {
     }
 
     @Override
-    public boolean isShield(ItemStack itemStack) {
-        return itemStack.getItem() instanceof ShieldItem;
-    }
-
-    @Override
-    public boolean isRepairable(ItemStack itemStack) {
-        final var repairCost = itemStack.getItem().components().get(DataComponents.REPAIR_COST);
-        return repairCost != null && repairCost > 0;
-    }
-
-    @Override
     public void setForcedPose(Player player, Pose pose) {
         ((BalmPlayer) player).setForcedPose(pose);
     }

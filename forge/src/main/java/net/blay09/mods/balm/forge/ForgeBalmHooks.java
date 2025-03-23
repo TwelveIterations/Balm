@@ -138,17 +138,6 @@ public class ForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public boolean isShield(ItemStack itemStack) {
-        return itemStack.getItem().canPerformAction(itemStack, ToolActions.SHIELD_BLOCK);
-    }
-
-    @Override
-    public boolean isRepairable(ItemStack itemStack) {
-        final var repairCost = itemStack.getItem().components().get(DataComponents.REPAIR_COST);
-        return repairCost != null && repairCost > 0;
-    }
-
-    @Override
     public void setForcedPose(Player player, Pose pose) {
         player.setForcedPose(pose);
     }
