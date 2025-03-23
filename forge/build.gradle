@@ -18,9 +18,7 @@ plugins {
 
 apply plugin: "org.spongepowered.mixin"
 
-group = mod_group
 archivesBaseName = "${mod_id}-forge-${minecraft_version}"
-version = mod_version
 
 jarJar.enable()
 build.dependsOn tasks.jarJar
@@ -188,7 +186,7 @@ def replaceProperties = [
         minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
         forge_version: forge_version, forge_version_range: forge_version_range,
         forge_loader_version_range: forge_loader_version_range,
-        mod_id: mod_id, mod_version: mod_version
+        mod_id: mod_id, version: version
 ]
 processResources {
     from project(":shared").sourceSets.main.resources

@@ -4,7 +4,7 @@ license="All rights reserved"
 issueTrackerURL="https://github.com/TwelveIterationMods/Balm/issues"
 [[mods]]
 modId="balm"
-version="${mod_version}"
+version="${version}"
 displayName="Balm"
 displayURL="https://mods.twelveiterations.com/"
 logoFile="balm-icon.png"
