@@ -7,6 +7,7 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
+import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +36,8 @@ public class NeoForgeBalm {
         capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "item_handler"), Capabilities.ItemHandler.BLOCK);
         capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "fluid_handler"), Capabilities.FluidHandler.BLOCK);
         capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "energy_storage"), Capabilities.EnergyStorage.BLOCK);
+
+        ((NeoForgeBalmNetworking) Balm.getNetworking()).register("balm", modBus);
     }
 
     private void enqueueIMC(InterModEnqueueEvent event) {
