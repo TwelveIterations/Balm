@@ -69,10 +69,14 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     @Override
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
         activeReflectionConfigs.remove(schema.identifier());
         localConfigs.put(schema.identifier(), config);
+        updateActiveFromLocal(schema, config);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void updateActiveFromLocal(BalmConfigSchema schema, MutableLoadedConfig config) {
         // Reapply active config while retaining synced properties if in multiplayer
         final var newConfig = config.copy();
         if (!Balm.getProxy().isLocalServer()) {

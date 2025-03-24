@@ -4,7 +4,11 @@ import com.electronwill.nightconfig.core.EnumGetMethod;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.config.LoadedTableConfig;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.*;
+import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -26,6 +30,7 @@ import java.util.Map;
 public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
     private final Map<ResourceLocation, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
+    private final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
 
     private static ModConfigSpec.ConfigValue<?> addPropertyToSpec(BalmConfigSchema schema, ConfiguredProperty<?> property, ModConfigSpec.Builder spec) {
         spec.comment(property.comment())
@@ -163,10 +168,26 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                         .getNamespace() + " not found when registering config."));
         final var eventBus = modContainer.getEventBus();
         eventBus.addListener((ModConfigEvent.Loading event) -> {
-            // TODO 1.21.5 Configs
+            final var modConfig = event.getConfig();
+            final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+            if (schema.identifier().equals(identifier)) {
+                modConfigs.put(schema.identifier(), modConfig);
+                final var wrappedConfig = new LoadedTableConfig(); // TODO 1.21.5 Configs
+                setLocalConfig(schema, wrappedConfig);
+                setActiveConfig(schema, wrappedConfig);
+            }
         });
         eventBus.addListener((ModConfigEvent.Reloading event) -> {
-            // TODO 1.21.5 Configs
+            final var modConfig = event.getConfig();
+            final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+            if (schema.identifier().equals(identifier)) {
+                modConfigs.put(schema.identifier(), modConfig);
+                final var wrappedConfig = new LoadedTableConfig(); // TODO 1.21.5 Configs
+                setLocalConfig(schema, wrappedConfig);
+                updateActiveFromLocal(schema, wrappedConfig);
+
+                Balm.getEvents().fireEvent(new ConfigReloadedEvent(schema));
+            }
         });
 
         final var stringType = schema.identifier().getPath();
@@ -182,6 +203,18 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             initializeConfigurationScreen(modContainer);
         }
+    }
+
+    @Override
+    public void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
+        super.saveLocalConfig(schema, config);
+        final var modConfig = modConfigs.get(schema.identifier());
+        if (modConfig == null) {
+            throw new IllegalStateException("Backing config not available for " + schema.identifier());
+        }
+        final var wrappedConfig = new LoadedTableConfig(); // TODO 1.21.5 Configs
+        wrappedConfig.applyFrom(schema, config);
+        ((ModConfigSpec) modConfig.getSpec()).save();
     }
 
     private void initializeConfigurationScreen(ModContainer modContainer) {

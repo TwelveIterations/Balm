@@ -2,16 +2,6 @@ package net.blay09.mods.balm.neoforge.config;
 
 /*public class NeoForgeBalmConfigOld extends AbstractBalmConfig {
 
-    private <T extends BalmConfigData> T readConfigValues(Class<T> clazz, ModConfig config) {
-        T instance = createConfigDataInstance(clazz);
-        try {
-            readConfigValues("", instance, config);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return instance;
-    }
-
     private <T> void readConfigValues(String parentPath, T instance, ModConfig config) throws IllegalAccessException {
         List<Field> fields = ConfigReflection.getAllFields(instance.getClass());
         for (Field field : fields) {
@@ -136,14 +126,6 @@ package net.blay09.mods.balm.neoforge.config;
 
     @Override
     public <T extends BalmConfigData> T initializeBackingConfig(Class<T> clazz) {
-        modContainer.getEventBus().addListener((ModConfigEvent.Loading event) -> {
-            configs.put(clazz, event.getConfig());
-            T newConfigData = readConfigValues(clazz, event.getConfig());
-            configData.put(clazz, newConfigData);
-
-            setActiveConfig(clazz, newConfigData);
-        });
-
         modContainer.getEventBus().addListener((ModConfigEvent.Reloading event) -> {
             configs.put(clazz, event.getConfig());
             T newConfigData = readConfigValues(clazz, event.getConfig());
@@ -156,8 +138,6 @@ package net.blay09.mods.balm.neoforge.config;
             if (!hasSyncMessage || isHostingServer || !isIngame) {
                 setActiveConfig(clazz, newConfigData);
             }
-
-            Balm.getEvents().fireEvent(new ConfigReloadedEvent());
         });
     }
 

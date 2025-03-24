@@ -31,13 +31,11 @@ public class ConfigSync {
         Balm.getEvents().onEvent(ConfigReloadedEvent.class, event -> {
             final var server = Balm.getHooks().getServer();
             if (server != null) {
-                final var schemas = Balm.getConfig().getSchemas();
-                for (final var schema : schemas) {
-                    if (hasSyncedProperties(schema)) {
-                        final var loaded = Balm.getConfig().getActiveConfig(schema);
-                        final var packet = new ClientboundConfigPacket(schema, loaded);
-                        Balm.getNetworking().sendToAll(server, packet);
-                    }
+                final var schema = event.getSchema();
+                if (hasSyncedProperties(schema)) {
+                    final var loaded = Balm.getConfig().getActiveConfig(schema);
+                    final var packet = new ClientboundConfigPacket(schema, loaded);
+                    Balm.getNetworking().sendToAll(server, packet);
                 }
             }
         });
