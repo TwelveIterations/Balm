@@ -11,7 +11,6 @@ import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.command.BalmCommand;
 import net.blay09.mods.balm.config.ExampleConfig;
-import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
@@ -35,6 +34,10 @@ public class FabricBalm implements ModInitializer {
 
     private static final SidedProxy<FabricBalmProxy> proxy = sidedProxy("net.blay09.mods.balm.fabric.FabricBalmProxy",
             "net.blay09.mods.balm.fabric.client.FabricBalmClientProxy");
+
+    public static FabricBalmProxy getProxy() {
+        return proxy.get();
+    }
 
     @Override
     public void onInitialize() {
@@ -134,9 +137,5 @@ public class FabricBalm implements ModInitializer {
                 });
 
         Balm.initializeIfLoaded("team_reborn_energy", "net.blay09.mods.balm.fabric.compat.energy.RebornEnergy");
-    }
-
-    public static FabricBalmProxy getProxy() {
-        return proxy.get();
     }
 }

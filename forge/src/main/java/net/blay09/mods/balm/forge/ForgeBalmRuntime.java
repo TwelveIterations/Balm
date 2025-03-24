@@ -7,35 +7,35 @@ import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.command.BalmCommands;
-import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
+import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.particle.BalmParticles;
-import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.proxy.*;
-import net.blay09.mods.balm.api.recipe.BalmRecipes;
-import net.blay09.mods.balm.api.stats.BalmStats;
-import net.blay09.mods.balm.common.CommonBalmLootTables;
-import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
-import net.blay09.mods.balm.common.proxy.ModProxyImpl;
-import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
-import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
-import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
+import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
+import net.blay09.mods.balm.api.proxy.*;
+import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;
+import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.common.proxy.ModProxyImpl;
+import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
 import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
+import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
+import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
 import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
+import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.item.ForgeBalmItems;
 import net.blay09.mods.balm.forge.menu.ForgeBalmMenus;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
@@ -48,7 +48,9 @@ import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.*;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.fml.ModList;
@@ -252,6 +254,7 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
     public BalmComponents getComponents() {
         return components;
     }
+
     @Override
     public BalmModSupport getModSupport() {
         return modSupport;

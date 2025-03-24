@@ -247,7 +247,8 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
 
     @Override
     public void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier, (ResourceManagerReloadListener) reloadListener::accept));
+        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier,
+                (ResourceManagerReloadListener) reloadListener::accept));
     }
 
     @Override
