@@ -21,9 +21,6 @@ import java.util.Set;
  */
 public class ConfigJsonExport {
 
-    record ConfigProperty(String name, String type, String description, Object defaultValue, @Nullable String[] validValues) {
-    }
-
     public static ArrayList<ConfigProperty> export(Class<?> configDataClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         final var defaults = configDataClass.getConstructor().newInstance();
         final var properties = new ArrayList<ConfigProperty>();
@@ -84,5 +81,8 @@ public class ConfigJsonExport {
     private static boolean isProperty(Field field) {
         final var type = field.getType();
         return type.isPrimitive() || type.isEnum() || type == String.class || type == List.class || type == Set.class || type == ResourceLocation.class;
+    }
+
+    record ConfigProperty(String name, String type, String description, Object defaultValue, @Nullable String[] validValues) {
     }
 }

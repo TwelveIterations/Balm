@@ -117,11 +117,14 @@ public class DelegateContainer implements Container, WorldlyContainer {
 
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, @Nullable Direction direction) {
-        return delegate instanceof WorldlyContainer worldContainer ? worldContainer.canPlaceItemThroughFace(slot, itemStack, direction) : canPlaceItem(slot, itemStack);
+        return delegate instanceof WorldlyContainer worldContainer ? worldContainer.canPlaceItemThroughFace(slot, itemStack, direction) : canPlaceItem(slot,
+                itemStack);
     }
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack itemStack, Direction direction) {
-        return delegate instanceof WorldlyContainer worldContainer ? worldContainer.canTakeItemThroughFace(slot, itemStack, direction) : canTakeItem(this, slot, itemStack);
+        return delegate instanceof WorldlyContainer worldContainer ? worldContainer.canTakeItemThroughFace(slot, itemStack, direction) : canTakeItem(this,
+                slot,
+                itemStack);
     }
 }

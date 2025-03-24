@@ -15,14 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfiguredConfigProvider implements IModConfigProvider {
-    @Override
-    public Set<IModConfig> getConfigurationsForMod(ModContext modContext) {
-        final var configs = Balm.getConfig().getSchemasByNamespace(modContext.modId());
-        return configs.stream()
-                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema)))
-                .collect(Collectors.toSet());
-    }
-
     private static IModConfig mapConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
         return new IModConfig() {
             @Override
@@ -278,5 +270,13 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                 Component.translatable("config." + modId + ".title"),
                 configsByType
         );
+    }
+
+    @Override
+    public Set<IModConfig> getConfigurationsForMod(ModContext modContext) {
+        final var configs = Balm.getConfig().getSchemasByNamespace(modContext.modId());
+        return configs.stream()
+                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema)))
+                .collect(Collectors.toSet());
     }
 }

@@ -3,25 +3,17 @@ package net.blay09.mods.balm.neoforge.client.keymappings;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.minecraft.client.KeyMapping;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class NeoForgeBalmKeyMappings implements BalmKeyMappings {
-    private static class Registrations {
-        public final List<KeyMapping> keyMappings = new ArrayList<>();
-
-        @SubscribeEvent
-        public void registerKeyMappings(RegisterKeyMappingsEvent event) {
-            keyMappings.forEach(event::register);
-        }
-    }
-
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
@@ -37,6 +29,15 @@ public class NeoForgeBalmKeyMappings implements BalmKeyMappings {
 
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final List<KeyMapping> keyMappings = new ArrayList<>();
+
+        @SubscribeEvent
+        public void registerKeyMappings(RegisterKeyMappingsEvent event) {
+            keyMappings.forEach(event::register);
+        }
     }
 
 }

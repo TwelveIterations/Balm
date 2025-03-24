@@ -6,5 +6,6 @@ import java.util.function.Function;
 
 public interface ConfigCategoryBuilder extends PropertyHolderBuilder {
     ConfigCategoryImpl comment(String comment);
+
     <T> T via(Function<ConfigCategoryBuilder, T> initializer);
 }

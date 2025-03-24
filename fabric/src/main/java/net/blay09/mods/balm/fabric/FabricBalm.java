@@ -2,15 +2,15 @@ package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.capability.CapabilityTypes;
-import net.blay09.mods.balm.common.CommonCapabilities;
-import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
+import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.common.command.BalmCommand;
 import net.blay09.mods.balm.common.config.ConfigSync;
+import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
@@ -43,6 +43,10 @@ public class FabricBalm implements ModInitializer {
 
     private static final SidedProxy<FabricBalmProxy> proxy = sidedProxy("net.blay09.mods.balm.fabric.FabricBalmProxy",
             "net.blay09.mods.balm.fabric.client.FabricBalmClientProxy");
+
+    public static FabricBalmProxy getProxy() {
+        return proxy.get();
+    }
 
     @Override
     public void onInitialize() {
@@ -172,9 +176,5 @@ public class FabricBalm implements ModInitializer {
                 });
 
         Balm.initializeIfLoaded("team_reborn_energy", "net.blay09.mods.balm.fabric.compat.energy.RebornEnergy");
-    }
-
-    public static FabricBalmProxy getProxy() {
-        return proxy.get();
     }
 }

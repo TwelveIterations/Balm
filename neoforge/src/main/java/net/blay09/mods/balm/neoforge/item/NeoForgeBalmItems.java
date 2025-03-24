@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.neoforge.item;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.neoforge.DeferredRegisters;
@@ -11,7 +12,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.fml.ModLoadingContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -20,25 +20,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class NeoForgeBalmItems implements BalmItems {
-
-    private static class Registrations {
-        public final Multimap<ResourceLocation, Supplier<ItemLike[]>> creativeTabContents = ArrayListMultimap.create();
-        private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
-
-        public void buildCreativeTabContents(ResourceLocation tabIdentifier, CreativeModeTab.Output entries) {
-            Collection<Supplier<ItemLike[]>> itemStackArraySuppliers = creativeTabContents.get(tabIdentifier);
-            final var comparator = creativeTabSorting.get(tabIdentifier);
-            if (!itemStackArraySuppliers.isEmpty()) {
-                itemStackArraySuppliers.forEach(it -> {
-                    final var itemStacks = Arrays.asList(it.get());
-                    final var sortedItemStacks = comparator != null ? itemStacks.stream().sorted(comparator).toList() : itemStacks;
-                    for (final var itemStack : sortedItemStacks) {
-                        entries.accept(itemStack);
-                    }
-                });
-            }
-        }
-    }
 
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
@@ -79,5 +60,24 @@ public class NeoForgeBalmItems implements BalmItems {
 
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final Multimap<ResourceLocation, Supplier<ItemLike[]>> creativeTabContents = ArrayListMultimap.create();
+        private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
+
+        public void buildCreativeTabContents(ResourceLocation tabIdentifier, CreativeModeTab.Output entries) {
+            Collection<Supplier<ItemLike[]>> itemStackArraySuppliers = creativeTabContents.get(tabIdentifier);
+            final var comparator = creativeTabSorting.get(tabIdentifier);
+            if (!itemStackArraySuppliers.isEmpty()) {
+                itemStackArraySuppliers.forEach(it -> {
+                    final var itemStacks = Arrays.asList(it.get());
+                    final var sortedItemStacks = comparator != null ? itemStacks.stream().sorted(comparator).toList() : itemStacks;
+                    for (final var itemStack : sortedItemStacks) {
+                        entries.accept(itemStack);
+                    }
+                });
+            }
+        }
     }
 }

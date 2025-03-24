@@ -24,6 +24,16 @@ public class NeoForgeBalmEvents implements BalmEvents {
     private final Table<Class<?>, EventPriority, List<Consumer<?>>> eventHandlers = HashBasedTable.create();
     private final Table<TickType<?>, TickPhase, Consumer<?>> tickEventInitializers = HashBasedTable.create();
 
+    public static net.neoforged.bus.api.EventPriority toForge(EventPriority priority) {
+        return switch (priority) {
+            case Lowest -> net.neoforged.bus.api.EventPriority.LOWEST;
+            case Low -> net.neoforged.bus.api.EventPriority.LOW;
+            case Normal -> net.neoforged.bus.api.EventPriority.NORMAL;
+            case High -> net.neoforged.bus.api.EventPriority.HIGH;
+            case Highest -> net.neoforged.bus.api.EventPriority.HIGHEST;
+        };
+    }
+
     public void registerEvent(Class<?> eventClass, Consumer<EventPriority> initializer) {
         registerEvent(eventClass, initializer, null);
     }
@@ -91,15 +101,5 @@ public class NeoForgeBalmEvents implements BalmEvents {
 
     public <T> void registerTickEvent(TickType<?> type, TickPhase phase, Consumer<T> initializer) {
         tickEventInitializers.put(type, phase, initializer);
-    }
-
-    public static net.neoforged.bus.api.EventPriority toForge(EventPriority priority) {
-        return switch (priority) {
-            case Lowest -> net.neoforged.bus.api.EventPriority.LOWEST;
-            case Low -> net.neoforged.bus.api.EventPriority.LOW;
-            case Normal -> net.neoforged.bus.api.EventPriority.NORMAL;
-            case High -> net.neoforged.bus.api.EventPriority.HIGH;
-            case Highest -> net.neoforged.bus.api.EventPriority.HIGHEST;
-        };
     }
 }

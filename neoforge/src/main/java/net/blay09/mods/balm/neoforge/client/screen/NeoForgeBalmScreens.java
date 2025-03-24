@@ -22,29 +22,15 @@ import java.util.function.Supplier;
 
 public class NeoForgeBalmScreens implements BalmScreens {
 
-    private static class Registrations {
-        public final List<Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>>> menuTypes = new ArrayList<>();
-
-        @SubscribeEvent
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        public void registerMenuScreens(RegisterMenuScreensEvent event) {
-            for (Pair<Supplier<MenuType<? extends AbstractContainerMenu>>, BalmScreenFactory<?, ?>> entry : menuTypes) {
-                final var menuType = entry.getFirst().get();
-                final var screenFactory = entry.getSecond();
-                registerScreenImmediate(event, (MenuType) menuType, (BalmScreenFactory) screenFactory);
-            }
-        }
-    }
-
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+
+    private static <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void registerScreenImmediate(RegisterMenuScreensEvent event, MenuType<TMenu> type, BalmScreenFactory<TMenu, TScreen> screenFactory) {
+        event.register(type, screenFactory::create);
+    }
 
     @Override
     public <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreen(ResourceLocation identifier, Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory) {
         getRegistrations(identifier.getNamespace()).menuTypes.add(Pair.of(type::get, screenFactory));
-    }
-
-    private static <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void registerScreenImmediate(RegisterMenuScreensEvent event, MenuType<TMenu> type, BalmScreenFactory<TMenu, TScreen> screenFactory) {
-        event.register(type, screenFactory::create);
     }
 
     @Override
@@ -62,5 +48,19 @@ public class NeoForgeBalmScreens implements BalmScreens {
 
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final List<Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>>> menuTypes = new ArrayList<>();
+
+        @SubscribeEvent
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public void registerMenuScreens(RegisterMenuScreensEvent event) {
+            for (Pair<Supplier<MenuType<? extends AbstractContainerMenu>>, BalmScreenFactory<?, ?>> entry : menuTypes) {
+                final var menuType = entry.getFirst().get();
+                final var screenFactory = entry.getSecond();
+                registerScreenImmediate(event, (MenuType) menuType, (BalmScreenFactory) screenFactory);
+            }
+        }
     }
 }

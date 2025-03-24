@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 public class FabricBalmComponents implements BalmComponents {
     @Override
     public <TComponent> DeferredObject<DataComponentType<TComponent>> registerComponent(Supplier<DataComponentType<TComponent>> supplier, ResourceLocation identifier) {
-        return new DeferredObject<>(identifier, () -> Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, identifier, supplier.get())).resolveImmediately();
+        return new DeferredObject<>(identifier,
+                () -> Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, identifier, supplier.get())).resolveImmediately();
     }
 }

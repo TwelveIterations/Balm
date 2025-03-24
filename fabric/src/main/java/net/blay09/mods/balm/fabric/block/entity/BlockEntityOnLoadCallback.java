@@ -8,12 +8,6 @@ import java.util.*;
 
 public class BlockEntityOnLoadCallback {
 
-    private static class LevelScope {
-        private final List<BlockEntity> pendingFreshBlockEntities = new ArrayList<>();
-        private final List<BlockEntity> freshBlockEntities = new ArrayList<>();
-        private boolean onLoadRunning;
-    }
-
     private static final Map<Level, LevelScope> levelBlockEntities = new WeakHashMap<>();
 
     public static void scheduleOnLoad(Level level, Collection<BlockEntity> blockEntities) {
@@ -42,5 +36,11 @@ public class BlockEntityOnLoadCallback {
             scope.freshBlockEntities.clear();
             scope.onLoadRunning = false;
         }
+    }
+
+    private static class LevelScope {
+        private final List<BlockEntity> pendingFreshBlockEntities = new ArrayList<>();
+        private final List<BlockEntity> freshBlockEntities = new ArrayList<>();
+        private boolean onLoadRunning;
     }
 }

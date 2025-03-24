@@ -8,17 +8,27 @@ import net.minecraft.network.codec.StreamCodec;
 
 public interface ConfiguredProperty<T> {
     BalmConfigSchema parentSchema();
+
     String category();
+
     String name();
+
     String comment();
+
     boolean synced();
+
     Class<?> type();
+
     Codec<T> codec();
+
     StreamCodec<ByteBuf, T> streamCodec();
+
     T defaultValue();
+
     default T getRaw(LoadedConfig config) {
         return config.getRaw(this);
     }
+
     default void setRaw(MutableLoadedConfig config, T value) {
         config.setRaw(this, value);
     }

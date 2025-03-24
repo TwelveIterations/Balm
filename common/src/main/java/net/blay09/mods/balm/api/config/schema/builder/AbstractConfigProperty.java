@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.api.config.schema.builder;
 
-import net.blay09.mods.balm.api.config.schema.impl.ConfigSchemaImpl;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.api.config.schema.impl.ConfigSchemaImpl;
 
 public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T> {
     private final ConfigSchemaImpl schema;

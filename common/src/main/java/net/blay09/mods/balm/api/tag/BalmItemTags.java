@@ -3,7 +3,6 @@ package net.blay09.mods.balm.api.tag;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 
 public class BalmItemTags {
@@ -42,7 +41,7 @@ public class BalmItemTags {
     public static final TagKey<Item> BLACK_DYES = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "dyes/black"));
 
     @SuppressWarnings("unchecked")
-    public static final TagKey<Item>[] DYE_TAGS = new TagKey[] {
+    public static final TagKey<Item>[] DYE_TAGS = new TagKey[]{
             WHITE_DYES,
             ORANGE_DYES,
             MAGENTA_DYES,

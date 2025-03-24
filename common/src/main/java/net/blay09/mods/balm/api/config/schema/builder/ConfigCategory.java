@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface ConfigCategory {
     BalmConfigSchema parentSchema();
+
     String name();
+
     String comment();
+
     List<ConfiguredProperty<?>> properties();
 }

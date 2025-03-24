@@ -24,6 +24,10 @@ public class DeferredObject<T> {
         this.canResolveFunc = canResolveFunc;
     }
 
+    public static <T> DeferredObject<T> of(ResourceLocation identifier, T instance) {
+        return new DeferredObject<>(identifier, () -> instance).resolveImmediately();
+    }
+
     protected void set(T object) {
         this.object = object;
     }
@@ -58,10 +62,6 @@ public class DeferredObject<T> {
 
     public ResourceLocation getIdentifier() {
         return id;
-    }
-
-    public static <T> DeferredObject<T> of(ResourceLocation identifier, T instance) {
-        return new DeferredObject<>(identifier, () -> instance).resolveImmediately();
     }
 
 }

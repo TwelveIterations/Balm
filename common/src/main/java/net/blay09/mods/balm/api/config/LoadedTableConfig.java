@@ -16,6 +16,37 @@ public record LoadedTableConfig(Table<String, String, Object> table) implements 
         this(HashBasedTable.create());
     }
 
+    public static Pair<LoadedTableConfig, List<Throwable>> of(BalmConfigSchema schema, Table<String, String, Object> table) {
+        final var validatedTable = HashBasedTable.<String, String, Object>create();
+        final var errors = new ArrayList<Throwable>();
+        for (final var rootProperty : schema.rootProperties()) {
+            try {
+                final var value = validate(rootProperty, table);
+                validatedTable.put(rootProperty.category(), rootProperty.name(), value);
+            } catch (Throwable e) {
+                validatedTable.put(rootProperty.category(), rootProperty.name(), rootProperty.defaultValue());
+                errors.add(e);
+            }
+        }
+        for (final var category : schema.categories()) {
+            for (final var property : category.properties()) {
+                try {
+                    final var value = validate(property, table);
+                    validatedTable.put(property.category(), property.name(), value);
+                } catch (Throwable e) {
+                    validatedTable.put(property.category(), property.name(), property.defaultValue());
+                    errors.add(e);
+                }
+            }
+        }
+        return Pair.of(new LoadedTableConfig(validatedTable), errors);
+    }
+
+    private static <T> T validate(ConfiguredProperty<T> property, Table<String, String, Object> table) {
+        final var value = table.get(property.category(), property.name());
+        return property.codec().decode(JavaOps.INSTANCE, value).getOrThrow().getFirst();
+    }
+
     @Override
     public <T> void setRaw(ConfiguredProperty<T> property, T value) {
         if (property.type().isAssignableFrom(value.getClass())) {
@@ -47,36 +78,5 @@ public record LoadedTableConfig(Table<String, String, Object> table) implements 
             return property.defaultValue();
         }
         return (T) value;
-    }
-
-    public static Pair<LoadedTableConfig, List<Throwable>> of(BalmConfigSchema schema, Table<String, String, Object> table) {
-        final var validatedTable = HashBasedTable.<String, String, Object>create();
-        final var errors = new ArrayList<Throwable>();
-        for (final var rootProperty : schema.rootProperties()) {
-            try {
-                final var value = validate(rootProperty, table);
-                validatedTable.put(rootProperty.category(), rootProperty.name(), value);
-            } catch (Throwable e) {
-                validatedTable.put(rootProperty.category(), rootProperty.name(), rootProperty.defaultValue());
-                errors.add(e);
-            }
-        }
-        for (final var category : schema.categories()) {
-            for (final var property : category.properties()) {
-                try {
-                    final var value = validate(property, table);
-                    validatedTable.put(property.category(), property.name(), value);
-                } catch (Throwable e) {
-                    validatedTable.put(property.category(), property.name(), property.defaultValue());
-                    errors.add(e);
-                }
-            }
-        }
-        return Pair.of(new LoadedTableConfig(validatedTable), errors);
-    }
-
-    private static <T> T validate(ConfiguredProperty<T> property, Table<String, String, Object> table) {
-        final var value = table.get(property.category(), property.name());
-        return property.codec().decode(JavaOps.INSTANCE, value).getOrThrow().getFirst();
     }
 }

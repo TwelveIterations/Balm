@@ -18,18 +18,6 @@ import java.util.function.Supplier;
 
 public interface BalmItems {
 
-    default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier) {
-        return registerItem(supplier, identifier, identifier.withPath(identifier.getNamespace()));
-    }
-
-    DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab);
-
-    DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier);
-
-    void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier);
-
-    void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator);
-
     static Item.Properties itemProperties(ResourceLocation identifier) {
         return new Item.Properties().setId(itemId(identifier));
     }
@@ -41,4 +29,16 @@ public interface BalmItems {
     static BlockItem blockItem(Block block, ResourceLocation identifier) {
         return new BlockItem(block, itemProperties(identifier));
     }
+
+    default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier) {
+        return registerItem(supplier, identifier, identifier.withPath(identifier.getNamespace()));
+    }
+
+    DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab);
+
+    DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier);
+
+    void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier);
+
+    void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator);
 }

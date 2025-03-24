@@ -7,12 +7,12 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
-import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmRenderers;
 import net.blay09.mods.balm.neoforge.client.screen.NeoForgeBalmScreens;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmClientEvents;
+import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 
 public class NeoForgeBalmClientRuntime implements BalmClientRuntime<NeoForgeLoadContext> {
 

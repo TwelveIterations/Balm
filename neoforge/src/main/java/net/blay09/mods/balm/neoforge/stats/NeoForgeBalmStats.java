@@ -8,7 +8,6 @@ import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import java.util.ArrayList;
@@ -17,17 +16,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NeoForgeBalmStats implements BalmStats {
-
-    private static class Registrations {
-        public final List<ResourceLocation> customStats = new ArrayList<>();
-
-        @SubscribeEvent
-        public void commonSetup(FMLCommonSetupEvent event) {
-            event.enqueueWork(() -> customStats.forEach(it -> {
-                Stats.CUSTOM.get(it, StatFormatter.DEFAULT);
-            }));
-        }
-    }
 
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
@@ -43,5 +31,16 @@ public class NeoForgeBalmStats implements BalmStats {
 
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final List<ResourceLocation> customStats = new ArrayList<>();
+
+        @SubscribeEvent
+        public void commonSetup(FMLCommonSetupEvent event) {
+            event.enqueueWork(() -> customStats.forEach(it -> {
+                Stats.CUSTOM.get(it, StatFormatter.DEFAULT);
+            }));
+        }
     }
 }

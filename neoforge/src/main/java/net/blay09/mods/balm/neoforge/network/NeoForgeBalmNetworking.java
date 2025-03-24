@@ -36,68 +36,8 @@ import java.util.function.BiConsumer;
 public class NeoForgeBalmNetworking implements BalmNetworking {
 
     private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmNetworking.class);
-
-    private static class Registrations {
-        private final String modId;
-        private final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> playMessagesByType = new ConcurrentHashMap<>();
-        private boolean optional;
-
-        private Registrations(String modId) {
-            this.modId = modId;
-        }
-
-        @SubscribeEvent
-        public void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
-            var registrar = event.registrar(modId);
-            if (optional) {
-                registrar = registrar.optional();
-            }
-            for (final var entry : playMessagesByType.entrySet()) {
-                final var messageRegistration = entry.getValue();
-                if (messageRegistration instanceof ServerboundMessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload> serverboundMessageRegistration) {
-                    registrar = playToServer(registrar, serverboundMessageRegistration);
-                } else if (messageRegistration instanceof ClientboundMessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload> clientboundMessageRegistration) {
-                    registrar = playToClient(registrar, clientboundMessageRegistration);
-                }
-            }
-        }
-
-        public void allowClientOnly() {
-            optional = true;
-        }
-
-        public void allowServerOnly() {
-            optional = true;
-        }
-
-        private <TPayload extends CustomPacketPayload> PayloadRegistrar playToServer(PayloadRegistrar registrar, ServerboundMessageRegistration<RegistryFriendlyByteBuf, TPayload> registration) {
-            return registrar.playToServer(registration.getType(), registration.getCodec(), createPayloadHandler(registration));
-        }
-
-        private <TPayload extends CustomPacketPayload> PayloadRegistrar playToClient(PayloadRegistrar registrar, ClientboundMessageRegistration<RegistryFriendlyByteBuf, TPayload> registration) {
-            return registrar.playToClient(registration.getType(), registration.getCodec(), createPayloadHandler(registration));
-        }
-
-        private <TBuffer extends FriendlyByteBuf, TPayload extends CustomPacketPayload> IPayloadHandler<TPayload> createPayloadHandler(ServerboundMessageRegistration<TBuffer, TPayload> serverboundMessageRegistration) {
-            return new MainThreadPayloadHandler<>((payload, context) -> {
-                replyContext = context;
-                serverboundMessageRegistration.getHandler().accept((ServerPlayer) context.player(), payload);
-                replyContext = null;
-            });
-        }
-
-        private <TBuffer extends FriendlyByteBuf, TPayload extends CustomPacketPayload> IPayloadHandler<TPayload> createPayloadHandler(ClientboundMessageRegistration<TBuffer, TPayload> clientboundMessageRegistration) {
-            return new MainThreadPayloadHandler<>((payload, context) -> {
-                replyContext = context;
-                clientboundMessageRegistration.getHandler().accept(context.player(), payload);
-                replyContext = null;
-            });
-        }
-    }
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
-
     private static IPayloadContext replyContext;
+    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
     public void allowClientOnly(String modId) {
@@ -185,5 +125,63 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
 
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations(modId));
+    }
+
+    private static class Registrations {
+        private final String modId;
+        private final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> playMessagesByType = new ConcurrentHashMap<>();
+        private boolean optional;
+
+        private Registrations(String modId) {
+            this.modId = modId;
+        }
+
+        @SubscribeEvent
+        public void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
+            var registrar = event.registrar(modId);
+            if (optional) {
+                registrar = registrar.optional();
+            }
+            for (final var entry : playMessagesByType.entrySet()) {
+                final var messageRegistration = entry.getValue();
+                if (messageRegistration instanceof ServerboundMessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload> serverboundMessageRegistration) {
+                    registrar = playToServer(registrar, serverboundMessageRegistration);
+                } else if (messageRegistration instanceof ClientboundMessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload> clientboundMessageRegistration) {
+                    registrar = playToClient(registrar, clientboundMessageRegistration);
+                }
+            }
+        }
+
+        public void allowClientOnly() {
+            optional = true;
+        }
+
+        public void allowServerOnly() {
+            optional = true;
+        }
+
+        private <TPayload extends CustomPacketPayload> PayloadRegistrar playToServer(PayloadRegistrar registrar, ServerboundMessageRegistration<RegistryFriendlyByteBuf, TPayload> registration) {
+            return registrar.playToServer(registration.getType(), registration.getCodec(), createPayloadHandler(registration));
+        }
+
+        private <TPayload extends CustomPacketPayload> PayloadRegistrar playToClient(PayloadRegistrar registrar, ClientboundMessageRegistration<RegistryFriendlyByteBuf, TPayload> registration) {
+            return registrar.playToClient(registration.getType(), registration.getCodec(), createPayloadHandler(registration));
+        }
+
+        private <TBuffer extends FriendlyByteBuf, TPayload extends CustomPacketPayload> IPayloadHandler<TPayload> createPayloadHandler(ServerboundMessageRegistration<TBuffer, TPayload> serverboundMessageRegistration) {
+            return new MainThreadPayloadHandler<>((payload, context) -> {
+                replyContext = context;
+                serverboundMessageRegistration.getHandler().accept((ServerPlayer) context.player(), payload);
+                replyContext = null;
+            });
+        }
+
+        private <TBuffer extends FriendlyByteBuf, TPayload extends CustomPacketPayload> IPayloadHandler<TPayload> createPayloadHandler(ClientboundMessageRegistration<TBuffer, TPayload> clientboundMessageRegistration) {
+            return new MainThreadPayloadHandler<>((payload, context) -> {
+                replyContext = context;
+                clientboundMessageRegistration.getHandler().accept(context.player(), payload);
+                replyContext = null;
+            });
+        }
     }
 }
