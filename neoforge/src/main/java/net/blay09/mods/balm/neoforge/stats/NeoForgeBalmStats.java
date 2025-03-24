@@ -18,17 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NeoForgeBalmStats implements BalmStats {
 
-    private static class Registrations {
-        public final List<ResourceLocation> customStats = new ArrayList<>();
-
-        @SubscribeEvent
-        public void commonSetup(FMLCommonSetupEvent event) {
-            event.enqueueWork(() -> customStats.forEach(it -> {
-                Stats.CUSTOM.get(it, StatFormatter.DEFAULT);
-            }));
-        }
-    }
-
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
@@ -47,5 +36,16 @@ public class NeoForgeBalmStats implements BalmStats {
 
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final List<ResourceLocation> customStats = new ArrayList<>();
+
+        @SubscribeEvent
+        public void commonSetup(FMLCommonSetupEvent event) {
+            event.enqueueWork(() -> customStats.forEach(it -> {
+                Stats.CUSTOM.get(it, StatFormatter.DEFAULT);
+            }));
+        }
     }
 }

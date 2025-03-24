@@ -8,6 +8,8 @@ import java.util.function.Predicate;
 
 public interface BalmModSupportTrinkets {
     boolean isEquipped(Player player, Predicate<ItemStack> predicate);
+
     ItemStack findEquipped(Player player, Predicate<ItemStack> predicate);
+
     List<ItemStack> findAllEquipped(Player player, Predicate<ItemStack> predicate);
 }

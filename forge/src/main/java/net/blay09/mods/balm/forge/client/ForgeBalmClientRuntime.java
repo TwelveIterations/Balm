@@ -15,7 +15,6 @@ import net.blay09.mods.balm.forge.client.rendering.ForgeBalmTextures;
 import net.blay09.mods.balm.forge.client.screen.ForgeBalmScreens;
 import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
-import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Arrays;
 import java.util.function.Supplier;

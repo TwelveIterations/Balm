@@ -25,19 +25,34 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class FabricBalmNetworking implements BalmNetworking {
 
     private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new HashMap<>();
-
+    private static PacketSender replyPacketSender;
     private final Set<String> registeredMods = new HashSet<>();
     private final Set<String> clientOnlyMods = new HashSet<>();
     private final Set<String> serverOnlyMods = new HashSet<>();
 
-    private static PacketSender replyPacketSender;
+    public static void initializeClientHandlers() {
+        for (final var messageRegistration : messagesByType.values()) {
+            if (messageRegistration instanceof ClientboundMessageRegistration<RegistryFriendlyByteBuf, ?> clientboundMessageRegistration) {
+                registerClientHandler(clientboundMessageRegistration);
+            }
+        }
+    }
+
+    private static <TPayload extends CustomPacketPayload> void registerClientHandler(ClientboundMessageRegistration<RegistryFriendlyByteBuf, TPayload> messageRegistration) {
+        final var type = messageRegistration.getType();
+        BiConsumer<Player, TPayload> handler = messageRegistration.getHandler();
+        ClientPlayNetworking.registerGlobalReceiver(type, ((payload, context) -> context.client().execute(() -> handler.accept(context.player(), payload))));
+    }
 
     public Set<String> getRegisteredMods() {
         return registeredMods;
@@ -146,19 +161,5 @@ public class FabricBalmNetworking implements BalmNetworking {
             handler.accept(context.player(), payload);
             replyPacketSender = null;
         })));
-    }
-
-    public static void initializeClientHandlers() {
-        for (final var messageRegistration : messagesByType.values()) {
-            if (messageRegistration instanceof ClientboundMessageRegistration<RegistryFriendlyByteBuf, ?> clientboundMessageRegistration) {
-                registerClientHandler(clientboundMessageRegistration);
-            }
-        }
-    }
-
-    private static <TPayload extends CustomPacketPayload> void registerClientHandler(ClientboundMessageRegistration<RegistryFriendlyByteBuf, TPayload> messageRegistration) {
-        final var type = messageRegistration.getType();
-        BiConsumer<Player, TPayload> handler = messageRegistration.getHandler();
-        ClientPlayNetworking.registerGlobalReceiver(type, ((payload, context) -> context.client().execute(() -> handler.accept(context.player(), payload))));
     }
 }

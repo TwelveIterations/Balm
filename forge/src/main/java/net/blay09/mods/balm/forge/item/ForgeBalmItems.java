@@ -1,11 +1,10 @@
 package net.blay09.mods.balm.forge.item;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.forge.DeferredRegisters;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,25 +24,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ForgeBalmItems implements BalmItems {
-
-    private static class Registrations {
-        public final Multimap<ResourceLocation, Supplier<ItemLike[]>> creativeTabContents = ArrayListMultimap.create();
-        private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
-
-        public void buildCreativeTabContents(ResourceLocation tabIdentifier, CreativeModeTab.Output entries) {
-            Collection<Supplier<ItemLike[]>> itemStackArraySuppliers = creativeTabContents.get(tabIdentifier);
-            final var comparator = creativeTabSorting.get(tabIdentifier);
-            if (!itemStackArraySuppliers.isEmpty()) {
-                itemStackArraySuppliers.forEach(it -> {
-                    final var itemStacks = Arrays.asList(it.get());
-                    final var sortedItemStacks = comparator != null ? itemStacks.stream().sorted(comparator).toList() : itemStacks;
-                    for (final var itemStack : sortedItemStacks) {
-                        entries.accept(itemStack);
-                    }
-                });
-            }
-        }
-    }
 
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
@@ -89,5 +68,24 @@ public class ForgeBalmItems implements BalmItems {
 
     private Registrations getActiveRegistrations() {
         return registrations.computeIfAbsent(ModLoadingContext.get().getActiveNamespace(), it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final Multimap<ResourceLocation, Supplier<ItemLike[]>> creativeTabContents = ArrayListMultimap.create();
+        private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
+
+        public void buildCreativeTabContents(ResourceLocation tabIdentifier, CreativeModeTab.Output entries) {
+            Collection<Supplier<ItemLike[]>> itemStackArraySuppliers = creativeTabContents.get(tabIdentifier);
+            final var comparator = creativeTabSorting.get(tabIdentifier);
+            if (!itemStackArraySuppliers.isEmpty()) {
+                itemStackArraySuppliers.forEach(it -> {
+                    final var itemStacks = Arrays.asList(it.get());
+                    final var sortedItemStacks = comparator != null ? itemStacks.stream().sorted(comparator).toList() : itemStacks;
+                    for (final var itemStack : sortedItemStacks) {
+                        entries.accept(itemStack);
+                    }
+                });
+            }
+        }
     }
 }

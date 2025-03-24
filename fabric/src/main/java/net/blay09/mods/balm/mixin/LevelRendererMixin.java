@@ -32,7 +32,10 @@ public class LevelRendererMixin {
     @Inject(method = "renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;DDDLnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", at = @At("HEAD"), cancellable = true)
     public void renderHitOutline(PoseStack poseStack, VertexConsumer vertexConsumer, Entity entity, double x, double y, double z, BlockPos pos, BlockState state, CallbackInfo callbackInfo) {
         if (minecraft.hitResult instanceof BlockHitResult blockHitResult) {
-            BlockHighlightDrawEvent event = new BlockHighlightDrawEvent(blockHitResult, poseStack, renderBuffers.bufferSource(), minecraft.gameRenderer.getMainCamera());
+            BlockHighlightDrawEvent event = new BlockHighlightDrawEvent(blockHitResult,
+                    poseStack,
+                    renderBuffers.bufferSource(),
+                    minecraft.gameRenderer.getMainCamera());
             Balm.getEvents().fireEvent(event);
             if (event.isCanceled()) {
                 callbackInfo.cancel();

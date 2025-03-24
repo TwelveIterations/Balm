@@ -8,17 +8,11 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 import java.util.function.Supplier;

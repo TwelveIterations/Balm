@@ -1,15 +1,12 @@
 package net.blay09.mods.balm.fabric.client.keymappings;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.keymappings.KeyConflictContext;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifier;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifiers;
 import net.blay09.mods.balm.common.client.keymappings.CommonBalmKeyMappings;
-import net.blay09.mods.balm.mixin.KeyMappingAccessor;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;

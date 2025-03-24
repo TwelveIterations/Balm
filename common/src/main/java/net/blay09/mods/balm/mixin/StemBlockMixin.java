@@ -16,7 +16,11 @@ public class StemBlockMixin {
     @Inject(method = "mayPlaceOn(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z", at = @At("HEAD"), cancellable = true)
     public void mayPlaceOn(BlockState state, BlockGetter blockGetter, BlockPos pos, CallbackInfoReturnable<Boolean> callbackInfo) {
         if (state.getBlock() instanceof CustomFarmBlock customFarmBlock) {
-            callbackInfo.setReturnValue(customFarmBlock.canSustainPlant(state, blockGetter, pos, Direction.UP, blockGetter.getBlockState(pos.relative(Direction.UP)).getBlock()));
+            callbackInfo.setReturnValue(customFarmBlock.canSustainPlant(state,
+                    blockGetter,
+                    pos,
+                    Direction.UP,
+                    blockGetter.getBlockState(pos.relative(Direction.UP)).getBlock()));
         }
     }
 }

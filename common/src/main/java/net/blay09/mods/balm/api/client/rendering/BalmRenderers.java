@@ -4,7 +4,6 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
@@ -27,6 +26,7 @@ public interface BalmRenderers {
     ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition);
 
     <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
+
     <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
 
     void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks);

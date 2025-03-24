@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.forge.world;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -38,26 +37,18 @@ import java.util.function.Supplier;
 
 public class ForgeBalmWorldGen implements BalmWorldGen {
 
-    private static class Registrations {
-        public final List<DeferredObject<?>> configuredFeatures = new ArrayList<>();
-        public final List<DeferredObject<?>> placedFeatures = new ArrayList<>();
-        public final List<DeferredObject<?>> placementModifiers = new ArrayList<>();
-
-        @SubscribeEvent
-        public void commonSetup(FMLCommonSetupEvent event) {
-            event.enqueueWork(() -> {
-                placementModifiers.forEach(DeferredObject::resolve);
-                configuredFeatures.forEach(DeferredObject::resolve);
-                placedFeatures.forEach(DeferredObject::resolve);
-            });
-        }
-    }
-
     public static final MapCodec<BalmBiomeModifier> BALM_BIOME_MODIFIER_CODEC = MapCodec.unit(BalmBiomeModifier.INSTANCE);
+    private static final List<BiomeModification> biomeModifications = new ArrayList<>();
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     public ForgeBalmWorldGen() {
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public static void initializeBalmBiomeModifiers() {
+        var registry = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "balm");
+        registry.register("balm", () -> BALM_BIOME_MODIFIER_CODEC);
+        registry.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @Override
@@ -82,10 +73,8 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
     public <T extends PoiType> DeferredObject<T> registerPoiType(ResourceLocation identifier, Supplier<T> supplier) {
         DeferredRegister<PoiType> register = DeferredRegisters.get(ForgeRegistries.POI_TYPES, identifier.getNamespace());
         RegistryObject<T> registryObject = register.register(identifier.getPath(), supplier);
-        return new DeferredObject<>(identifier,registryObject, registryObject::isPresent);
+        return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
-
-    private static final List<BiomeModification> biomeModifications = new ArrayList<>();
 
     @Override
     public void addFeatureToBiomes(BiomePredicate biomePredicate, GenerationStep.Decoration step, ResourceLocation placedFeatureIdentifier) {
@@ -116,9 +105,18 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
         return registrations.computeIfAbsent(ModLoadingContext.get().getActiveNamespace(), it -> new Registrations());
     }
 
-    public static void initializeBalmBiomeModifiers() {
-        var registry = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "balm");
-        registry.register("balm", () -> BALM_BIOME_MODIFIER_CODEC);
-        registry.register(FMLJavaModLoadingContext.get().getModEventBus());
+    private static class Registrations {
+        public final List<DeferredObject<?>> configuredFeatures = new ArrayList<>();
+        public final List<DeferredObject<?>> placedFeatures = new ArrayList<>();
+        public final List<DeferredObject<?>> placementModifiers = new ArrayList<>();
+
+        @SubscribeEvent
+        public void commonSetup(FMLCommonSetupEvent event) {
+            event.enqueueWork(() -> {
+                placementModifiers.forEach(DeferredObject::resolve);
+                configuredFeatures.forEach(DeferredObject::resolve);
+                placedFeatures.forEach(DeferredObject::resolve);
+            });
+        }
     }
 }

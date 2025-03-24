@@ -30,16 +30,6 @@ public class BalmConfigPropertyImpl<T> implements BalmConfigProperty<T> {
     }
 
     @Override
-    public void setValue(T value) {
-        try {
-            var instance = categoryField != null ? categoryField.get(configData) : configData;
-            propertyField.set(instance, value);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public T getValue() {
         try {
             var instance = categoryField != null ? categoryField.get(configData) : configData;
@@ -48,6 +38,16 @@ public class BalmConfigPropertyImpl<T> implements BalmConfigProperty<T> {
             e.printStackTrace();
         }
         return getDefaultValue();
+    }
+
+    @Override
+    public void setValue(T value) {
+        try {
+            var instance = categoryField != null ? categoryField.get(configData) : configData;
+            propertyField.set(instance, value);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

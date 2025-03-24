@@ -3,13 +3,10 @@ package net.blay09.mods.balm.forge;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistry;
 
 import java.util.function.Function;
 

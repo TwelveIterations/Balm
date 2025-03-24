@@ -18,6 +18,18 @@ import java.util.function.Supplier;
 
 public interface BalmItems {
 
+    static Item.Properties itemProperties(ResourceLocation identifier) {
+        return new Item.Properties();
+    }
+
+    static ResourceKey<Item> itemId(ResourceLocation identifier) {
+        return ResourceKey.create(Registries.ITEM, identifier);
+    }
+
+    static BlockItem blockItem(Block block, ResourceLocation identifier) {
+        return new BlockItem(block, itemProperties(identifier));
+    }
+
     default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier) {
         return registerItem(supplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
@@ -43,18 +55,6 @@ public interface BalmItems {
     @Deprecated
     default DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         return registerItem((id) -> supplier.get(), identifier, creativeTab);
-    }
-
-    static Item.Properties itemProperties(ResourceLocation identifier) {
-        return new Item.Properties();
-    }
-
-    static ResourceKey<Item> itemId(ResourceLocation identifier) {
-        return ResourceKey.create(Registries.ITEM, identifier);
-    }
-
-    static BlockItem blockItem(Block block, ResourceLocation identifier) {
-        return new BlockItem(block, itemProperties(identifier));
     }
 
 }

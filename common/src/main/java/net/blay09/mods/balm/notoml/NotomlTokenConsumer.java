@@ -36,7 +36,7 @@ public abstract class NotomlTokenConsumer {
     public void emitPropertyValue(String value) {
         if (currentList != null) {
             currentList.add(value);
-        } else if(currentMultiLineString != null) {
+        } else if (currentMultiLineString != null) {
             currentMultiLineString.append(value);
         } else {
             onPropertyParsed(currentCategory, currentProperty, value);

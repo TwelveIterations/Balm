@@ -38,6 +38,16 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     private final Multimap<String, Class<?>> configsByMod = ArrayListMultimap.create();
     private final Map<Class<?>, BalmConfigData> configData = new HashMap<>();
 
+    private static Object parseEnumValue(Class<?> type, String value) {
+        for (Object enumConstant : type.getEnumConstants()) {
+            if (enumConstant.toString().equalsIgnoreCase(value)) {
+                return enumConstant;
+            }
+        }
+
+        return null;
+    }
+
     private <T extends BalmConfigData> IConfigSpec<?> createConfigSpec(Class<T> clazz) {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         try {
@@ -184,16 +194,6 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 logger.error("Unexpected error loading config value for " + path + ", falling back to default", e);
             }
         }
-    }
-
-    private static Object parseEnumValue(Class<?> type, String value) {
-        for (Object enumConstant : type.getEnumConstants()) {
-            if (enumConstant.toString().equalsIgnoreCase(value)) {
-                return enumConstant;
-            }
-        }
-
-        return null;
     }
 
     private <T extends BalmConfigData> void writeConfigValues(ModConfig config, T configData) {

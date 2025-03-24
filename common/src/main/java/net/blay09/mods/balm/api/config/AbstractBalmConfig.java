@@ -31,6 +31,23 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     private final Map<Class<?>, BalmConfigData> defaultConfigs = new HashMap<>();
     private final Map<Class<?>, Function<?, ?>> syncMessageFactories = new HashMap<>();
 
+    private static BalmConfigProperty<?> createConfigProperty(BalmConfigData configData, Field categoryField, Field propertyField, BalmConfigData defaultConfig) {
+        return new BalmConfigPropertyImpl<String>(configData, categoryField, propertyField, defaultConfig);
+    }
+
+    private static boolean isPropertyType(Class<?> type) {
+        return type.isPrimitive()
+                || type == String.class
+                || type == Integer.class
+                || type == Boolean.class
+                || type == Float.class
+                || type == Double.class
+                || type == List.class
+                || type == Set.class
+                || type == ResourceLocationException.class
+                || Enum.class.isAssignableFrom(type);
+    }
+
     public void initialize() {
         Balm.getEvents().onEvent(PlayerLoginEvent.class, event -> {
             for (BalmConfigData config : activeConfigs.values()) {
@@ -170,22 +187,5 @@ public abstract class AbstractBalmConfig implements BalmConfig {
             }
         }
         return properties;
-    }
-
-    private static BalmConfigProperty<?> createConfigProperty(BalmConfigData configData, Field categoryField, Field propertyField, BalmConfigData defaultConfig) {
-        return new BalmConfigPropertyImpl<String>(configData, categoryField, propertyField, defaultConfig);
-    }
-
-    private static boolean isPropertyType(Class<?> type) {
-        return type.isPrimitive()
-                || type == String.class
-                || type == Integer.class
-                || type == Boolean.class
-                || type == Float.class
-                || type == Double.class
-                || type == List.class
-                || type == Set.class
-                || type == ResourceLocationException.class
-                || Enum.class.isAssignableFrom(type);
     }
 }

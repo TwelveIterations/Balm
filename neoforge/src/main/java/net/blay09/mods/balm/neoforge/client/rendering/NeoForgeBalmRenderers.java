@@ -38,6 +38,65 @@ import java.util.function.Supplier;
 
 public class NeoForgeBalmRenderers implements BalmRenderers {
 
+    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+
+    @Override
+    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
+        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, "main");
+        getActiveRegistrations().layerDefinitions.put(modelLayerLocation, layerDefinition);
+        return modelLayerLocation;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
+        getActiveRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
+        getActiveRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
+    }
+
+    @Override
+    public void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks) {
+        getActiveRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
+    }
+
+    @Override
+    public void registerItemColorHandler(ItemColor color, Supplier<ItemLike[]> items) {
+        getActiveRegistrations().itemColors.add(new ColorRegistration<>(color, items));
+    }
+
+    @Override
+    public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
+        // Do nothing in Forge. Forge unfortunately changes the Vanilla model format,
+        // so we have to have both this call (for Fabric) and change the JSON (for Forge).
+    }
+
+    @Override
+    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+        getActiveRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
+    }
+
+    @Override
+    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+        getActiveRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
+    }
+
+    public void register(String modId, IEventBus eventBus) {
+        eventBus.register(getRegistrations(modId));
+    }
+
+    private Registrations getActiveRegistrations() {
+        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
+    }
+
+    private Registrations getRegistrations(String modId) {
+        return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
+
     private record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {
     }
 
@@ -110,64 +169,5 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
         private <T extends ParticleOptions> void registerParticleProvider(RegisterParticleProvidersEvent event, ParticleProviderRegistration<T> registration) {
             event.registerSpriteSet(registration.particleType.get(), spriteSet -> registration.value());
         }
-    }
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
-
-    @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
-        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, "main");
-        getActiveRegistrations().layerDefinitions.put(modelLayerLocation, layerDefinition);
-        return modelLayerLocation;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
-        getActiveRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
-        getActiveRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
-    }
-
-    @Override
-    public void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks) {
-        getActiveRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
-    }
-
-    @Override
-    public void registerItemColorHandler(ItemColor color, Supplier<ItemLike[]> items) {
-        getActiveRegistrations().itemColors.add(new ColorRegistration<>(color, items));
-    }
-
-    @Override
-    public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        // Do nothing in Forge. Forge unfortunately changes the Vanilla model format,
-        // so we have to have both this call (for Fabric) and change the JSON (for Forge).
-    }
-
-    @Override
-    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
-        getActiveRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
-    }
-
-    @Override
-    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
-        getActiveRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
-    }
-
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
-    }
-
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
     }
 }

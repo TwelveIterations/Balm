@@ -43,6 +43,20 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     private final Multimap<String, Class<?>> configsByMod = ArrayListMultimap.create();
     private final Table<Class<?>, String, ModConfigSpec.ConfigValue<?>> configProperties = HashBasedTable.create();
 
+    private static Object parseEnumValue(Class<?> type, String value) {
+        for (Object enumConstant : type.getEnumConstants()) {
+            if (enumConstant.toString().equalsIgnoreCase(value)) {
+                return enumConstant;
+            }
+        }
+
+        return null;
+    }
+
+    private static void initializeConfigurationScreen(ModContainer modContainer) {
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
     private <T extends BalmConfigData> IConfigSpec createConfigSpec(Class<T> clazz) {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         try {
@@ -207,16 +221,6 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         }
     }
 
-    private static Object parseEnumValue(Class<?> type, String value) {
-        for (Object enumConstant : type.getEnumConstants()) {
-            if (enumConstant.toString().equalsIgnoreCase(value)) {
-                return enumConstant;
-            }
-        }
-
-        return null;
-    }
-
     private <T extends BalmConfigData> void writeConfigValues(Class<?> clazz, T configData) {
         try {
             writeConfigValues("", clazz, configData);
@@ -319,9 +323,5 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     @Override
     public List<? extends BalmConfigData> getConfigsByMod(String modId) {
         return configsByMod.get(modId).stream().map(configData::get).toList();
-    }
-
-    private static void initializeConfigurationScreen(ModContainer modContainer) {
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }

@@ -23,27 +23,15 @@ import java.util.function.Supplier;
 
 public class ForgeBalmScreens implements BalmScreens {
 
-    private static class Registrations {
-        public final List<Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>>> menuTypes = new ArrayList<>();
-
-        @SubscribeEvent
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        public void setupClient(FMLClientSetupEvent event) {
-            for (Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>> entry : menuTypes) {
-                registerScreenImmediate(entry.getFirst()::get, (BalmScreenFactory) entry.getSecond()); // I hate Java generics.
-            }
-        }
-    }
-
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+
+    private static <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreenImmediate(Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory) {
+        MenuScreens.register(type.get(), screenFactory::create);
+    }
 
     @Override
     public <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreen(Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory) {
         getActiveRegistrations().menuTypes.add(Pair.of(type::get, screenFactory));
-    }
-
-    private static <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreenImmediate(Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory) {
-        MenuScreens.register(type.get(), screenFactory::create);
     }
 
     @Override
@@ -61,5 +49,17 @@ public class ForgeBalmScreens implements BalmScreens {
 
     private Registrations getActiveRegistrations() {
         return registrations.computeIfAbsent(ModLoadingContext.get().getActiveNamespace(), it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final List<Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>>> menuTypes = new ArrayList<>();
+
+        @SubscribeEvent
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        public void setupClient(FMLClientSetupEvent event) {
+            for (Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>> entry : menuTypes) {
+                registerScreenImmediate(entry.getFirst()::get, (BalmScreenFactory) entry.getSecond()); // I hate Java generics.
+            }
+        }
     }
 }

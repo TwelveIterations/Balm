@@ -63,7 +63,7 @@ public class IconExport {
                         renderTarget.unbindWrite();
                         RenderSystem.disableDepthTest();
 
-                        try(final var nativeImage = new NativeImage(renderTarget.width, renderTarget.height, false)) {
+                        try (final var nativeImage = new NativeImage(renderTarget.width, renderTarget.height, false)) {
                             RenderSystem.bindTexture(renderTarget.getColorTextureId());
                             nativeImage.downloadTexture(0, false);
                             nativeImage.flipY();

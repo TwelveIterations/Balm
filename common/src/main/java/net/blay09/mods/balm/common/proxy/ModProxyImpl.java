@@ -11,38 +11,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ModProxyImpl<T> implements ModProxy<T> {
-    public ModProxyImpl(Predicate<String> modLoadedPredicate) {
-        this.modLoadedPredicate = modLoadedPredicate;
-    }
-
-    private final class ModEntry {
-        private final String modId;
-        private final String clazzName;
-        private final Supplier<T> proxy;
-
-        private ModEntry(String modId, String clazzName, Supplier<T> proxy) {
-            this.modId = modId;
-            this.clazzName = clazzName;
-            this.proxy = proxy;
-        }
-
-        public String modId() {
-            return modId;
-        }
-
-        public String clazzName() {
-            return clazzName;
-        }
-
-        public Supplier<T> proxy() {
-            return proxy;
-        }
-    }
-
     private final Predicate<String> modLoadedPredicate;
     private final List<ModEntry> proxies = new ArrayList<>();
     private Function<List<T>, T> multiplexer;
     private T fallback;
+    public ModProxyImpl(Predicate<String> modLoadedPredicate) {
+        this.modLoadedPredicate = modLoadedPredicate;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -98,5 +73,29 @@ public class ModProxyImpl<T> implements ModProxy<T> {
                 return instance;
             }
         };
+    }
+
+    private final class ModEntry {
+        private final String modId;
+        private final String clazzName;
+        private final Supplier<T> proxy;
+
+        private ModEntry(String modId, String clazzName, Supplier<T> proxy) {
+            this.modId = modId;
+            this.clazzName = clazzName;
+            this.proxy = proxy;
+        }
+
+        public String modId() {
+            return modId;
+        }
+
+        public String clazzName() {
+            return clazzName;
+        }
+
+        public Supplier<T> proxy() {
+            return proxy;
+        }
     }
 }

@@ -27,22 +27,9 @@ import java.util.function.Supplier;
 
 public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
 
-    private static abstract class DeferredModel extends DeferredObject<BakedModel> {
-        public DeferredModel(ModelResourceLocation identifier) {
-            super(identifier.id());
-        }
-
-        public abstract BakedModel resolve(ModelBakery modelBakery, ModelBakery.TextureGetter textureGetter);
-
-        @Override
-        public void set(BakedModel object) {
-            super.set(object);
-        }
-    }
-
+    public final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = Collections.synchronizedList(new ArrayList<>());
     private final List<ResourceLocation> additionalModels = Collections.synchronizedList(new ArrayList<>());
     private final List<DeferredModel> modelsToBake = Collections.synchronizedList(new ArrayList<>());
-    public final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = Collections.synchronizedList(new ArrayList<>());
     private ModelBakery modelBakery;
 
     @Override
@@ -119,7 +106,15 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
                 for (final var modelId : models) {
                     unbakedModels.put(modelId, ((ModelBakeryAccessor) bakery).callGetModel(modelId.id()));
                 }
-                return new FabricCachedDynamicModel(bakery, unbakedModels, effectiveModelFunction, null, textureMapFunction, transformFunction, renderTypes, identifier, textureGetter);
+                return new FabricCachedDynamicModel(bakery,
+                        unbakedModels,
+                        effectiveModelFunction,
+                        null,
+                        textureMapFunction,
+                        transformFunction,
+                        renderTypes,
+                        identifier,
+                        textureGetter);
             }
         };
         modelsToBake.add(deferredModel);
@@ -176,5 +171,18 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
 
     private Function<Material, TextureAtlasSprite> createModelTextureGetter(ModelResourceLocation location, ModelBakery.TextureGetter textureGetter) {
         return (Material material) -> (TextureAtlasSprite) textureGetter.get(location, material);
+    }
+
+    private static abstract class DeferredModel extends DeferredObject<BakedModel> {
+        public DeferredModel(ModelResourceLocation identifier) {
+            super(identifier.id());
+        }
+
+        public abstract BakedModel resolve(ModelBakery modelBakery, ModelBakery.TextureGetter textureGetter);
+
+        @Override
+        public void set(BakedModel object) {
+            super.set(object);
+        }
     }
 }

@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface PermissionContext {
     Optional<ServerPlayer> getPlayer();
+
     Optional<UUID> getPlayerUUID();
+
     Optional<CommandSourceStack> getCommandSource();
 }

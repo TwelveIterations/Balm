@@ -4,8 +4,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Objects;
-
 public class ItemCraftedEvent extends BalmEvent {
     private final Player player;
     private final ItemStack itemStack;

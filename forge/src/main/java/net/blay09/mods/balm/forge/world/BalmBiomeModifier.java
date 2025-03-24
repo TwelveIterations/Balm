@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.forge.world;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.blay09.mods.balm.api.Balm;
 import net.minecraft.core.Holder;

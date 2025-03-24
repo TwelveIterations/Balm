@@ -18,7 +18,9 @@ public class NeoForgeBalmMenus implements BalmMenus {
     public <TMenu extends AbstractContainerMenu, TPayload> DeferredObject<MenuType<TMenu>> registerMenu(ResourceLocation identifier, BalmMenuFactory<TMenu, TPayload> factory) {
         final var register = DeferredRegisters.get(Registries.MENU, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(),
-                () -> new MenuType<>((IContainerFactory<TMenu>) (syncId, inventory, buf) -> factory.create(syncId, inventory, factory.getStreamCodec().decode(buf)),
+                () -> new MenuType<>((IContainerFactory<TMenu>) (syncId, inventory, buf) -> factory.create(syncId,
+                        inventory,
+                        factory.getStreamCodec().decode(buf)),
                         FeatureFlagSet.of(FeatureFlags.VANILLA)));
         return new DeferredObject<>(identifier, registryObject, registryObject::isBound);
     }
