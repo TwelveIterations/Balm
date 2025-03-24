@@ -7,21 +7,28 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
-import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmTextures;
 import net.blay09.mods.balm.forge.client.screen.ForgeBalmScreens;
 import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
+import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ForgeBalmClientRuntime implements BalmClientRuntime {
 
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private final BalmRenderers renderers = new ForgeBalmRenderers();
     private final BalmTextures textures = new ForgeBalmTextures();
     private final BalmScreens screens = new ForgeBalmScreens();
     private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings();
     private final BalmModels models = new ForgeBalmModels();
+
+    private boolean ready;
 
     public ForgeBalmClientRuntime() {
         ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.getEvents()));
@@ -60,5 +67,25 @@ public class ForgeBalmClientRuntime implements BalmClientRuntime {
         ((ForgeBalmKeyMappings) keyMappings).register();
 
         initializer.run();
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    @Override
+    public void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
+        if (isReady()) {
+            callback.run();
+        }
+    }
+
+    public void initializeRuntime() {
+        ready = true;
+        for (final var callback : initCallbacks) {
+            callback.run();
+        }
     }
 }

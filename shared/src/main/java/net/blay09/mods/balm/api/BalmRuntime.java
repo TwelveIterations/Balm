@@ -70,7 +70,9 @@ public interface BalmRuntime {
     BalmPermissions getPermissions();
 
     boolean isModLoaded(String modId);
+
     String getModName(String modId);
+
     <T> SidedProxy<T> sidedProxy(String commonName, String clientName);
 
     void initialize(String modId, Runnable initializer);
@@ -78,6 +80,7 @@ public interface BalmRuntime {
     void initializeIfLoaded(String modId, String className);
 
     void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
+
     void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener);
 
     <T> PlatformProxy<T> platformProxy();
@@ -108,4 +111,8 @@ public interface BalmRuntime {
     }
 
     BalmProxy getProxy();
+
+    boolean isReady();
+
+    void onRuntimeAvailable(Runnable callback);
 }

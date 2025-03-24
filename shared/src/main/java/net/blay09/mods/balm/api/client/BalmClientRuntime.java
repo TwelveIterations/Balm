@@ -30,4 +30,8 @@ public interface BalmClientRuntime {
         module.registerKeyMappings(getKeyMappings());
         module.initialize();
     }
+
+    boolean isReady();
+
+    void onRuntimeAvailable(Runnable callback);
 }

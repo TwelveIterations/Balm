@@ -8,32 +8,20 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class BalmClient {
-
-    private static final Object RUNTIME_LOCK = new Object();
-    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
-    private static volatile BalmClientRuntime runtime;
+    private static final BalmClientRuntime runtime = BalmClientRuntimeSpi.create();
 
     public static void onRuntimeAvailable(Runnable callback) {
-        initCallbacks.add(callback);
-        synchronized (RUNTIME_LOCK) {
-            if (runtime != null) {
-                callback.run();
-            }
-        }
+        runtime.onRuntimeAvailable(callback);
     }
 
     public static void initialize(String modId, Runnable initializer) {
-        requireRuntime().initialize(modId, initializer);
+        runtime.initialize(modId, initializer);
     }
 
     @Deprecated
     public static void initialize(String modId) {
-        requireRuntime().initialize(modId, () -> {
+        runtime.initialize(modId, () -> {
         });
     }
 
@@ -46,7 +34,7 @@ public class BalmClient {
     }
 
     public static BalmRenderers getRenderers() {
-        return requireRuntime().getRenderers();
+        return runtime.getRenderers();
     }
 
     /**
@@ -54,46 +42,23 @@ public class BalmClient {
      */
     @Deprecated
     public static BalmTextures getTextures() {
-        return requireRuntime().getTextures();
+        return runtime.getTextures();
     }
 
     public static BalmKeyMappings getKeyMappings() {
-        return requireRuntime().getKeyMappings();
+        return runtime.getKeyMappings();
     }
 
     public static BalmScreens getScreens() {
-        return requireRuntime().getScreens();
+        return runtime.getScreens();
     }
 
     public static BalmModels getModels() {
-        return requireRuntime().getModels();
+        return runtime.getModels();
     }
 
 
     public static BalmClientRuntime getRuntime() {
-        return requireRuntime();
-    }
-
-    private static BalmClientRuntime requireRuntime() {
-        if (runtime == null) {
-            synchronized (RUNTIME_LOCK) {
-                if (runtime == null) { // intentional - first check is not synchronized for performance, but field may have changed by then
-                    // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
-                    initializeRuntime();
-                }
-            }
-        }
         return runtime;
-    }
-
-    public static void initializeRuntime() {
-        synchronized (RUNTIME_LOCK) {
-            if (runtime == null) {
-                runtime = BalmClientRuntimeSpi.create();
-                for (final var callback : initCallbacks) {
-                    callback.run();
-                }
-            }
-        }
     }
 }
