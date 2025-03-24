@@ -18,16 +18,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 @Mod("balm")
 public class NeoForgeBalm {
 
-    /* TODO shouldn't be necessary anymore after we register them in CapabilityTypes
-    public static final BlockCapability<Container, Direction> CONTAINER_CAPABILITY = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath("balm",
-            "container"), Container.class);
-    public static final BlockCapability<FluidTank, Direction> FLUID_TANK_CAPABILITY = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath(
-            "balm",
-            "fluid_tank"), FluidTank.class);
-    public static final BlockCapability<EnergyStorage, Direction> ENERGY_STORAGE_CAPABILITY = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath(
-            "balm",
-            "energy_storage"), EnergyStorage.class);*/
-
     public NeoForgeBalm(IEventBus modBus) {
         ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 

@@ -4,6 +4,9 @@ import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.renderer.block.model.SingleVariant;
+import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -53,8 +56,11 @@ public class NeoForgeBalmModels implements BalmModels {
         public void onRegisterAdditionalModels(ModelEvent.RegisterStandalone event) {
             for (final var additionalModel : additionalModels) {
                 event.register(new StandaloneModelKey<>(additionalModel), (model, baker) -> {
-                    // TODO 1.21.5: Additional Models
-                    return Minecraft.getInstance().getModelManager().getMissingBlockStateModel();
+                    final var textureSlots = model.getTopTextureSlots();
+                    final var ambientOcclusion = model.getTopAmbientOcclusion();
+                    final var quadCollection = model.bakeTopGeometry(textureSlots, baker, BlockModelRotation.X0_Y0);
+                    final var particleSprite = model.resolveParticleSprite(textureSlots, baker);
+                    return new SingleVariant(new SimpleModelWrapper(quadCollection, ambientOcclusion, particleSprite));
                 });
             }
         }
