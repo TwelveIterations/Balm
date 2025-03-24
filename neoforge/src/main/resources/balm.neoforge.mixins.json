@@ -8,7 +8,7 @@
     "PlayerListMixin"
   ],
   "client": [
-    "OptionsScreenMixin"
+    "ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

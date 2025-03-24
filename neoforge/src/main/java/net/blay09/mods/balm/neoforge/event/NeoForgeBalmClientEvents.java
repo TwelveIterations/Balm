@@ -64,23 +64,6 @@ public class NeoForgeBalmClientEvents {
             });
         });
 
-        events.registerEvent(ScreenInitEvent.Pre.class, priority -> {
-            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (ScreenEvent.Init.Pre orig) -> {
-                final ScreenInitEvent.Pre event = new ScreenInitEvent.Pre(orig.getScreen());
-                events.fireEventHandlers(priority, event);
-                if (event.isCanceled()) {
-                    orig.setCanceled(true);
-                }
-            });
-        });
-
-        events.registerEvent(ScreenInitEvent.Post.class, priority -> {
-            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (ScreenEvent.Init.Post orig) -> {
-                final ScreenInitEvent.Post event = new ScreenInitEvent.Post(orig.getScreen());
-                events.fireEventHandlers(priority, event);
-            });
-        });
-
         events.registerEvent(ScreenDrawEvent.Pre.class, priority -> {
             NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (ScreenEvent.Render.Pre orig) -> {
                 final ScreenDrawEvent.Pre event = new ScreenDrawEvent.Pre(orig.getScreen(),
