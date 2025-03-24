@@ -37,7 +37,7 @@ public class NeoForgeBalmModels implements BalmModels {
                 return model != null;
             }
         };
-        getRegistrations(identifier.getNamespace()).additionalModels.add(identifier);
+        getRegistrations(identifier.getNamespace()).additionalModels.add(standaloneModelKey);
         return deferredModel;
     }
 
@@ -50,12 +50,12 @@ public class NeoForgeBalmModels implements BalmModels {
     }
 
     private static class Registrations {
-        public final List<ResourceLocation> additionalModels = new ArrayList<>();
+        public final List<StandaloneModelKey<BlockStateModel>> additionalModels = new ArrayList<>();
 
         @SubscribeEvent
         public void onRegisterAdditionalModels(ModelEvent.RegisterStandalone event) {
             for (final var additionalModel : additionalModels) {
-                event.register(new StandaloneModelKey<>(additionalModel), (model, baker) -> {
+                event.register(additionalModel, (model, baker) -> {
                     final var textureSlots = model.getTopTextureSlots();
                     final var ambientOcclusion = model.getTopAmbientOcclusion();
                     final var quadCollection = model.bakeTopGeometry(textureSlots, baker, BlockModelRotation.X0_Y0);
