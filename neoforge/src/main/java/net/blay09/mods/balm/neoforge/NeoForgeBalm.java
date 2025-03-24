@@ -44,7 +44,6 @@ public class NeoForgeBalm {
         NeoForgeBalmCapabilities capabilities = (NeoForgeBalmCapabilities) Balm.getCapabilities();
         capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "item_handler"), Capabilities.ItemHandler.BLOCK);
         capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "fluid_handler"), Capabilities.FluidHandler.BLOCK);
-        capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "fluid_handler_item"), Capabilities.FluidHandler.ITEM);
         capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "energy_storage"), Capabilities.EnergyStorage.BLOCK);
     }
 

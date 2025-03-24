@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.fabric.compat.energy;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.capability.CapabilityTypes;
 import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
+import net.blay09.mods.balm.common.CommonCapabilities;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +30,7 @@ public class RebornEnergy {
                     }
                 } else {
                     running = true;
-                    final var energyStorage = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.ENERGY_STORAGE);
+                    final var energyStorage = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.ENERGY_STORAGE);
                     running = false;
                     if (energyStorage != null) {
                         return new RebornEnergyStorage(energyStorage);

@@ -1,7 +1,6 @@
 package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.capability.CapabilityTypes;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
@@ -81,7 +80,7 @@ public class FabricBalm implements ModInitializer {
                     }
                 } else {
                     running = true;
-                    final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.CONTAINER);
+                    final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
                     running = false;
                     if (container != null) {
                         return InventoryStorage.of(container, direction);
@@ -108,7 +107,7 @@ public class FabricBalm implements ModInitializer {
                     }
                 } else {
                     running = true;
-                    final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, direction, CapabilityTypes.FLUID_TANK);
+                    final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.FLUID_TANK);
                     running = false;
                     if (fluidTank != null) {
                         return new BalmFluidStorage(fluidTank);

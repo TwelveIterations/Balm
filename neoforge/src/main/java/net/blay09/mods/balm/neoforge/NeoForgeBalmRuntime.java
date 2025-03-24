@@ -199,6 +199,7 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
         ((NeoForgeBalmNetworking) networking).register(modId, context.modBus());
         ((NeoForgeBalmEntities) entities).register(modId, context.modBus());
+        ((NeoForgeBalmCapabilities) capabilities).register(modId, context.modBus());
         ((NeoForgeBalmStats) stats).register(modId, context.modBus());
 
         initializer.run();

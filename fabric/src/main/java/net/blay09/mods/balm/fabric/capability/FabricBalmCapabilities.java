@@ -6,35 +6,59 @@ import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiFunction;
 
 public class FabricBalmCapabilities implements BalmCapabilities {
 
+    private final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new HashMap<>();
+
     @Override
-    public <TApi, TContext> CapabilityType<TApi, TContext> getType(ResourceLocation identifier, Class<TApi> apiClass, Class<TContext> contextClass) {
-        final var lookup = BlockApiLookup.get(identifier, apiClass, contextClass);
-        return new CapabilityType<>(identifier, apiClass, contextClass, lookup);
+    @SuppressWarnings("unchecked")
+    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
+        final var type = types.get(identifier);
+        if (type.scopeClass() != scopeClass) {
+            throw new IllegalArgumentException("Incompatible scope for capability " + identifier + ", expected " + type.scopeClass() + " but got " + scopeClass);
+        }
+        if (type.apiClass() != apiClass) {
+            throw new IllegalArgumentException("Incompatible API for capability " + identifier + ", expected " + type.apiClass() + " but got " + apiClass);
+        }
+        if (type.contextClass() != contextClass) {
+            throw new IllegalArgumentException("Incompatible context for capability " + identifier + ", expected " + type.contextClass() + " but got " + contextClass);
+        }
+
+        return (CapabilityType<TScope, TApi, TContext>) type;
     }
 
     @Override
-    public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<TApi, TContext> type) {
+    public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type) {
         @SuppressWarnings("unchecked") final var lookup = (BlockApiLookup<TApi, TContext>) type.backingType();
         return lookup.find(level, pos, state, blockEntity, context);
     }
 
     @Override
-    public <TApi, TContext> void registerProvider(CapabilityType<TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, BlockEntityType<?>... blockEntityTypes) {
+    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
+        final var lookup = BlockApiLookup.get(identifier, apiClass, contextClass);
+        final var type = new CapabilityType<>(identifier, scopeClass, apiClass, contextClass, lookup);
+        types.put(identifier, type);
+        return type;
+    }
+
+    @Override
+    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, BlockEntityType<?>... blockEntityTypes) {
         @SuppressWarnings("unchecked") final var lookup = (BlockApiLookup<TApi, TContext>) type.backingType();
         lookup.registerForBlockEntities(provider::apply, blockEntityTypes);
     }
 
     @Override
-    public <TApi, TContext> void registerFallbackBlockEntityProvider(CapabilityType<TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider) {
+    public <TApi, TContext> void registerFallbackBlockEntityProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider) {
         @SuppressWarnings("unchecked") final var lookup = (BlockApiLookup<TApi, TContext>) type.backingType();
         lookup.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
             @Override
