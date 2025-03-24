@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class NeoForgeBalmCapabilities implements BalmCapabilities {
 
@@ -64,7 +65,7 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
     }
 
     @Override
-    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, BlockEntityType<?>... blockEntityTypes) {
+    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<List<BlockEntityType<?>>> blockEntityTypes) {
         getRegistrations(identifier.getNamespace()).blockEntityProviders.add(new BlockEntityProviderRegistration<>(type, provider, blockEntityTypes));
     }
 
@@ -94,7 +95,7 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
     }
 
     record BlockEntityProviderRegistration<TApi, TContext>(CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider,
-                                                           BlockEntityType<?>[] blockEntityTypes) {
+                                                           Supplier<List<BlockEntityType<?>>> blockEntityTypes) {
     }
 
     record BlockEntityFallbackProviderRegistration<TApi, TContext>(CapabilityType<Block, TApi, TContext> type,
@@ -121,7 +122,7 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
         }
 
         private <TApi, TContext> void doRegister(RegisterCapabilitiesEvent event, BlockEntityProviderRegistration<TApi, TContext> registration) {
-            final var blocks = Arrays.stream(registration.blockEntityTypes).flatMap(it -> it.getValidBlocks().stream()).distinct().toArray(Block[]::new);
+            final var blocks = registration.blockEntityTypes.get().stream().flatMap(it -> it.getValidBlocks().stream()).distinct().toArray(Block[]::new);
             @SuppressWarnings("unchecked") final var capability = (BlockCapability<TApi, TContext>) registration.type().backingType();
             event.registerBlock(capability, new IBlockCapabilityProvider<>() {
                 @Override

@@ -13,8 +13,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class FabricBalmCapabilities implements BalmCapabilities {
 
@@ -52,9 +54,9 @@ public class FabricBalmCapabilities implements BalmCapabilities {
     }
 
     @Override
-    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, BlockEntityType<?>... blockEntityTypes) {
+    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<List<BlockEntityType<?>>> blockEntityTypes) {
         @SuppressWarnings("unchecked") final var lookup = (BlockApiLookup<TApi, TContext>) type.backingType();
-        lookup.registerForBlockEntities(provider::apply, blockEntityTypes);
+        lookup.registerForBlockEntities(provider::apply, blockEntityTypes.get().toArray(BlockEntityType[]::new));
     }
 
     @Override
