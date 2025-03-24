@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
 
-    @WrapOperation(method = "handleAccumulatedMovement()V", at= @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;mouseDragged(DDIDD)Z"))
+    @WrapOperation(method = "handleAccumulatedMovement()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;mouseDragged(DDIDD)Z"))
     public boolean mouseDragged(Screen screen, double mouseX, double mouseY, int activeButton, double dragX, double dragY, Operation<Boolean> operation) {
         ScreenMouseEvent.Drag.Pre preEvent = new ScreenMouseEvent.Drag.Pre(screen, mouseX, mouseY, activeButton, dragX, dragY);
         Balm.getEvents().fireEvent(preEvent);

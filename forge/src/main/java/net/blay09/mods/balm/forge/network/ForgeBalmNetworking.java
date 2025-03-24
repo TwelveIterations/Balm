@@ -36,6 +36,10 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     private static CustomPayloadEvent.Context replyContext;
 
+    private static int nextDiscriminator(String modId) {
+        return discriminatorCounter.compute(modId, (key, prev) -> prev != null ? prev + 1 : 0);
+    }
+
     @Override
     public void allowClientOnly(String modId) {
         NetworkChannels.allowClientOnly(modId);
@@ -59,7 +63,9 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     private <T> void openGui(ServerPlayer player, BalmMenuProvider<T> menuProvider) {
         // TODO we have to create a RegistryFriendlyByteBuf ourselves because Forge is out of date
-        player.openMenu(menuProvider, buf -> menuProvider.getScreenStreamCodec().encode(new RegistryFriendlyByteBuf(buf, player.registryAccess()), menuProvider.getScreenOpeningData(player)));
+        player.openMenu(menuProvider,
+                buf -> menuProvider.getScreenStreamCodec()
+                        .encode(new RegistryFriendlyByteBuf(buf, player.registryAccess()), menuProvider.getScreenOpeningData(player)));
     }
 
     @Override
@@ -156,9 +162,5 @@ public class ForgeBalmNetworking implements BalmNetworking {
                     replyContext = null;
                 })
                 .add();
-    }
-
-    private static int nextDiscriminator(String modId) {
-        return discriminatorCounter.compute(modId, (key, prev) -> prev != null ? prev + 1 : 0);
     }
 }

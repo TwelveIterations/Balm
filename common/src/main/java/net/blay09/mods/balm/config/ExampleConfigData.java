@@ -11,12 +11,6 @@ import java.util.Set;
 public class ExampleConfigData implements BalmConfigData {
 
     public static final String EXAMPLE_STATIC = "test";
-
-    public enum ExampleEnum {
-        Hello,
-        World
-    }
-
     @Comment("This is an example boolean property")
     public boolean exampleBoolean = true;
     @Comment("This is an example int property")
@@ -34,16 +28,21 @@ public class ExampleConfigData implements BalmConfigData {
     @Synced
     @ExpectedType(ResourceLocation.class)
     @Comment("This is an example resource location set property")
-    public Set<ResourceLocation> exampleResourceLocationSet = Set.of(ResourceLocation.withDefaultNamespace("dirt"), ResourceLocation.withDefaultNamespace("diamond"));
+    public Set<ResourceLocation> exampleResourceLocationSet = Set.of(ResourceLocation.withDefaultNamespace("dirt"),
+            ResourceLocation.withDefaultNamespace("diamond"));
     @ExpectedType(Integer.class)
     @Comment("This is an example int list property")
     public List<Integer> exampleIntList = Arrays.asList(12, 24);
     @ExpectedType(ExampleEnum.class)
     @Comment("This is an example enum list property")
     public List<ExampleEnum> exampleEnumList = Arrays.asList(ExampleEnum.Hello, ExampleEnum.World);
-
     @Comment("This is an example category")
     public ExampleCategory exampleCategory = new ExampleCategory();
+
+    public enum ExampleEnum {
+        Hello,
+        World
+    }
 
     public static class ExampleCategory {
         @Comment("This is an example string inside a category")

@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.neoforge.block;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.neoforge.DeferredRegisters;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.neoforge.DeferredRegisters;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;

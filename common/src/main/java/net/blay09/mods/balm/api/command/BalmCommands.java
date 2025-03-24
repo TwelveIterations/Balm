@@ -10,8 +10,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public interface BalmCommands {
-    void register(Consumer<CommandDispatcher<CommandSourceStack>> initializer);
-
     static void registerPermission(ResourceLocation permission, int permissionLevel) {
         Balm.getPermissions().registerPermission(permission,
                 (context) -> context.getCommandSource().map(it -> it.hasPermission(permissionLevel)).orElse(false));
@@ -28,4 +26,6 @@ public interface BalmCommands {
     static Predicate<CommandSourceStack> requireAllPermissions(ResourceLocation... permissions) {
         return (source) -> Arrays.stream(permissions).allMatch(it -> Balm.getPermissions().hasPermission(source, it));
     }
+
+    void register(Consumer<CommandDispatcher<CommandSourceStack>> initializer);
 }

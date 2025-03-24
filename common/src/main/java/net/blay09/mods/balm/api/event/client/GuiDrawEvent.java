@@ -6,19 +6,9 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public abstract class GuiDrawEvent extends BalmEvent {
 
-    public enum Element {
-        ALL,
-        HEALTH,
-        CHAT,
-        DEBUG,
-        BOSS_INFO,
-        PLAYER_LIST
-    }
-
     private final Window window;
     private final GuiGraphics guiGraphics;
     private final Element element;
-
     public GuiDrawEvent(Window window, GuiGraphics guiGraphics, Element element) {
         this.window = window;
         this.guiGraphics = guiGraphics;
@@ -35,6 +25,15 @@ public abstract class GuiDrawEvent extends BalmEvent {
 
     public Element getElement() {
         return element;
+    }
+
+    public enum Element {
+        ALL,
+        HEALTH,
+        CHAT,
+        DEBUG,
+        BOSS_INFO,
+        PLAYER_LIST
     }
 
     public static class Pre extends GuiDrawEvent {

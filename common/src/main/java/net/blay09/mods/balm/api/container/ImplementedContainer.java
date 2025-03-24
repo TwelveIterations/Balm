@@ -12,12 +12,6 @@ import net.minecraft.world.item.ItemStack;
 
 public interface ImplementedContainer extends Container {
     /**
-     * Retrieves the item list of this inventory.
-     * Must return the same instance every time it's called.
-     */
-    NonNullList<ItemStack> getItems();
-
-    /**
      * Creates an inventory from the item list.
      */
     static ImplementedContainer of(NonNullList<ItemStack> items) {
@@ -30,6 +24,26 @@ public interface ImplementedContainer extends Container {
     static ImplementedContainer ofSize(int size) {
         return of(NonNullList.withSize(size, ItemStack.EMPTY));
     }
+
+    static NonNullList<ItemStack> deserializeInventory(CompoundTag tag, int minimumSize, HolderLookup.Provider provider) {
+        int size = Math.max(minimumSize, tag.contains("Size", Tag.TAG_INT) ? tag.getInt("Size") : minimumSize);
+        NonNullList<ItemStack> items = NonNullList.withSize(size, ItemStack.EMPTY);
+        ListTag itemTags = tag.getList("Items", Tag.TAG_COMPOUND);
+        for (int i = 0; i < itemTags.size(); i++) {
+            CompoundTag itemTag = itemTags.getCompound(i);
+            int slot = itemTag.getInt("Slot");
+            if (slot >= 0 && slot < items.size()) {
+                items.set(slot, ItemStack.parse(provider, itemTag).orElse(ItemStack.EMPTY));
+            }
+        }
+        return items;
+    }
+
+    /**
+     * Retrieves the item list of this inventory.
+     * Must return the same instance every time it's called.
+     */
+    NonNullList<ItemStack> getItems();
 
     /**
      * Returns the inventory size.
@@ -141,20 +155,6 @@ public interface ImplementedContainer extends Container {
     @Override
     default boolean stillValid(Player player) {
         return true;
-    }
-
-    static NonNullList<ItemStack> deserializeInventory(CompoundTag tag, int minimumSize, HolderLookup.Provider provider) {
-        int size = Math.max(minimumSize, tag.contains("Size", Tag.TAG_INT) ? tag.getInt("Size") : minimumSize);
-        NonNullList<ItemStack> items = NonNullList.withSize(size, ItemStack.EMPTY);
-        ListTag itemTags = tag.getList("Items", Tag.TAG_COMPOUND);
-        for (int i = 0; i < itemTags.size(); i++) {
-            CompoundTag itemTag = itemTags.getCompound(i);
-            int slot = itemTag.getInt("Slot");
-            if (slot >= 0 && slot < items.size()) {
-                items.set(slot, ItemStack.parse(provider, itemTag).orElse(ItemStack.EMPTY));
-            }
-        }
-        return items;
     }
 
     default CompoundTag serializeInventory(HolderLookup.Provider provider) {

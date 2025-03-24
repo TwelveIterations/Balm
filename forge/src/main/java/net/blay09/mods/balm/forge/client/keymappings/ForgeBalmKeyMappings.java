@@ -11,23 +11,32 @@ import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.jetbrains.annotations.Nullable;
 
-public class ForgeBalmKeyMappings extends CommonBalmKeyMappings {
-    private static class Registrations {
-        public final List<KeyMapping> keyMappings = new ArrayList<>();
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-        @SubscribeEvent
-        public void registerKeyMappings(RegisterKeyMappingsEvent event) {
-            keyMappings.forEach(event::register);
-        }
+public class ForgeBalmKeyMappings extends CommonBalmKeyMappings {
+    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+
+    private static IKeyConflictContext toForge(KeyConflictContext context) {
+        return switch (context) {
+            case UNIVERSAL -> net.minecraftforge.client.settings.KeyConflictContext.UNIVERSAL;
+            case GUI -> net.minecraftforge.client.settings.KeyConflictContext.GUI;
+            case INGAME -> net.minecraftforge.client.settings.KeyConflictContext.IN_GAME;
+        };
     }
 
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+    private static net.minecraftforge.client.settings.KeyModifier toForge(KeyModifier modifier) {
+        return switch (modifier) {
+            case SHIFT -> net.minecraftforge.client.settings.KeyModifier.SHIFT;
+            case CONTROL -> net.minecraftforge.client.settings.KeyModifier.CONTROL;
+            case ALT -> net.minecraftforge.client.settings.KeyModifier.ALT;
+            default -> net.minecraftforge.client.settings.KeyModifier.NONE;
+        };
+    }
 
     @Override
     public KeyMapping registerKeyMapping(String name, KeyConflictContext conflictContext, KeyModifier modifier, InputConstants.Type type, int keyCode, String category) {
@@ -92,23 +101,6 @@ public class ForgeBalmKeyMappings extends CommonBalmKeyMappings {
         return keyMapping.getKeyConflictContext().isActive();
     }
 
-    private static IKeyConflictContext toForge(KeyConflictContext context) {
-        return switch (context) {
-            case UNIVERSAL -> net.minecraftforge.client.settings.KeyConflictContext.UNIVERSAL;
-            case GUI -> net.minecraftforge.client.settings.KeyConflictContext.GUI;
-            case INGAME -> net.minecraftforge.client.settings.KeyConflictContext.IN_GAME;
-        };
-    }
-
-    private static net.minecraftforge.client.settings.KeyModifier toForge(KeyModifier modifier) {
-        return switch (modifier) {
-            case SHIFT -> net.minecraftforge.client.settings.KeyModifier.SHIFT;
-            case CONTROL -> net.minecraftforge.client.settings.KeyModifier.CONTROL;
-            case ALT -> net.minecraftforge.client.settings.KeyModifier.ALT;
-            default -> net.minecraftforge.client.settings.KeyModifier.NONE;
-        };
-    }
-
     public void register(String modId, IEventBus eventBus) {
         eventBus.register(getRegistrations(modId));
     }
@@ -119,6 +111,15 @@ public class ForgeBalmKeyMappings extends CommonBalmKeyMappings {
 
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final List<KeyMapping> keyMappings = new ArrayList<>();
+
+        @SubscribeEvent
+        public void registerKeyMappings(RegisterKeyMappingsEvent event) {
+            keyMappings.forEach(event::register);
+        }
     }
 
 }

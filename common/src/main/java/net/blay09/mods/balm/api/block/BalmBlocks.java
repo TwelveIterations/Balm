@@ -16,6 +16,14 @@ import java.util.function.Supplier;
 
 public interface BalmBlocks {
 
+    static BlockBehaviour.Properties blockProperties(ResourceLocation identifier) {
+        return BlockBehaviour.Properties.of().setId(blockId(identifier));
+    }
+
+    static ResourceKey<Block> blockId(ResourceLocation identifier) {
+        return ResourceKey.create(Registries.BLOCK, identifier);
+    }
+
     DeferredObject<Block> registerBlock(Function<ResourceLocation, Block> supplier, ResourceLocation identifier);
 
     DeferredObject<Item> registerBlockItem(Function<ResourceLocation, BlockItem> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab);
@@ -77,13 +85,5 @@ public interface BalmBlocks {
     default void register(Supplier<Block> blockSupplier, Supplier<BlockItem> blockItemSupplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         registerBlock(blockSupplier, identifier);
         registerBlockItem((id) -> blockItemSupplier.get(), identifier, creativeTab);
-    }
-
-    static BlockBehaviour.Properties blockProperties(ResourceLocation identifier) {
-        return BlockBehaviour.Properties.of().setId(blockId(identifier));
-    }
-
-    static ResourceKey<Block> blockId(ResourceLocation identifier) {
-        return ResourceKey.create(Registries.BLOCK, identifier);
     }
 }

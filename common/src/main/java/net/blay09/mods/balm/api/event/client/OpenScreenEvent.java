@@ -16,12 +16,12 @@ public class OpenScreenEvent extends BalmEvent {
         return screen;
     }
 
+    public void setScreen(Screen screen) {
+        this.newScreen = screen;
+    }
+
     @Nullable
     public Screen getNewScreen() {
         return newScreen;
-    }
-
-    public void setScreen(Screen screen) {
-        this.newScreen = screen;
     }
 }

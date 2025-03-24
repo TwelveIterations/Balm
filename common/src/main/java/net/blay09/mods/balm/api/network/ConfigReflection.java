@@ -33,7 +33,8 @@ public class ConfigReflection {
 
     public static boolean isSyncedFieldOrObject(Field field) {
         boolean hasSyncedAnnotation = field.getAnnotation(Synced.class) != null;
-        boolean isObject = !field.getType().isPrimitive() && !field.getType().isEnum() && field.getType() != String.class && field.getType() != List.class && field.getType() != Set.class && field.getType() != ResourceLocation.class;
+        boolean isObject = !field.getType().isPrimitive() && !field.getType()
+                .isEnum() && field.getType() != String.class && field.getType() != List.class && field.getType() != Set.class && field.getType() != ResourceLocation.class;
         return hasSyncedAnnotation || isObject;
     }
 

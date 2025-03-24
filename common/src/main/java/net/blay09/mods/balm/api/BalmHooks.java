@@ -64,6 +64,7 @@ public interface BalmHooks {
     boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult);
 
     boolean isShield(ItemStack itemStack);
+
     boolean isRepairable(ItemStack itemStack);
 
     void setForcedPose(Player player, Pose pose);

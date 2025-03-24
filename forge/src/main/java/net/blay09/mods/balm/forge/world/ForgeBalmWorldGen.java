@@ -32,9 +32,16 @@ import java.util.function.Supplier;
 public class ForgeBalmWorldGen implements BalmWorldGen {
 
     public static final MapCodec<BalmBiomeModifier> BALM_BIOME_MODIFIER_CODEC = MapCodec.unit(BalmBiomeModifier.INSTANCE);
+    private static final List<BiomeModification> biomeModifications = new ArrayList<>();
 
     public ForgeBalmWorldGen() {
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public static void initializeBalmBiomeModifiers(IEventBus modEventBus) {
+        var registry = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "balm");
+        registry.register("balm", () -> BALM_BIOME_MODIFIER_CODEC);
+        registry.register(modEventBus);
     }
 
     @Override
@@ -58,8 +65,6 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
-    private static final List<BiomeModification> biomeModifications = new ArrayList<>();
-
     @Override
     public void addFeatureToBiomes(BiomePredicate biomePredicate, GenerationStep.Decoration step, ResourceLocation placedFeatureIdentifier) {
         ResourceKey<PlacedFeature> resourceKey = ResourceKey.create(Registries.PLACED_FEATURE, placedFeatureIdentifier);
@@ -79,11 +84,5 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
                 }
             }
         }
-    }
-
-    public static void initializeBalmBiomeModifiers(IEventBus modEventBus) {
-        var registry = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "balm");
-        registry.register("balm", () -> BALM_BIOME_MODIFIER_CODEC);
-        registry.register(modEventBus);
     }
 }

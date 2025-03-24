@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
 public class ClientLevelMixin {
-    @Inject(method = "<init>", at = @At("TAIL") )
-    private void onConstructor(ClientPacketListener clientPacketListener, ClientLevel.ClientLevelData clientLevelData, ResourceKey<Level> resourceKey, Holder<DimensionType> holder, int i, int j, LevelRenderer levelRenderer, boolean bl, long l, int i2, CallbackInfo ci  ) {
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void onConstructor(ClientPacketListener clientPacketListener, ClientLevel.ClientLevelData clientLevelData, ResourceKey<Level> resourceKey, Holder<DimensionType> holder, int i, int j, LevelRenderer levelRenderer, boolean bl, long l, int i2, CallbackInfo ci) {
         ClientLevel clientLevel = (ClientLevel) (Object) this;
         Balm.getEvents().fireEvent(new LevelLoadingEvent.Load(clientLevel));
     }

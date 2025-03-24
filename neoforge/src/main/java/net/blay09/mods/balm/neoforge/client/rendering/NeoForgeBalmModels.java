@@ -2,32 +2,20 @@ package net.blay09.mods.balm.neoforge.client.rendering;
 
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.event.ModelEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NeoForgeBalmModels implements BalmModels {
-
-    private static class Registrations {
-        public final List<ResourceLocation> additionalModels = new ArrayList<>();
-        public Map<ResourceLocation, BakedModel> bakedStandaloneModels = new HashMap<>();
-
-        @SubscribeEvent
-        public void onRegisterAdditionalModels(ModelEvent.RegisterAdditional event) {
-            additionalModels.forEach(event::register);
-        }
-
-        @SubscribeEvent
-        public void onBakingCompleted(ModelEvent.BakingCompleted event) {
-            bakedStandaloneModels = event.getBakingResult().standaloneModels();
-        }
-    }
 
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
@@ -58,6 +46,21 @@ public class NeoForgeBalmModels implements BalmModels {
 
     private Registrations getRegistrations(String modId) {
         return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final List<ResourceLocation> additionalModels = new ArrayList<>();
+        public Map<ResourceLocation, BakedModel> bakedStandaloneModels = new HashMap<>();
+
+        @SubscribeEvent
+        public void onRegisterAdditionalModels(ModelEvent.RegisterAdditional event) {
+            additionalModels.forEach(event::register);
+        }
+
+        @SubscribeEvent
+        public void onBakingCompleted(ModelEvent.BakingCompleted event) {
+            bakedStandaloneModels = event.getBakingResult().standaloneModels();
+        }
     }
 
 }

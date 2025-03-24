@@ -30,6 +30,13 @@ import java.util.function.Supplier;
 public class NeoForgeBalmWorldGen implements BalmWorldGen {
 
     public static final MapCodec<BalmBiomeModifier> BALM_BIOME_MODIFIER_CODEC = MapCodec.unit(BalmBiomeModifier.INSTANCE);
+    private static final List<BiomeModification> biomeModifications = new ArrayList<>();
+
+    public static void initializeBalmBiomeModifiers(IEventBus modBus) {
+        var registry = DeferredRegister.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "balm");
+        registry.register("balm", () -> BALM_BIOME_MODIFIER_CODEC);
+        registry.register(modBus);
+    }
 
     @Override
     public <T extends Feature<?>> DeferredObject<T> registerFeature(ResourceLocation identifier, Supplier<T> supplier) {
@@ -52,8 +59,6 @@ public class NeoForgeBalmWorldGen implements BalmWorldGen {
         return new DeferredObject<>(identifier, registryObject, registryObject::isBound);
     }
 
-    private static final List<BiomeModification> biomeModifications = new ArrayList<>();
-
     @Override
     public void addFeatureToBiomes(BiomePredicate biomePredicate, GenerationStep.Decoration step, ResourceLocation placedFeatureIdentifier) {
         ResourceKey<PlacedFeature> resourceKey = ResourceKey.create(Registries.PLACED_FEATURE, placedFeatureIdentifier);
@@ -73,11 +78,5 @@ public class NeoForgeBalmWorldGen implements BalmWorldGen {
                 }
             }
         }
-    }
-
-    public static void initializeBalmBiomeModifiers(IEventBus modBus) {
-        var registry = DeferredRegister.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "balm");
-        registry.register("balm", () -> BALM_BIOME_MODIFIER_CODEC);
-        registry.register(modBus);
     }
 }

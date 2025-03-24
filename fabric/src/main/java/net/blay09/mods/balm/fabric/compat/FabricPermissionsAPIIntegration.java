@@ -8,6 +8,10 @@ import net.minecraft.server.level.ServerPlayer;
 
 @SuppressWarnings("unused")
 public class FabricPermissionsAPIIntegration extends CommonBalmPermissions {
+    private static String toPermission(ResourceLocation permission) {
+        return permission.getNamespace() + "." + permission.getPath();
+    }
+
     @Override
     public boolean hasPermission(ServerPlayer player, ResourceLocation permission) {
         return Permissions.check(player, toPermission(permission), super.hasPermission(player, permission));
@@ -16,9 +20,5 @@ public class FabricPermissionsAPIIntegration extends CommonBalmPermissions {
     @Override
     public boolean hasPermission(CommandSourceStack source, ResourceLocation permission) {
         return Permissions.check(source, toPermission(permission), super.hasPermission(source, permission));
-    }
-
-    private static String toPermission(ResourceLocation permission) {
-        return permission.getNamespace() + "." + permission.getPath();
     }
 }
