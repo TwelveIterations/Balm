@@ -22,7 +22,7 @@ public class FabricBalmClient implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 
         Balm.getEvents().onEvent(DisconnectedFromServerEvent.class, event -> Balm.getConfig().resetToBackingConfigs());
-        
+
         ModelLoadingPlugin.register((FabricBalmModels) BalmClient.getModels());
 
         Balm.getEvents().onEvent(ConnectedToServerEvent.class, event -> {

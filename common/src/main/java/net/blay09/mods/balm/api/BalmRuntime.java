@@ -3,8 +3,8 @@ package net.blay09.mods.balm.api;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.command.BalmCommands;
-import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
+import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
@@ -71,7 +71,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmPermissions getPermissions();
 
     boolean isModLoaded(String modId);
+
     String getModName(String modId);
+
     <TProxy> SidedProxy<TProxy> sidedProxy(String commonName, String clientName);
 
     void initialize(String modId, TLoadContext context, Runnable initializer);
@@ -79,6 +81,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void initializeIfLoaded(String modId, String className);
 
     void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
+
     void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener);
 
     BalmComponents getComponents();
