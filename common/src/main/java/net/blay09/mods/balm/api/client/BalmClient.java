@@ -7,33 +7,15 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class BalmClient {
-
-    private static final Object RUNTIME_LOCK = new Object();
-    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
-    private static final List<BalmClientModule> modules = Collections.synchronizedList(new ArrayList<>());
-    private static volatile BalmClientRuntime<BalmRuntimeLoadContext> runtime;
+    private static final BalmClientRuntime<BalmRuntimeLoadContext> runtime = BalmClientRuntimeSpi.create();
 
     public static void registerModule(BalmClientModule module) {
-        modules.add(module);
-        synchronized (RUNTIME_LOCK) {
-            if (runtime != null) {
-                runtime.initializeModule(module);
-            }
-        }
+        runtime.registerModule(module);
     }
 
     public static void onRuntimeAvailable(Runnable callback) {
-        initCallbacks.add(callback);
-        synchronized (RUNTIME_LOCK) {
-            if (runtime != null) {
-                callback.run();
-            }
-        }
+        runtime.onRuntimeAvailable(callback);
     }
 
     /**
@@ -45,15 +27,15 @@ public class BalmClient {
     }
 
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, Runnable initializer) {
-        requireRuntime().initializeMod(modId, context, initializer);
+        runtime.initializeMod(modId, context, initializer);
     }
 
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmClientModule module) {
-        requireRuntime().initializeMod(modId, context, () -> registerModule(module));
+        runtime.initializeMod(modId, context, () -> registerModule(module));
     }
 
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmClientModule... modules) {
-        requireRuntime().initializeMod(modId, context, () -> {
+        runtime.initializeMod(modId, context, () -> {
             for (final var module : modules) {
                 registerModule(module);
             }
@@ -61,50 +43,23 @@ public class BalmClient {
     }
 
     public static BalmRenderers getRenderers() {
-        return requireRuntime().getRenderers();
+        return runtime.getRenderers();
     }
 
     public static BalmKeyMappings getKeyMappings() {
-        return requireRuntime().getKeyMappings();
+        return runtime.getKeyMappings();
     }
 
     public static BalmScreens getScreens() {
-        return requireRuntime().getScreens();
+        return runtime.getScreens();
     }
 
     public static BalmModels getModels() {
-        return requireRuntime().getModels();
+        return runtime.getModels();
     }
 
 
     public static BalmClientRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
-        return requireRuntime();
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends BalmRuntimeLoadContext> BalmClientRuntime<T> requireRuntime() {
-        if (runtime == null) {
-            synchronized (RUNTIME_LOCK) {
-                if (runtime == null) { // intentional - first check is not synchronized for performance, but field may have changed by then
-                    // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
-                    initializeRuntime();
-                }
-            }
-        }
-        return (BalmClientRuntime<T>) runtime;
-    }
-
-    public static void initializeRuntime() {
-        synchronized (RUNTIME_LOCK) {
-            if (runtime == null) {
-                runtime = BalmClientRuntimeSpi.create();
-                for (final var callback : initCallbacks) {
-                    callback.run();
-                }
-                for (final var module : modules) {
-                    runtime.initializeModule(module);
-                }
-            }
-        }
+        return runtime;
     }
 }

@@ -15,14 +15,23 @@ import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmTextures;
 import net.blay09.mods.balm.forge.client.screen.ForgeBalmScreens;
 import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
+import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
+import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ForgeBalmClientRuntime implements BalmClientRuntime<ForgeLoadContext> {
 
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private final BalmRenderers renderers = new ForgeBalmRenderers();
     private final BalmTextures textures = new ForgeBalmTextures();
     private final BalmScreens screens = new ForgeBalmScreens();
     private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings();
     private final BalmModels models = new ForgeBalmModels();
+
+    private boolean ready;
 
     public ForgeBalmClientRuntime() {
         ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.getEvents()));
@@ -61,5 +70,25 @@ public class ForgeBalmClientRuntime implements BalmClientRuntime<ForgeLoadContex
         ((ForgeBalmKeyMappings) keyMappings).register(modId, context.modEventBus());
 
         initializer.run();
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    @Override
+    public void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
+        if (isReady()) {
+            callback.run();
+        }
+    }
+
+    public void initializeRuntime() {
+        ready = true;
+        for (final var callback : initCallbacks) {
+            callback.run();
+        }
     }
 }

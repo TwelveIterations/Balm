@@ -117,4 +117,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     }
 
     BalmProxy getProxy();
+
+    boolean isReady();
+
+    void onRuntimeAvailable(Runnable callback);
+
+    void registerModule(BalmModule module);
 }
