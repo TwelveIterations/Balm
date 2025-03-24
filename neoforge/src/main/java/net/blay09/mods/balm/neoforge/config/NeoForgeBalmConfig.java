@@ -31,8 +31,12 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     private final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
 
     private static ModConfigSpec.ConfigValue<?> addPropertyToSpec(BalmConfigSchema schema, ConfiguredProperty<?> property, ModConfigSpec.Builder spec) {
-        spec.comment(property.comment())
-                .translation("config." + schema.identifier().getNamespace() + "." + schema.identifier().getPath() + "." + property.name());
+        spec.comment(property.comment());
+        if (property.category().isEmpty()) {
+            spec.translation(schema.identifier().getNamespace() + ".configuration." + property.name());
+        } else {
+            spec.translation(schema.identifier().getNamespace() + ".configuration." + property.category() + "." + property.name());
+        }
 
         return switch (property) {
             case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue());

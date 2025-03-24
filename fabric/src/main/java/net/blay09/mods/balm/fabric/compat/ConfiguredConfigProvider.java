@@ -87,7 +87,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
             @Override
             public String getTranslationKey() {
                 final var configIdentifier = schema.identifier();
-                return "config." + configIdentifier.getNamespace() + "." + configIdentifier.getPath() + ".title";
+                return configIdentifier.getNamespace() + ".configuration." + configIdentifier.getPath() + ".title";
             }
         };
     }
@@ -129,7 +129,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
             @Override
             public String getTranslationKey() {
                 final var configIdentifier = category.parentSchema().identifier();
-                return "config." + configIdentifier.getNamespace() + "." + configIdentifier.getPath() + "." + category;
+                return configIdentifier.getNamespace() + ".configuration." + category;
             }
         };
     }
@@ -195,7 +195,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                         final var category = property.category();
                         final var modId = property.parentSchema().identifier();
                         final var key = property.name();
-                        return category.isEmpty() ? Component.translatable("config." + modId + "." + key + ".tooltip") : Component.translatable("config." + modId + "." + category + "." + key + ".tooltip");
+                        return category.isEmpty() ? Component.translatable(modId + ".configuration." + key + ".tooltip") : Component.translatable(modId + ".configuration." + category + "." + key + ".tooltip");
                     }
 
                     @Override
@@ -203,7 +203,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                         final var category = property.category();
                         final var modId = property.parentSchema().identifier();
                         final var key = property.name();
-                        return category.isEmpty() ? "config." + modId + "." + key : "config." + modId + "." + category + "." + key;
+                        return category.isEmpty() ? modId + ".configuration." + key : modId + ".configuration." + category + "." + key;
                     }
 
                     @Override
@@ -242,7 +242,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                 final var category = property.category();
                 final var modId = property.parentSchema().identifier();
                 final var key = property.name();
-                return category.isEmpty() ? Component.translatable("config." + modId + "." + key + ".tooltip") : Component.translatable("config." + modId + "." + category + "." + key + ".tooltip");
+                return category.isEmpty() ? Component.translatable(modId + ".configuration." + key + ".tooltip") : Component.translatable(modId + ".configuration." + category + "." + key + ".tooltip");
             }
 
             @Override
@@ -250,7 +250,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                 final var category = property.category();
                 final var modId = property.parentSchema().identifier();
                 final var key = property.name();
-                return category.isEmpty() ? "config." + modId + "." + key : "config." + modId + "." + category + "." + key;
+                return category.isEmpty() ? modId + ".configuration." + key : modId + ".configuration." + category + "." + key;
             }
         };
     }
@@ -267,7 +267,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         configsByType.put(ConfigType.UNIVERSAL, universalConfigs);
         configsByType.put(ConfigType.CLIENT, clientConfigs);
         return ConfigScreenHelper.createSelectionScreen(parent,
-                Component.translatable("config." + modId + ".title"),
+                Component.translatable(modId + ".configuration.title"),
                 configsByType
         );
     }

@@ -19,7 +19,7 @@ public class ClothConfigUtils {
         return (ConfigScreenFactory<Screen>) screen -> {
             final var builder = ConfigBuilder.create()
                     .setParentScreen(screen)
-                    .setTitle(Component.translatable("config." + modId + ".title"));
+                    .setTitle(Component.translatable(modId + ".configuration.title"));
             final var schemas = Balm.getConfig().getSchemasByNamespace(modId);
             builder.setSavingRunnable(() -> {
                 for (final var schema : schemas) {
@@ -28,7 +28,7 @@ public class ClothConfigUtils {
             });
             for (final var schema : schemas) {
                 final var config = Balm.getConfig().getLocalConfig(schema);
-                final var i18nBase = "config." + schema.identifier().getNamespace() + "." + schema.identifier().getPath();
+                final var i18nBase = schema.identifier().getNamespace() + ".configuration";
                 final var categories = schema.categories();
                 ConfigCategory rootCategory = null;
                 for (final var rootProperty : schema.rootProperties()) {
@@ -53,7 +53,7 @@ public class ClothConfigUtils {
     @SuppressWarnings("unchecked")
     private static void addPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<?> property, ConfigCategory categoryInstance, ConfigBuilder builder) {
         final var schema = property.parentSchema();
-        final var i18nBase = "config." + schema.identifier().getNamespace() + "." + schema.identifier().getPath();
+        final var i18nBase = schema.identifier().getNamespace() + ".configuration";
         var categoryI18nBase = i18nBase + "." + property.category();
         var displayName = Component.translatable(categoryI18nBase + "." + property);
         var tooltip = Component.translatable(categoryI18nBase + "." + property + ".tooltip");
