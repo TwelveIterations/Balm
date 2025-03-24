@@ -21,16 +21,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadContext> {
 
     private static final Logger logger = LoggerFactory.getLogger(FabricBalmClientRuntime.class);
-
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private final BalmRenderers renderers = new FabricBalmRenderers();
     private final BalmTextures textures = new FabricBalmTextures();
     private final BalmScreens screens = new FabricBalmScreens();
     private final BalmKeyMappings keyMappings = createKeyMappingsBindings();
     private final BalmModels models = new FabricBalmModels();
+
+    private boolean ready;
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
@@ -91,5 +96,25 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
     @Override
     public void initialize(String modId, EmptyLoadContext context, Runnable initializer) {
         initializer.run();
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    @Override
+    public void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
+        if (isReady()) {
+            callback.run();
+        }
+    }
+
+    public void initializeRuntime() {
+        ready = true;
+        for (final var callback : initCallbacks) {
+            callback.run();
+        }
     }
 }

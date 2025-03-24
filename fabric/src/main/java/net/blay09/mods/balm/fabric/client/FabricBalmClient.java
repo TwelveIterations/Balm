@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class FabricBalmClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        BalmClient.initializeRuntime();
+        ((FabricBalmClientRuntime) BalmClient.getRuntime()).initializeRuntime();
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 

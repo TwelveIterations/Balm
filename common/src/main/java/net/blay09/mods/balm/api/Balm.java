@@ -26,179 +26,144 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class Balm {
-    private static final Object RUNTIME_LOCK = new Object();
-
-    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
-    private static volatile BalmRuntime<BalmRuntimeLoadContext> runtime;
+    private static final BalmRuntime<BalmRuntimeLoadContext> runtime = BalmRuntimeSpi.create();
 
     public static void onRuntimeAvailable(Runnable callback) {
-        initCallbacks.add(callback);
-        synchronized (RUNTIME_LOCK) {
-            if (runtime != null) {
-                callback.run();
-            }
-        }
+        runtime.onRuntimeAvailable(callback);
     }
 
     public static void initialize(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
-        requireRuntime().initialize(modId, context, initializer);
+        runtime.initialize(modId, context, initializer);
     }
 
     public static boolean isModLoaded(String modId) {
-        return requireRuntime().isModLoaded(modId);
+        return runtime.isModLoaded(modId);
     }
 
     public static String getModName(String modId) {
-        return requireRuntime().getModName(modId);
+        return runtime.getModName(modId);
     }
 
     public static <T> PlatformProxy<T> platformProxy() {
-        return requireRuntime().platformProxy();
+        return runtime.platformProxy();
     }
 
     public static <T> ModProxy<T> modProxy() {
-        return requireRuntime().modProxy();
+        return runtime.modProxy();
     }
 
     public static <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        return requireRuntime().sidedProxy(commonName, clientName);
+        return runtime.sidedProxy(commonName, clientName);
     }
 
     public static void initializeIfLoaded(String modId, String className) {
-        requireRuntime().initializeIfLoaded(modId, className);
+        runtime.initializeIfLoaded(modId, className);
     }
 
     public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
-        requireRuntime().addServerReloadListener(identifier, reloadListener);
+        runtime.addServerReloadListener(identifier, reloadListener);
     }
 
     public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        requireRuntime().addServerReloadListener(identifier, reloadListener);
+        runtime.addServerReloadListener(identifier, reloadListener);
     }
 
     public static BalmProxy getProxy() {
-        return requireRuntime().getProxy();
+        return runtime.getProxy();
     }
 
     public static BalmEvents getEvents() {
-        return requireRuntime().getEvents();
+        return runtime.getEvents();
     }
 
     public static BalmConfig getConfig() {
-        return requireRuntime().getConfig();
+        return runtime.getConfig();
     }
 
     public static BalmNetworking getNetworking() {
-        return requireRuntime().getNetworking();
+        return runtime.getNetworking();
     }
 
     public static BalmWorldGen getWorldGen() {
-        return requireRuntime().getWorldGen();
+        return runtime.getWorldGen();
     }
 
     public static BalmBlocks getBlocks() {
-        return requireRuntime().getBlocks();
+        return runtime.getBlocks();
     }
 
     public static BalmBlockEntities getBlockEntities() {
-        return requireRuntime().getBlockEntities();
+        return runtime.getBlockEntities();
     }
 
     public static BalmItems getItems() {
-        return requireRuntime().getItems();
+        return runtime.getItems();
     }
 
     public static BalmComponents getComponents() {
-        return requireRuntime().getComponents();
+        return runtime.getComponents();
     }
 
     public static BalmMenus getMenus() {
-        return requireRuntime().getMenus();
+        return runtime.getMenus();
     }
 
     public static BalmHooks getHooks() {
-        return requireRuntime().getHooks();
+        return runtime.getHooks();
     }
 
     public static BalmRecipes getRecipes() {
-        return requireRuntime().getRecipes();
+        return runtime.getRecipes();
     }
 
     public static BalmRegistries getRegistries() {
-        return requireRuntime().getRegistries();
+        return runtime.getRegistries();
     }
 
     public static BalmSounds getSounds() {
-        return requireRuntime().getSounds();
+        return runtime.getSounds();
     }
 
     public static BalmEntities getEntities() {
-        return requireRuntime().getEntities();
+        return runtime.getEntities();
     }
 
     public static BalmProviders getProviders() {
-        return requireRuntime().getProviders();
+        return runtime.getProviders();
     }
 
     public static BalmCommands getCommands() {
-        return requireRuntime().getCommands();
+        return runtime.getCommands();
     }
 
     public static BalmLootTables getLootTables() {
-        return requireRuntime().getLootTables();
+        return runtime.getLootTables();
     }
 
     public static BalmStats getStats() {
-        return requireRuntime().getStats();
+        return runtime.getStats();
     }
 
     public static BalmModSupport getModSupport() {
-        return requireRuntime().getModSupport();
+        return runtime.getModSupport();
     }
 
     public static BalmParticles getParticles() {
-        return requireRuntime().getParticles();
+        return runtime.getParticles();
     }
 
     public static BalmPermissions getPermissions() {
-        return requireRuntime().getPermissions();
+        return runtime.getPermissions();
     }
 
     public static String getPlatform() {
-        return requireRuntime().getPlatform();
+        return runtime.getPlatform();
     }
 
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
-        return requireRuntime();
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends BalmRuntimeLoadContext> BalmRuntime<T> requireRuntime() {
-        if (runtime == null) {
-            synchronized (RUNTIME_LOCK) {
-                if (runtime == null) { // intentional - first check is not synchronized for performance, but field may have changed by then
-                    // TODO In 1.21.5, we will only initialize the runtime at a stable and safe time, and crash if accessed too early.
-                    initializeRuntime();
-                }
-            }
-        }
-        return (BalmRuntime<T>) runtime;
-    }
-
-    public static void initializeRuntime() {
-        synchronized (RUNTIME_LOCK) {
-            if (runtime == null) {
-                runtime = BalmRuntimeSpi.create();
-                for (final var callback : initCallbacks) {
-                    callback.run();
-                }
-            }
-        }
+        return runtime;
     }
 }

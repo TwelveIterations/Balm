@@ -58,10 +58,13 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
+
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
     private final BalmBlocks blocks = new NeoForgeBalmBlocks();
     private final BalmBlockEntities blockEntities = new NeoForgeBalmBlockEntities();
@@ -86,6 +89,8 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
+
+    private boolean ready;
 
     public NeoForgeBalmRuntime() {
         NeoForgeBalmCommonEvents.registerEvents(events);
@@ -281,5 +286,25 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     @Override
     public String getPlatform() {
         return LoaderPlatforms.NEOFORGE;
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    @Override
+    public void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
+        if (isReady()) {
+            callback.run();
+        }
+    }
+
+    public void initializeRuntime() {
+        ready = true;
+        for (final var callback : initCallbacks) {
+            callback.run();
+        }
     }
 }

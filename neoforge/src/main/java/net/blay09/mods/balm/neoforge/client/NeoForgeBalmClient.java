@@ -7,7 +7,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class NeoForgeBalmClient {
     public static void onInitializeClient(FMLClientSetupEvent setupEvent) {
-        BalmClient.initializeRuntime();
+        ((NeoForgeBalmClientRuntime) BalmClient.getRuntime()).initializeRuntime();
 
         Balm.getEvents().onEvent(DisconnectedFromServerEvent.class, event -> Balm.getConfig().resetToBackingConfigs());
     }
