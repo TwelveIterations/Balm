@@ -2,89 +2,6 @@ package net.blay09.mods.balm.neoforge.config;
 
 /*public class NeoForgeBalmConfigOld extends AbstractBalmConfig {
 
-    private final Logger logger = LogManager.getLogger();
-    private final Map<Class<?>, ModConfig> configs = new HashMap<>();
-    private final Map<Class<?>, BalmConfigData> configData = new HashMap<>();
-    private final Multimap<String, Class<?>> configsByMod = ArrayListMultimap.create();
-    private final Table<Class<?>, String, ModConfigSpec.ConfigValue<?>> configProperties = HashBasedTable.create();
-
-    private <T extends BalmConfigData> IConfigSpec createConfigSpec(Class<T> clazz) {
-        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
-        try {
-            buildConfigSpec("", builder, clazz);
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("Config spec generation unexpectedly failed.", e);
-        }
-        return builder.build();
-    }
-
-    private void buildConfigSpec(String parentPath, ModConfigSpec.Builder builder, Class<?> clazz) throws IllegalAccessException {
-        List<Field> fields = ConfigReflection.getAllFields(clazz);
-        Object defaults = createConfigDataInstance(clazz);
-        final var modContainer = ModLoadingContext.get().getActiveContainer();
-        final var modId = modContainer.getModId();
-        for (Field field : fields) {
-            Class<?> type = field.getType();
-            Object defaultValue = field.get(defaults);
-            String path = parentPath + field.getName();
-
-            Comment comment = field.getAnnotation(Comment.class);
-            if (comment != null) {
-                builder.comment(comment.value());
-            }
-
-            builder.translation("config." + modId + "." + path);
-
-            if (String.class.isAssignableFrom(type)) {
-                final var property = builder.define(path, (String) defaultValue);
-                configProperties.put(clazz, path, property);
-            } else if (ResourceLocation.class.isAssignableFrom(type)) {
-                final var property = builder.define(path, ((ResourceLocation) defaultValue).toString());
-                configProperties.put(clazz, path, property);
-            } else if (Collection.class.isAssignableFrom(type)) {
-                ExpectedType expectedType = field.getAnnotation(ExpectedType.class);
-                if (expectedType == null) {
-                    logger.warn("Config field without expected type, will not validate list content ({} in {})", field.getName(), clazz.getName());
-                }
-
-                Supplier<List<?>> defaultSupplier = () -> expectedType != null && expectedType.value()
-                        .isEnum() ? ((Collection<?>) defaultValue).stream().map(Object::toString).toList() : new ArrayList<>((Collection<?>) defaultValue);
-                Predicate<Object> validator = (Object it) -> expectedType == null || expectedType.value()
-                        .isAssignableFrom(it.getClass()) || (expectedType.value()
-                        .isEnum() && Arrays.stream(
-                        expectedType.value().getEnumConstants()).anyMatch(constant -> constant.toString().equals(it)));
-                if (expectedType != null && ResourceLocation.class.isAssignableFrom(expectedType.value())) {
-                    defaultSupplier = () -> ((Collection<?>) defaultValue).stream().map(it -> ((ResourceLocation) it).toString()).collect(Collectors.toList());
-                    validator = (Object it) -> it instanceof String stringValue && ResourceLocation.tryParse(stringValue) != null;
-                }
-
-                final var property = builder.defineListAllowEmpty(List.of(path.split("\\.")), defaultSupplier, validator);
-                configProperties.put(clazz, path, property);
-            } else if (Enum.class.isAssignableFrom(type)) {
-                final var property = builder.defineEnum(path, (Enum) defaultValue);
-                configProperties.put(clazz, path, property);
-            } else if (int.class.isAssignableFrom(type)) {
-                final var property = builder.defineInRange(path, (int) defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
-                configProperties.put(clazz, path, property);
-            } else if (float.class.isAssignableFrom(type)) {
-                final var property = builder.defineInRange(path, (float) defaultValue, -Float.MAX_VALUE, Float.MAX_VALUE);
-                configProperties.put(clazz, path, property);
-            } else if (double.class.isAssignableFrom(type)) {
-                final var property = builder.defineInRange(path, (double) defaultValue, -Double.MAX_VALUE, Double.MAX_VALUE);
-                configProperties.put(clazz, path, property);
-            } else if (boolean.class.isAssignableFrom(type)) {
-                final var property = builder.define(path, (boolean) defaultValue);
-                configProperties.put(clazz, path, property);
-            } else if (long.class.isAssignableFrom(type)) {
-                final var property = builder.defineInRange(path, (long) defaultValue, Long.MIN_VALUE, Long.MAX_VALUE);
-                configProperties.put(clazz, path, property);
-
-            } else {
-                buildConfigSpec(path + ".", builder, type);
-            }
-        }
-    }
-
     private <T extends BalmConfigData> T readConfigValues(Class<T> clazz, ModConfig config) {
         T instance = createConfigDataInstance(clazz);
         try {
@@ -219,15 +136,6 @@ package net.blay09.mods.balm.neoforge.config;
 
     @Override
     public <T extends BalmConfigData> T initializeBackingConfig(Class<T> clazz) {
-        IConfigSpec configSpec = createConfigSpec(clazz);
-        final var modContainer = ModLoadingContext.get().getActiveContainer();
-
-        // We set this early in case event handlers run upon registering, so we don't reset back to defaults
-        T initialData = createConfigDataInstance(clazz);
-        setActiveConfig(clazz, initialData);
-        configData.put(clazz, initialData);
-        configsByMod.put(getConfigName(clazz), clazz);
-
         modContainer.getEventBus().addListener((ModConfigEvent.Loading event) -> {
             configs.put(clazz, event.getConfig());
             T newConfigData = readConfigValues(clazz, event.getConfig());
@@ -251,19 +159,6 @@ package net.blay09.mods.balm.neoforge.config;
 
             Balm.getEvents().fireEvent(new ConfigReloadedEvent());
         });
-
-        modContainer.registerConfig(ModConfig.Type.COMMON, configSpec);
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            initializeConfigurationScreen(modContainer);
-        }
-
-        return getActive(clazz);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends BalmConfigData> T getBackingConfig(Class<T> clazz) {
-        return (T) configData.get(clazz);
     }
 
     @Override
@@ -275,12 +170,4 @@ package net.blay09.mods.balm.neoforge.config;
         }
     }
 
-    @Override
-    public List<? extends BalmConfigData> getConfigsByMod(String modId) {
-        return configsByMod.get(modId).stream().map(configData::get).toList();
-    }
-
-    private static void initializeConfigurationScreen(ModContainer modContainer) {
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-    }
 }*/
