@@ -22,10 +22,8 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
@@ -43,14 +41,14 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             case ConfiguredFloat configuredFloat -> spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
             case ConfiguredInt configuredInt -> spec.define(configuredInt.name(), configuredInt.defaultValue());
             case ConfiguredList<?> configuredList -> spec.defineListAllowEmpty(configuredList.name(),
-                    neoForgedCollection(configuredList.defaultValue()),
+                    mapConfigCollectionToNeoForge(configuredList.defaultValue()),
                     () -> newListElement(configuredList),
                     (it) -> validateListElement(configuredList, it));
             case ConfiguredLong configuredLong -> spec.define(configuredLong.name(), configuredLong.defaultValue());
             case ConfiguredResourceLocation configuredResourceLocation ->
                     spec.define(configuredResourceLocation.name(), configuredResourceLocation.defaultValue().toString());
             case ConfiguredSet<?> configuredSet -> spec.defineListAllowEmpty(configuredSet.name(),
-                    neoForgedCollection(configuredSet.defaultValue()),
+                    mapConfigCollectionToNeoForge(configuredSet.defaultValue()),
                     () -> newSetElement(configuredSet),
                     (it) -> validateSetElement(configuredSet, it));
             case ConfiguredString configuredString -> spec.define(configuredString.name(), configuredString.defaultValue());
@@ -58,14 +56,48 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         };
     }
 
-    private static List<?> neoForgedCollection(Collection<?> values) {
-        return values.stream().map(it -> {
-            if (it instanceof ResourceLocation resourceLocation) {
-                return resourceLocation.toString();
-            } else {
-                return it;
-            }
-        }).toList();
+    public static List<?> mapConfigCollectionToNeoForge(Collection<?> values) {
+        return values.stream().map(NeoForgeBalmConfig::mapConfigValueToNeoForge).toList();
+    }
+
+    public static Object mapConfigValueToNeoForge(Object value) {
+        return switch (value) {
+            case ResourceLocation resourceLocation -> resourceLocation.toString();
+            case Float floatValue -> floatValue.doubleValue();
+            case Set<?> setValue -> mapConfigCollectionToNeoForge(setValue);
+            case List<?> listValue -> mapConfigCollectionToNeoForge(listValue);
+            case null, default -> value;
+        };
+    }
+
+    public static List<?> mapConfigListFromNeoForge(ConfiguredList<?> property, List<?> value) {
+        return value.stream().map(it -> mapConfigValueFromNeoForge(property.nestedType(), it)).toList();
+    }
+
+    public static Set<?> mapConfigSetFromNeoForge(ConfiguredSet<?> property, List<?> value) {
+        return value.stream().map(it -> mapConfigValueFromNeoForge(property.nestedType(), it)).collect(Collectors.toSet());
+    }
+
+    public static Object mapConfigValueFromNeoForge(ConfiguredProperty<?> property, Object value) {
+        return switch (property) {
+            case ConfiguredResourceLocation ignored -> ResourceLocation.parse((String) value);
+            case ConfiguredFloat ignored -> ((Double) value).floatValue();
+            case ConfiguredList<?> configuredList -> mapConfigListFromNeoForge(configuredList, (List<?>) value);
+            case ConfiguredSet<?> configuredSet -> mapConfigSetFromNeoForge(configuredSet, (List<?>) value);
+            case null, default -> value;
+        };
+    }
+
+    private static Object mapConfigValueFromNeoForge(Class<?> nestedType, Object value) {
+        if (nestedType == ResourceLocation.class) {
+            return ResourceLocation.parse((String) value);
+        } else if (nestedType == Float.class) {
+            return ((Double) value).floatValue();
+        } else if (nestedType.isEnum() && value instanceof String) {
+            return stringToEnum(value, nestedType);
+        } else {
+            return value;
+        }
     }
 
     private static <T> T newListElement(ConfiguredList<T> configuredList) {
@@ -159,6 +191,15 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     private static <T extends Enum<T>> boolean validateEnum(Object value, Class<?> unknownClass) {
         if (unknownClass.isEnum()) {
             return EnumGetMethod.NAME_IGNORECASE.validate(value, (Class<T>) unknownClass);
+        } else {
+            throw new IllegalArgumentException("Not an enum class: " + unknownClass.getName());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Enum<T>> T stringToEnum(Object value, Class<?> unknownClass) {
+        if (unknownClass.isEnum()) {
+            return EnumGetMethod.NAME_IGNORECASE.get(value, (Class<T>) unknownClass);
         } else {
             throw new IllegalArgumentException("Not an enum class: " + unknownClass.getName());
         }
