@@ -5,7 +5,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.*;
 import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
@@ -23,6 +22,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,23 +39,33 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         return switch (property) {
             case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue());
             case ConfiguredDouble configuredDouble -> spec.define(configuredDouble.name(), configuredDouble.defaultValue());
-            case ConfiguredEnum<?> configuredEnum -> spec.defineEnum(configuredEnum.name(), configuredEnum.defaultValue(), EnumGetMethod.NAME_IGNORECASE);
-            case ConfiguredFloat configuredFloat -> spec.define(configuredFloat.name(), configuredFloat.defaultValue());
+            case ConfiguredEnum<?> configuredEnum -> defineEnum(spec, configuredEnum);
+            case ConfiguredFloat configuredFloat -> spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
             case ConfiguredInt configuredInt -> spec.define(configuredInt.name(), configuredInt.defaultValue());
             case ConfiguredList<?> configuredList -> spec.defineListAllowEmpty(configuredList.name(),
-                    configuredList.defaultValue(),
+                    neoForgedCollection(configuredList.defaultValue()),
                     () -> newListElement(configuredList),
                     (it) -> validateListElement(configuredList, it));
             case ConfiguredLong configuredLong -> spec.define(configuredLong.name(), configuredLong.defaultValue());
             case ConfiguredResourceLocation configuredResourceLocation ->
                     spec.define(configuredResourceLocation.name(), configuredResourceLocation.defaultValue().toString());
             case ConfiguredSet<?> configuredSet -> spec.defineListAllowEmpty(configuredSet.name(),
-                    List.copyOf(configuredSet.defaultValue()),
+                    neoForgedCollection(configuredSet.defaultValue()),
                     () -> newSetElement(configuredSet),
                     (it) -> validateSetElement(configuredSet, it));
             case ConfiguredString configuredString -> spec.define(configuredString.name(), configuredString.defaultValue());
             default -> throw new IllegalStateException("Unexpected value: " + property);
         };
+    }
+
+    private static List<?> neoForgedCollection(Collection<?> values) {
+        return values.stream().map(it -> {
+            if (it instanceof ResourceLocation resourceLocation) {
+                return resourceLocation.toString();
+            } else {
+                return it;
+            }
+        }).toList();
     }
 
     private static <T> T newListElement(ConfiguredList<T> configuredList) {
@@ -73,7 +83,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         } else if (nestedType == Double.class) {
             return (T) Double.valueOf(0.0);
         } else if (nestedType == Float.class) {
-            return (T) Float.valueOf(0.0f);
+            return (T) Double.valueOf(0.0f);
         } else if (nestedType == Integer.class) {
             return (T) Integer.valueOf(0);
         } else if (nestedType == Long.class) {
@@ -154,6 +164,10 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         }
     }
 
+    private static <T extends Enum<T>> ModConfigSpec.ConfigValue<T> defineEnum(ModConfigSpec.Builder spec, ConfiguredEnum<T> configuredEnum) {
+        return spec.defineEnum(configuredEnum.name(), configuredEnum.defaultValue(), EnumGetMethod.NAME_IGNORECASE);
+    }
+
     @Override
     public File getConfigDir() {
         return FMLPaths.CONFIGDIR.get().toFile();
@@ -167,12 +181,16 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                 .orElseThrow(() -> new IllegalStateException("Mod container for " + schema.identifier()
                         .getNamespace() + " not found when registering config."));
         final var eventBus = modContainer.getEventBus();
+        if (eventBus == null) {
+            throw new IllegalStateException("Missing event bus for " + schema.identifier().getNamespace() + " when registering config.");
+        }
+
         eventBus.addListener((ModConfigEvent.Loading event) -> {
             final var modConfig = event.getConfig();
             final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
-                final var wrappedConfig = new LoadedTableConfig(); // TODO 1.21.5 Configs
+                final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, properties.get(schema.identifier()));
                 setLocalConfig(schema, wrappedConfig);
                 setActiveConfig(schema, wrappedConfig);
             }
@@ -182,7 +200,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
-                final var wrappedConfig = new LoadedTableConfig(); // TODO 1.21.5 Configs
+                final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, properties.get(schema.identifier()));
                 setLocalConfig(schema, wrappedConfig);
                 updateActiveFromLocal(schema, wrappedConfig);
 
@@ -212,7 +230,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         if (modConfig == null) {
             throw new IllegalStateException("Backing config not available for " + schema.identifier());
         }
-        final var wrappedConfig = new LoadedTableConfig(); // TODO 1.21.5 Configs
+        final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, properties.get(schema.identifier()));
         wrappedConfig.applyFrom(schema, config);
         ((ModConfigSpec) modConfig.getSpec()).save();
     }
