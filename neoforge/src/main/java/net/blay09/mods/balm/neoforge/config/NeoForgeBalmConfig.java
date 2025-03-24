@@ -39,7 +39,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         }
 
         return switch (property) {
-            case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue());
+            case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue().booleanValue());
             case ConfiguredDouble configuredDouble -> spec.define(configuredDouble.name(), configuredDouble.defaultValue());
             case ConfiguredEnum<?> configuredEnum -> defineEnum(spec, configuredEnum);
             case ConfiguredFloat configuredFloat -> spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
