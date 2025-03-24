@@ -15,6 +15,18 @@ public class KeyModifiers {
         this.modifiers.addAll(Arrays.asList(modifiers));
     }
 
+    public static KeyModifiers of(KeyModifier... modifiers) {
+        return new KeyModifiers(modifiers);
+    }
+
+    public static KeyModifiers ofCustom(InputConstants.Key... modifiers) {
+        KeyModifiers keyModifiers = new KeyModifiers();
+        for (InputConstants.Key modifier : modifiers) {
+            keyModifiers.addCustomModifier(modifier);
+        }
+        return keyModifiers;
+    }
+
     public boolean contains(KeyModifier keyModifier) {
         return modifiers.contains(keyModifier);
     }
@@ -47,17 +59,5 @@ public class KeyModifiers {
 
     public boolean hasCustomModifiers() {
         return !customModifiers.isEmpty();
-    }
-
-    public static KeyModifiers of(KeyModifier... modifiers) {
-        return new KeyModifiers(modifiers);
-    }
-
-    public static KeyModifiers ofCustom(InputConstants.Key... modifiers) {
-        KeyModifiers keyModifiers = new KeyModifiers();
-        for (InputConstants.Key modifier : modifiers) {
-            keyModifiers.addCustomModifier(modifier);
-        }
-        return keyModifiers;
     }
 }

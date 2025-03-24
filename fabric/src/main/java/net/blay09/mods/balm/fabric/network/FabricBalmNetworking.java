@@ -35,12 +35,25 @@ public class FabricBalmNetworking implements BalmNetworking {
     private static final Map<ResourceLocation, MessageRegistration<?>> messagesByIdentifier = new HashMap<>();
 
     private static final List<ClientboundMessageRegistration<?>> clientMessageRegistrations = new ArrayList<>();
-
+    private static Player replyPlayer;
     private final Set<String> registeredMods = new HashSet<>();
     private final Set<String> clientOnlyMods = new HashSet<>();
     private final Set<String> serverOnlyMods = new HashSet<>();
 
-    private static Player replyPlayer;
+    public static void initializeClientHandlers() {
+        for (ClientboundMessageRegistration<?> message : clientMessageRegistrations) {
+            registerClientHandler(message);
+        }
+    }
+
+    private static <T> void registerClientHandler(ClientboundMessageRegistration<T> messageRegistration) {
+        ResourceLocation identifier = messageRegistration.getIdentifier();
+        BiConsumer<Player, T> handler = messageRegistration.getHandler();
+        ClientPlayNetworking.registerGlobalReceiver(identifier, ((client, listener, buf, responseSender) -> {
+            T message = messageRegistration.getDecodeFunc().apply(buf);
+            client.execute(() -> handler.accept(BalmClient.getClientPlayer(), message));
+        }));
+    }
 
     public Set<String> getRegisteredMods() {
         return registeredMods;
@@ -179,21 +192,6 @@ public class FabricBalmNetworking implements BalmNetworking {
                 handler.accept(player, message);
                 replyPlayer = null;
             });
-        }));
-    }
-
-    public static void initializeClientHandlers() {
-        for (ClientboundMessageRegistration<?> message : clientMessageRegistrations) {
-            registerClientHandler(message);
-        }
-    }
-
-    private static <T> void registerClientHandler(ClientboundMessageRegistration<T> messageRegistration) {
-        ResourceLocation identifier = messageRegistration.getIdentifier();
-        BiConsumer<Player, T> handler = messageRegistration.getHandler();
-        ClientPlayNetworking.registerGlobalReceiver(identifier, ((client, listener, buf, responseSender) -> {
-            T message = messageRegistration.getDecodeFunc().apply(buf);
-            client.execute(() -> handler.accept(BalmClient.getClientPlayer(), message));
         }));
     }
 }

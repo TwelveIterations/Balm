@@ -8,7 +8,6 @@ import net.blay09.mods.balm.api.config.BalmConfigData;
 import net.blay09.mods.balm.api.config.BalmConfigProperty;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
 import java.util.Map;
@@ -82,7 +81,8 @@ public class ClothConfigUtils {
                         );
                     } else if (Enum.class.isAssignableFrom(backingProperty.getType())) {
                         categoryInstance.addEntry(
-                                builder.entryBuilder().startEnumSelector(displayName, (Class<Enum<?>>) backingProperty.getType(), (Enum<?>) backingProperty.getValue())
+                                builder.entryBuilder()
+                                        .startEnumSelector(displayName, (Class<Enum<?>>) backingProperty.getType(), (Enum<?>) backingProperty.getValue())
                                         .setDefaultValue((Enum<?>) backingProperty.getDefaultValue())
                                         .setTooltip(tooltip)
                                         .setSaveConsumer(value -> ((BalmConfigProperty<Enum<?>>) backingProperty).setValue(value))

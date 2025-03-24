@@ -17,11 +17,13 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -131,6 +133,7 @@ public abstract class AbstractCachedDynamicModel implements BakedModel {
     }
 
     public abstract List<RenderType> getBlockRenderTypes(BlockState state, RandomSource rand);
+
     public abstract List<RenderType> getItemRenderTypes(ItemStack itemStack, boolean fabulous);
 
     private TextureAtlasSprite getSprite(ResourceLocation modelLocation, Material material) {

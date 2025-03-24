@@ -35,6 +35,10 @@ public class FabricBalm implements ModInitializer {
     private static final SidedProxy<FabricBalmProxy> proxy = sidedProxy("net.blay09.mods.balm.fabric.FabricBalmProxy",
             "net.blay09.mods.balm.fabric.client.FabricBalmClientProxy");
 
+    public static FabricBalmProxy getProxy() {
+        return proxy.get();
+    }
+
     @Override
     public void onInitialize() {
         ((FabricBalmRuntime) Balm.getRuntime()).initializeRuntime();
@@ -133,9 +137,5 @@ public class FabricBalm implements ModInitializer {
                 });
 
         Balm.initializeIfLoaded("team_reborn_energy", "net.blay09.mods.balm.fabric.compat.energy.RebornEnergy");
-    }
-
-    public static FabricBalmProxy getProxy() {
-        return proxy.get();
     }
 }

@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.screen.ContainerScreenDrawEvent;
 import net.minecraft.client.gui.GuiGraphics;

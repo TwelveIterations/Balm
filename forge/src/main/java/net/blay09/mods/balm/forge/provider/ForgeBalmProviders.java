@@ -3,7 +3,6 @@ package net.blay09.mods.balm.forge.provider;
 import net.blay09.mods.balm.api.provider.BalmProviders;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;

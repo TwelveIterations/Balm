@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.fabric.menu;
 
 import net.blay09.mods.balm.api.DeferredObject;
-import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.menu.BalmMenuFactory;
+import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;

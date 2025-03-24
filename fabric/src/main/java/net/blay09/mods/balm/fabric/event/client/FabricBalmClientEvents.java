@@ -1,10 +1,13 @@
 package net.blay09.mods.balm.fabric.event.client;
 
-import net.blay09.mods.balm.api.event.client.*;
-import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
-import net.blay09.mods.balm.api.event.client.screen.*;
+import net.blay09.mods.balm.api.event.client.*;
+import net.blay09.mods.balm.api.event.client.screen.ScreenDrawEvent;
+import net.blay09.mods.balm.api.event.client.screen.ScreenInitEvent;
+import net.blay09.mods.balm.api.event.client.screen.ScreenKeyEvent;
+import net.blay09.mods.balm.api.event.client.screen.ScreenMouseEvent;
+import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -77,8 +80,12 @@ public class FabricBalmClientEvents {
     public static void registerEvents(FabricBalmEvents events) {
         events.registerTickEvent(TickType.Client, TickPhase.Start, (ClientTickHandler handler) -> ClientTickEvents.START_CLIENT_TICK.register(handler::handle));
         events.registerTickEvent(TickType.Client, TickPhase.End, (ClientTickHandler handler) -> ClientTickEvents.END_CLIENT_TICK.register(handler::handle));
-        events.registerTickEvent(TickType.ClientLevel, TickPhase.Start, (ClientLevelTickHandler handler) -> ClientTickEvents.START_WORLD_TICK.register(handler::handle));
-        events.registerTickEvent(TickType.ClientLevel, TickPhase.End, (ClientLevelTickHandler handler) -> ClientTickEvents.END_WORLD_TICK.register(handler::handle));
+        events.registerTickEvent(TickType.ClientLevel,
+                TickPhase.Start,
+                (ClientLevelTickHandler handler) -> ClientTickEvents.START_WORLD_TICK.register(handler::handle));
+        events.registerTickEvent(TickType.ClientLevel,
+                TickPhase.End,
+                (ClientLevelTickHandler handler) -> ClientTickEvents.END_WORLD_TICK.register(handler::handle));
 
         events.registerEvent(ClientStartedEvent.class, () -> ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             final ClientStartedEvent event = new ClientStartedEvent(client);

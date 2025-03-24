@@ -22,10 +22,6 @@ public class SyncConfigMessage<TData> {
         this.data = data;
     }
 
-    public TData getData() {
-        return data;
-    }
-
     public static <TData> Supplier<TData> createDeepCopyFactory(Supplier<TData> from, Supplier<TData> factory) {
         return () -> {
             TData to = factory.get();
@@ -126,6 +122,10 @@ public class SyncConfigMessage<TData> {
             readSyncedFields(buf, data, false);
             return messageFactory.apply(data);
         }, Balm.getConfig()::handleSync);
+    }
+
+    public TData getData() {
+        return data;
     }
 
 }

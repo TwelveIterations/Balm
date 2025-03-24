@@ -39,6 +39,10 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     private static NetworkEvent.Context replyContext;
 
+    private static int nextDiscriminator(String modId) {
+        return discriminatorCounter.compute(modId, (key, prev) -> prev != null ? prev + 1 : 0);
+    }
+
     @Override
     public void allowClientOnly(String modId) {
         NetworkChannels.allowClientOnly(modId);
@@ -182,9 +186,5 @@ public class ForgeBalmNetworking implements BalmNetworking {
             });
             context.setPacketHandled(true);
         });
-    }
-
-    private static int nextDiscriminator(String modId) {
-        return discriminatorCounter.compute(modId, (key, prev) -> prev != null ? prev + 1 : 0);
     }
 }

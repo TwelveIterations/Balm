@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.block.entity;
 
-import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.DeferredObject;
+import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntityFactory;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;

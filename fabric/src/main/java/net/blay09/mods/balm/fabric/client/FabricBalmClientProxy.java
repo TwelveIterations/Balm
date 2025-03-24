@@ -10,7 +10,8 @@ public class FabricBalmClientProxy extends FabricBalmProxy {
     @Override
     public Fluid enableMilkFluid() {
         final var fluid = super.enableMilkFluid();
-        FluidRenderHandlerRegistry.INSTANCE.register(fluid, new SimpleFluidRenderHandler(SimpleFluidRenderHandler.WATER_STILL, SimpleFluidRenderHandler.WATER_FLOWING, 0xFFFFFFFF));
+        FluidRenderHandlerRegistry.INSTANCE.register(fluid,
+                new SimpleFluidRenderHandler(SimpleFluidRenderHandler.WATER_STILL, SimpleFluidRenderHandler.WATER_FLOWING, 0xFFFFFFFF));
         return fluid;
     }
 }

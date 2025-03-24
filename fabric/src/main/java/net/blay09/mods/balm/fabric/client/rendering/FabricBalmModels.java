@@ -19,7 +19,10 @@ import org.joml.Matrix4f;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -27,22 +30,9 @@ import java.util.function.Supplier;
 
 public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
 
-    private static abstract class DeferredModel extends DeferredObject<BakedModel> {
-        public DeferredModel(ResourceLocation identifier) {
-            super(identifier);
-        }
-
-        public abstract BakedModel resolve(ModelBakery modelBakery, BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction);
-
-        @Override
-        public void set(BakedModel object) {
-            super.set(object);
-        }
-    }
-
+    public final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = Collections.synchronizedList(new ArrayList<>());
     private final List<ResourceLocation> additionalModels = Collections.synchronizedList(new ArrayList<>());
     private final List<DeferredModel> modelsToBake = Collections.synchronizedList(new ArrayList<>());
-    public final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = Collections.synchronizedList(new ArrayList<>());
     private ModelBakery modelBakery;
 
     @Override
@@ -170,5 +160,18 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
 
     private Function<Material, TextureAtlasSprite> createModelTextureGetter(ResourceLocation location, BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction) {
         return (Material material) -> (TextureAtlasSprite) spriteBiFunction.apply(location, material);
+    }
+
+    private static abstract class DeferredModel extends DeferredObject<BakedModel> {
+        public DeferredModel(ResourceLocation identifier) {
+            super(identifier);
+        }
+
+        public abstract BakedModel resolve(ModelBakery modelBakery, BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction);
+
+        @Override
+        public void set(BakedModel object) {
+            super.set(object);
+        }
     }
 }

@@ -19,9 +19,9 @@ import java.util.function.Supplier;
 
 @Mixin(ClientLevel.class)
 public class ClientLevelMixin {
-    @Inject(method = "<init>", at = @At("TAIL") )
+    @Inject(method = "<init>", at = @At("TAIL"))
     private void onConstructor(ClientPacketListener clientPacketListener, ClientLevel.ClientLevelData clientLevelData, ResourceKey<Level> resourceKey, Holder<DimensionType> holder, int i, int j, Supplier<ProfilerFiller> supplier, LevelRenderer levelRenderer, boolean bl, long l,
-                               CallbackInfo ci  ) {
+                               CallbackInfo ci) {
         ClientLevel clientLevel = (ClientLevel) (Object) this;
         Balm.getEvents().fireEvent(new LevelLoadingEvent.Load(clientLevel));
     }

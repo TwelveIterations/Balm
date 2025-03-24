@@ -23,18 +23,6 @@ import java.util.function.Supplier;
 
 public class ForgeBalmEntities implements BalmEntities {
 
-    private static class Registrations {
-        public final Map<EntityType<?>, AttributeSupplier> attributeSuppliers = new HashMap<>();
-
-        @SubscribeEvent
-        @SuppressWarnings("unchecked")
-        public void registerAttributes(EntityAttributeCreationEvent event) {
-            for (Map.Entry<EntityType<?>, AttributeSupplier> entry : attributeSuppliers.entrySet()) {
-                event.put((EntityType<? extends LivingEntity>) entry.getKey(), entry.getValue());
-            }
-        }
-    }
-
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
@@ -62,5 +50,17 @@ public class ForgeBalmEntities implements BalmEntities {
 
     private Registrations getActiveRegistrations() {
         return registrations.computeIfAbsent(ModLoadingContext.get().getActiveNamespace(), it -> new Registrations());
+    }
+
+    private static class Registrations {
+        public final Map<EntityType<?>, AttributeSupplier> attributeSuppliers = new HashMap<>();
+
+        @SubscribeEvent
+        @SuppressWarnings("unchecked")
+        public void registerAttributes(EntityAttributeCreationEvent event) {
+            for (Map.Entry<EntityType<?>, AttributeSupplier> entry : attributeSuppliers.entrySet()) {
+                event.put((EntityType<? extends LivingEntity>) entry.getKey(), entry.getValue());
+            }
+        }
     }
 }

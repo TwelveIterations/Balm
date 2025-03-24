@@ -17,7 +17,11 @@ public class CuriosIntegration implements BalmModSupportTrinkets {
 
     @Override
     public ItemStack findEquipped(Player player, Predicate<ItemStack> predicate) {
-        return CuriosApi.getCuriosInventory(player).resolve().flatMap(trinkets -> trinkets.findFirstCurio(predicate)).map(SlotResult::stack).orElse(ItemStack.EMPTY);
+        return CuriosApi.getCuriosInventory(player)
+                .resolve()
+                .flatMap(trinkets -> trinkets.findFirstCurio(predicate))
+                .map(SlotResult::stack)
+                .orElse(ItemStack.EMPTY);
     }
 
     @Override
