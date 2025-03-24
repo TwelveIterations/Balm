@@ -31,6 +31,7 @@ import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
 import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.component.FabricBalmComponents;
+import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
 import net.blay09.mods.balm.fabric.entity.FabricBalmEntities;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
@@ -57,6 +58,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -65,6 +67,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
     private final BalmBlocks blocks = new FabricBalmBlocks();
     private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
@@ -90,8 +93,9 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
             .withFallback(new CommonBalmPermissions())
             .buildLazily();
     private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
-
     private final List<String> addonClasses = new ArrayList<>();
+
+    private boolean ready;
 
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
@@ -306,5 +310,25 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
 
     public List<String> getAddonClasses() {
         return addonClasses;
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    @Override
+    public void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
+        if (isReady()) {
+            callback.run();
+        }
+    }
+
+    public void initializeRuntime() {
+        ready = true;
+        for (final var callback : initCallbacks) {
+            callback.run();
+        }
     }
 }

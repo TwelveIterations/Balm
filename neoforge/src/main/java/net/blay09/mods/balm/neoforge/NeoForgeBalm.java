@@ -36,7 +36,7 @@ public class NeoForgeBalm {
             "energy_storage"), EnergyStorage.class);
 
     public NeoForgeBalm(IEventBus modBus) {
-        Balm.initializeRuntime();
+        ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
         ExampleConfig.initialize();

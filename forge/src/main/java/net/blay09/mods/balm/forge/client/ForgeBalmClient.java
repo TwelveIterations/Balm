@@ -7,7 +7,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ForgeBalmClient {
     public static void onInitializeClient(FMLClientSetupEvent setupEvent) {
-        BalmClient.initializeRuntime();
+        ((ForgeBalmClientRuntime) BalmClient.getRuntime()).initializeRuntime();
 
         Balm.getEvents().onEvent(DisconnectedFromServerEvent.class, event -> Balm.getConfig().resetToBackingConfigs());
     }

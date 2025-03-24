@@ -31,4 +31,8 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         module.registerKeyMappings(getKeyMappings());
         module.initialize();
     }
+
+    boolean isReady();
+
+    void onRuntimeAvailable(Runnable callback);
 }

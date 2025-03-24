@@ -22,7 +22,7 @@ import net.minecraftforge.items.IItemHandler;
 public class ForgeBalm {
 
     public ForgeBalm(FMLJavaModLoadingContext context) {
-        Balm.initializeRuntime();
+        ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
         ExampleConfig.initialize();

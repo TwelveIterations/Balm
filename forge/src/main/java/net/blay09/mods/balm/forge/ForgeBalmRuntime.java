@@ -32,6 +32,7 @@ import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
+import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
 import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
@@ -59,11 +60,14 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
+
+    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
     private final BalmBlocks blocks = new ForgeBalmBlocks();
     private final BalmBlockEntities blockEntities = new ForgeBalmBlockEntities();
@@ -88,6 +92,8 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
     private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
+
+    private boolean ready;
 
     public ForgeBalmRuntime() {
         ForgeBalmCommonEvents.registerEvents(events);
@@ -283,5 +289,25 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
     @Override
     public BalmProxy getProxy() {
         return proxy.get();
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    @Override
+    public void onRuntimeAvailable(Runnable callback) {
+        initCallbacks.add(callback);
+        if (isReady()) {
+            callback.run();
+        }
+    }
+
+    public void initializeRuntime() {
+        ready = true;
+        for (final var callback : initCallbacks) {
+            callback.run();
+        }
     }
 }
