@@ -78,7 +78,7 @@ public class FabricBalm implements ModInitializer {
                     if (container != null) {
                         return InventoryStorage.of(container, direction);
                     }
-                } else {
+                } else if (blockEntity != null) {
                     running = true;
                     final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
                     running = false;
@@ -105,7 +105,7 @@ public class FabricBalm implements ModInitializer {
                     if (fluidTank != null) {
                         return new BalmFluidStorage(fluidTank);
                     }
-                } else {
+                } else if (blockEntity != null){
                     running = true;
                     final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.FLUID_TANK);
                     running = false;

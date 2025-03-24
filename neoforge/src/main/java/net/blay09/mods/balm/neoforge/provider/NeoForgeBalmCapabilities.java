@@ -123,10 +123,10 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
         private <TApi, TContext> void doRegister(RegisterCapabilitiesEvent event, BlockEntityProviderRegistration<TApi, TContext> registration) {
             final var blocks = Arrays.stream(registration.blockEntityTypes).flatMap(it -> it.getValidBlocks().stream()).distinct().toArray(Block[]::new);
             @SuppressWarnings("unchecked") final var capability = (BlockCapability<TApi, TContext>) registration.type().backingType();
-            event.registerBlock(capability, new IBlockCapabilityProvider<TApi, TContext>() {
+            event.registerBlock(capability, new IBlockCapabilityProvider<>() {
                 @Override
                 public @Nullable TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable TContext context) {
-                    return registration.provider.apply(blockEntity, context);
+                    return blockEntity != null ? registration.provider.apply(blockEntity, context) : null;
                 }
             }, blocks);
         }
@@ -134,10 +134,10 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
         private <TApi, TContext> void doRegister(RegisterCapabilitiesEvent event, BlockEntityFallbackProviderRegistration<TApi, TContext> registration) {
             @SuppressWarnings("unchecked") final var capability = (BlockCapability<TApi, TContext>) registration.type().backingType();
             final var blocks = BuiltInRegistries.BLOCK_ENTITY_TYPE.stream().flatMap(it -> it.getValidBlocks().stream()).distinct().toArray(Block[]::new);
-            event.registerBlock(capability, new IBlockCapabilityProvider<TApi, TContext>() {
+            event.registerBlock(capability, new IBlockCapabilityProvider<>() {
                 @Override
                 public @Nullable TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable TContext context) {
-                    return registration.provider.apply(blockEntity, context);
+                    return blockEntity != null ? registration.provider.apply(blockEntity, context) : null;
                 }
             }, blocks);
         }
