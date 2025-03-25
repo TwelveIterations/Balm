@@ -9,11 +9,14 @@ import net.blay09.mods.balm.api.event.client.screen.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class NeoForgeBalmClientEvents {
 
@@ -336,5 +339,62 @@ public class NeoForgeBalmClientEvents {
                 }
             });
         });
+
+        events.registerEvent(GuiDrawEvent.Pre.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiEvent.Pre orig) -> {
+                final var window = Minecraft.getInstance().getWindow();
+                final GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(window, orig.getGuiGraphics(), GuiDrawEvent.Element.ALL);
+                events.fireEventHandlers(priority, event);
+                if (event.isCanceled()) {
+                    orig.setCanceled(true);
+                }
+            });
+
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiLayerEvent.Pre orig) -> {
+                final var window = Minecraft.getInstance().getWindow();
+                final var element = getGuiDrawEventElement(orig.getName());
+                if (element != null) {
+                    final GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(window, orig.getGuiGraphics(), element);
+                    events.fireEventHandlers(priority, event);
+                    if (event.isCanceled()) {
+                        orig.setCanceled(true);
+                    }
+                }
+            });
+        });
+
+        events.registerEvent(GuiDrawEvent.Post.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiEvent.Post orig) -> {
+                final var window = Minecraft.getInstance().getWindow();
+                final GuiDrawEvent.Post event = new GuiDrawEvent.Post(window, orig.getGuiGraphics(), GuiDrawEvent.Element.ALL);
+                events.fireEventHandlers(priority, event);
+            });
+
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiLayerEvent.Post orig) -> {
+                final var window = Minecraft.getInstance().getWindow();
+                final var element = getGuiDrawEventElement(orig.getName());
+                if (element != null) {
+                    final GuiDrawEvent.Post event = new GuiDrawEvent.Post(window, orig.getGuiGraphics(), element);
+                    events.fireEventHandlers(priority, event);
+                }
+            });
+        });
+    }
+
+    @Nullable
+    private static GuiDrawEvent.Element getGuiDrawEventElement(ResourceLocation id) {
+        GuiDrawEvent.Element type = null;
+        if (id.equals(VanillaGuiLayers.PLAYER_HEALTH)) {
+            type = GuiDrawEvent.Element.HEALTH;
+        } else if (id.equals(VanillaGuiLayers.CHAT)) {
+            type = GuiDrawEvent.Element.CHAT;
+        } else if (id.equals(VanillaGuiLayers.DEBUG_OVERLAY)) {
+            type = GuiDrawEvent.Element.DEBUG;
+        } else if (id.equals(VanillaGuiLayers.BOSS_OVERLAY)) {
+            type = GuiDrawEvent.Element.BOSS_INFO;
+        } else if (id.equals(VanillaGuiLayers.TAB_LIST)) {
+            type = GuiDrawEvent.Element.PLAYER_LIST;
+        }
+        return type;
     }
 }
