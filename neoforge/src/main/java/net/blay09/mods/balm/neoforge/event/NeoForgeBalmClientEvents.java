@@ -316,7 +316,7 @@ public class NeoForgeBalmClientEvents {
             });
         });
 
-        events.registerEvent(GuiDrawEvent.class, priority -> {
+        events.registerEvent(GuiDrawEvent.Pre.class, priority -> {
             NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiEvent.Pre orig) -> {
                 final var window = Minecraft.getInstance().getWindow();
                 final GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(window, orig.getGuiGraphics(), GuiDrawEvent.Element.ALL);
@@ -325,17 +325,7 @@ public class NeoForgeBalmClientEvents {
                     orig.setCanceled(true);
                 }
             });
-        });
 
-        events.registerEvent(GuiDrawEvent.class, priority -> {
-            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiEvent.Post orig) -> {
-                final var window = Minecraft.getInstance().getWindow();
-                final GuiDrawEvent.Post event = new GuiDrawEvent.Post(window, orig.getGuiGraphics(), GuiDrawEvent.Element.ALL);
-                events.fireEventHandlers(priority, event);
-            });
-        });
-
-        events.registerEvent(GuiDrawEvent.class, priority -> {
             NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiLayerEvent.Pre orig) -> {
                 final var window = Minecraft.getInstance().getWindow();
                 final var element = getGuiDrawEventElement(orig.getName());
@@ -349,7 +339,13 @@ public class NeoForgeBalmClientEvents {
             });
         });
 
-        events.registerEvent(GuiDrawEvent.class, priority -> {
+        events.registerEvent(GuiDrawEvent.Post.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiEvent.Post orig) -> {
+                final var window = Minecraft.getInstance().getWindow();
+                final GuiDrawEvent.Post event = new GuiDrawEvent.Post(window, orig.getGuiGraphics(), GuiDrawEvent.Element.ALL);
+                events.fireEventHandlers(priority, event);
+            });
+
             NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderGuiLayerEvent.Post orig) -> {
                 final var window = Minecraft.getInstance().getWindow();
                 final var element = getGuiDrawEventElement(orig.getName());
