@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.*;
+import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
 import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.minecraft.resources.ResourceLocation;
@@ -238,6 +239,8 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                 final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, properties.get(schema.identifier()));
                 setLocalConfig(schema, wrappedConfig);
                 setActiveConfig(schema, wrappedConfig);
+
+                Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
             }
         });
         eventBus.addListener((ModConfigEvent.Reloading event) -> {

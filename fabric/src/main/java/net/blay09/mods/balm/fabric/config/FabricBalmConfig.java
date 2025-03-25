@@ -1,9 +1,11 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.LoadedConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ public class FabricBalmConfig extends AbstractBalmConfig {
         final var config = loadConfigFromConfigFile(schema);
         setLocalConfig(schema, config.mutable(schema));
         setActiveConfig(schema, config);
+        Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
     }
 
     @Override
