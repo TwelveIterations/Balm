@@ -15,6 +15,7 @@ public class ModProxyImpl<T> implements ModProxy<T> {
     private final List<ModEntry> proxies = new ArrayList<>();
     private Function<List<T>, T> multiplexer;
     private T fallback;
+
     public ModProxyImpl(Predicate<String> modLoadedPredicate) {
         this.modLoadedPredicate = modLoadedPredicate;
     }
@@ -22,17 +23,16 @@ public class ModProxyImpl<T> implements ModProxy<T> {
     @Override
     @SuppressWarnings("unchecked")
     public ModProxy<T> with(String modId, String clazzName) {
-        if (modLoadedPredicate.test(modId)) {
-            proxies.add(new ModEntry(modId, clazzName, () -> {
-                try {
-                    return (T) Class.forName(clazzName).getConstructor().newInstance();
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-                    throw new RuntimeException("Failed to instantiate mod proxy " + clazzName, e);
-                } catch (NoSuchMethodException e) {
-                    throw new RuntimeException("Failed to instantiate mod proxy, missing no-arg constructor in " + clazzName, e);
-                }
-            }));
-        }
+        proxies.add(new ModEntry(modId, clazzName, () -> {
+            try {
+                return (T) Class.forName(clazzName).getConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+                throw new RuntimeException("Failed to instantiate mod proxy " + clazzName, e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("Failed to instantiate mod proxy, missing no-arg constructor in " + clazzName, e);
+            }
+        }));
+
         return this;
     }
 
@@ -50,15 +50,16 @@ public class ModProxyImpl<T> implements ModProxy<T> {
 
     @Override
     public T build() {
-        if (multiplexer != null && proxies.size() > 1) {
-            return multiplexer.apply(proxies.stream().map(ModEntry::proxy).map(Supplier::get).collect(Collectors.toList()));
+        final var applicableProxies = proxies.stream().filter(proxy -> modLoadedPredicate.test(proxy.modId)).toList();
+        if (multiplexer != null && applicableProxies.size() > 1) {
+            return multiplexer.apply(applicableProxies.stream().map(ModEntry::proxy).map(Supplier::get).collect(Collectors.toList()));
         }
 
-        if (proxies.isEmpty()) {
+        if (applicableProxies.isEmpty()) {
             return fallback;
         }
 
-        return proxies.get(0).proxy().get();
+        return applicableProxies.getFirst().proxy().get();
     }
 
     public Supplier<T> buildLazily() {
