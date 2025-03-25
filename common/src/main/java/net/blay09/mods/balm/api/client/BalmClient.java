@@ -6,6 +6,11 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+
+import java.util.function.Function;
 
 public class BalmClient {
     private static final BalmClientRuntime<BalmRuntimeLoadContext> runtime = BalmClientRuntimeSpi.create();
@@ -42,6 +47,10 @@ public class BalmClient {
         });
     }
 
+    public static void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+        runtime.addResourceReloadListener(identifier, reloadListener);
+    }
+
     public static BalmRenderers getRenderers() {
         return runtime.getRenderers();
     }
@@ -57,7 +66,6 @@ public class BalmClient {
     public static BalmModels getModels() {
         return runtime.getModels();
     }
-
 
     public static BalmClientRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;

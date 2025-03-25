@@ -7,6 +7,8 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmRenderers getRenderers();
@@ -33,4 +35,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void onRuntimeAvailable(Runnable callback);
 
     void registerModule(BalmClientModule module);
+
+    void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
 }

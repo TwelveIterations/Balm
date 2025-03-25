@@ -16,6 +16,12 @@ import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
 import net.blay09.mods.balm.fabric.client.screen.FabricBalmScreens;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.event.client.FabricBalmClientEvents;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +29,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadContext> {
 
@@ -94,6 +102,21 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
         if (isReady()) {
             initializeModule(module);
         }
+    }
+
+    @Override
+    public void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
+            @Override
+            public ResourceLocation getFabricId() {
+                return identifier;
+            }
+
+            @Override
+            public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager manager, Executor backgroundExecutor, Executor gameExecutor) {
+                return reloadListener.reload(barrier, manager, backgroundExecutor, gameExecutor);
+            }
+        });
     }
 
     public void initializeRuntime() {
