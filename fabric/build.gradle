@@ -14,7 +14,7 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    implementation project(":shared")
+    implementation project(":common")
     implementation project(":shared-bridge")
 
     compileOnly "org.jetbrains:annotations:22.0.0"
@@ -55,7 +55,7 @@ loom {
             runDir("build/datagen")
 
             vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${project(":shared").file("src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.output-dir=${project(":common").file("src/main/generated")}"
             vmArg "-Dfabric-api.datagen.modid=${mod_id}"
         }
     }
@@ -70,7 +70,7 @@ sourceSets {
 }
 
 processResources {
-    from project(":shared").sourceSets.main.resources
+    from project(":common").sourceSets.main.resources
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
@@ -79,7 +79,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile) {
-    source(project(":shared").sourceSets.main.allSource)
+    source(project(":common").sourceSets.main.allSource)
     source(project(":shared-bridge").sourceSets.main.allSource)
 }
 

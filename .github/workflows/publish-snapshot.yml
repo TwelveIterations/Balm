@@ -27,7 +27,7 @@ jobs:
             const gradleProperties = fs.readFileSync('gradle.properties', 'utf8');
             const mavenSnapshots = gradleProperties.match(/^(?!#)maven_snapshots\s*=\s*(.+)/m);
             return {
-              loader: ['shared', includeFabric ? 'fabric' : false, includeForge ? 'forge' : false].filter(Boolean),
+              loader: ['common', includeFabric ? 'fabric' : false, includeForge ? 'forge' : false].filter(Boolean),
               task: [mavenSnapshots ? 'publish' : 'build']
             };
   publish-snapshot:

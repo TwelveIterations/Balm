@@ -53,7 +53,7 @@ minecraft {
             mods {
                 "${mod_id}" {
                     source sourceSets.main
-                    source project(":shared").sourceSets.main
+                    source project(":common").sourceSets.main
                 }
             }
         }
@@ -82,7 +82,7 @@ minecraft {
             mods {
                 "${mod_id}" {
                     source sourceSets.main
-                    source project(":shared").sourceSets.main
+                    source project(":common").sourceSets.main
                 }
             }
         }
@@ -111,7 +111,7 @@ minecraft {
             mods {
                 "${mod_id}" {
                     source sourceSets.main
-                    source project(":shared").sourceSets.main
+                    source project(":common").sourceSets.main
                 }
             }
         }
@@ -140,7 +140,7 @@ minecraft {
             mods {
                 "${mod_id}" {
                     source sourceSets.main
-                    source project(":shared").sourceSets.main
+                    source project(":common").sourceSets.main
                 }
             }
         }
@@ -159,7 +159,7 @@ sourceSets {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
-    compileOnly project(":shared")
+    compileOnly project(":common")
 
     compileOnly "org.jetbrains:annotations:22.0.0"
 
@@ -178,7 +178,7 @@ dependencies {
 apply from: 'dependencies.gradle'
 
 tasks.withType(JavaCompile) {
-    source(project(":shared").sourceSets.main.allSource)
+    source(project(":common").sourceSets.main.allSource)
 }
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
@@ -189,7 +189,7 @@ def replaceProperties = [
         mod_id: mod_id, version: version
 ]
 processResources {
-    from project(":shared").sourceSets.main.resources
+    from project(":common").sourceSets.main.resources
 
     inputs.properties replaceProperties
     replaceProperties.put 'project', project

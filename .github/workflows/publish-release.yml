@@ -76,11 +76,11 @@ jobs:
             const modrinthProjectId = gradleProperties.match(/^(?!#)modrinth_project_id\s*=\s*(.+)/m);
             const mavenReleases = gradleProperties.match(/^(?!#)maven_releases\s*=\s*(.+)/m);
             return {
-              loader: ['shared', includeFabric ? 'fabric' : false, includeForge ? 'forge' : false].filter(Boolean),
+              loader: ['common', includeFabric ? 'fabric' : false, includeForge ? 'forge' : false].filter(Boolean),
               site: [curseForgeProjectId ? 'curseforge' : '', modrinthProjectId ? 'modrinth' : '', mavenReleases ? 'publish' : ''].filter(Boolean),
               exclude: [
-                {loader: 'shared', site: 'curseforge'},
-                {loader: 'shared', site: 'modrinth'}
+                {loader: 'common', site: 'curseforge'},
+                {loader: 'common', site: 'modrinth'}
               ]
             }
   build-common:
@@ -101,12 +101,12 @@ jobs:
       - name: Make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: Build common artifact
-        run: ./gradlew :shared:build '-Pversion=${{needs.create-release.outputs.version}}'
+        run: ./gradlew :common:build '-Pversion=${{needs.create-release.outputs.version}}'
       - name: Upload common artifact
         uses: actions/upload-artifact@v4
         with:
-          name: shared-artifact
-          path: shared/build
+          name: common-artifact
+          path: common/build
     needs: create-release
   build-release:
     runs-on: ubuntu-latest
@@ -131,8 +131,8 @@ jobs:
       - name: Download common artifact
         uses: actions/download-artifact@v4
         with:
-          name: shared-artifact
-          path: shared/build
+          name: common-artifact
+          path: common/build
       - name: Build ${{ matrix.loader }} artifact
         run: ./gradlew :${{ matrix.loader }}:build '-Pversion=${{needs.create-release.outputs.version}}'
       - name: Upload ${{ matrix.loader }} artifact
