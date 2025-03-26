@@ -21,7 +21,12 @@
     "MouseHandlerAccessor",
     "ScreenAccessor",
     "MinecraftMixin",
-    "OptionsScreenMixin"
+    "OptionsScreenMixin",
+    "BossHealthOverlayMixin",
+    "ChatComponentMixin",
+    "DebugScreenOverlayMixin",
+    "GuiMixin",
+    "PlayerTabOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1
