@@ -59,7 +59,7 @@ public class ModProxyImpl<T> implements ModProxy<T> {
             return fallback;
         }
 
-        return applicableProxies.getFirst().proxy().get();
+        return applicableProxies.get(0).proxy().get();
     }
 
     public Supplier<T> buildLazily() {
