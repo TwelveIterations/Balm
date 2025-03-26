@@ -8,6 +8,8 @@ import net.minecraft.world.level.material.Fluid;
 
 public class FabricBalmProxy {
     public Fluid enableMilkFluid() {
-        return Registry.register(BuiltInRegistries.FLUID, ResourceLocation.fromNamespaceAndPath("balm-fabric", "milk"), new SimpleMilkFluid());
+        final var milk = Registry.register(BuiltInRegistries.FLUID, ResourceLocation.fromNamespaceAndPath("balm", "milk"), new SimpleMilkFluid());
+        BuiltInRegistries.FLUID.addAlias(ResourceLocation.fromNamespaceAndPath("balm-fabric", "milk"), ResourceLocation.fromNamespaceAndPath("balm", "milk"));
+        return milk;
     }
 }
