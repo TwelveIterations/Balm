@@ -20,6 +20,7 @@ import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
+import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -96,6 +97,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     default void initializeModule(BalmModule module) {
         module.registerConfig(getConfig());
+        module.registerResources(getResources());
+        module.registerComponents(getComponents());
         module.registerBlocks(getBlocks());
         module.registerBlockEntities(getBlockEntities());
         module.registerItems(getItems());
@@ -120,4 +123,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     boolean isReady();
 
     void onRuntimeAvailable(Runnable callback);
+
+    BalmResources getResources();
 }
