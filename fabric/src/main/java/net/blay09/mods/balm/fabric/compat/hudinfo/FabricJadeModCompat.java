@@ -13,7 +13,7 @@ import snownee.jade.api.ui.BoxStyle;
 import snownee.jade.impl.ui.ProgressElement;
 import snownee.jade.impl.ui.SimpleProgressStyle;
 
-@WailaPlugin("balm-fabric")
+@WailaPlugin("balm")
 public class FabricJadeModCompat implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
