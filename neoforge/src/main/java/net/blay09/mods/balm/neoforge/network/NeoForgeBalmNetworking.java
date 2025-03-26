@@ -60,6 +60,11 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
         }
     }
 
+    @Override
+    public void defineNetworkVersion(String modId, String version) {
+        getRegistrations(modId).setNetworkVersion(version);
+    }
+
     private <T> void openGui(ServerPlayer player, BalmMenuProvider<T> menuProvider) {
         player.openMenu(menuProvider, buf -> menuProvider.getScreenStreamCodec().encode(buf, menuProvider.getScreenOpeningData(player)));
     }
@@ -131,6 +136,7 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
         private final String modId;
         private final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> playMessagesByType = new ConcurrentHashMap<>();
         private boolean optional;
+        private String networkVersion;
 
         private Registrations(String modId) {
             this.modId = modId;
@@ -141,6 +147,9 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
             var registrar = event.registrar(modId);
             if (optional) {
                 registrar = registrar.optional();
+            }
+            if (networkVersion != null) {
+                registrar = registrar.versioned(networkVersion);
             }
             for (final var entry : playMessagesByType.entrySet()) {
                 final var messageRegistration = entry.getValue();
@@ -158,6 +167,10 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
 
         public void allowServerOnly() {
             optional = true;
+        }
+
+        public void setNetworkVersion(String networkVersion) {
+            this.networkVersion = networkVersion;
         }
 
         private <TPayload extends CustomPacketPayload> PayloadRegistrar playToServer(PayloadRegistrar registrar, ServerboundMessageRegistration<RegistryFriendlyByteBuf, TPayload> registration) {

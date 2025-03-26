@@ -16,6 +16,8 @@ import java.util.function.BiConsumer;
 public interface BalmNetworking {
     void openMenu(Player player, MenuProvider menuProvider);
 
+    void defineNetworkVersion(String modId, String version);
+
     default void allowClientAndServerOnly(String modId) {
         allowClientOnly(modId);
         allowServerOnly(modId);
