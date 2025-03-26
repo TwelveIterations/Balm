@@ -1,17 +1,4 @@
-- Updated to Minecraft 1.21.5
-- Added `BalmModule` and `BalmClientModule` as an alternative more structured way of initializing a mod with Balm
-- Added `Balm.onRuntimeAvailable` and `BalmClient.onRuntimeAvailable` to allow more stable access to Balm outside of mod loader lifecycles
-- Added `BlockGetter` and `BlockPos` to `DigSpeedEvent`, now sets the final value on all loaders
-- Refactored Capabilities support to reduce mod-loader-specific overhead
-- Refactored Configs to allow for declarative config schemas and cleaner implementation
-- Balm mods no longer need to register their own config sync packet 
-- Added `BalmClient.addResourceReloadListener()`
-- Added `ConfigLoadedEvent`
-- Fixed `ScreenInit` events not firing reliably for all screens on NeoForge
-- Fixed `GuiDrawEvent` not firing on NeoForge
-- Changed config i18n to use `modid.configuration.category.key` format
-- Changed client-side registration methods to require identifiers
-- Removed several obsolete hooks from `BalmHooks`
-- Removed obsolete key mapping methods - use Kuma instead
-- Removed obsolete `BalmTextures`
-- Removed `ExtractionAwareContainer` in favor of `WorldlyContainer`
+- Fixed crash when opening mod menu
+- Fixed crash with Sinytra Connector (again)
+- Added `BalmResources.registerResourceCondition` to register custom resource conditions
+- Added `balm:config` resource condition to check a config option against a stringified value
