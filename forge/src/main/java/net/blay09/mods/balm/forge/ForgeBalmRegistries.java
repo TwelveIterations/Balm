@@ -22,9 +22,8 @@ public class ForgeBalmRegistries implements BalmRegistries {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> DeferredObject<T> register(Registry<T> registry, Function<ResourceLocation, T> supplier, ResourceLocation identifier) {
-        final var register = DeferredRegisters.get((ResourceKey<Registry<T>>) registry.key(), identifier.getNamespace());
+        final var register = DeferredRegisters.get(registry.key(), identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
