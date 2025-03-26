@@ -54,9 +54,9 @@ public class ClothConfigUtils {
     private static void addPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<?> property, ConfigCategory categoryInstance, ConfigBuilder builder) {
         final var schema = property.parentSchema();
         final var i18nBase = schema.identifier().getNamespace() + ".configuration";
-        var categoryI18nBase = i18nBase + "." + property.category();
-        var displayName = Component.translatable(categoryI18nBase + "." + property);
-        var tooltip = Component.translatable(categoryI18nBase + "." + property + ".tooltip");
+        var categoryI18nBase = i18nBase + (property.category().isEmpty() ? "" : ("." + property.category()));
+        var displayName = Component.translatable(categoryI18nBase + "." + property.name());
+        var tooltip = Component.translatable(categoryI18nBase + "." + property.name() + ".tooltip");
         switch (property) {
             case ConfiguredString stringProperty -> categoryInstance.addEntry(
                     builder.entryBuilder().startStrField(displayName, stringProperty.get(config))
