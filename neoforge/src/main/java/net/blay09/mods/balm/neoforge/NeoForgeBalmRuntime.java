@@ -1,7 +1,6 @@
 package net.blay09.mods.balm.neoforge;
 
 import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmProxy;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
@@ -16,7 +15,6 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
-import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
@@ -27,6 +25,7 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
@@ -62,15 +61,12 @@ import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
+public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> {
 
-    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
-    private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
     private final BalmBlocks blocks = new NeoForgeBalmBlocks();
     private final BalmBlockEntities blockEntities = new NeoForgeBalmBlockEntities();
@@ -93,11 +89,8 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmResources resources = new NeoForgeBalmResources();
-    private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
-
-    private boolean ready;
 
     public NeoForgeBalmRuntime() {
         NeoForgeBalmCommonEvents.registerEvents(events);
@@ -290,42 +283,6 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     @Override
     public String getPlatform() {
         return LoaderPlatforms.NEOFORGE;
-    }
-
-    @Override
-    public BalmProxy getProxy() {
-        return proxy.get();
-    }
-
-    @Override
-    public boolean isReady() {
-        return ready;
-    }
-
-    @Override
-    public void onRuntimeAvailable(Runnable callback) {
-        initCallbacks.add(callback);
-        if (isReady()) {
-            callback.run();
-        }
-    }
-
-    @Override
-    public void registerModule(BalmModule module) {
-        modules.add(module);
-        if (isReady()) {
-            initializeModule(module);
-        }
-    }
-
-    public void initializeRuntime() {
-        ready = true;
-        for (final var callback : initCallbacks) {
-            callback.run();
-        }
-        for (final var module : modules) {
-            initializeModule(module);
-        }
     }
 
     @Override

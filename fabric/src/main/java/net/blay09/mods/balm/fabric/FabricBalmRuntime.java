@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.*;
+import net.blay09.mods.balm.api.BalmHooks;
+import net.blay09.mods.balm.api.BalmRegistries;
+import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -14,7 +16,6 @@ import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
-import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
@@ -25,6 +26,7 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
@@ -60,16 +62,13 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
-    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
-    private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
+public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
     private final BalmBlocks blocks = new FabricBalmBlocks();
     private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
@@ -95,10 +94,8 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
             .withFallback(new CommonBalmPermissions())
             .build();
     private final BalmResources resources = new FabricBalmResources();
-    private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
-    private final List<String> addonClasses = new ArrayList<>();
 
-    private boolean ready;
+    private final List<String> addonClasses = new ArrayList<>();
 
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
@@ -306,44 +303,8 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
         return LoaderPlatforms.FABRIC;
     }
 
-    @Override
-    public BalmProxy getProxy() {
-        return proxy.get();
-    }
-
     public List<String> getAddonClasses() {
         return addonClasses;
-    }
-
-    @Override
-    public boolean isReady() {
-        return ready;
-    }
-
-    @Override
-    public void onRuntimeAvailable(Runnable callback) {
-        initCallbacks.add(callback);
-        if (isReady()) {
-            callback.run();
-        }
-    }
-
-    @Override
-    public void registerModule(BalmModule module) {
-        modules.add(module);
-        if (isReady()) {
-            initializeModule(module);
-        }
-    }
-
-    public void initializeRuntime() {
-        ready = true;
-        for (final var callback : initCallbacks) {
-            callback.run();
-        }
-        for (final var module : modules) {
-            initializeModule(module);
-        }
     }
 
     @Override
