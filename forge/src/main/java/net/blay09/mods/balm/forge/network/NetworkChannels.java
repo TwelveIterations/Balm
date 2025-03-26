@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.forge.network;
 
+import net.blay09.mods.balm.api.network.NetworkVersions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -34,5 +35,9 @@ public class NetworkChannels {
 
     private static boolean defaultVersionCheck(String it) {
         return it.equals(version);
+    }
+
+    public static void defineNetworkVersion(String modId, String version) {
+        // NOOP because I can't be bothered backporting this
     }
 }

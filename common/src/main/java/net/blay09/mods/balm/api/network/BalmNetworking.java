@@ -16,6 +16,8 @@ import java.util.function.Function;
 public interface BalmNetworking {
     void openGui(Player player, MenuProvider menuProvider);
 
+    void defineNetworkVersion(String modId, String version);
+
     default void allowClientAndServerOnly(String modId) {
         allowClientOnly(modId);
         allowServerOnly(modId);

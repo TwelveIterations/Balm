@@ -65,6 +65,11 @@ public class ForgeBalmNetworking implements BalmNetworking {
     }
 
     @Override
+    public void defineNetworkVersion(String modId, String version) {
+        NetworkChannels.defineNetworkVersion(modId, version);
+    }
+
+    @Override
     public <T> void reply(T message) {
         if (replyContext == null) {
             throw new IllegalStateException("No context to reply to");
