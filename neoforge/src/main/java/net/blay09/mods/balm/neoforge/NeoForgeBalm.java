@@ -28,6 +28,8 @@ public class NeoForgeBalm {
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
         Balm.getCommands().register(BalmCommand::register);
 
+        Balm.getNetworking().defineNetworkVersion("balm", "2");
+
         Balm.getResources().registerResourceCondition(ResourceLocation.fromNamespaceAndPath("balm", "config"), ConfigResourceCondition.CODEC);
         DeferredRegisters.register("balm", modBus);
 
