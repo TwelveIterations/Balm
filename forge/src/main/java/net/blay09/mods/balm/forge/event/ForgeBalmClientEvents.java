@@ -262,7 +262,7 @@ public class ForgeBalmClientEvents {
 
         events.registerEvent(FovUpdateEvent.class, priority -> {
             MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (ComputeFovModifierEvent orig) -> {
-                final FovUpdateEvent event = new FovUpdateEvent(orig.getPlayer());
+                final FovUpdateEvent event = new FovUpdateEvent(orig.getPlayer(), orig.getFovModifier());
                 events.fireEventHandlers(priority, event);
                 if (event.getFov() != null) {
                     orig.setNewFovModifier(event.getFov());
