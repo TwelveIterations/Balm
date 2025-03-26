@@ -1,10 +1,27 @@
 # Balm
 
-Minecraft Mod. Abstraction Layer (but not really)™ for Blay's multiplatform mods.
+Minecraft Library Mod. Abstraction Layer for Multiplatform Mods.
 
-This is a library mod that allows Blay's mods to be built for both Forge and Fabric without needing separate codebases.
+Balm is a library mod for mod developers that simplifies the process of creating multi-loader mods by providing common
+interfaces and events and removing the need for most mod-loader specific code.
 
-- [Modpack Permissions](https://mods.twelveiterations.com/permissions)
+It is not a magic solution for running Forge and Fabric mods together. As a user, you only need to install this mod if
+you use a mod that requires it.
+
+## Key Points
+
+- No custom Gradle tooling, official mod loader plugins only
+- Uses Mojang Mappings, supports [Jared's MultiLoader-Template](https://github.com/jaredlll08/MultiLoader-Template)
+- All-inclusive from networking to configs, no third party dependencies
+- Battle-tested across Blay's 20+ mods ranging from content additions to quality of life utilities
+- Supports NeoForge, Fabric and Forge without duplicate code
+- Unified support for Third Party Mods like Curios/Trinkets or Jade/TheOneProbe
+
+## How to make a mod with Balm
+
+You can get started [using this template repository](https://github.com/TwelveIterationMods/balm-mod).
+There is no documentation, but the template gives an overview of most features, and you can browse [Blay's other mods'
+code](https://github.com/TwelveIterationMods) to learn how specific things are done.
 
 #### Downloads
 
@@ -25,9 +42,10 @@ repositories {
 dependencies {
     // Replace ${balm_file_id} with the id of the file you want to depend on.
     // You can find it in the URL of the file on CurseForge (e.g. 3914527).
-    // Forge: implementation fg.deobf("curse.maven:balm-531761:${balm_file_id}")
+    // NeoForge: implementation "curse.maven:balm-531761:${balm_file_id}"
     // Fabric (1.21.5+): modImplementation "curse.maven:balm-531761:${balm_file_id}"
-    // Fabric (other): modImplementation "curse.maven:balm-fabric-500525:${balm_file_id}"
+    // Fabric (older versions): modImplementation "curse.maven:balm-fabric-500525:${balm_file_id}"
+    // Forge: implementation "curse.maven:balm-531761:${balm_file_id}"
 }
 ```
 
@@ -37,9 +55,9 @@ Add the following to your `build.gradle`:
 
 ```groovy
 repositories {
-    maven { 
-        url "https://maven.twelveiterations.com/repository/maven-public/" 
-        
+    maven {
+        url "https://maven.twelveiterations.com/repository/maven-public/"
+
         content {
             includeGroup "net.blay09.mods"
         }
@@ -48,19 +66,22 @@ repositories {
 
 dependencies {
     // Replace ${balm_version} with the version you want to depend on. 
-    // You may also have to change the Minecraft version in the artifact name.
     // You can find the latest version for a given Minecraft version at https://maven.twelveiterations.com/service/rest/repository/browse/maven-public/net/blay09/mods/balm-common/
     // Common (mojmap): implementation "net.blay09.mods:balm-common:${balm_version}"
-    // Forge: implementation fg.deobf("net.blay09.mods:balm-forge:${balm_version}")
+    // NeoForge: implementation "net.blay09.mods:balm-neoforge:${balm_version}"
     // Fabric: modImplementation "net.blay09.mods:balm-fabric:${balm_version}"
+    // Forge: implementation "net.blay09.mods:balm-forge:${balm_version}"
 }
 ```
 
 ## Contributing
 
-If you're interested in contributing to the mod, you can check out [issues labelled as "help wanted"](https://github.com/TwelveIterationMods/Balm/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22). 
+If you're interested in contributing to the mod, you can check
+out [issues labelled as "help wanted"](https://github.com/TwelveIterationMods/Balm/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
 
-When it comes to new features, it's best to confer with me first to ensure we share the same vision. You can join us on [Discord](https://discord.gg/VAfZ2Nau6j) if you'd like to talk.
+When it comes to new features, it's best to confer with me first to ensure we share the same vision. You can join us
+on [Discord](https://discord.gg/VAfZ2Nau6j) if you'd like to talk.
 
-Contributions must be done through pull requests. I will not be able to accept translations, code or other assets through any other channels.
+Contributions must be done through pull requests. I will not be able to accept translations, code or other assets
+through any other channels.
 
