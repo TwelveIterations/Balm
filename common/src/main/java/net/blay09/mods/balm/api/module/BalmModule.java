@@ -14,6 +14,7 @@ import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
+import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -74,5 +75,8 @@ public interface BalmModule {
     }
 
     default void initialize() {
+    }
+
+    default void registerResources(BalmResources resources) {
     }
 }
