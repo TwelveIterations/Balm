@@ -6,6 +6,7 @@ import net.blay09.mods.balm.common.command.BalmCommand;
 import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
+import net.blay09.mods.balm.common.resources.ConfigResourceCondition;
 import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmCapabilities;
@@ -26,6 +27,9 @@ public class NeoForgeBalm {
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
         Balm.getCommands().register(BalmCommand::register);
+
+        Balm.getResources().registerResourceCondition(ResourceLocation.fromNamespaceAndPath("balm", "config"), ConfigResourceCondition.CODEC);
+        DeferredRegisters.register("balm", modBus);
 
         NeoForgeBalmWorldGen.initializeBalmBiomeModifiers(modBus);
         modBus.addListener(this::enqueueIMC);
