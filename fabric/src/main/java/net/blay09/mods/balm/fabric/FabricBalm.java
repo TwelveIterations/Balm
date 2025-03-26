@@ -55,21 +55,14 @@ public class FabricBalm implements ModInitializer {
         ((FabricBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         ((FabricBalmHooks) Balm.getHooks()).initialize();
-        ConfigSync.initialize();
+
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
-        Balm.getCommands().register(BalmCommand::register);
-
-        Balm.getNetworking().defineNetworkVersion("balm", "2");
-
-        Balm.getResources().registerResourceCondition(ResourceLocation.fromNamespaceAndPath("balm", "config"), ConfigResourceCondition.CODEC);
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();
             ((BalmEntity) newPlayer).setFabricBalmData(data);
         });
-
-        CommonCapabilities.initialize(Balm.getCapabilities());
 
         ItemStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
             private boolean running;

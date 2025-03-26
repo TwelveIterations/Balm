@@ -23,20 +23,13 @@ public class NeoForgeBalm {
     public NeoForgeBalm(IEventBus modBus) {
         ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
-        ConfigSync.initialize();
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
-        Balm.getCommands().register(BalmCommand::register);
 
-        Balm.getNetworking().defineNetworkVersion("balm", "2");
-
-        Balm.getResources().registerResourceCondition(ResourceLocation.fromNamespaceAndPath("balm", "config"), ConfigResourceCondition.CODEC);
         DeferredRegisters.register("balm", modBus);
 
         NeoForgeBalmWorldGen.initializeBalmBiomeModifiers(modBus);
         modBus.addListener(this::enqueueIMC);
-
-        CommonCapabilities.initialize(Balm.getCapabilities());
 
         NeoForgeBalmCapabilities capabilities = (NeoForgeBalmCapabilities) Balm.getCapabilities();
         capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "item_handler"), Capabilities.ItemHandler.BLOCK);

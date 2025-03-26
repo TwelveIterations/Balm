@@ -52,6 +52,8 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
         for (final var module : modules) {
             initializeModule(module);
         }
+
+        registerModule(new BaseModule());
     }
 
 }
