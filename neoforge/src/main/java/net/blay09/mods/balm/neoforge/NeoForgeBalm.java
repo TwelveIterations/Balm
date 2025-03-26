@@ -42,6 +42,8 @@ public class NeoForgeBalm {
         ExampleConfig.initialize();
         Balm.getCommands().register(BalmCommand::register);
 
+        Balm.getNetworking().defineNetworkVersion("balm", "2");
+
         NeoForgeBalmWorldGen.initializeBalmBiomeModifiers(modBus);
         modBus.addListener(NeoForgeBalmClient::onInitializeClient);
         modBus.addListener(this::enqueueIMC);

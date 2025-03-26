@@ -62,6 +62,11 @@ public class ForgeBalmNetworking implements BalmNetworking {
         }
     }
 
+    @Override
+    public void defineNetworkVersion(String modId, String version) {
+        NetworkChannels.defineNetworkVersion(modId, version);
+    }
+
     private <T> void openGui(ServerPlayer player, BalmMenuProvider<T> menuProvider) {
         // TODO we have to create a RegistryFriendlyByteBuf ourselves because Forge is out of date
         player.openMenu(menuProvider,
