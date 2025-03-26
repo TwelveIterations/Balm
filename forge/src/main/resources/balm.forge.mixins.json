@@ -23,7 +23,12 @@
     "ScreenAccessor",
     "MinecraftMixin",
     "ModelBakeryMixin",
-    "OptionsScreenMixin"
+    "OptionsScreenMixin",
+    "BossHealthOverlayMixin",
+    "ChatComponentMixin",
+    "DebugScreenOverlayMixin",
+    "GuiMixin",
+    "PlayerTabOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1
