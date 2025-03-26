@@ -39,7 +39,12 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
-        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, "main");
+        return registerModel(location, "main", layerDefinition);
+    }
+
+    @Override
+    public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
+        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, layer);
         getRegistrations(location.getNamespace()).layerDefinitions.put(modelLayerLocation, layerDefinition);
         return modelLayerLocation;
     }

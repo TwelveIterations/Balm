@@ -23,6 +23,8 @@ import java.util.function.Supplier;
 public interface BalmRenderers {
     ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition);
 
+    ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition);
+
     <T extends Entity> void registerEntityRenderer(ResourceLocation id, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
 
     <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation id, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
