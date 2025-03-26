@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.fabric.network;
 
+import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.balm.api.network.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -102,12 +103,12 @@ public class FabricBalmNetworking implements BalmNetworking {
         networkVersions.put(modId, version);
     }
 
-    public Optional<NetworkVersions> getNetworkVersions(String modId) {
+    public Optional<NetworkVersions> getNetworkVersions(String modId, BalmEnvironment environment) {
         return FabricLoader.getInstance().getModContainer(modId)
                 .map(modContainer -> modContainer.getMetadata().getVersion().toString())
                 .map(modVersion -> {
                     final var networkVersion = networkVersions.getOrDefault(modId, modVersion);
-                    return new NetworkVersions(modVersion, networkVersion);
+                    return new NetworkVersions(modVersion, networkVersion, environment == BalmEnvironment.CLIENT ? isClientOnly(modId) : isServerOnly(modId));
                 });
     }
 
