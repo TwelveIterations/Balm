@@ -16,7 +16,10 @@ public class ModMenuIntegration implements ModMenuApi {
         final var result = new HashMap<String, ConfigScreenFactory<?>>();
         for (final var schema : Balm.getConfig().getSchemas()) {
             final var namespace = schema.identifier().getNamespace();
-            result.put(namespace, ModMenuUtils.getConfigScreen(namespace));
+            final var screenFactory = ModMenuUtils.getConfigScreen(namespace);
+            if (screenFactory != null) {
+                result.put(namespace, screenFactory);
+            }
         }
         return result;
     }
