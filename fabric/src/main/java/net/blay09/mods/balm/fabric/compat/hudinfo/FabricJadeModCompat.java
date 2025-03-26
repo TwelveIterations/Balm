@@ -11,7 +11,7 @@ import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.impl.ui.ProgressArrowElement;
 
-@WailaPlugin("balm-fabric")
+@WailaPlugin("balm")
 public class FabricJadeModCompat implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {

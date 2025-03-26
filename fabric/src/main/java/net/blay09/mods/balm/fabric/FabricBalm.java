@@ -80,7 +80,7 @@ public class FabricBalm implements ModInitializer {
             return null;
         });
 
-        Balm.getNetworking().registerServerboundPacket(new ResourceLocation("balm-fabric", "mod_list"),
+        Balm.getNetworking().registerServerboundPacket(new ResourceLocation("balm", "mod_list"),
                 ServerboundModListMessage.class, (message, buf) -> {
                     buf.writeVarInt(message.modList().size());
                     message.modList().forEach((modId, version) -> {
