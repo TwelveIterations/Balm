@@ -1,10 +1,7 @@
-- Revert parts of initial fix to fix another threading issue causing a crash on startup
-  - Never doing workarounds for Sinytra Connector again
-
----
-
-- Fixed threading issue causing Balm to not initialize things correctly when multiple Balm mods are present, causing lots of weird followup issues
-
----
-
-- Fixed crash when mods falsely access Balm too early e.g. due to Sinytra Connector
+- Fixed GuiDrawEvent not firing on Forge and NeoForge
+- Fixed crash with Sinytra Connector (again)
+- Added `BalmNetworking.defineNetworkVersion` for more control over network compatibility
+  - Fabric's remote version check now uses the network version (which defaults to the mod version)
+  - Network version is also used to version the channel on Forge and NeoForge
+- Added remote version verification even on client/server-only compatible mods if they are installed on both sides
+- Added `BalmResources.registerResourceCondition`
