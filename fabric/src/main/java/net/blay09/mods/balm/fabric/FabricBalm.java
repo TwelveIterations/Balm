@@ -2,6 +2,7 @@ package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.AbstractBalmConfig;
+import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.entity.BalmEntity;
@@ -20,9 +21,6 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -92,55 +90,51 @@ public class FabricBalm implements ModInitializer {
                         buf.writeUtf(modId);
                         buf.writeUtf(versions.modVersion());
                         buf.writeUtf(versions.networkVersion());
+                        buf.writeBoolean(versions.requireRemote());
                     });
                 }, (buf) -> {
                     final var modVersions = new HashMap<String, NetworkVersions>();
                     final var modCount = buf.readVarInt();
                     for (int i = 0; i < modCount; i++) {
                         String modId = buf.readUtf();
-                        modVersions.put(modId, new NetworkVersions(buf.readUtf(), buf.readUtf()));
+                        modVersions.put(modId, new NetworkVersions(buf.readUtf(), buf.readUtf(), buf.readBoolean()));
                     }
                     return new ServerboundModListMessage(modVersions);
                 }, (player, message) -> {
                     final var networking = (FabricBalmNetworking) Balm.getNetworking();
                     for (final var entry : message.modList().entrySet()) {
                         final var modId = entry.getKey();
-                        if (networking.isClientOnly(modId) || networking.isServerOnly(modId)) {
-                            continue;
-                        }
-
                         final var clientVersions = entry.getValue();
-                        final var clientNetworkVersion = clientVersions.networkVersion();
-                        final var serverVersionsOpt = networking.getNetworkVersions(modId);
+                        final var serverVersionsOpt = networking.getNetworkVersions(modId, BalmEnvironment.SERVER);
                         if (serverVersionsOpt.isEmpty()) {
-                            player.connection.disconnect(Component.translatable("disconnect.balm.mod_missing_on_server",
-                                    Component.literal(modId).withStyle(ChatFormatting.RED)));
-                            return;
+                            if (clientVersions.requireRemote()) {
+                                player.connection.disconnect(Component.translatable("disconnect.balm.mod_missing_on_server",
+                                        Component.literal(modId).withStyle(ChatFormatting.RED)));
+                                return;
+                            } else {
+                                continue;
+                            }
                         }
 
                         final var serverVersions = serverVersionsOpt.get();
-                        if (!clientNetworkVersion.equals(serverVersions.networkVersion())) {
-                            final var clientModVersion = clientVersions.modVersion();
-                            final var serverModVersion = serverVersions.modVersion();
+                        if (!clientVersions.networkVersion().equals(serverVersions.networkVersion())) {
                             player.connection.disconnect(Component.translatable("disconnect.balm.mod_version_mismatch",
                                     Component.literal(modId).withStyle(ChatFormatting.GOLD),
-                                    Component.literal(serverModVersion).withStyle(ChatFormatting.GREEN),
-                                    Component.literal(clientModVersion).withStyle(ChatFormatting.RED)));
+                                    Component.literal(serverVersions.modVersion()).withStyle(ChatFormatting.GREEN),
+                                    Component.literal(clientVersions.modVersion()).withStyle(ChatFormatting.RED)));
                             return;
                         }
                     }
 
                     for (final var modId : networking.getRegisteredMods()) {
-                        if (!networking.isServerOnly(modId) && !networking.isClientOnly(modId)) {
-                            if (!message.modList().containsKey(modId)) {
-                                networking.getNetworkVersions(modId).ifPresent(serverVersions -> {
-                                    final var serverModVersion = serverVersions.modVersion();
-                                    player.connection.disconnect(Component.translatable("disconnect.balm.mod_missing_on_client",
-                                            Component.literal(modId).withStyle(ChatFormatting.RED),
-                                            Component.literal(modId).withStyle(ChatFormatting.GOLD),
-                                            Component.literal(serverModVersion).withStyle(ChatFormatting.GREEN)));
-                                });
-                            }
+                        final var serverVersions = networking.getNetworkVersions(modId, BalmEnvironment.SERVER).orElseThrow();
+                        if (serverVersions.requireRemote() && !message.modList().containsKey(modId)) {
+                            final var serverModVersion = serverVersions.modVersion();
+                            player.connection.disconnect(Component.translatable("disconnect.balm.mod_missing_on_client",
+                                    Component.literal(modId).withStyle(ChatFormatting.RED),
+                                    Component.literal(modId).withStyle(ChatFormatting.GOLD),
+                                    Component.literal(serverModVersion).withStyle(ChatFormatting.GREEN)));
+                            return;
                         }
                     }
                 });

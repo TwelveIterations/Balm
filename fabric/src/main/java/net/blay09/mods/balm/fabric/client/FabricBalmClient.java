@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric.client;
 
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.client.BalmClient;
 import net.blay09.mods.balm.api.event.client.ConnectedToServerEvent;
 import net.blay09.mods.balm.api.event.client.DisconnectedFromServerEvent;
@@ -29,10 +30,8 @@ public class FabricBalmClient implements ClientModInitializer {
             final var networking = (FabricBalmNetworking) Balm.getNetworking();
             final var modVersions = new HashMap<String, NetworkVersions>();
             for (final var modId : networking.getRegisteredMods()) {
-                networking.getNetworkVersions(modId).ifPresent(clientVersions -> {
-                    if (!networking.isClientOnly(modId) && !networking.isServerOnly(modId)) {
-                        modVersions.put(modId, clientVersions);
-                    }
+                networking.getNetworkVersions(modId, BalmEnvironment.CLIENT).ifPresent(clientVersions -> {
+                    modVersions.put(modId, clientVersions);
                 });
             }
             Balm.getNetworking().sendToServer(new ServerboundModListMessage(modVersions));
