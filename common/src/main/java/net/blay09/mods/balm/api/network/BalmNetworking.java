@@ -17,6 +17,8 @@ import java.util.function.Function;
 public interface BalmNetworking {
     void openMenu(Player player, MenuProvider menuProvider);
 
+    void defineNetworkVersion(String modId, String version);
+
     /**
      * @deprecated Use {@link #openMenu(Player, MenuProvider)} instead.
      */

@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
-public record ServerboundModListMessage(Map<String, String> modList) implements CustomPacketPayload {
+public record ServerboundModListMessage(Map<String, NetworkVersions> modList) implements CustomPacketPayload {
 
     public static final Type<ServerboundModListMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath("balm", "mod_list"));
 

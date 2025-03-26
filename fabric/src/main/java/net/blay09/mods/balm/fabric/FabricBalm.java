@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.api.fluid.FluidTank;
+import net.blay09.mods.balm.api.network.NetworkVersions;
 import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.command.BalmCommand;
@@ -20,6 +21,8 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -47,6 +50,8 @@ public class FabricBalm implements ModInitializer {
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
         ExampleConfig.initialize();
         Balm.getCommands().register(BalmCommand::register);
+
+        Balm.getNetworking().defineNetworkVersion("balm", "2");
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();
@@ -83,17 +88,19 @@ public class FabricBalm implements ModInitializer {
         Balm.getNetworking().registerServerboundPacket(ServerboundModListMessage.TYPE,
                 ServerboundModListMessage.class, (buf, message) -> {
                     buf.writeVarInt(message.modList().size());
-                    message.modList().forEach((modId, version) -> {
+                    message.modList().forEach((modId, versions) -> {
                         buf.writeUtf(modId);
-                        buf.writeUtf(version);
+                        buf.writeUtf(versions.modVersion());
+                        buf.writeUtf(versions.networkVersion());
                     });
                 }, (buf) -> {
-                    final var modList = new HashMap<String, String>();
+                    final var modVersions = new HashMap<String, NetworkVersions>();
                     final var modCount = buf.readVarInt();
                     for (int i = 0; i < modCount; i++) {
-                        modList.put(buf.readUtf(), buf.readUtf());
+                        String modId = buf.readUtf();
+                        modVersions.put(modId, new NetworkVersions(buf.readUtf(), buf.readUtf()));
                     }
-                    return new ServerboundModListMessage(modList);
+                    return new ServerboundModListMessage(modVersions);
                 }, (player, message) -> {
                     final var networking = (FabricBalmNetworking) Balm.getNetworking();
                     for (final var entry : message.modList().entrySet()) {
@@ -102,20 +109,23 @@ public class FabricBalm implements ModInitializer {
                             continue;
                         }
 
-                        final var clientVersion = entry.getValue();
-                        final var modContainer = FabricLoader.getInstance().getModContainer(modId).orElse(null);
-                        if (modContainer == null) {
+                        final var clientVersions = entry.getValue();
+                        final var clientNetworkVersion = clientVersions.networkVersion();
+                        final var serverVersionsOpt = networking.getNetworkVersions(modId);
+                        if (serverVersionsOpt.isEmpty()) {
                             player.connection.disconnect(Component.translatable("disconnect.balm.mod_missing_on_server",
                                     Component.literal(modId).withStyle(ChatFormatting.RED)));
                             return;
                         }
 
-                        final var serverVersion = modContainer.getMetadata().getVersion().toString();
-                        if (!clientVersion.equals(serverVersion)) {
+                        final var serverVersions = serverVersionsOpt.get();
+                        if (!clientNetworkVersion.equals(serverVersions.networkVersion())) {
+                            final var clientModVersion = clientVersions.modVersion();
+                            final var serverModVersion = serverVersions.modVersion();
                             player.connection.disconnect(Component.translatable("disconnect.balm.mod_version_mismatch",
                                     Component.literal(modId).withStyle(ChatFormatting.GOLD),
-                                    Component.literal(serverVersion).withStyle(ChatFormatting.GREEN),
-                                    Component.literal(clientVersion).withStyle(ChatFormatting.RED)));
+                                    Component.literal(serverModVersion).withStyle(ChatFormatting.GREEN),
+                                    Component.literal(clientModVersion).withStyle(ChatFormatting.RED)));
                             return;
                         }
                     }
@@ -123,14 +133,13 @@ public class FabricBalm implements ModInitializer {
                     for (final var modId : networking.getRegisteredMods()) {
                         if (!networking.isServerOnly(modId) && !networking.isClientOnly(modId)) {
                             if (!message.modList().containsKey(modId)) {
-                                final var modContainer = FabricLoader.getInstance().getModContainer(modId).orElse(null);
-                                if (modContainer != null) {
-                                    final var serverVersion = modContainer.getMetadata().getVersion().toString();
+                                networking.getNetworkVersions(modId).ifPresent(serverVersions -> {
+                                    final var serverModVersion = serverVersions.modVersion();
                                     player.connection.disconnect(Component.translatable("disconnect.balm.mod_missing_on_client",
                                             Component.literal(modId).withStyle(ChatFormatting.RED),
                                             Component.literal(modId).withStyle(ChatFormatting.GOLD),
-                                            Component.literal(serverVersion).withStyle(ChatFormatting.GREEN)));
-                                }
+                                            Component.literal(serverModVersion).withStyle(ChatFormatting.GREEN)));
+                                });
                             }
                         }
                     }

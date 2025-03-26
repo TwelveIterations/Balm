@@ -1,16 +1,14 @@
 package net.blay09.mods.balm.fabric.network;
 
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
-import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.network.ClientboundMessageRegistration;
-import net.blay09.mods.balm.api.network.MessageRegistration;
-import net.blay09.mods.balm.api.network.ServerboundMessageRegistration;
+import net.blay09.mods.balm.api.network.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -26,19 +24,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 public class FabricBalmNetworking implements BalmNetworking {
 
     private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new HashMap<>();
     private static PacketSender replyPacketSender;
-    private final Set<String> registeredMods = new HashSet<>();
-    private final Set<String> clientOnlyMods = new HashSet<>();
-    private final Set<String> serverOnlyMods = new HashSet<>();
+    private final Set<String> registeredMods = Collections.synchronizedSet(new HashSet<>());
+    private final Set<String> clientOnlyMods = Collections.synchronizedSet(new HashSet<>());
+    private final Set<String> serverOnlyMods = Collections.synchronizedSet(new HashSet<>());
+    private final Map<String, String> networkVersions = Collections.synchronizedMap(new HashMap<>());
 
     public static void initializeClientHandlers() {
         for (final var messageRegistration : messagesByType.values()) {
@@ -102,6 +98,20 @@ public class FabricBalmNetworking implements BalmNetworking {
     }
 
     @Override
+    public void defineNetworkVersion(String modId, String version) {
+        networkVersions.put(modId, version);
+    }
+
+    public Optional<NetworkVersions> getNetworkVersions(String modId) {
+        return FabricLoader.getInstance().getModContainer(modId)
+                .map(modContainer -> modContainer.getMetadata().getVersion().toString())
+                .map(modVersion -> {
+                    final var networkVersion = networkVersions.getOrDefault(modId, modVersion);
+                    return new NetworkVersions(modVersion, networkVersion);
+                });
+    }
+
+    @Override
     public <T extends CustomPacketPayload> void reply(T message) {
         if (replyPacketSender == null) {
             throw new IllegalStateException("No context to reply to");
@@ -162,4 +172,5 @@ public class FabricBalmNetworking implements BalmNetworking {
             replyPacketSender = null;
         })));
     }
+
 }

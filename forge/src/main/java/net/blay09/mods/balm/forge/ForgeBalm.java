@@ -24,6 +24,8 @@ public class ForgeBalm {
     public ForgeBalm(FMLJavaModLoadingContext context) {
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
+        Balm.getNetworking().defineNetworkVersion("balm", "2");
+
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
         ExampleConfig.initialize();
         Balm.getCommands().register(BalmCommand::register);
