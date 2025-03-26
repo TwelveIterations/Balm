@@ -5,14 +5,20 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class FovUpdateEvent extends BalmEvent {
     private final LivingEntity entity;
+    private final float originalFov;
     private Float fov;
 
-    public FovUpdateEvent(LivingEntity entity) {
+    public FovUpdateEvent(LivingEntity entity, float originalFov) {
         this.entity = entity;
+        this.originalFov = originalFov;
     }
 
     public LivingEntity getEntity() {
         return entity;
+    }
+
+    public float getOriginalFov() {
+        return originalFov;
     }
 
     public Float getFov() {
