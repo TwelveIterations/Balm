@@ -4,5 +4,5 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceLocation;
 
 public interface BalmResources {
-    void registerResourceCondition(ResourceLocation identifier, MapCodec<BalmResourceCondition> codec);
+    <T extends BalmResourceCondition> void registerResourceCondition(ResourceLocation identifier, MapCodec<T> codec);
 }
