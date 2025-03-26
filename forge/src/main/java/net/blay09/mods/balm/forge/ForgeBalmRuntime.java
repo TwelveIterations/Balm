@@ -21,6 +21,7 @@ import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
 import net.blay09.mods.balm.api.proxy.*;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
+import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -43,6 +44,7 @@ import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
+import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
 import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
 import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
@@ -88,6 +90,7 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
+    private final BalmResources resources = new ForgeBalmResources();
     private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
@@ -308,5 +311,10 @@ public class ForgeBalmRuntime implements BalmRuntime<ForgeLoadContext> {
         for (final var callback : initCallbacks) {
             callback.run();
         }
+    }
+
+    @Override
+    public BalmResources getResources() {
+        return resources;
     }
 }

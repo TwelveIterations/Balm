@@ -19,7 +19,7 @@ public class DeferredRegisters {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> DeferredRegister<T> get(ResourceKey<Registry<T>> registry, String modId) {
+    public static <T> DeferredRegister<T> get(ResourceKey<? extends Registry<T>> registry, String modId) {
         DeferredRegister<?> register = deferredRegisters.get(registry, modId);
         if (register == null) {
             register = DeferredRegister.create(registry, modId);
