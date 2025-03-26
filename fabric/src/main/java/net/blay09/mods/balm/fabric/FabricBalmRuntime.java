@@ -20,6 +20,7 @@ import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.*;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
+import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -42,6 +43,7 @@ import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
+import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
 import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
@@ -92,6 +94,7 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
             .build();
+    private final BalmResources resources = new FabricBalmResources();
     private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -341,5 +344,10 @@ public class FabricBalmRuntime implements BalmRuntime<EmptyLoadContext> {
         for (final var module : modules) {
             initializeModule(module);
         }
+    }
+
+    @Override
+    public BalmResources getResources() {
+        return resources;
     }
 }
