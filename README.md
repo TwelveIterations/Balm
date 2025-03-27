@@ -31,12 +31,16 @@ using it, I think it's important to understand the implications of depending on 
 First and foremost, Balm is a library for my own set of mods, and I need it to be stable as such. I think it's great if
 other developers want to use it, but you should be aware of the risks in using it over an open source project.
 
+### Forks cannot be publicly released
+
 The choice for Balm to remain All Rights Reserved is largely a pragmatic decision: If a fork of Balm were to
 be published without necessary precautions (different package name, different mod id, sufficiently different name), it
 would cause problems both for me on a technical level, and users in terms of confusion. Realistically, a serious fork
 would make the necessary naming changes anyway, but the world of Minecraft Modding is unforgiving, and I've seen too
 much happen in a decade of modding. In return this means that by using Balm, you risk the possibility of Balm being
 discontinued without any recourse (which I wouldn't do, but anyone could say that!).
+
+### Binaries cannot be freely redistributed
 
 Being designated ARR also helps me fight against malicious re-uploads from bad actors, and improves moderation efforts
 and file attribution on mod hosting platforms. Mod packs can't accidentally ship a custom or unattributed jar of
@@ -46,9 +50,13 @@ third party downloads / API access), you risk the possibility of Balm being remo
 installation of your dependent mod more difficult for users (I'm not going to remove Balm from either platform, but
 anyone could say that!).
 
+### There is no team or developer community behind Balm
+
 It also should be noted that while Balm does have 100m+ downloads, the vast majority of those are from my own mods. At
 the moment, there's probably only ~5 other developers who also use Balm to develop their mods. There is no team or
 community behind Balm, it's a one-person operation.
+
+### Alternatives to Balm
 
 If this is a deal-breaker for you (it would be for me), I recommend
 using [Architectury](https://github.com/architectury/architectury)
