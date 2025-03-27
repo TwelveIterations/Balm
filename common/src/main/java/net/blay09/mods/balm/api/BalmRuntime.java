@@ -98,6 +98,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     default void initializeModule(BalmModule module) {
         module.registerConfig(getConfig());
         module.registerResources(getResources());
+        module.registerAdditional(getRegistries());
         module.registerComponents(getComponents());
         module.registerBlocks(getBlocks());
         module.registerBlockEntities(getBlockEntities());

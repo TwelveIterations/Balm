@@ -37,7 +37,7 @@ The choice for Balm to remain All Rights Reserved is largely a pragmatic decisio
 be published without necessary precautions (different package name, different mod id, sufficiently different name), it
 would cause problems both for me on a technical level, and users in terms of confusion. Realistically, a serious fork
 would make the necessary naming changes anyway, but the world of Minecraft Modding is unforgiving, and I've seen too
-much happen in a decade of modding. 
+much happen in a decade of modding.
 
 In return this means that by using Balm, you risk the possibility of Balm being
 discontinued without any recourse (which I wouldn't do, but anyone could say that!).
@@ -50,7 +50,8 @@ Balm, which in my experience happens more often than you'd think.
 
 In return however this means that Balm cannot be
 freely redistributed on third party platforms, and while it is both available on CurseForge and Modrinth (including
-third party downloads / API access), you risk the possibility of Balm being removed from either platform, which would make
+third party downloads / API access), you risk the possibility of Balm being removed from either platform, which would
+make
 installation of your dependent mod more difficult for users (I'm not going to remove Balm from either platform, but
 anyone could say that!).
 
@@ -67,8 +68,8 @@ using [Architectury](https://github.com/architectury/architectury)
 instead, which is licensed under LGPL at the time of this writing and has a greater developer community around it.
 
 Alternatively, roll your own solution
-using [Jared's MultiLoader-Template](https://github.com/jaredlll08/MultiLoader-Template)
-instead, which is what I did with Balm because I didn't want to depend on a third party that I realistically would not
+using [Jared's MultiLoader-Template](https://github.com/jaredlll08/MultiLoader-Template), which is what I did with Balm
+because I didn't want to depend on a third party that I realistically would not
 be able to maintain myself (and the fact that I didn't want to deal with custom gradle plugins).
 
 If you like to live on the edge, feel free to give Balm a try! I'm glad if it can be useful for others, and if it wasn't
