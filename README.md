@@ -31,20 +31,24 @@ using it, I think it's important to understand the implications of depending on 
 First and foremost, Balm is a library for my own set of mods, and I need it to be stable as such. I think it's great if
 other developers want to use it, but you should be aware of the risks in using it over an open source project.
 
-### Forks cannot be publicly released
+### Forks of Balm cannot be publicly released
 
 The choice for Balm to remain All Rights Reserved is largely a pragmatic decision: If a fork of Balm were to
 be published without necessary precautions (different package name, different mod id, sufficiently different name), it
 would cause problems both for me on a technical level, and users in terms of confusion. Realistically, a serious fork
 would make the necessary naming changes anyway, but the world of Minecraft Modding is unforgiving, and I've seen too
-much happen in a decade of modding. In return this means that by using Balm, you risk the possibility of Balm being
+much happen in a decade of modding. 
+
+In return this means that by using Balm, you risk the possibility of Balm being
 discontinued without any recourse (which I wouldn't do, but anyone could say that!).
 
-### Binaries cannot be freely redistributed
+### Binaries of Balm itself cannot be freely redistributed
 
 Being designated ARR also helps me fight against malicious re-uploads from bad actors, and improves moderation efforts
 and file attribution on mod hosting platforms. Mod packs can't accidentally ship a custom or unattributed jar of
-Balm, which in my experience happens more often than you'd think. In return however this means that Balm cannot be
+Balm, which in my experience happens more often than you'd think.
+
+In return however this means that Balm cannot be
 freely redistributed on third party platforms, and while it is both available on CurseForge and Modrinth (including
 third party downloads / API access), you risk the possibility of Balm being removed from either platform, which would make
 installation of your dependent mod more difficult for users (I'm not going to remove Balm from either platform, but
@@ -61,6 +65,7 @@ community behind Balm, it's a one-person operation.
 If this is a deal-breaker for you (it would be for me), I recommend
 using [Architectury](https://github.com/architectury/architectury)
 instead, which is licensed under LGPL at the time of this writing and has a greater developer community around it.
+
 Alternatively, roll your own solution
 using [Jared's MultiLoader-Template](https://github.com/jaredlll08/MultiLoader-Template)
 instead, which is what I did with Balm because I didn't want to depend on a third party that I realistically would not
