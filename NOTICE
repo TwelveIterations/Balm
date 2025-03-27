@@ -1,0 +1,12 @@
+Apache License, Version 2.0
+Copyright (c) 2025 BlayTheNinth
+
+This project is licensed under the Apache License 2.0, with the following exceptions:
+
+- Forks published outside of GitHub must clearly rename the project as to not create confusion with the original version
+  of Balm.
+- The icon(s) for Balm are Copyright (c) 2025 BlayTheNinth, All Rights Reserved.
+- Binary builds including these icon(s) are Copyright (c) 2025 BlayTheNinth, All Rights Reserved.
+
+Additionally, it is strongly recommended that forks published outside of GitHub change the mod ID and package names to
+avoid conflicts with the original version of Balm.

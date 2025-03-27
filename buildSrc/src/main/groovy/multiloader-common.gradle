@@ -67,6 +67,9 @@ sourcesJar {
     from(rootProject.file("LICENSE")) {
         rename { "${it}_${mod_name}" }
     }
+    from(rootProject.file("NOTICE")) {
+        rename { "${it}_${mod_name}" }
+    }
 }
 
 tasks.withType(Javadoc).tap {
@@ -78,6 +81,12 @@ tasks.withType(Javadoc).tap {
 
 jar {
     from(rootProject.file("LICENSE")) {
+        rename { "${it}_${mod_name}" }
+    }
+    from(rootProject.file("LICENSE_binaries")) {
+        rename { "${it}_${mod_name}" }
+    }
+    from(rootProject.file("NOTICE")) {
         rename { "${it}_${mod_name}" }
     }
 
