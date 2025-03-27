@@ -3,6 +3,7 @@ package net.blay09.mods.balm.fabric;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.EmptyLoadContext;
+import net.blay09.mods.balm.api.attribute.BalmAttributes;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -30,6 +31,7 @@ import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.blay09.mods.balm.fabric.attribute.FabricBalmAttributes;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
 import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
@@ -94,6 +96,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
             .withFallback(new CommonBalmPermissions())
             .build();
     private final BalmResources resources = new FabricBalmResources();
+    private final BalmAttributes attributes = new FabricBalmAttributes();
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -310,5 +313,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmResources getResources() {
         return resources;
+    }
+
+    @Override
+    public BalmAttributes getAttributes() {
+        return attributes;
     }
 }

@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.api;
 
+import net.blay09.mods.balm.api.attribute.BalmAttributes;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -193,6 +194,10 @@ public class Balm {
 
     public static BalmResources getResources() {
         return runtime.getResources();
+    }
+
+    public static BalmAttributes getAttributes() {
+        return runtime.getAttributes();
     }
 
     public static String getPlatform() {

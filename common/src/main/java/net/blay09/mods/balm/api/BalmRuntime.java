@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.api;
 
+import net.blay09.mods.balm.api.attribute.BalmAttributes;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -99,6 +100,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerConfig(getConfig());
         module.registerResources(getResources());
         module.registerComponents(getComponents());
+        module.registerAttributes(getAttributes());
         module.registerBlocks(getBlocks());
         module.registerBlockEntities(getBlockEntities());
         module.registerItems(getItems());
@@ -127,4 +129,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void registerModule(BalmModule module);
 
     BalmResources getResources();
+
+    BalmAttributes getAttributes();
 }

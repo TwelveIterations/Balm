@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.api.module;
 
+import net.blay09.mods.balm.api.attribute.BalmAttributes;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -82,5 +83,8 @@ public interface BalmModule {
     }
 
     default void registerResources(BalmResources resources) {
+    }
+
+    default void registerAttributes(BalmAttributes attributes) {
     }
 }

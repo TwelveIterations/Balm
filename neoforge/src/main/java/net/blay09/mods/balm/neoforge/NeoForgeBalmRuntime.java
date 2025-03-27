@@ -2,6 +2,7 @@ package net.blay09.mods.balm.neoforge;
 
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
+import net.blay09.mods.balm.api.attribute.BalmAttributes;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -27,6 +28,7 @@ import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.blay09.mods.balm.neoforge.attribute.NeoForgeBalmAttributes;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
@@ -88,6 +90,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmResources resources = new NeoForgeBalmResources();
+    private final BalmAttributes attributes = new NeoForgeBalmAttributes();
 
     private final List<String> addonClasses = new ArrayList<>();
 
@@ -287,5 +290,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmResources getResources() {
         return resources;
+    }
+
+    @Override
+    public BalmAttributes getAttributes() {
+        return attributes;
     }
 }
