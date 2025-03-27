@@ -28,27 +28,49 @@ code](https://github.com/TwelveIterationMods) to learn how specific things are d
 Recently, other developers have started inquiring about or building upon Balm, and while I'm happy to facilitate others
 using it, I think it's important to understand the implications of depending on Balm.
 
-First and foremost, Balm is a library for my set of mods, and I need it to be stable as such. If a fork of Balm were to
+First and foremost, Balm is a library for my own set of mods, and I need it to be stable as such. I think it's great if
+other developers want to use it, but you should be aware of the risks in using it over an open source project.
+
+The choice for Balm to remain All Rights Reserved is largely a pragmatic decision: If a fork of Balm were to
 be published without necessary precautions (different package name, different mod id, sufficiently different name), it
-would cause both problems for me on a technical level, and users in terms of confusion. Being designated ARR also
-helps me fight against malicious re-uploads from bad actors, and improves moderation efforts and file attribution on mod
-hosting platforms, i.e. mod packs can't accidentally ship a custom or unattributed jar of Balm (which in my experience
-happens more often than you'd think). It also should be noted that while Balm does have 100m+ downloads,
-the vast majority of those are from my own mods. At the moment, there's probably only ~5 other developers who also use
-Balm to develop their mods.
+would cause problems both for me on a technical level, and users in terms of confusion. Realistically, a serious fork
+would make the necessary naming changes anyway, but the world of Minecraft Modding is unforgiving, and I've seen too
+much happen in a decade of modding. In return this means that by using Balm, you risk the possibility of Balm being
+discontinued without any recourse (which I wouldn't do, but anyone could say that!).
 
-If this is a deal-breaker for you, I recommend using [Architectury](https://github.com/architectury/architectury)
+Being designated ARR also helps me fight against malicious re-uploads from bad actors, and improves moderation efforts
+and file attribution on mod hosting platforms. Mod packs can't accidentally ship a custom or unattributed jar of
+Balm, which in my experience happens more often than you'd think. In return however this means that Balm cannot be
+freely redistributed on third party platforms, and while it is both available on CurseForge and Modrinth (including
+third party downloads / API access), you risk the possibility of Balm being removed from either platform, which would make
+installation of your dependent mod more difficult for users (I'm not going to remove Balm from either platform, but
+anyone could say that!).
+
+It also should be noted that while Balm does have 100m+ downloads, the vast majority of those are from my own mods. At
+the moment, there's probably only ~5 other developers who also use Balm to develop their mods. There is no team or
+community behind Balm, it's a one-person operation.
+
+If this is a deal-breaker for you (it would be for me), I recommend
+using [Architectury](https://github.com/architectury/architectury)
 instead, which is licensed under LGPL at the time of this writing and has a greater developer community around it.
+Alternatively, roll your own solution
+using [Jared's MultiLoader-Template](https://github.com/jaredlll08/MultiLoader-Template)
+instead, which is what I did with Balm because I didn't want to depend on a third party that I realistically would not
+be able to maintain myself (and the fact that I didn't want to deal with custom gradle plugins).
 
-### Guarantees I can make for those who would like to rely on Balm anyway
+If you like to live on the edge, feel free to give Balm a try! I'm glad if it can be useful for others, and if it wasn't
+directly tied to my livelihood and better licensing option for my needs were available, I'd be happy to consider them.
+
+### Some soothing words for those who like to live dangerously
 
 - I'm not retiring anytime soon, Minecraft Modding makes up a significant part of my income
 - If I do retire, I'll license Balm under an open source license before I go
 - If I die before I retire, I won't haunt you if you continue to maintain Balm
-- I'm open to pull requests as long as the submissions remain maintainable
+- I'm open to pull requests as long as the submissions are maintainable in the long term
+    - If your submission does more than just wrapping and exposing existing APIs, it probably shouldn't be part of Balm
 - You can use as much or as little of Balm as you like, it's really just a glorified ServiceLoader with a set of event
   mixins
-- I usually update to the first pre-release and the first release candidate asap so that mod porting can begin
+- I usually update to the first pre-release and the first release candidate ASAP so that mod porting can begin
     - However, only full releases are published to mod hosting platforms unless you can convince me otherwise
 - I avoid breaking changes mid-version unless absolutely necessary (after all, I have 20 mods running on Balm myself)
 - I intend to support Fabric, NeoForge and Forge
