@@ -23,6 +23,42 @@ You can get started [using this template repository](https://github.com/TwelveIt
 There is no documentation, but the template gives an overview of most features, and you can browse [Blay's other mods'
 code](https://github.com/TwelveIterationMods) to learn how specific things are done.
 
+## Why is Balm not Open Source?
+
+Recently, other developers have started inquiring about or building upon Balm, and while I'm happy to facilitate others
+using it, I think it's important to understand the implications of depending on Balm.
+
+First and foremost, Balm is a library for my set of mods, and I need it to be stable as such. If a fork of Balm were to
+be published without necessary precautions (different package name, different mod id, sufficiently different name), it
+would cause both problems for me on a technical level, and users in terms of confusion. Being designated ARR also
+helps me fight against malicious re-uploads from bad actors, and improves moderation efforts and file attribution on mod
+hosting platforms, i.e. mod packs can't accidentally ship a custom or unattributed jar of Balm (which in my experience
+happens more often than you'd think). It also should be noted that while Balm does have 100m+ downloads,
+the vast majority of those are from my own mods. At the moment, there's probably only ~5 other developers who also use
+Balm to develop their mods.
+
+If this is a deal-breaker for you, I recommend using [Architectury](https://github.com/architectury/architectury)
+instead, which is licensed under LGPL at the time of this writing and has a greater developer community around it.
+
+### Guarantees I can make for those who would like to rely on Balm anyway
+
+- I'm not retiring anytime soon, Minecraft Modding makes up a significant part of my income
+- If I do retire, I'll license Balm under an open source license before I go
+- If I die before I retire, I won't haunt you if you continue to maintain Balm
+- I'm open to pull requests as long as the submissions remain maintainable
+- You can use as much or as little of Balm as you like, it's really just a glorified ServiceLoader with a set of event
+  mixins
+- I usually update to the first pre-release and the first release candidate asap so that mod porting can begin
+    - However, only full releases are published to mod hosting platforms unless you can convince me otherwise
+- I avoid breaking changes mid-version unless absolutely necessary (after all, I have 20 mods running on Balm myself)
+- I intend to support Fabric, NeoForge and Forge
+    - However, I'm encouraging users to migrate away from Forge, and support for it may become more and more difficult
+      as they continue to
+      make [design](https://github.com/MinecraftForge/MinecraftForge/commit/587b684035e567e9f553ffab02a081a8b52ddb01) [choices](https://github.com/MinecraftForge/MinecraftForge/blob/8e0845d032e18b0999ec0221ba73cb4d7325ada7/src/main/java/net/minecraftforge/common/capabilities/RegisterCapabilitiesEvent.java#L21)
+      that go against the nature of multi-loader contexts
+- Third Party Downloads on CurseForge are enabled and Balm
+  can [freely be used in mod packs](https://mods.twelveiterations.com/permissions/)
+
 #### Downloads
 
 [![Versions](http://cf.way2muchnoise.eu/versions/531761_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/balm)
