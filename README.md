@@ -31,7 +31,7 @@ using it, I think it's important to understand the implications of depending on 
 First and foremost, Balm is a library for my own set of mods, and I need it to be stable as such. I think it's great if
 other developers want to use it, but you should be aware of the risks in using it over an open source project.
 
-### Forks of Balm cannot be publicly released
+### Forks of Balm itself cannot be released outside of GitHub
 
 The choice for Balm to remain All Rights Reserved is largely a pragmatic decision: If a fork of Balm were to
 be published without necessary precautions (different package name, different mod id, sufficiently different name), it
@@ -49,7 +49,7 @@ and file attribution on mod hosting platforms. Mod packs can't accidentally ship
 Balm, which in my experience happens more often than you'd think.
 
 In return however this means that Balm cannot be
-freely redistributed on third party platforms, and while it is both available on CurseForge and Modrinth (including
+freely redistributed on other platforms, and while it is both available on CurseForge and Modrinth (including
 third party downloads / API access), you risk the possibility of Balm being removed from either platform, which would
 make
 installation of your dependent mod more difficult for users (I'm not going to remove Balm from either platform, but
@@ -73,7 +73,7 @@ because I didn't want to depend on a third party that I realistically would not
 be able to maintain myself (and the fact that I didn't want to deal with custom gradle plugins).
 
 If you like to live on the edge, feel free to give Balm a try! I'm glad if it can be useful for others, and if it wasn't
-directly tied to my livelihood and better licensing option for my needs were available, I'd be happy to consider them.
+directly tied to my livelihood and better licensing options for my needs were available, I'd be happy to consider them.
 
 ### Some soothing words for those who like to live dangerously
 
