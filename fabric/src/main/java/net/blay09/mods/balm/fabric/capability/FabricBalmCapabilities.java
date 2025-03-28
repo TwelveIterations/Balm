@@ -25,7 +25,10 @@ public class FabricBalmCapabilities implements BalmCapabilities {
     @Override
     @SuppressWarnings("unchecked")
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
-        final var type = types.get(identifier);
+        var type = types.get(identifier);
+        if (type == null) {
+            type = registerType(identifier, scopeClass, apiClass, contextClass);
+        }
         if (type.scopeClass() != scopeClass) {
             throw new IllegalArgumentException("Incompatible scope for capability " + identifier + ", expected " + type.scopeClass() + " but got " + scopeClass);
         }

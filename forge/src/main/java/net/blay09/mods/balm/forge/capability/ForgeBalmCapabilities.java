@@ -12,7 +12,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -57,9 +59,10 @@ public class ForgeBalmCapabilities implements BalmCapabilities {
     @Override
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
         getRegistrations(identifier.getNamespace()).apiClasses.add(apiClass);
-        final var backingType =  backingTypes.get(identifier);
-        if(backingType == null) {
-            throw new IllegalStateException("You must additionally call ForgeBalmCapabilities.preRegisterType() on Forge first, as Balm cannot create a capability token dynamically.");
+        final var backingType = backingTypes.get(identifier);
+        if (backingType == null) {
+            throw new IllegalStateException(
+                    "You must additionally call ForgeBalmCapabilities.preRegisterType() on Forge first, as Balm cannot create a capability token dynamically.");
         }
         final var type = new CapabilityType<>(identifier, scopeClass, apiClass, contextClass, backingType);
         types.put(identifier, type);
@@ -69,7 +72,16 @@ public class ForgeBalmCapabilities implements BalmCapabilities {
     @Override
     @SuppressWarnings("unchecked")
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
-        final var type = types.get(identifier);
+        var type = types.get(identifier);
+        if (type == null) {
+            final var backingType = backingTypes.get(identifier);
+            if (backingType == null) {
+                throw new IllegalStateException(
+                        "You must call ForgeBalmCapabilities.preRegisterType() on Forge first, as Balm cannot create a capability token dynamically.");
+            }
+            type = new CapabilityType<>(identifier, scopeClass, apiClass, contextClass, backingType);
+            types.put(identifier, type);
+        }
         if (type.scopeClass() != scopeClass) {
             throw new IllegalArgumentException("Incompatible scope for capability " + identifier + ", expected " + type.scopeClass() + " but got " + scopeClass);
         }

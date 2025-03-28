@@ -19,7 +19,9 @@ import net.neoforged.neoforge.capabilities.IBlockCapabilityProvider;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -50,7 +52,11 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
     @Override
     @SuppressWarnings("unchecked")
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
-        final var type = types.get(identifier);
+        var type = types.get(identifier);
+        if (type == null) {
+            type = registerType(identifier, scopeClass, apiClass, contextClass);
+        }
+
         if (type.scopeClass() != scopeClass) {
             throw new IllegalArgumentException("Incompatible scope for capability " + identifier + ", expected " + type.scopeClass() + " but got " + scopeClass);
         }
