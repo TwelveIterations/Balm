@@ -222,19 +222,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
     @Override
     public <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        SidedProxy<T> proxy = new SidedProxy<>(commonName, clientName);
-        try {
-            if (FMLEnvironment.dist.isClient()) {
-
-                proxy.resolveClient();
-            } else {
-                proxy.resolveCommon();
-            }
-        } catch (ProxyResolutionException e) {
-            throw new RuntimeException(e);
-        }
-
-        return proxy;
+        return new SidedProxy<>(this::getEnvironment, commonName, clientName);
     }
 
     private void initializeAddons() {

@@ -18,7 +18,10 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.proxy.*;
+import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
+import net.blay09.mods.balm.api.proxy.ModProxy;
+import net.blay09.mods.balm.api.proxy.PlatformProxy;
+import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
@@ -217,19 +220,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     @Override
     public <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        SidedProxy<T> proxy = new SidedProxy<>(commonName, clientName);
-        try {
-            if (FMLEnvironment.dist.isClient()) {
-
-                proxy.resolveClient();
-            } else {
-                proxy.resolveCommon();
-            }
-        } catch (ProxyResolutionException e) {
-            throw new RuntimeException(e);
-        }
-
-        return proxy;
+        return new SidedProxy<>(this::getEnvironment, commonName, clientName);
     }
 
     private void initializeAddons() {
