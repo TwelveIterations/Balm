@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.fabric.network;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.balm.api.network.*;
@@ -24,11 +25,15 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 
 public class FabricBalmNetworking implements BalmNetworking {
+
+    private static final Logger logger = LoggerFactory.getLogger(FabricBalmNetworking.class);
 
     private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new HashMap<>();
     private static PacketSender replyPacketSender;
@@ -149,7 +154,11 @@ public class FabricBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
-        ClientPlayNetworking.send(message);
+        if (!Balm.getProxy().isConnected()) {
+            logger.debug("Skipping message {} because we're not connected to a server", message);
+        } else {
+            ClientPlayNetworking.send(message);
+        }
     }
 
     @Override
