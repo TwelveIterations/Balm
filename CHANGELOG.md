@@ -1,2 +1,3 @@
+- Fixed potential crash when using `BalmModule` (e.g. Waystones)
 - Fixed crash on dedicated servers
 - Fixed crash with Sinytra Connector (for real now)
