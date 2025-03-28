@@ -18,7 +18,10 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.proxy.*;
+import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
+import net.blay09.mods.balm.api.proxy.ModProxy;
+import net.blay09.mods.balm.api.proxy.PlatformProxy;
+import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
@@ -286,5 +289,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
             case CLIENT -> BalmEnvironment.CLIENT;
             case DEDICATED_SERVER -> BalmEnvironment.SERVER;
         };
+    }
+
+    @Override
+    public void initializeRuntime() {
+        MinecraftForge.EVENT_BUS.register(capabilities);
+        super.initializeRuntime();
     }
 }
