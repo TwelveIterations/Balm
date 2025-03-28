@@ -22,7 +22,7 @@ you use a mod that requires it.
 ## How to make a mod with Balm
 
 You can get started [using this template repository](https://github.com/TwelveIterationMods/balm-mod).
-There is no documentation, but the template gives an overview of most features, and you can browse [Blay's other mods'
+Documentation is [limited](https://balm.twelveiterations.com/docs/getting-started), but the template gives an overview on how to get started, and you can browse [Blay's other mods'
 code](https://github.com/TwelveIterationMods) to learn how specific things are done.
 
 #### Downloads
