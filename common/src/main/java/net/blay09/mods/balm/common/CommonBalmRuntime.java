@@ -39,18 +39,13 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public void registerModule(BalmModule module) {
         modules.add(module);
-        if (isReady()) {
-            initializeModule(module);
-        }
+        initializeModule(module);
     }
 
     public void initializeRuntime() {
         ready = true;
         for (final var callback : initCallbacks) {
             callback.run();
-        }
-        for (final var module : modules) {
-            initializeModule(module);
         }
 
         registerModule(new BaseModule());
