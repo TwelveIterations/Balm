@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
@@ -64,6 +65,8 @@ public class NeoForgeBalmClientRuntime implements BalmClientRuntime<NeoForgeLoad
 
     @Override
     public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
+        BalmLoadContexts.register(modId, context);
+
         ((NeoForgeBalmRenderers) renderers).register(modId, context.modBus());
         ((NeoForgeBalmScreens) screens).register(modId, context.modBus());
         ((NeoForgeBalmModels) models).register(modId, context.modBus());

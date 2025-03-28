@@ -2,14 +2,10 @@ package net.blay09.mods.balm.forge.event;
 
 
 import net.blay09.mods.balm.api.event.*;
-import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
+import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -279,21 +275,6 @@ public class ForgeBalmCommonEvents {
             MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (net.minecraftforge.event.entity.living.LivingHealEvent orig) -> {
                 final LivingHealEvent event = new LivingHealEvent(orig.getEntity(), orig.getAmount());
                 events.fireEventHandlers(priority, event);
-                if (event.isCanceled()) {
-                    orig.setCanceled(true);
-                }
-            });
-        });
-
-        events.registerEvent(DigSpeedEvent.class, priority ->
-
-        {
-            MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (PlayerEvent.BreakSpeed orig) -> {
-                final DigSpeedEvent event = new DigSpeedEvent(orig.getEntity(), orig.getState(), orig.getOriginalSpeed());
-                events.fireEventHandlers(priority, event);
-                if (event.getSpeedOverride() != null) {
-                    orig.setNewSpeed(event.getSpeedOverride());
-                }
                 if (event.isCanceled()) {
                     orig.setCanceled(true);
                 }

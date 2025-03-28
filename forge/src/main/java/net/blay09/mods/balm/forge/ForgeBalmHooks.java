@@ -4,7 +4,6 @@ import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,14 +18,11 @@ import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -71,12 +67,12 @@ public class ForgeBalmHooks implements BalmHooks {
     public CompoundTag getPersistentData(Entity entity) {
         CompoundTag persistentData = entity.getPersistentData();
         if (entity instanceof ServerPlayer) {
-            CompoundTag persistedTag = persistentData.getCompound(ServerPlayer.PERSISTED_NBT_TAG);
+            CompoundTag persistedTag = persistentData.getCompoundOrEmpty(ServerPlayer.PERSISTED_NBT_TAG);
             persistentData.put(ServerPlayer.PERSISTED_NBT_TAG, persistedTag);
             persistentData = persistedTag;
         }
 
-        CompoundTag balmData = persistentData.getCompound("BalmData");
+        CompoundTag balmData = persistentData.getCompoundOrEmpty("BalmData");
         if (balmData.isEmpty()) {
             // If we have no data, try to import from Fabric in case the world was migrated
             balmData = ((BalmEntity) entity).getFabricBalmData();

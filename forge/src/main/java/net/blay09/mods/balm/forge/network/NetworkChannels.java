@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkChannels {
     private static final Map<String, SimpleChannel> channels = new ConcurrentHashMap<>();
+    private static final Map<String, Integer> networkVersions = new ConcurrentHashMap<>();
     private static final Set<String> clientOnlyMods = Sets.newConcurrentHashSet();
     private static final Set<String> serverOnlyMods = Sets.newConcurrentHashSet();
 
@@ -24,6 +25,10 @@ public class NetworkChannels {
             if (clientOnlyMods.contains(modId)) {
                 builder = builder.optionalServer();
             }
+            final var networkVersion = networkVersions.get(modId);
+            if (networkVersion != null) {
+                builder = builder.networkProtocolVersion(networkVersion);
+            }
             return builder.simpleChannel();
         });
     }
@@ -34,5 +39,14 @@ public class NetworkChannels {
 
     public static void allowServerOnly(String modId) {
         serverOnlyMods.add(modId);
+    }
+
+    public static void defineNetworkVersion(String modId, String version) {
+        try {
+            final var networkVersion = Integer.parseInt(version);
+            networkVersions.put(modId, networkVersion);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid network version for mod " + modId + ": Versions must be integers for Forge compatibility.");
+        }
     }
 }

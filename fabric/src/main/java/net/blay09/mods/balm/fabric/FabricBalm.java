@@ -2,18 +2,17 @@ package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmEnvironment;
+import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.api.network.NetworkVersions;
 import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
+import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.CommonCapabilities;
-import net.blay09.mods.balm.common.command.BalmCommand;
-import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
-import net.blay09.mods.balm.common.resources.ConfigResourceCondition;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.fabricmc.api.ModInitializer;
@@ -31,7 +30,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,6 +50,8 @@ public class FabricBalm implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        BalmLoadContexts.register("balm", EmptyLoadContext.INSTANCE);
+
         ((FabricBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         ((FabricBalmHooks) Balm.getHooks()).initialize();

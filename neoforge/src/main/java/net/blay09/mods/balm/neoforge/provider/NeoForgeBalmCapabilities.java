@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 
 public class NeoForgeBalmCapabilities implements BalmCapabilities {
 
-    private final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new HashMap<>();
+    private final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override

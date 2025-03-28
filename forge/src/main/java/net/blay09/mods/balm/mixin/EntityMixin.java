@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin implements BalmEntity {
@@ -18,10 +17,13 @@ public class EntityMixin implements BalmEntity {
     @Inject(method = "load(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("HEAD"))
     private void load(CompoundTag compound, CallbackInfo callbackInfo) {
         if (compound.contains("BalmData")) {
-            fabricBalmData = compound.getCompound("BalmData");
+            fabricBalmData = compound.getCompound("BalmData").orElse(fabricBalmData);
         }
         if (compound.contains("NeoForgeData")) {
-            neoforgeBalmData = compound.getCompound("NeoForgeData").getCompound("PlayerPersisted").getCompound("BalmData");
+            neoforgeBalmData = compound.getCompound("NeoForgeData")
+                    .flatMap(it -> it.getCompound("PlayerPersisted"))
+                    .flatMap(it -> it.getCompound("BalmData"))
+                    .orElse(neoforgeBalmData);
         }
     }
 

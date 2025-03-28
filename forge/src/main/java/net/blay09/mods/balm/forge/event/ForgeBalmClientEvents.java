@@ -2,8 +2,8 @@ package net.blay09.mods.balm.forge.event;
 
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
-import net.blay09.mods.balm.api.event.client.*;
 import net.blay09.mods.balm.api.event.client.RenderHandEvent;
+import net.blay09.mods.balm.api.event.client.*;
 import net.blay09.mods.balm.api.event.client.screen.*;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.*;
@@ -41,15 +41,6 @@ public class ForgeBalmClientEvents {
                 if (orig.phase == TickEvent.Phase.END) {
                     handler.handle(Minecraft.getInstance().level);
                 }
-            });
-        });
-
-        events.registerEvent(ClientStartedEvent.class, priority -> {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ForgeBalmEvents.toForge(priority), (FMLLoadCompleteEvent orig) -> {
-                orig.enqueueWork(() -> {
-                    final ClientStartedEvent event = new ClientStartedEvent(Minecraft.getInstance());
-                    events.fireEventHandlers(priority, event);
-                });
             });
         });
 

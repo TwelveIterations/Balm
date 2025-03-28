@@ -23,6 +23,7 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
@@ -192,6 +193,8 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     @Override
     public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
+        BalmLoadContexts.register(modId, context);
+
         ((NeoForgeBalmNetworking) networking).register(modId, context.modBus());
         ((NeoForgeBalmEntities) entities).register(modId, context.modBus());
         ((NeoForgeBalmCapabilities) capabilities).register(modId, context.modBus());

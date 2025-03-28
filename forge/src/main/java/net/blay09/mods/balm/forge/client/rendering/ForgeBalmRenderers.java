@@ -20,10 +20,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
@@ -35,6 +34,61 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ForgeBalmRenderers implements BalmRenderers {
+
+    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+
+    @Override
+    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
+        return registerModel(location, "main", layerDefinition);
+    }
+
+    @Override
+    public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
+        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, layer);
+        getRegistrations(location.getNamespace()).layerDefinitions.put(modelLayerLocation, layerDefinition);
+        return modelLayerLocation;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
+        getRegistrations(identifier.getNamespace()).entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
+        getRegistrations(identifier.getNamespace()).blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
+    }
+
+    @Override
+    public void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
+        getRegistrations(identifier.getNamespace()).blockColors.add(new ColorRegistration<>(color, blocks));
+    }
+
+    @Override
+    public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
+        // Do nothing in Forge. Forge unfortunately changes the Vanilla model format,
+        // so we have to have both this call (for Fabric) and change the JSON (for Forge).
+    }
+
+    @Override
+    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+        getRegistrations(identifier.getNamespace()).particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
+    }
+
+    @Override
+    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+        getRegistrations(identifier.getNamespace()).particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
+    }
+
+    public void register(String modId, IEventBus eventBus) {
+        eventBus.register(getRegistrations(modId));
+    }
+
+    private Registrations getRegistrations(String modId) {
+        return registrations.computeIfAbsent(modId, it -> new Registrations());
+    }
 
     private record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {
     }
@@ -100,60 +154,5 @@ public class ForgeBalmRenderers implements BalmRenderers {
         private <T extends ParticleOptions> void registerParticleProvider(RegisterParticleProvidersEvent event, ParticleProviderRegistration<T> registration) {
             event.registerSpriteSet(registration.particleType.get(), spriteSet -> registration.value());
         }
-    }
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
-
-    @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
-        return registerModel(location, "main", layerDefinition);
-    }
-
-    @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
-        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, layer);
-        getRegistrations(location.getNamespace()).layerDefinitions.put(modelLayerLocation, layerDefinition);
-        return modelLayerLocation;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
-        getRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
-        getRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
-    }
-
-    @Override
-    public void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks) {
-        getRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
-    }
-
-    @Override
-    public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        // Do nothing in Forge. Forge unfortunately changes the Vanilla model format,
-        // so we have to have both this call (for Fabric) and change the JSON (for Forge).
-    }
-
-    @Override
-    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
-        getRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
-    }
-
-    @Override
-    public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
-        getRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
-    }
-
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
     }
 }

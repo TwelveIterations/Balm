@@ -36,6 +36,10 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     private static CustomPayloadEvent.Context replyContext;
 
+    private static int nextDiscriminator(String modId) {
+        return discriminatorCounter.compute(modId, (key, prev) -> prev != null ? prev + 1 : 0);
+    }
+
     @Override
     public void allowClientOnly(String modId) {
         NetworkChannels.allowClientOnly(modId);
@@ -57,9 +61,16 @@ public class ForgeBalmNetworking implements BalmNetworking {
         }
     }
 
+    @Override
+    public void defineNetworkVersion(String modId, String version) {
+        NetworkChannels.defineNetworkVersion(modId, version);
+    }
+
     private <T> void openGui(ServerPlayer player, BalmMenuProvider<T> menuProvider) {
         // TODO we have to create a RegistryFriendlyByteBuf ourselves because Forge is out of date
-        player.openMenu(menuProvider, buf -> menuProvider.getScreenStreamCodec().encode(new RegistryFriendlyByteBuf(buf, player.registryAccess()), menuProvider.getScreenOpeningData(player)));
+        player.openMenu(menuProvider,
+                buf -> menuProvider.getScreenStreamCodec()
+                        .encode(new RegistryFriendlyByteBuf(buf, player.registryAccess()), menuProvider.getScreenOpeningData(player)));
     }
 
     @Override
@@ -108,7 +119,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
-        if (!Balm.getProxy().isConnectedToServer()) {
+        if (!Balm.getProxy().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
             return;
         }
@@ -156,9 +167,5 @@ public class ForgeBalmNetworking implements BalmNetworking {
                     replyContext = null;
                 })
                 .add();
-    }
-
-    private static int nextDiscriminator(String modId) {
-        return discriminatorCounter.compute(modId, (key, prev) -> prev != null ? prev + 1 : 0);
     }
 }

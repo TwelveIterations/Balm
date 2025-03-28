@@ -22,7 +22,9 @@ public class ForgeBalmMenus implements BalmMenus {
         DeferredRegister<MenuType<?>> register = DeferredRegisters.get(ForgeRegistries.MENU_TYPES, identifier.getNamespace());
         // TODO we have to create a RegistryFriendlyByteBuf ourselves because Forge is out of date
         RegistryObject<MenuType<TMenu>> registryObject = register.register(identifier.getPath(),
-                () -> new MenuType<>((IContainerFactory<TMenu>) (syncId, inventory, buf) -> factory.create(syncId, inventory, factory.getStreamCodec().decode(new RegistryFriendlyByteBuf(buf, inventory.player.registryAccess()))),
+                () -> new MenuType<>((IContainerFactory<TMenu>) (syncId, inventory, buf) -> factory.create(syncId,
+                        inventory,
+                        factory.getStreamCodec().decode(new RegistryFriendlyByteBuf(buf, inventory.player.registryAccess()))),
                         FeatureFlagSet.of(FeatureFlags.VANILLA)));
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }

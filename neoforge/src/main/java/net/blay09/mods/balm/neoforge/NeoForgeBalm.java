@@ -1,12 +1,9 @@
 package net.blay09.mods.balm.neoforge;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.common.CommonCapabilities;
-import net.blay09.mods.balm.common.command.BalmCommand;
-import net.blay09.mods.balm.common.config.ConfigSync;
+import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
-import net.blay09.mods.balm.common.resources.ConfigResourceCondition;
 import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmCapabilities;
@@ -21,6 +18,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 public class NeoForgeBalm {
 
     public NeoForgeBalm(IEventBus modBus) {
+        BalmLoadContexts.register("balm", new NeoForgeLoadContext(modBus));
+
         ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
