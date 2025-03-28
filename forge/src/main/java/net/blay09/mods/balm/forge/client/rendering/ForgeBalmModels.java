@@ -2,6 +2,7 @@ package net.blay09.mods.balm.forge.client.rendering;
 
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -27,12 +28,14 @@ public class ForgeBalmModels implements BalmModels {
         final var deferredModel = new DeferredObject<BlockStateModel>(identifier) {
             @Override
             public BlockStateModel resolve() {
-                return getRegistrations(identifier.getNamespace()).bakedExtraModels.get(identifier);
+                final var modelManager = Minecraft.getInstance().getModelManager();
+                final var stateDefinition = getRegistrations(identifier.getNamespace()).extraStateDefinitions.get(identifier);
+                return modelManager.getBlockModelShaper().getBlockModel(stateDefinition.any());
             }
 
             @Override
             public boolean canResolve() {
-                return getRegistrations(identifier.getNamespace()).bakedExtraModels.containsKey(identifier);
+                return getRegistrations(identifier.getNamespace()).extraStateDefinitions.containsKey(identifier);
             }
         };
         getRegistrations(identifier.getNamespace()).extraModels.add(identifier);
@@ -50,7 +53,6 @@ public class ForgeBalmModels implements BalmModels {
     private static class Registrations {
         public final List<ResourceLocation> extraModels = new ArrayList<>();
         public final Map<ResourceLocation, StateDefinition<Block, BlockState>> extraStateDefinitions = new HashMap<>();
-        public final Map<ResourceLocation, BlockStateModel> bakedExtraModels = new HashMap<>();
 
         @SubscribeEvent
         public void onRegisterAdditionalModels(ModelEvent.RegisterModelStateDefinitions event) {
@@ -58,15 +60,6 @@ public class ForgeBalmModels implements BalmModels {
                 final var stateDefinition = new StateDefinition.Builder<Block, BlockState>(Blocks.AIR).create(Block::defaultBlockState, BlockState::new);
                 event.register(it, stateDefinition);
                 extraStateDefinitions.put(it, stateDefinition);
-            });
-        }
-
-        @SubscribeEvent
-        public void onBakingCompleted(ModelEvent.BakingCompleted event) {
-            final var modelManager = event.getModelManager();
-            extraStateDefinitions.forEach((id, stateDefinition) -> {
-                final var model = modelManager.getBlockModelShaper().getBlockModel(stateDefinition.any());
-                bakedExtraModels.put(id, model);
             });
         }
     }
