@@ -4,13 +4,14 @@ import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
 import net.blay09.mods.balm.api.event.client.RenderHandEvent;
 import net.blay09.mods.balm.api.event.client.*;
-import net.blay09.mods.balm.api.event.client.screen.*;
+import net.blay09.mods.balm.api.event.client.screen.ContainerScreenDrawEvent;
+import net.blay09.mods.balm.api.event.client.screen.ScreenDrawEvent;
+import net.blay09.mods.balm.api.event.client.screen.ScreenKeyEvent;
+import net.blay09.mods.balm.api.event.client.screen.ScreenMouseEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class ForgeBalmClientEvents {
 
@@ -54,23 +55,6 @@ public class ForgeBalmClientEvents {
         events.registerEvent(DisconnectedFromServerEvent.class, priority -> {
             MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (ClientPlayerNetworkEvent.LoggingOut orig) -> {
                 final DisconnectedFromServerEvent event = new DisconnectedFromServerEvent(Minecraft.getInstance());
-                events.fireEventHandlers(priority, event);
-            });
-        });
-
-        events.registerEvent(ScreenInitEvent.Pre.class, priority -> {
-            MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (ScreenEvent.Init.Pre orig) -> {
-                final ScreenInitEvent.Pre event = new ScreenInitEvent.Pre(orig.getScreen());
-                events.fireEventHandlers(priority, event);
-                if (event.isCanceled()) {
-                    orig.setCanceled(true);
-                }
-            });
-        });
-
-        events.registerEvent(ScreenInitEvent.Post.class, priority -> {
-            MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (ScreenEvent.Init.Post orig) -> {
-                final ScreenInitEvent.Post event = new ScreenInitEvent.Post(orig.getScreen());
                 events.fireEventHandlers(priority, event);
             });
         });
