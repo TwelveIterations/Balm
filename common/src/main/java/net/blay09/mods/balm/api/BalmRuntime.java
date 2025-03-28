@@ -128,4 +128,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void registerModule(BalmModule module);
 
     BalmResources getResources();
+
+    BalmEnvironment getEnvironment();
 }

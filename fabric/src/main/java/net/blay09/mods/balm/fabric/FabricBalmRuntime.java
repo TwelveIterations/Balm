@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.fabric;
 
+import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.EmptyLoadContext;
@@ -314,5 +315,13 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmResources getResources() {
         return resources;
+    }
+
+    @Override
+    public BalmEnvironment getEnvironment() {
+        return switch(FabricLoader.getInstance().getEnvironmentType()) {
+            case CLIENT -> BalmEnvironment.CLIENT;
+            case SERVER -> BalmEnvironment.SERVER;
+        };
     }
 }

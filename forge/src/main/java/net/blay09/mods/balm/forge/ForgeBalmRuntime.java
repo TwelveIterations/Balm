@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.forge;
 
+import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
@@ -30,6 +31,7 @@ import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
 import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
+import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
@@ -42,7 +44,6 @@ import net.blay09.mods.balm.forge.menu.ForgeBalmMenus;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
-import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
 import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
 import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
@@ -289,5 +290,13 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmResources getResources() {
         return resources;
+    }
+
+    @Override
+    public BalmEnvironment getEnvironment() {
+        return switch (FMLEnvironment.dist) {
+            case CLIENT -> BalmEnvironment.CLIENT;
+            case DEDICATED_SERVER -> BalmEnvironment.SERVER;
+        };
     }
 }

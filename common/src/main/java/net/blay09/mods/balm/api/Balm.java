@@ -199,6 +199,10 @@ public class Balm {
         return runtime.getPlatform();
     }
 
+    public static BalmEnvironment getEnvironment() {
+        return runtime.getEnvironment();
+    }
+
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
     }

@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.neoforge;
 
+import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
@@ -290,5 +291,13 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmResources getResources() {
         return resources;
+    }
+
+    @Override
+    public BalmEnvironment getEnvironment() {
+        return switch (FMLEnvironment.dist) {
+            case CLIENT -> BalmEnvironment.CLIENT;
+            case DEDICATED_SERVER -> BalmEnvironment.SERVER;
+        };
     }
 }
