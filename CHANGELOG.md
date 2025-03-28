@@ -1,1 +1,2 @@
+- Fixed crash with custom stats on Forge
 - Fixed crash when calling sendToServer while not ingame on Fabric
