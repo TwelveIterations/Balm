@@ -1,9 +1,2 @@
-- Fixed crash when opening mod menu
-- Fixed crash with Sinytra Connector (again)
-- Renamed `balm-fabric:milk` to `balm:milk` (should automatically migrate via alias)
-- Added `BalmNetworking.defineNetworkVersion` for more control over network compatibility
-  - Fabric's remote version check now uses the network version (which defaults to the mod version)
-  - Network version is also used to version the channel on NeoForge
-- Added remote version verification even on client/server-only compatible mods if they are installed on both sides
-- Added `BalmResources.registerResourceCondition` to register custom resource conditions
-- Added `balm:config` resource condition to check a config option against a stringified value
+- Fixed crash on dedicated servers
+- Fixed crash with Sinytra Connector (for real now)
