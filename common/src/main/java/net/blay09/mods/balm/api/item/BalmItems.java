@@ -45,7 +45,7 @@ public interface BalmItems {
     /**
      * @deprecated Use {@link #itemProperties(ResourceLocation)} instead
      */
-    @Deprecated(forRemoval = true, since = "1.22")
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default Item.Properties itemProperties() {
         return new Item.Properties();
     }
@@ -53,7 +53,7 @@ public interface BalmItems {
     /**
      * @deprecated Use {@link #registerItem(Function, ResourceLocation)} instead
      */
-    @Deprecated(forRemoval = true, since = "1.22")
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier) {
         return registerItem(supplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
@@ -61,7 +61,7 @@ public interface BalmItems {
     /**
      * @deprecated Use {@link #registerItem(Function, ResourceLocation, ResourceLocation)} instead
      */
-    @Deprecated(forRemoval = true, since = "1.22")
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         return registerItem((id) -> supplier.get(), identifier, creativeTab);
     }

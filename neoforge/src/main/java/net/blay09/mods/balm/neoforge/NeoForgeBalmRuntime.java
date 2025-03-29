@@ -81,7 +81,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmSounds sounds = new NeoForgeBalmSounds();
     private final BalmEntities entities = new NeoForgeBalmEntities();
     private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities();
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmProviders providers = new NeoForgeBalmProviders();
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -165,7 +165,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public BalmProviders getProviders() {
         return providers;
     }

@@ -119,7 +119,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
-        if (!Balm.getProxy().isConnectedToServer()) {
+        if (!Balm.getProxy().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
             return;
         }

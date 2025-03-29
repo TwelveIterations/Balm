@@ -6,7 +6,7 @@ import net.minecraft.client.multiplayer.ClientRecipeContainer;
 /**
  * @deprecated This event is no longer fired.
  */
-@Deprecated(forRemoval = true, since = "1.22")
+@Deprecated(forRemoval = true, since = "1.21.5")
 public class RecipesUpdatedEvent extends BalmEvent {
     private final ClientRecipeContainer clientRecipeContainer;
 
