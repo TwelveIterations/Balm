@@ -81,7 +81,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmSounds sounds = new ForgeBalmSounds();
     private final BalmEntities entities = new ForgeBalmEntities();
     private final BalmCapabilities capabilities = new ForgeBalmCapabilities();
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmProviders providers = new ForgeBalmProviders();
     private final BalmCommands commands = new ForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -165,7 +165,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public BalmProviders getProviders() {
         return providers;
     }

@@ -35,7 +35,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
 
     private static final Logger logger = LoggerFactory.getLogger(FabricBalmClientRuntime.class);
     private final BalmRenderers renderers = new FabricBalmRenderers();
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmTextures textures = new FabricBalmTextures();
     private final BalmScreens screens = new FabricBalmScreens();
     private final BalmKeyMappings keyMappings = createKeyMappingsBindings();
@@ -78,7 +78,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     }
 
     @Override
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public BalmTextures getTextures() {
         return textures;
     }

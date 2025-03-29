@@ -23,7 +23,7 @@ import net.minecraft.server.packs.resources.ReloadableResourceManager;
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
 
     private final BalmRenderers renderers = new NeoForgeBalmRenderers();
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmTextures textures = new NeoForgeBalmTextures();
     private final BalmScreens screens = new NeoForgeBalmScreens();
     private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings();
@@ -39,7 +39,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     }
 
     @Override
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public BalmTextures getTextures() {
         return textures;
     }

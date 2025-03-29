@@ -28,7 +28,7 @@ public class BalmProxy {
     /**
      * @deprecated Use {@link #isConnected()} instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public final boolean isConnectedToServer() {
         return isConnected();
     }

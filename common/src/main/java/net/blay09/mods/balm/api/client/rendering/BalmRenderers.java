@@ -57,18 +57,33 @@ public interface BalmRenderers {
         registerParticleProvider(particleType, provider);
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerEntityRenderer(ResourceLocation, Supplier, EntityRendererProvider)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerBlockEntityRenderer(ResourceLocation, Supplier, BlockEntityRendererProvider)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerBlockColorHandler(ResourceLocation, BlockColor, Supplier)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks);
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerParticleProvider(ResourceLocation, Supplier, ParticleProvider)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerParticleProvider(ResourceLocation, Supplier, Function)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 }

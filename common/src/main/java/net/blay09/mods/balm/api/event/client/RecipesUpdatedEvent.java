@@ -4,6 +4,10 @@ import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.crafting.RecipeManager;
 
+/**
+ * @deprecated This event is no longer fired.
+ */
+@Deprecated(forRemoval = true, since = "1.21.5")
 public class RecipesUpdatedEvent extends BalmEvent {
     private final RecipeManager recipeManager;
     private final RegistryAccess registryAccess;

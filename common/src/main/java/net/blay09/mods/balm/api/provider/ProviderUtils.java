@@ -7,13 +7,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities} instead.
  */
-@Deprecated
+@Deprecated(forRemoval = true, since = "1.21.5")
 public class ProviderUtils {
     /**
      * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities} instead.
      */
     @Nullable
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public static <T> T getProvider(BlockEntity blockEntity, Class<T> clazz) {
         return Balm.getProviders().getProvider(blockEntity, clazz);
     }
