@@ -47,17 +47,26 @@ public interface BalmItems {
 
     void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator);
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #itemProperties(ResourceLocation)} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default Item.Properties itemProperties() {
         return new Item.Properties();
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerItem(Function, ResourceLocation)} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier) {
         return registerItem(supplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerItem(Function, ResourceLocation, ResourceLocation)} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         return registerItem((id) -> supplier.get(), identifier, creativeTab);
     }

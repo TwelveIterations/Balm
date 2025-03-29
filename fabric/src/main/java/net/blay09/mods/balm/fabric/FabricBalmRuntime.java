@@ -82,7 +82,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
     private final BalmSounds sounds = new FabricBalmSounds();
     private final BalmEntities entities = new FabricBalmEntities();
     private final BalmCapabilities capabilities = new FabricBalmCapabilities();
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmProviders providers = new FabricBalmProviders();
     private final BalmCommands commands = new FabricBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -178,7 +178,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
     }
 
     @Override
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public BalmProviders getProviders() {
         return providers;
     }

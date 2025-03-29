@@ -3,6 +3,7 @@ package net.blay09.mods.balm.common;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntityBase;
+import net.blay09.mods.balm.api.capability.CapabilityType;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,11 +26,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class BalmBlockEntity extends BalmBlockEntityBase implements BalmProviderHolder {
 
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private final Map<Class<?>, BalmProvider<?>> providers = new HashMap<>();
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private final Map<Pair<Direction, Class<?>>, BalmProvider<?>> sidedProviders = new HashMap<>();
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private boolean providersInitialized;
 
     public BalmBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
@@ -46,6 +53,10 @@ public class BalmBlockEntity extends BalmBlockEntityBase implements BalmProvider
         return createUpdatePacket();
     }
 
+    /**
+     * @deprecated See {@link net.blay09.mods.balm.api.capability.BalmCapabilities}
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     @SuppressWarnings("unchecked")
     public <T> T getProvider(Class<T> clazz) {
         if (!providersInitialized) {
@@ -71,7 +82,11 @@ public class BalmBlockEntity extends BalmBlockEntityBase implements BalmProvider
         return found != null ? (T) found.getInstance() : null;
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities#registerProvider(ResourceLocation, CapabilityType, BiFunction, Supplier)} instead.
+     */
     @Override
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public void buildProviders(List<Object> providers) {
         providers.add(this);
 

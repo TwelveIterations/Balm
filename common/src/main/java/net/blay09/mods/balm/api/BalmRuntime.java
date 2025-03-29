@@ -56,7 +56,10 @@ public interface BalmRuntime {
 
     BalmCapabilities getCapabilities();
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #getCapabilities()} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     BalmProviders getProviders();
 
     BalmCommands getCommands();

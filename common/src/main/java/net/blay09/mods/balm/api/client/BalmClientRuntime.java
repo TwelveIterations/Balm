@@ -38,6 +38,9 @@ public interface BalmClientRuntime {
 
     void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
 
-    @Deprecated
+    /**
+     * @deprecated No more purpose. Register textures to atlases via resource pack instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     BalmTextures getTextures();
 }

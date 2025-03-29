@@ -38,32 +38,50 @@ public interface BalmBlocks {
         register(blockSupplier, blockItemSupplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #blockProperties(ResourceLocation)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default BlockBehaviour.Properties blockProperties() {
         return BlockBehaviour.Properties.of();
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerBlock(Function, ResourceLocation)} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default DeferredObject<Block> registerBlock(Supplier<Block> supplier, ResourceLocation identifier) {
         return registerBlock((id) -> supplier.get(), identifier);
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerBlockItem(Function, ResourceLocation)} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default DeferredObject<Item> registerBlockItem(Supplier<BlockItem> supplier, ResourceLocation identifier) {
         return registerBlockItem(supplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #registerBlockItem(Function, ResourceLocation, ResourceLocation)} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default DeferredObject<Item> registerBlockItem(Supplier<BlockItem> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         return registerBlockItem((id) -> supplier.get(), identifier, creativeTab);
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #register(Function, BiFunction, ResourceLocation)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default void register(Supplier<Block> blockSupplier, Supplier<BlockItem> blockItemSupplier, ResourceLocation identifier) {
         register(blockSupplier, blockItemSupplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #register(Function, BiFunction, ResourceLocation, ResourceLocation)} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default void register(Supplier<Block> blockSupplier, Supplier<BlockItem> blockItemSupplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         registerBlock(blockSupplier, identifier);
         registerBlockItem((id) -> blockItemSupplier.get(), identifier, creativeTab);

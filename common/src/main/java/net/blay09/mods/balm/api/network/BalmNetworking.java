@@ -46,7 +46,7 @@ public interface BalmNetworking {
     /**
      * @deprecated Use {@link #openMenu(Player, MenuProvider)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.22")
+    @Deprecated(forRemoval = true, since = "1.21.5")
     default void openGui(Player player, MenuProvider menuProvider) {
         openMenu(player, menuProvider);
     }

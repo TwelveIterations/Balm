@@ -24,7 +24,7 @@ import net.minecraft.server.packs.resources.ReloadableResourceManager;
 public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
 
     private final BalmRenderers renderers = new ForgeBalmRenderers();
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmTextures textures = new ForgeBalmTextures();
     private final BalmScreens screens = new ForgeBalmScreens();
     private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings();
@@ -40,7 +40,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCon
     }
 
     @Override
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public BalmTextures getTextures() {
         return textures;
     }

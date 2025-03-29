@@ -4,6 +4,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.capability.CapabilityType;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.provider.BalmProvider;
@@ -14,6 +15,7 @@ import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public abstract class BalmBlockEntityBase extends BlockEntity {
 
@@ -39,6 +43,10 @@ public abstract class BalmBlockEntityBase extends BlockEntity {
         super(blockEntityType, blockPos, blockState);
     }
 
+    /**
+     * @deprecated See {@link net.blay09.mods.balm.api.capability.BalmCapabilities}
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     private void addCapabilities(BalmProvider<?> provider, Map<Capability<?>, LazyOptional<?>> capabilities) {
         ForgeBalmProviders forgeProviders = (ForgeBalmProviders) Balm.getProviders();
         Capability<?> capability = forgeProviders.getCapability(provider.getProviderClass());
@@ -53,6 +61,10 @@ public abstract class BalmBlockEntityBase extends BlockEntity {
         }
     }
 
+    /**
+     * @deprecated See {@link net.blay09.mods.balm.api.capability.BalmCapabilities}
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     @SuppressWarnings("unchecked")
     public <T> T getProvider(Class<T> clazz) {
         ForgeBalmProviders forgeProviders = (ForgeBalmProviders) Balm.getProviders();
@@ -60,8 +72,12 @@ public abstract class BalmBlockEntityBase extends BlockEntity {
         return (T) getCapability(capability).resolve().orElse(null);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities#registerProvider(ResourceLocation, CapabilityType, BiFunction, Supplier)} instead.
+     */
     @NotNull
     @Override
+    @Deprecated(forRemoval = true, since = "1.21.5")
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (!capabilitiesInitialized) {
             List<Object> providers = new ArrayList<>();
@@ -93,6 +109,10 @@ public abstract class BalmBlockEntityBase extends BlockEntity {
         return result != null ? result.cast() : super.getCapability(cap, side);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities#registerProvider(ResourceLocation, CapabilityType, BiFunction, Supplier)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
     protected abstract void buildProviders(List<Object> providers);
 
 }
