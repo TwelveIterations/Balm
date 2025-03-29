@@ -5,7 +5,7 @@ import net.blay09.mods.balm.api.BalmRuntimeFactory;
 
 public class FabricBalmRuntimeFactory implements BalmRuntimeFactory {
     @Override
-    public BalmRuntime create() {
+    public BalmRuntime<?> create() {
         return new FabricBalmRuntime();
     }
 }
