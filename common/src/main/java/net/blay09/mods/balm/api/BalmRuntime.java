@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api;
 
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
@@ -57,6 +58,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmEntities getEntities();
 
+    BalmCapabilities getCapabilities();
+
+    @Deprecated
     BalmProviders getProviders();
 
     BalmCommands getCommands();
@@ -79,7 +83,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     <TProxy> SidedProxy<TProxy> sidedProxy(String commonName, String clientName);
 
-    void initialize(String modId, TLoadContext context, Runnable initializer);
+    void initializeMod(String modId, TLoadContext context, Runnable initializer);
 
     void initializeIfLoaded(String modId, String className);
 
@@ -98,6 +102,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     default void initializeModule(BalmModule module) {
         module.registerConfig(getConfig());
         module.registerResources(getResources());
+        module.registerAdditional(getRegistries());
         module.registerComponents(getComponents());
         module.registerBlocks(getBlocks());
         module.registerBlockEntities(getBlockEntities());
@@ -106,7 +111,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());
         module.registerMenus(getMenus());
-        module.registerCapabilities(getProviders());
+        module.registerCapabilities(getCapabilities());
         module.registerCommands(getCommands());
         module.registerRecipes(getRecipes());
         module.registerLootTables(getLootTables());
@@ -124,5 +129,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void onRuntimeAvailable(Runnable callback);
 
+    void registerModule(BalmModule module);
+
     BalmResources getResources();
+
+    BalmEnvironment getEnvironment();
 }

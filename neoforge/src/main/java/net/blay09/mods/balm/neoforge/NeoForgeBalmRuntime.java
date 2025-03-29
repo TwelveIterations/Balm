@@ -1,11 +1,9 @@
 package net.blay09.mods.balm.neoforge;
 
-import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmProxy;
-import net.blay09.mods.balm.api.BalmRegistries;
-import net.blay09.mods.balm.api.BalmRuntime;
+import net.blay09.mods.balm.api.*;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
@@ -26,10 +24,12 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
+import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
 import net.blay09.mods.balm.neoforge.component.NeoForgeBalmComponents;
@@ -66,9 +66,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
+public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> {
 
-    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
     private final BalmBlocks blocks = new NeoForgeBalmBlocks();
     private final BalmBlockEntities blockEntities = new NeoForgeBalmBlockEntities();
@@ -81,6 +80,8 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final BalmRegistries registries = new NeoForgeBalmRegistries();
     private final BalmSounds sounds = new NeoForgeBalmSounds();
     private final BalmEntities entities = new NeoForgeBalmEntities();
+    private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities();
+    @Deprecated
     private final BalmProviders providers = new NeoForgeBalmProviders();
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -91,19 +92,11 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmResources resources = new NeoForgeBalmResources();
-    private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
 
-    private boolean ready;
-
     public NeoForgeBalmRuntime() {
         NeoForgeBalmCommonEvents.registerEvents(events);
-    }
-
-    @Override
-    public BalmProxy getProxy() {
-        return proxy.get();
     }
 
     @Override
@@ -167,6 +160,12 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     }
 
     @Override
+    public BalmCapabilities getCapabilities() {
+        return capabilities;
+    }
+
+    @Override
+    @Deprecated
     public BalmProviders getProviders() {
         return providers;
     }
@@ -202,7 +201,7 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     }
 
     @Override
-    public void initialize(String modId, NeoForgeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
         ((NeoForgeBalmNetworking) networking).register(modId, context.modBus());
         ((NeoForgeBalmEntities) entities).register(modId, context.modBus());
         ((NeoForgeBalmStats) stats).register(modId, context.modBus());
@@ -219,23 +218,6 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
         if (isModLoaded(modId)) {
             addonClasses.add(className);
         }
-    }
-
-    @Override
-    public <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        SidedProxy<T> proxy = new SidedProxy<>(commonName, clientName);
-        try {
-            if (FMLEnvironment.dist.isClient()) {
-
-                proxy.resolveClient();
-            } else {
-                proxy.resolveCommon();
-            }
-        } catch (ProxyResolutionException e) {
-            throw new RuntimeException(e);
-        }
-
-        return proxy;
     }
 
     private void initializeAddons() {
@@ -280,42 +262,20 @@ public class NeoForgeBalmRuntime implements BalmRuntime<NeoForgeLoadContext> {
     }
 
     @Override
-    public <T> PlatformProxy<T> platformProxy() {
-        return new PlatformProxyImpl<>(LoaderPlatforms.NEOFORGE);
-    }
-
-    @Override
-    public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>(this::isModLoaded);
-    }
-
-    @Override
     public String getPlatform() {
         return LoaderPlatforms.NEOFORGE;
     }
 
     @Override
-    public boolean isReady() {
-        return ready;
-    }
-
-    @Override
-    public void onRuntimeAvailable(Runnable callback) {
-        initCallbacks.add(callback);
-        if (isReady()) {
-            callback.run();
-        }
-    }
-
-    public void initializeRuntime() {
-        ready = true;
-        for (final var callback : initCallbacks) {
-            callback.run();
-        }
-    }
-
-    @Override
     public BalmResources getResources() {
         return resources;
+    }
+
+    @Override
+    public BalmEnvironment getEnvironment() {
+        return switch (FMLEnvironment.dist) {
+            case CLIENT -> BalmEnvironment.CLIENT;
+            case DEDICATED_SERVER -> BalmEnvironment.SERVER;
+        };
     }
 }

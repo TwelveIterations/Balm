@@ -1,7 +1,9 @@
 package net.blay09.mods.balm.api.module;
 
+import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
@@ -13,7 +15,6 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.provider.BalmProviders;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
@@ -60,10 +61,10 @@ public interface BalmModule {
     default void registerNetworking(BalmNetworking networking) {
     }
 
-    default void registerCapabilities(BalmProviders capabilities) {
+    default void registerCapabilities(BalmCapabilities capabilities) {
     }
 
-    default void registerPermissions(BalmPermissions config) {
+    default void registerPermissions(BalmPermissions permissions) {
     }
 
     default void registerConfig(BalmConfig config) {
@@ -75,11 +76,15 @@ public interface BalmModule {
     default void registerEvents(BalmEvents events) {
     }
 
+    default void registerComponents(BalmComponents components) {
+    }
+
+    default void registerAdditional(BalmRegistries registries) {
+    }
+
     default void initialize() {
     }
 
     default void registerResources(BalmResources resources) {
     }
-
-    void registerComponents(BalmComponents components);
 }

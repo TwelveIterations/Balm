@@ -19,14 +19,6 @@ public interface BalmNetworking {
 
     void defineNetworkVersion(String modId, String version);
 
-    /**
-     * @deprecated Use {@link #openMenu(Player, MenuProvider)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    default void openGui(Player player, MenuProvider menuProvider) {
-        openMenu(player, menuProvider);
-    }
-
     default void allowClientAndServerOnly(String modId) {
         allowClientOnly(modId);
         allowServerOnly(modId);
@@ -66,5 +58,13 @@ public interface BalmNetworking {
     @Deprecated
     default <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<ServerPlayer, T> handler) {
         registerServerboundPacket(type, clazz, StreamCodec.of(encodeFunc::accept, decodeFunc::apply), handler);
+    }
+
+    /**
+     * @deprecated Use {@link #openMenu(Player, MenuProvider)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.22")
+    default void openGui(Player player, MenuProvider menuProvider) {
+        openMenu(player, menuProvider);
     }
 }

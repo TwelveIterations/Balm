@@ -12,13 +12,24 @@ public class BalmClientProxy extends BalmProxy {
     }
 
     @Override
-    public boolean isConnectedToServer() {
-        return Minecraft.getInstance().getConnection() != null;
+    @SuppressWarnings("ConstantValue")
+    public boolean isLocalServer() {
+        final var client = Minecraft.getInstance();
+        return client != null && client.isLocalServer();
     }
 
     @Override
+    @SuppressWarnings("ConstantValue")
+    public boolean isConnected() {
+        final var client = Minecraft.getInstance();
+        return client != null && client.getConnection() != null;
+    }
+
+    @Override
+    @SuppressWarnings("ConstantValue")
     public boolean isIngame() {
-        return Minecraft.getInstance().gameMode != null;
+        final var client = Minecraft.getInstance();
+        return client != null && client.gameMode != null;
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
@@ -55,8 +56,6 @@ public interface BalmHooks {
 
     boolean canItemsStack(ItemStack first, ItemStack second);
 
-    int getBurnTime(Level level, ItemStack itemStack);
-
     void setBurnTime(Item item, int burnTime);
 
     void firePlayerCraftingEvent(Player player, ItemStack crafted, Container craftMatrix);
@@ -65,11 +64,32 @@ public interface BalmHooks {
 
     boolean isShield(ItemStack itemStack);
 
-    boolean isRepairable(ItemStack itemStack);
-
     void setForcedPose(Player player, Pose pose);
 
     MinecraftServer getServer();
 
-    double getBlockReachDistance(Player player);
+    /**
+     * @deprecated Use {@link net.minecraft.world.entity.ai.attributes.Attributes#BLOCK_INTERACTION_RANGE} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
+    default double getBlockReachDistance(Player player) {
+        return 4.5 + (player.isCreative() ? 0.5 : 0);
+    }
+
+    /**
+     * @deprecated Check for {@link net.minecraft.core.component.DataComponents#REPAIRABLE} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
+    default boolean isRepairable(ItemStack itemStack) {
+        final var repairCost = itemStack.getItem().components().get(DataComponents.REPAIR_COST);
+        return repairCost != null && repairCost > 0;
+    }
+
+    /**
+     * @deprecated Use <code>level.fuelValues().burnDuration(itemStack);</code> instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
+    default int getBurnTime(Level level, ItemStack itemStack) {
+        return level.fuelValues().burnDuration(itemStack);
+    }
 }
