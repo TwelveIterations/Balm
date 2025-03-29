@@ -150,9 +150,4 @@ public class NeoForgeBalmHooks implements BalmHooks {
     public MinecraftServer getServer() {
         return ServerLifecycleHooks.getCurrentServer();
     }
-
-    @Override
-    public double getBlockReachDistance(Player player) {
-        return 4.5 + (player.isCreative() ? 0.5 : 0);
-    }
 }

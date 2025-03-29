@@ -6,7 +6,9 @@ import net.minecraft.client.KeyMapping;
 import java.util.Optional;
 
 public interface BalmKeyMappings {
-    KeyMapping registerKeyMapping(String name, int keyCode, String category);
+    default KeyMapping registerKeyMapping(String name, int keyCode, String category) {
+        return registerKeyMapping(name, InputConstants.Type.KEYSYM, keyCode, category);
+    }
 
     KeyMapping registerKeyMapping(String name, InputConstants.Type type, int keyCode, String category);
 

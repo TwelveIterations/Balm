@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -26,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class FabricBalmNetworking implements BalmNetworking {
 
@@ -74,7 +74,7 @@ public class FabricBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public void openGui(Player player, MenuProvider menuProvider) {
+    public void openMenu(Player player, MenuProvider menuProvider) {
         if (menuProvider instanceof BalmMenuProvider<?> balmMenuProvider) {
             player.openMenu(new ExtendedScreenHandlerFactory<>() {
                 @Override
@@ -153,17 +153,17 @@ public class FabricBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<Player, T> handler) {
+    public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {
         registeredMods.add(type.id().getNamespace());
-        final var messageRegistration = new ClientboundMessageRegistration<>(type, clazz, encodeFunc, decodeFunc, handler);
+        final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
         PayloadTypeRegistry.playS2C().register(type, messageRegistration.getCodec());
         messagesByType.put(type, messageRegistration);
     }
 
     @Override
-    public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<ServerPlayer, T> handler) {
+    public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<ServerPlayer, T> handler) {
         registeredMods.add(type.id().getNamespace());
-        final var messageRegistration = new ServerboundMessageRegistration<>(type, clazz, encodeFunc, decodeFunc, handler);
+        final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
         messagesByType.put(type, messageRegistration);
 
         PayloadTypeRegistry.playC2S().register(type, messageRegistration.getCodec());

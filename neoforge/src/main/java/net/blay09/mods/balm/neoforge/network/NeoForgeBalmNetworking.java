@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.network.ServerboundMessageRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -32,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class NeoForgeBalmNetworking implements BalmNetworking {
 
@@ -51,7 +51,7 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public void openGui(Player player, MenuProvider menuProvider) {
+    public void openMenu(Player player, MenuProvider menuProvider) {
         if (player instanceof ServerPlayer serverPlayer) {
             if (menuProvider instanceof BalmMenuProvider<?> balmMenuProvider) {
                 openGui(serverPlayer, balmMenuProvider);
@@ -103,7 +103,7 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
-        if (!Balm.getProxy().isConnectedToServer()) {
+        if (!Balm.getProxy().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
             return;
         }
@@ -112,16 +112,16 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<Player, T> handler) {
-        final var messageRegistration = new ClientboundMessageRegistration<>(type, clazz, encodeFunc, decodeFunc, handler);
-        final var registrations = getActiveRegistrations();
+    public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {
+        final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
+        final var registrations = getRegistrations(type.id().getNamespace());
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 
     @Override
-    public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<ServerPlayer, T> handler) {
-        final var messageRegistration = new ServerboundMessageRegistration<>(type, clazz, encodeFunc, decodeFunc, handler);
-        final var registrations = getActiveRegistrations();
+    public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<ServerPlayer, T> handler) {
+        final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
+        final var registrations = getRegistrations(type.id().getNamespace());
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 

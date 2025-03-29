@@ -2,13 +2,13 @@ package net.blay09.mods.balm.fabric.client;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.EmptyLoadContext;
-import net.blay09.mods.balm.api.client.BalmClientRuntime;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
+import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.fabric.FabricBalmRuntime;
 import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
@@ -17,25 +17,29 @@ import net.blay09.mods.balm.fabric.client.rendering.FabricBalmTextures;
 import net.blay09.mods.balm.fabric.client.screen.FabricBalmScreens;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.event.client.FabricBalmClientEvents;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
-public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadContext> {
+public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
 
     private static final Logger logger = LoggerFactory.getLogger(FabricBalmClientRuntime.class);
-    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private final BalmRenderers renderers = new FabricBalmRenderers();
+    @Deprecated
     private final BalmTextures textures = new FabricBalmTextures();
     private final BalmScreens screens = new FabricBalmScreens();
     private final BalmKeyMappings keyMappings = createKeyMappingsBindings();
     private final BalmModels models = new FabricBalmModels();
-
-    private boolean ready;
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
@@ -74,6 +78,7 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
     }
 
     @Override
+    @Deprecated
     public BalmTextures getTextures() {
         return textures;
     }
@@ -94,27 +99,22 @@ public class FabricBalmClientRuntime implements BalmClientRuntime<EmptyLoadConte
     }
 
     @Override
-    public void initialize(String modId, EmptyLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
         initializer.run();
     }
 
     @Override
-    public boolean isReady() {
-        return ready;
-    }
+    public void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
+            @Override
+            public ResourceLocation getFabricId() {
+                return identifier;
+            }
 
-    @Override
-    public void onRuntimeAvailable(Runnable callback) {
-        initCallbacks.add(callback);
-        if (isReady()) {
-            callback.run();
-        }
-    }
-
-    public void initializeRuntime() {
-        ready = true;
-        for (final var callback : initCallbacks) {
-            callback.run();
-        }
+            @Override
+            public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager manager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
+                return reloadListener.reload(barrier, manager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor);
+            }
+        });
     }
 }
