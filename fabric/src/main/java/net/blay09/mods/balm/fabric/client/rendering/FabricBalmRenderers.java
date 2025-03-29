@@ -35,8 +35,8 @@ public class FabricBalmRenderers implements BalmRenderers {
     private final Map<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinitions = new HashMap<>();
 
     @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
-        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, "main");
+    public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
+        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, layer);
         layerDefinitions.put(modelLayerLocation, layerDefinition);
         return modelLayerLocation;
     }
