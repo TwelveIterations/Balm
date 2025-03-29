@@ -14,12 +14,13 @@ import net.minecraft.world.level.block.Block;
 
 public class CommonCapabilities {
     public static CapabilityType<Block, Container, Direction> CONTAINER;
-    public static CapabilityType<Block, FluidTank, Direction> FLUID_TANK;
+    public static CapabilityType<Block, FluidTank, Void> FLUID_TANK;
     public static CapabilityType<Block, EnergyStorage, Direction> ENERGY_STORAGE;
 
     public static void initialize(BalmCapabilities capabilities) {
         CONTAINER = capabilities.registerType(id("container"), Block.class, Container.class, Direction.class);
-        FLUID_TANK = capabilities.registerType(id("fluid_tank"), Block.class, FluidTank.class, Direction.class);
+        // Backwards compatibility requires us to use Void as context. Fixed in 1.21.5+
+        FLUID_TANK = capabilities.registerType(id("fluid_tank"), Block.class, FluidTank.class, Void.class);
         ENERGY_STORAGE = capabilities.registerType(id("energy_storage"), Block.class, EnergyStorage.class, Direction.class);
 
         capabilities.registerFallbackBlockEntityProvider(id("container"), CONTAINER, ((blockEntity, direction) -> {
@@ -36,11 +37,7 @@ public class CommonCapabilities {
         }));
         capabilities.registerFallbackBlockEntityProvider(id("fluid_tank"), FLUID_TANK, ((blockEntity, direction) -> {
             if (blockEntity instanceof BalmFluidTankProvider provider) {
-                if (direction != null) {
-                    return provider.getFluidTank(direction);
-                } else {
-                    return provider.getFluidTank();
-                }
+                return provider.getFluidTank();
             }
             return null;
         }));
