@@ -30,9 +30,10 @@ public class NeoForgeBalm {
 
     public static final BlockCapability<Container, Direction> CONTAINER_CAPABILITY = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath("balm",
             "container"), Container.class);
-    public static final BlockCapability<FluidTank, Direction> FLUID_TANK_CAPABILITY = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath(
+    // Backwards compatibility requires us to use Void as context. Fixed in 1.21.5+
+    public static final BlockCapability<FluidTank, Void> FLUID_TANK_CAPABILITY = BlockCapability.create(ResourceLocation.fromNamespaceAndPath(
             "balm",
-            "fluid_tank"), FluidTank.class);
+            "fluid_tank"), FluidTank.class, Void.class);
     public static final BlockCapability<EnergyStorage, Direction> ENERGY_STORAGE_CAPABILITY = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath(
             "balm",
             "energy_storage"), EnergyStorage.class);
