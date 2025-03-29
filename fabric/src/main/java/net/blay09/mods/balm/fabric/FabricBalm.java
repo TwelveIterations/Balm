@@ -49,6 +49,7 @@ public class FabricBalm implements ModInitializer {
         ExampleConfig.initialize();
         Balm.getCommands().register(BalmCommand::register);
 
+        Balm.getNetworking().allowClientAndServerOnly("balm");
         Balm.getNetworking().defineNetworkVersion("balm", "2");
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
