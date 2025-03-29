@@ -9,7 +9,11 @@ public class BalmProxy {
         return null;
     }
 
-    public boolean isConnectedToServer() {
+    public boolean isLocalServer() {
+        return false;
+    }
+
+    public boolean isConnected() {
         return false;
     }
 
@@ -19,5 +23,13 @@ public class BalmProxy {
 
     public boolean isClient() {
         return false;
+    }
+
+    /**
+     * @deprecated Use {@link #isConnected()} instead.
+     */
+    @Deprecated
+    public final boolean isConnectedToServer() {
+        return isConnected();
     }
 }

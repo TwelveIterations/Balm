@@ -114,11 +114,6 @@ public class NeoForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public int getBurnTime(Level level, ItemStack itemStack) {
-        return level.fuelValues().burnDuration(itemStack);
-    }
-
-    @Override
     public void setBurnTime(Item item, int burnTime) {
         burnTimes.put(item, burnTime);
     }
@@ -139,12 +134,6 @@ public class NeoForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public boolean isRepairable(ItemStack itemStack) {
-        final var repairCost = itemStack.getItem().components().get(DataComponents.REPAIR_COST);
-        return repairCost != null && repairCost > 0;
-    }
-
-    @Override
     public void setForcedPose(Player player, Pose pose) {
         player.setForcedPose(pose);
     }
@@ -152,10 +141,5 @@ public class NeoForgeBalmHooks implements BalmHooks {
     @Override
     public MinecraftServer getServer() {
         return ServerLifecycleHooks.getCurrentServer();
-    }
-
-    @Override
-    public double getBlockReachDistance(Player player) {
-        return 4.5 + (player.isCreative() ? 0.5 : 0);
     }
 }

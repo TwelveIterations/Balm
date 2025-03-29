@@ -6,8 +6,10 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.common.command.BalmCommand;
 import net.blay09.mods.balm.config.ExampleConfig;
+import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.client.NeoForgeBalmClient;
 import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
+import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.minecraft.core.Direction;
@@ -40,13 +42,10 @@ public class NeoForgeBalm {
 
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
         ExampleConfig.initialize();
-        Balm.getCommands().register(BalmCommand::register);
 
-        Balm.getNetworking().allowClientAndServerOnly("balm");
-        Balm.getNetworking().defineNetworkVersion("balm", "2");
+        DeferredRegisters.register("balm", modBus);
 
         NeoForgeBalmWorldGen.initializeBalmBiomeModifiers(modBus);
-        modBus.addListener(NeoForgeBalmClient::onInitializeClient);
         modBus.addListener(this::enqueueIMC);
 
         NeoForgeBalmProviders providers = (NeoForgeBalmProviders) Balm.getProviders();
@@ -58,6 +57,13 @@ public class NeoForgeBalm {
         providers.registerBlockProvider(Container.class, CONTAINER_CAPABILITY);
         providers.registerBlockProvider(FluidTank.class, FLUID_TANK_CAPABILITY);
         providers.registerBlockProvider(EnergyStorage.class, ENERGY_STORAGE_CAPABILITY);
+
+        NeoForgeBalmCapabilities capabilities = (NeoForgeBalmCapabilities) Balm.getCapabilities();
+        capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "item_handler"), Capabilities.ItemHandler.BLOCK);
+        capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "fluid_handler"), Capabilities.FluidHandler.BLOCK);
+        capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "energy_storage"), Capabilities.EnergyStorage.BLOCK);
+
+        ((NeoForgeBalmNetworking) Balm.getNetworking()).register("balm", modBus);
     }
 
     private void enqueueIMC(InterModEnqueueEvent event) {

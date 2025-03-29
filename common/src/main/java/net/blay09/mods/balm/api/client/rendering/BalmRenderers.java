@@ -27,11 +27,17 @@ public interface BalmRenderers {
 
     ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition);
 
-    <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
+    default <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
+        registerEntityRenderer(type, provider);
+    }
 
-    <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
+    default <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
+        registerBlockEntityRenderer(type, provider);
+    }
 
-    void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks);
+    default void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
+        registerBlockColorHandler(color, blocks);
+    }
 
     /**
      * @deprecated Works fine on Fabric, but on Forge and NeoForge they changed the vanilla format with no hook (sigh).
@@ -39,7 +45,26 @@ public interface BalmRenderers {
     @Deprecated
     void setBlockRenderType(Supplier<Block> block, RenderType renderType);
 
+    default <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+        registerParticleProvider(particleType, factory);
+    }
+
+    default <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+        registerParticleProvider(particleType, provider);
+    }
+
+    @Deprecated
+    <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
+
+    @Deprecated
+    <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
+
+    @Deprecated
+    void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks);
+
+    @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
+    @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 }

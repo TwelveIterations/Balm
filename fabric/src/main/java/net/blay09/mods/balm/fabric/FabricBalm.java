@@ -47,41 +47,10 @@ public class FabricBalm implements ModInitializer {
         ((FabricBalmHooks) Balm.getHooks()).initialize();
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
         ExampleConfig.initialize();
-        Balm.getCommands().register(BalmCommand::register);
-
-        Balm.getNetworking().allowClientAndServerOnly("balm");
-        Balm.getNetworking().defineNetworkVersion("balm", "2");
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();
             ((BalmEntity) newPlayer).setFabricBalmData(data);
-        });
-
-        var providers = ((FabricBalmProviders) Balm.getProviders());
-        providers.registerProvider(ResourceLocation.fromNamespaceAndPath("balm", "container"), Container.class);
-        providers.registerProvider(ResourceLocation.fromNamespaceAndPath("balm", "fluid_tank"), FluidTank.class);
-        providers.registerProvider(ResourceLocation.fromNamespaceAndPath("balm", "energy_storage"), EnergyStorage.class);
-
-        ItemStorage.SIDED.registerFallback((world, pos, state, blockEntity, direction) -> {
-            if (blockEntity instanceof BalmContainerProvider containerProvider) {
-                final var container = containerProvider.getContainer(direction);
-                if (container != null) {
-                    return InventoryStorage.of(container, direction);
-                }
-            }
-
-            return null;
-        });
-
-        FluidStorage.SIDED.registerFallback((world, pos, state, blockEntity, direction) -> {
-            if (blockEntity instanceof BalmFluidTankProvider fluidTankProvider) {
-                final var fluidTank = fluidTankProvider.getFluidTank(direction);
-                if (fluidTank != null) {
-                    return new BalmFluidStorage(fluidTank);
-                }
-            }
-
-            return null;
         });
 
         Balm.getNetworking().registerServerboundPacket(ServerboundModListMessage.TYPE,
