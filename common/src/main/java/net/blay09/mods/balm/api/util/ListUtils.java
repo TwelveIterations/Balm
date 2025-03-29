@@ -5,7 +5,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * @deprecated Not in use by Balm.
+ */
+@Deprecated(forRemoval = true, since = "1.22")
 public class ListUtils {
+    @Deprecated
     public static <T> NonNullList<T> nonNullListOf(@Nullable List<T> list, T defaultValue) {
         if (list == null) {
             return null;

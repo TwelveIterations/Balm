@@ -7,6 +7,6 @@ public class BalmRuntimeSpi {
     public static BalmRuntime<BalmRuntimeLoadContext> create() {
         var loader = ServiceLoader.load(BalmRuntimeFactory.class);
         var factory = loader.findFirst().orElseThrow();
-        return factory.create();
+        return (BalmRuntime<BalmRuntimeLoadContext>) factory.create();
     }
 }
