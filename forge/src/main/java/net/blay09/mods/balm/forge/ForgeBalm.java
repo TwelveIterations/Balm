@@ -24,6 +24,7 @@ public class ForgeBalm {
     public ForgeBalm() {
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
+        Balm.getNetworking().allowClientAndServerOnly("balm");
         Balm.getNetworking().defineNetworkVersion("balm", "2");
 
         ((AbstractBalmConfig) Balm.getConfig()).initialize();
