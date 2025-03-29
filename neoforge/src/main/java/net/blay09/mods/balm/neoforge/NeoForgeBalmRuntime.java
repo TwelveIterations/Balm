@@ -46,7 +46,7 @@ import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
-import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmCapabilities;
+import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
 import net.blay09.mods.balm.neoforge.sound.NeoForgeBalmSounds;
@@ -218,11 +218,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
         }
     }
 
-    @Override
-    public <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        return new SidedProxy<>(this::getEnvironment, commonName, clientName);
-    }
-
     private void initializeAddons() {
         for (String addonClass : addonClasses) {
             try {
@@ -262,16 +257,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmPermissions getPermissions() {
         return permissions;
-    }
-
-    @Override
-    public <T> PlatformProxy<T> platformProxy() {
-        return new PlatformProxyImpl<>(LoaderPlatforms.NEOFORGE);
-    }
-
-    @Override
-    public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>(this::isModLoaded);
     }
 
     @Override

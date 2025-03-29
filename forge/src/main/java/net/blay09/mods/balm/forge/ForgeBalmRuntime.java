@@ -223,11 +223,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
         }
     }
 
-    @Override
-    public <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        return new SidedProxy<>(this::getEnvironment, commonName, clientName);
-    }
-
     private void initializeAddons() {
         for (String addonClass : addonClasses) {
             try {
@@ -261,16 +256,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmParticles getParticles() {
         return particles;
-    }
-
-    @Override
-    public <T> PlatformProxy<T> platformProxy() {
-        return new PlatformProxyImpl<>(LoaderPlatforms.FORGE);
-    }
-
-    @Override
-    public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>(this::isModLoaded);
     }
 
     @Override

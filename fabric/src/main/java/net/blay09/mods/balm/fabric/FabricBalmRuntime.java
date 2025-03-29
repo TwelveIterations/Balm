@@ -211,10 +211,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
         return FabricLoader.getInstance().getModContainer(modId).map(it -> it.getMetadata().getName()).orElse(modId);
     }
 
-    @Override
-    public <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        return new SidedProxy<>(this::getEnvironment, commonName, clientName);
-    }
 
     @Override
     public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
@@ -278,18 +274,8 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public <T> PlatformProxy<T> platformProxy() {
-        return new PlatformProxyImpl<>(LoaderPlatforms.FABRIC);
-    }
-
-    @Override
     public BalmPermissions getPermissions() {
         return permissions.get();
-    }
-
-    @Override
-    public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>(this::isModLoaded);
     }
 
     @Override

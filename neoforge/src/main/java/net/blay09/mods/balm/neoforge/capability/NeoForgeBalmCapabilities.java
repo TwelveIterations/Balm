@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.neoforge.provider;
+package net.blay09.mods.balm.neoforge.capability;
 
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.capability.CapabilityType;
