@@ -4,8 +4,13 @@ import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmProxy;
 import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.BalmRuntime;
+import net.blay09.mods.balm.api.*;
+import net.blay09.mods.balm.api.BalmEnvironment;
+import net.blay09.mods.balm.api.BalmHooks;
+import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
@@ -18,16 +23,16 @@ import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.provider.BalmProviders;
-import net.blay09.mods.balm.api.proxy.*;
+import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
-import net.blay09.mods.balm.common.proxy.ModProxyImpl;
-import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
 import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
+import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
@@ -58,12 +63,11 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ForgeBalmRuntime implements BalmRuntime {
-    private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
+public class ForgeBalmRuntime extends CommonBalmRuntime {
+
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
     private final BalmBlocks blocks = new ForgeBalmBlocks();
     private final BalmBlockEntities blockEntities = new ForgeBalmBlockEntities();
@@ -76,6 +80,8 @@ public class ForgeBalmRuntime implements BalmRuntime {
     private final BalmRegistries registries = new ForgeBalmRegistries();
     private final BalmSounds sounds = new ForgeBalmSounds();
     private final BalmEntities entities = new ForgeBalmEntities();
+    private final BalmCapabilities capabilities = new ForgeBalmCapabilities();
+    @Deprecated
     private final BalmProviders providers = new ForgeBalmProviders();
     private final BalmCommands commands = new ForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -84,11 +90,8 @@ public class ForgeBalmRuntime implements BalmRuntime {
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
-    private final SidedProxy<BalmProxy> proxy = sidedProxy("net.blay09.mods.balm.api.BalmProxy", "net.blay09.mods.balm.api.client.BalmClientProxy");
 
     private final List<String> addonClasses = new ArrayList<>();
-
-    private boolean ready;
 
     public ForgeBalmRuntime() {
         ForgeBalmCommonEvents.registerEvents(events);
@@ -155,6 +158,12 @@ public class ForgeBalmRuntime implements BalmRuntime {
     }
 
     @Override
+    public BalmCapabilities getCapabilities() {
+        return capabilities;
+    }
+
+    @Override
+    @Deprecated
     public BalmProviders getProviders() {
         return providers;
     }
@@ -195,7 +204,7 @@ public class ForgeBalmRuntime implements BalmRuntime {
     }
 
     @Override
-    public void initialize(String modId, Runnable initializer) {
+    public void initializeMod(String modId, Runnable initializer) {
         ((ForgeBalmItems) items).register();
         ((ForgeBalmEntities) entities).register();
         ((ForgeBalmWorldGen) worldGen).register();
@@ -213,23 +222,6 @@ public class ForgeBalmRuntime implements BalmRuntime {
         if (isModLoaded(modId)) {
             addonClasses.add(className);
         }
-    }
-
-    @Override
-    public <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        SidedProxy<T> proxy = new SidedProxy<>(commonName, clientName);
-        try {
-            if (FMLEnvironment.dist.isClient()) {
-
-                proxy.resolveClient();
-            } else {
-                proxy.resolveCommon();
-            }
-        } catch (ProxyResolutionException e) {
-            throw new RuntimeException(e);
-        }
-
-        return proxy;
     }
 
     private void initializeAddons() {
@@ -263,42 +255,21 @@ public class ForgeBalmRuntime implements BalmRuntime {
     }
 
     @Override
-    public <T> PlatformProxy<T> platformProxy() {
-        return new PlatformProxyImpl<>(LoaderPlatforms.FORGE);
-    }
-
-    @Override
-    public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>(this::isModLoaded);
-    }
-
-    @Override
     public String getPlatform() {
         return LoaderPlatforms.FORGE;
     }
 
     @Override
-    public BalmProxy getProxy() {
-        return proxy.get();
-    }
-
-    @Override
-    public boolean isReady() {
-        return ready;
-    }
-
-    @Override
-    public void onRuntimeAvailable(Runnable callback) {
-        initCallbacks.add(callback);
-        if (isReady()) {
-            callback.run();
-        }
-    }
-
     public void initializeRuntime() {
-        ready = true;
-        for (final var callback : initCallbacks) {
-            callback.run();
-        }
+        MinecraftForge.EVENT_BUS.register(capabilities);
+        super.initializeRuntime();
+    }
+
+    @Override
+    public BalmEnvironment getEnvironment() {
+        return switch (FMLEnvironment.dist) {
+            case CLIENT -> BalmEnvironment.CLIENT;
+            case DEDICATED_SERVER -> BalmEnvironment.SERVER;
+        };
     }
 }

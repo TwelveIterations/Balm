@@ -78,7 +78,7 @@ public class FabricBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public void openGui(Player player, MenuProvider menuProvider) {
+    public void openMenu(Player player, MenuProvider menuProvider) {
         if (menuProvider instanceof BalmMenuProvider balmMenuProvider) {
             player.openMenu(new ExtendedScreenHandlerFactory() {
                 @Override

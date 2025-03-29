@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api;
 
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
@@ -53,6 +54,9 @@ public interface BalmRuntime {
 
     BalmEntities getEntities();
 
+    BalmCapabilities getCapabilities();
+
+    @Deprecated
     BalmProviders getProviders();
 
     BalmCommands getCommands();
@@ -75,7 +79,7 @@ public interface BalmRuntime {
 
     <T> SidedProxy<T> sidedProxy(String commonName, String clientName);
 
-    void initialize(String modId, Runnable initializer);
+    void initializeMod(String modId, Runnable initializer);
 
     void initializeIfLoaded(String modId, String className);
 
@@ -91,6 +95,7 @@ public interface BalmRuntime {
 
     default void initializeModule(BalmModule module) {
         module.registerConfig(getConfig());
+        module.registerAdditional(getRegistries());
         module.registerBlocks(getBlocks());
         module.registerBlockEntities(getBlockEntities());
         module.registerItems(getItems());
@@ -98,7 +103,7 @@ public interface BalmRuntime {
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());
         module.registerMenus(getMenus());
-        module.registerCapabilities(getProviders());
+        module.registerCapabilities(getCapabilities());
         module.registerCommands(getCommands());
         module.registerRecipes(getRecipes());
         module.registerLootTables(getLootTables());
@@ -115,4 +120,8 @@ public interface BalmRuntime {
     boolean isReady();
 
     void onRuntimeAvailable(Runnable callback);
+
+    void registerModule(BalmModule module);
+
+    BalmEnvironment getEnvironment();
 }

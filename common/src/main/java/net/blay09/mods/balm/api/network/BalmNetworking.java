@@ -14,7 +14,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface BalmNetworking {
-    void openGui(Player player, MenuProvider menuProvider);
+    void openMenu(Player player, MenuProvider menuProvider);
 
     void defineNetworkVersion(String modId, String version);
 
@@ -42,4 +42,12 @@ public interface BalmNetworking {
     <T> void registerClientboundPacket(ResourceLocation identifier, Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encodeFunc, Function<FriendlyByteBuf, T> decodeFunc, BiConsumer<Player, T> handler);
 
     <T> void registerServerboundPacket(ResourceLocation identifier, Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encodeFunc, Function<FriendlyByteBuf, T> decodeFunc, BiConsumer<ServerPlayer, T> handler);
+
+    /**
+     * @deprecated Use {@link #openMenu(Player, MenuProvider)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.22")
+    default void openGui(Player player, MenuProvider menuProvider) {
+        openMenu(player, menuProvider);
+    }
 }

@@ -65,11 +65,13 @@ public interface BalmHooks {
 
     boolean isShield(ItemStack itemStack);
 
-    boolean isRepairable(ItemStack itemStack);
-
     void setForcedPose(Player player, Pose pose);
 
     MinecraftServer getServer();
 
-    double getBlockReachDistance(Player player);
+    default double getBlockReachDistance(Player player) {
+        return 4.5 + (player.isCreative() ? 0.5 : 0);
+    }
+
+    boolean isRepairable(ItemStack itemStack);
 }

@@ -7,12 +7,11 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 public interface BalmClientRuntime {
     BalmRenderers getRenderers();
-
-    @Deprecated
-    BalmTextures getTextures();
 
     BalmScreens getScreens();
 
@@ -20,7 +19,7 @@ public interface BalmClientRuntime {
 
     BalmKeyMappings getKeyMappings();
 
-    void initialize(String modId, Runnable initializer);
+    void initializeMod(String modId, Runnable initializer);
 
     default void initializeModule(BalmClientModule module) {
         module.registerEvents(Balm.getEvents());
@@ -34,4 +33,11 @@ public interface BalmClientRuntime {
     boolean isReady();
 
     void onRuntimeAvailable(Runnable callback);
+
+    void registerModule(BalmClientModule module);
+
+    void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
+
+    @Deprecated
+    BalmTextures getTextures();
 }

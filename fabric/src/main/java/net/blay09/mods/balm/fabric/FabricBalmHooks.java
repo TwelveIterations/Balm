@@ -185,8 +185,4 @@ public class FabricBalmHooks implements BalmHooks {
         return currentServer.get();
     }
 
-    @Override
-    public double getBlockReachDistance(Player player) {
-        return 4.5 + (player.isCreative() ? 0.5 : 0);
-    }
 }

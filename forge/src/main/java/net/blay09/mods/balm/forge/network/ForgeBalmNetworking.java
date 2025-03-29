@@ -54,7 +54,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public void openGui(Player player, MenuProvider menuProvider) {
+    public void openMenu(Player player, MenuProvider menuProvider) {
         if (player instanceof ServerPlayer) {
             if (menuProvider instanceof BalmMenuProvider balmMenuProvider) {
                 NetworkHooks.openScreen((ServerPlayer) player, menuProvider, buf -> balmMenuProvider.writeScreenOpeningData((ServerPlayer) player, buf));
@@ -124,7 +124,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public <T> void sendToServer(T message) {
-        if (!Balm.getProxy().isConnectedToServer()) {
+        if (!Balm.getProxy().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
             return;
         }

@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api;
 
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
@@ -10,6 +11,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
+import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
@@ -30,17 +32,52 @@ import java.util.function.Consumer;
 public class Balm {
     private static final BalmRuntime runtime = BalmRuntimeSpi.create();
 
+    public static void registerModule(BalmModule module) {
+        runtime.registerModule(module);
+    }
+
     public static void onRuntimeAvailable(Runnable callback) {
         runtime.onRuntimeAvailable(callback);
     }
 
+    /**
+     * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
+     */
+    @Deprecated
     public static void initialize(String modId) {
-        runtime.initialize(modId, () -> {
-        });
+        initialize(modId, () -> {});
     }
 
+    /**
+     * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
+     */
+    @Deprecated
     public static void initialize(String modId, Runnable initializer) {
-        runtime.initialize(modId, initializer);
+        initializeMod(modId, EmptyLoadContext.INSTANCE, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
+     */
+    @Deprecated
+    public static void initialize(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+        initializeMod(modId, context, initializer);
+    }
+
+    public static void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+        runtime.initializeMod(modId, initializer);
+    }
+
+    public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {
+        runtime.initializeMod(modId, () -> registerModule(module));
+    }
+
+    public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule... modules) {
+        runtime.initializeMod(modId, () -> {
+            for (final var module : modules) {
+                registerModule(module);
+            }
+        });
     }
 
     public static boolean isModLoaded(String modId) {
@@ -131,8 +168,8 @@ public class Balm {
         return runtime.getEntities();
     }
 
-    public static BalmProviders getProviders() {
-        return runtime.getProviders();
+    public static BalmCapabilities getCapabilities() {
+        return runtime.getCapabilities();
     }
 
     public static BalmCommands getCommands() {
@@ -165,5 +202,17 @@ public class Balm {
 
     public static BalmRuntime getRuntime() {
         return runtime;
+    }
+
+    public static BalmEnvironment getEnvironment() {
+        return runtime.getEnvironment();
+    }
+
+    /**
+     * @deprecated Use {@link #getCapabilities()} instead.
+     */
+    @Deprecated
+    public static BalmProviders getProviders() {
+        return runtime.getProviders();
     }
 }
