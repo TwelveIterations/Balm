@@ -1,4 +1,1 @@
-- Fixed crash with Sinytra Connector (again)
-- Added `BalmNetworking.defineNetworkVersion` for more control over network compatibility
-  - Fabric's remote version check now uses the network version (which defaults to the mod version)
-- Added remote version verification even on client/server-only compatible mods if they are installed on both sides
+- Fixed version verification falsely treating allowServerOnly/allowClientOnly as denyServerOnly/denyClientOnly
