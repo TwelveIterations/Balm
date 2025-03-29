@@ -112,7 +112,7 @@ public class FabricBalmNetworking implements BalmNetworking {
                 .map(modContainer -> modContainer.getMetadata().getVersion().toString())
                 .map(modVersion -> {
                     final var networkVersion = networkVersions.getOrDefault(modId, modVersion);
-                    return new NetworkVersions(modVersion, networkVersion, environment == BalmEnvironment.CLIENT ? isClientOnly(modId) : isServerOnly(modId));
+                    return new NetworkVersions(modVersion, networkVersion, environment == BalmEnvironment.CLIENT ? !isClientOnly(modId) : !isServerOnly(modId));
                 });
     }
 
