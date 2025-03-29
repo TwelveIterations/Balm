@@ -6,11 +6,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * @deprecated Not in use by Balm.
+ * @deprecated Not in use by Balm. Make a copy if you want to keep it.
  */
 @Deprecated(forRemoval = true, since = "1.22")
 public class ListUtils {
-    @Deprecated
+    /**
+     * @deprecated Not in use by Balm. Make a copy if you want to keep it.
+     */
+    @Deprecated(forRemoval = true, since = "1.22")
     public static <T> NonNullList<T> nonNullListOf(@Nullable List<T> list, T defaultValue) {
         if (list == null) {
             return null;

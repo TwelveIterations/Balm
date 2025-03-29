@@ -46,7 +46,7 @@ public class Balm {
     /**
      * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.22")
     public static void initialize(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
         initializeMod(modId, context, initializer);
     }
