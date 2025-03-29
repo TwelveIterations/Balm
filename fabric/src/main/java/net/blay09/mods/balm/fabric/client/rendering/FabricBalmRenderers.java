@@ -29,8 +29,8 @@ import java.util.function.Supplier;
 
 public class FabricBalmRenderers implements BalmRenderers {
     @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
-        final var modelLayerLocation = new ModelLayerLocation(location, "main");
+    public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
+        final var modelLayerLocation = new ModelLayerLocation(location, layer);
         EntityModelLayerRegistry.registerModelLayer(modelLayerLocation, layerDefinition::get);
         return modelLayerLocation;
     }

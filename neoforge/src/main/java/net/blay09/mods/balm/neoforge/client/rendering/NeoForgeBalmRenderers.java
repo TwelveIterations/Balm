@@ -39,8 +39,8 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
-        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, "main");
+    public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
+        ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, layer);
         getActiveRegistrations().layerDefinitions.put(modelLayerLocation, layerDefinition);
         return modelLayerLocation;
     }
