@@ -21,7 +21,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface BalmRenderers {
-    ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition);
+    default ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
+        return registerModel(location, "main", layerDefinition);
+    }
 
     ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition);
 

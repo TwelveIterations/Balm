@@ -38,11 +38,6 @@ public class ForgeBalmRenderers implements BalmRenderers {
     private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
-        return registerModel(location, "main", layerDefinition);
-    }
-
-    @Override
     public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
         ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, layer);
         getRegistrations(location.getNamespace()).layerDefinitions.put(modelLayerLocation, layerDefinition);

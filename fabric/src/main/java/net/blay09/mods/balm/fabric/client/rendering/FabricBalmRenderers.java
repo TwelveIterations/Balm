@@ -28,10 +28,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalmRenderers implements BalmRenderers {
-    @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
-        return registerModel(location, "main", layerDefinition);
-    }
 
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
