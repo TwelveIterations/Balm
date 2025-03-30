@@ -8,10 +8,14 @@ import net.blay09.mods.balm.api.config.BalmConfigData;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.*;
 import net.blay09.mods.balm.api.network.ConfigReflection;
+import net.blay09.mods.balm.common.config.ConfigLocalization;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ClothConfigUtils {
 
@@ -19,7 +23,7 @@ public class ClothConfigUtils {
         return (ConfigScreenFactory<Screen>) screen -> {
             final var builder = ConfigBuilder.create()
                     .setParentScreen(screen)
-                    .setTitle(Component.translatable(modId + ".configuration.title"));
+                    .setTitle(Component.translatable(ConfigLocalization.forTitle(modId)));
             final var schemas = Balm.getConfig().getSchemasByNamespace(modId);
             builder.setSavingRunnable(() -> {
                 for (final var schema : schemas) {
@@ -28,18 +32,16 @@ public class ClothConfigUtils {
             });
             for (final var schema : schemas) {
                 final var config = Balm.getConfig().getLocalConfig(schema);
-                final var i18nBase = schema.identifier().getNamespace() + ".configuration";
                 final var categories = schema.categories();
                 ConfigCategory rootCategory = null;
                 for (final var rootProperty : schema.rootProperties()) {
                     if (rootCategory == null) {
-                        rootCategory = builder.getOrCreateCategory(Component.translatable(i18nBase));
+                        rootCategory = builder.getOrCreateCategory(Component.translatable(ConfigLocalization.forRootCategory(schema)));
                     }
                     addPropertyToBuilder(config, rootProperty, rootCategory, builder);
                 }
                 for (final var category : categories) {
-                    var categoryI18nBase = i18nBase + "." + category;
-                    final var categoryInstance = builder.getOrCreateCategory(Component.translatable(categoryI18nBase));
+                    final var categoryInstance = builder.getOrCreateCategory(Component.translatable(ConfigLocalization.forCategory(category)));
                     for (final var property : category.properties()) {
                         addPropertyToBuilder(config, property, categoryInstance, builder);
                     }
@@ -52,11 +54,8 @@ public class ClothConfigUtils {
 
     @SuppressWarnings("unchecked")
     private static void addPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<?> property, ConfigCategory categoryInstance, ConfigBuilder builder) {
-        final var schema = property.parentSchema();
-        final var i18nBase = schema.identifier().getNamespace() + ".configuration";
-        var categoryI18nBase = i18nBase + (property.category().isEmpty() ? "" : ("." + property.category()));
-        var displayName = Component.translatable(categoryI18nBase + "." + property.name());
-        var tooltip = Component.translatable(categoryI18nBase + "." + property.name() + ".tooltip");
+        var displayName = Component.translatable(ConfigLocalization.forProperty(property));
+        var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
         switch (property) {
             case ConfiguredString stringProperty -> categoryInstance.addEntry(
                     builder.entryBuilder().startStrField(displayName, stringProperty.get(config))

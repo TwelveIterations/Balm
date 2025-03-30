@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.api.config.schema.builder.ConfigCategory;
+import net.blay09.mods.balm.common.config.ConfigLocalization;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ClassUtils;
@@ -86,8 +87,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getTranslationKey() {
-                final var configIdentifier = schema.identifier();
-                return configIdentifier.getNamespace() + ".configuration." + configIdentifier.getPath() + ".title";
+                return ConfigLocalization.forTitle(schema);
             }
         };
     }
@@ -128,8 +128,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getTranslationKey() {
-                final var configIdentifier = category.parentSchema().identifier();
-                return configIdentifier.getNamespace() + ".configuration." + category;
+                return ConfigLocalization.forCategory(category);
             }
         };
     }
@@ -192,18 +191,12 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public Component getComment() {
-                        final var category = property.category();
-                        final var modId = property.parentSchema().identifier();
-                        final var key = property.name();
-                        return category.isEmpty() ? Component.translatable(modId + ".configuration." + key + ".tooltip") : Component.translatable(modId + ".configuration." + category + "." + key + ".tooltip");
+                        return Component.translatable(ConfigLocalization.forPropertyTooltip(property));
                     }
 
                     @Override
                     public String getTranslationKey() {
-                        final var category = property.category();
-                        final var modId = property.parentSchema().identifier();
-                        final var key = property.name();
-                        return category.isEmpty() ? modId + ".configuration." + key : modId + ".configuration." + category + "." + key;
+                        return ConfigLocalization.forProperty(property);
                     }
 
                     @Override
@@ -239,18 +232,12 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public Component getTooltip() {
-                final var category = property.category();
-                final var modId = property.parentSchema().identifier();
-                final var key = property.name();
-                return category.isEmpty() ? Component.translatable(modId + ".configuration." + key + ".tooltip") : Component.translatable(modId + ".configuration." + category + "." + key + ".tooltip");
+                return Component.translatable(ConfigLocalization.forPropertyTooltip(property));
             }
 
             @Override
             public String getTranslationKey() {
-                final var category = property.category();
-                final var modId = property.parentSchema().identifier();
-                final var key = property.name();
-                return category.isEmpty() ? modId + ".configuration." + key : modId + ".configuration." + category + "." + key;
+                return ConfigLocalization.forPropertyTooltip(property);
             }
         };
     }
@@ -267,7 +254,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         configsByType.put(ConfigType.UNIVERSAL, universalConfigs);
         configsByType.put(ConfigType.CLIENT, clientConfigs);
         return ConfigScreenHelper.createSelectionScreen(parent,
-                Component.translatable(modId + ".configuration.title"),
+                Component.translatable(ConfigLocalization.forTitle(modId)),
                 configsByType
         );
     }

@@ -11,6 +11,7 @@ import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
 import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
+import net.blay09.mods.balm.common.config.ConfigLocalization;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -28,13 +29,9 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     private final Map<ResourceLocation, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
     private final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
 
-    private static ForgeConfigSpec.ConfigValue<?> addPropertyToSpec(BalmConfigSchema schema, ConfiguredProperty<?> property, ForgeConfigSpec.Builder spec) {
+    private static ForgeConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ForgeConfigSpec.Builder spec) {
         spec.comment(property.comment());
-        if (property.category().isEmpty()) {
-            spec.translation(schema.identifier().getNamespace() + ".configuration." + property.name());
-        } else {
-            spec.translation(schema.identifier().getNamespace() + ".configuration." + property.category() + "." + property.name());
-        }
+        spec.translation(ConfigLocalization.forProperty(property));
 
         return switch (property) {
             case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue().booleanValue());
@@ -250,12 +247,12 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
         final var spec = new ForgeConfigSpec.Builder();
         final var properties = HashBasedTable.<String, String, ForgeConfigSpec.ConfigValue<?>>create();
         for (final var rootProperty : schema.rootProperties()) {
-            properties.put("", rootProperty.name(), addPropertyToSpec(schema, rootProperty, spec));
+            properties.put("", rootProperty.name(), addPropertyToSpec(rootProperty, spec));
         }
         for (final var category : schema.categories()) {
             spec.push(category.name());
             for (final var property : category.properties()) {
-                properties.put(category.name(), property.name(), addPropertyToSpec(schema, property, spec));
+                properties.put(category.name(), property.name(), addPropertyToSpec(property, spec));
             }
             spec.pop();
         }
