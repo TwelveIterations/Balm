@@ -1,11 +1,12 @@
 package net.blay09.mods.balm.forge;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.AbstractBalmConfig;
+import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
-import net.blay09.mods.balm.common.command.BalmCommand;
-import net.blay09.mods.balm.config.ExampleConfig;
+import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
+import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.capability.ForgeCommonCapabilities;
 import net.blay09.mods.balm.forge.client.ForgeBalmClient;
@@ -26,11 +27,13 @@ import net.minecraftforge.items.IItemHandler;
 public class ForgeBalm {
 
     public ForgeBalm() {
+        BalmLoadContexts.register("balm", EmptyLoadContext.INSTANCE);
+
         Balm.registerModule(new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
-        ((AbstractBalmConfig) Balm.getConfig()).initialize();
-        ExampleConfig.initialize();
+        Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
+        Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
         ForgeBalmWorldGen.initializeBalmBiomeModifiers();
         final var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

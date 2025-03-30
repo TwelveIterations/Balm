@@ -1,8 +1,9 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.config.BalmConfigData;
-import net.blay09.mods.balm.api.config.ExpectedType;
+import net.blay09.mods.balm.api.config.LoadedConfig;
+import net.blay09.mods.balm.api.config.LoadedTableConfig;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlError;
 import net.blay09.mods.balm.notoml.NotomlParser;
@@ -18,7 +19,7 @@ public class FabricConfigLoader {
 
     private static final Logger logger = LogUtils.getLogger();
 
-    public static void load(File configFile, BalmConfigData configData) throws IOException {
+    public static LoadedConfig load(File configFile, BalmConfigSchema schema) throws IOException {
         Notoml notoml = new Notoml();
         if (configFile.exists()) {
             try {
@@ -28,48 +29,12 @@ public class FabricConfigLoader {
                 logger.error("Failed to load config file {}", configFile, e);
             }
         }
-        for (String category : notoml.getProperties().rowKeySet()) {
-            Object categoryInstance;
-            if (category.isEmpty()) {
-                categoryInstance = configData;
-            } else {
-                try {
-                    var categoryField = configData.getClass().getField(category);
-                    categoryInstance = categoryField.get(configData);
-                } catch (NoSuchFieldException e) {
-                    notoml.addError(new NotomlError("Unknown config category: '" + category + "'"));
-                    continue;
-                } catch (IllegalAccessException e) {
-                    notoml.addError(new NotomlError("Error loading config category: '" + category + "'", e));
-                    continue;
-                }
-            }
-
-            var properties = notoml.getProperties().row(category);
-            for (Map.Entry<String, Object> propertyEntry : properties.entrySet()) {
-                var property = propertyEntry.getKey();
-                var value = propertyEntry.getValue();
-                try {
-                    var propertyField = categoryInstance.getClass().getField(property);
-                    var expectedTypeAnnotation = propertyField.getAnnotation(ExpectedType.class);
-                    Class<?> innerType = expectedTypeAnnotation != null ? expectedTypeAnnotation.value() : null;
-                    try {
-                        Object convertedValue = convertValue(value, propertyField.getType(), innerType);
-                        if (convertedValue != null) {
-                            propertyField.set(categoryInstance, convertedValue);
-                        }
-                    } catch (IllegalArgumentException e) {
-                        String expectedValueType = getExpectedValueTypeMessage(propertyField.getType(), innerType);
-                        notoml.addError(new NotomlError("Invalid value for config property [" + category + "] '" + property + "': '" + value + "', expected " + expectedValueType));
-                    }
-                } catch (NoSuchFieldException e) {
-                    notoml.addError(new NotomlError("Unknown config property: [" + category + "] '" + property + "'"));
-                } catch (Exception e) {
-                    notoml.addError(new NotomlError("Error loading config property [" + category + "] '" + property + "'", e));
-                }
-            }
+        final var table = notoml.getProperties();
+        final var configAndErrors = LoadedTableConfig.of(schema, table);
+        final var config = configAndErrors.getFirst();
+        for (final var throwable : configAndErrors.getSecond()) {
+            notoml.addError(new NotomlError(throwable.getMessage(), throwable));
         }
-
         if (notoml.hasErrors()) {
             logger.error("Errors were encountered when loading the config file {}:", configFile.getName());
             for (NotomlError error : notoml.getErrors()) {
@@ -81,19 +46,20 @@ public class FabricConfigLoader {
             }
             File backupFile = getBackupConfigFile(configFile);
             configFile.renameTo(backupFile);
-            FabricConfigSaver.save(configFile, configData);
+            FabricConfigSaver.save(configFile, schema, config);
             logger.error("The affected properties have been reset to their defaults and a backup of the corrupted version was created under {}",
                     backupFile.getName());
         } else {
-            Notoml updated = FabricConfigSaver.toNotoml(configData);
+            Notoml updated = FabricConfigSaver.toNotoml(schema, config);
             if (!notoml.containsProperties(updated)) {
                 logger.info("The config file {} is missing some properties.", configFile.getName());
                 File backupFile = getBackupConfigFile(configFile);
                 configFile.renameTo(backupFile);
-                FabricConfigSaver.save(configFile, configData);
+                FabricConfigSaver.save(configFile, schema, config);
                 logger.info("The missing properties have been added and a backup of the previous version was created under {}", backupFile.getName());
             }
         }
+        return config;
     }
 
     private static File getBackupConfigFile(File configFile) {

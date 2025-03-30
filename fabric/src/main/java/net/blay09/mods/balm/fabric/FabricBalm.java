@@ -2,12 +2,14 @@ package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.config.AbstractBalmConfig;
+import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.blay09.mods.balm.api.network.NetworkVersions;
 import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
-import net.blay09.mods.balm.config.ExampleConfig;
+import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
+import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -30,11 +32,14 @@ public class FabricBalm implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        BalmLoadContexts.register("balm", EmptyLoadContext.INSTANCE);
+
         ((FabricBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         ((FabricBalmHooks) Balm.getHooks()).initialize();
-        ((AbstractBalmConfig) Balm.getConfig()).initialize();
-        ExampleConfig.initialize();
+
+        Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
+        Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();
