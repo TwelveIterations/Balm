@@ -33,7 +33,7 @@ public class PrimitiveConfigCodecs {
     }
 
     private static <T extends Enum<T>> Codec<T> enumCodec(Class<T> type) {
-        return LenientEnumCodecs.fromLegacyValues(type::getEnumConstants);
+        return LenientEnumCodecs.fromValues(type::getEnumConstants);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

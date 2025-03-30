@@ -15,17 +15,18 @@ import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
-public interface LenientEnumCodecs {
-        static <T extends Enum<T>> Codec<T> fromLegacyValues(Supplier<T[]> valuesSupplier) {
+public class LenientEnumCodecs {
+    public static <T extends Enum<T>> Codec<T> fromValues(Supplier<T[]> valuesSupplier) {
         final var values = valuesSupplier.get();
-        final var nameLookup = createLegacyNameLookup(values, Function.identity());
+        final var nameLookup = createNameLookup(values, Function.identity());
         final var indexLookup = Util.createIndexLookup(Arrays.asList(values));
-        return new LenientStringRepresentableCodec<>(values, nameLookup, indexLookup);
+        return new LenientEnumCodec<>(values, nameLookup, indexLookup);
     }
 
-    private static <T extends Enum<T>> Function<String, T> createLegacyNameLookup(T[] values, Function<String, String> keyFunction) {
+    private static <T extends Enum<T>> Function<String, T> createNameLookup(T[] values, Function<String, String> keyFunction) {
         if (values.length > 16) {
-            final var map = Arrays.stream(values).collect(Collectors.toMap((value) -> keyFunction.apply(getSerializedName(value).toLowerCase(Locale.ROOT)), Function.identity()));
+            final var map = Arrays.stream(values)
+                    .collect(Collectors.toMap((value) -> keyFunction.apply(getSerializedName(value).toLowerCase(Locale.ROOT)), Function.identity()));
             return (name) -> name == null ? null : map.get(name.toLowerCase(Locale.ROOT));
         } else {
             return (name) -> {
@@ -48,10 +49,10 @@ public interface LenientEnumCodecs {
         }
     }
 
-    class LenientStringRepresentableCodec<S extends Enum<S>> implements Codec<S> {
+    static class LenientEnumCodec<S extends Enum<S>> implements Codec<S> {
         private final Codec<S> codec;
 
-        public LenientStringRepresentableCodec(S[] values, Function<String, S> nameLookup, ToIntFunction<S> indexLookup) {
+        public LenientEnumCodec(S[] values, Function<String, S> nameLookup, ToIntFunction<S> indexLookup) {
             this.codec = ExtraCodecs.orCompressed(Codec.stringResolver(LenientEnumCodecs::getSerializedName, nameLookup),
                     ExtraCodecs.idResolverCodec(indexLookup, (p_304986_) -> p_304986_ >= 0 && p_304986_ < values.length ? values[p_304986_] : null, -1));
         }

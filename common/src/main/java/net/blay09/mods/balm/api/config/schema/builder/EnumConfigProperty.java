@@ -18,7 +18,7 @@ public class EnumConfigProperty<T extends Enum<T>> extends AbstractConfigPropert
         this.defaultValue = defaultValue;
         final var enumClass = defaultValue.getDeclaringClass();
         final var byIdMapper = ByIdMap.continuous(Enum::ordinal, enumClass.getEnumConstants(), ByIdMap.OutOfBoundsStrategy.ZERO);
-        this.codec = LenientEnumCodecs.fromLegacyValues(enumClass::getEnumConstants);
+        this.codec = LenientEnumCodecs.fromValues(enumClass::getEnumConstants);
         this.streamCodec = ByteBufCodecs.idMapper(byIdMapper, Enum::ordinal).cast();
     }
 
