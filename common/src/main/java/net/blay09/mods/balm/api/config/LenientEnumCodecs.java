@@ -15,32 +15,22 @@ import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
-public interface LegacyStringRepresentable extends StringRepresentable {
-    /*static <E extends Enum<E>> LegacyEnumCodec<E> fromLegacyEnumWithMapping(Supplier<E[]> enumValuesSupplier, Function<String, String> keyFunction) {
-        final var enumValues = enumValuesSupplier.get();
-        final var nameLookup = createLegacyNameLookup(enumValues, keyFunction);
-        return new LegacyEnumCodec<E>(enumValues, nameLookup);
-    }
-
-    static <E extends Enum<E>> LegacyEnumCodec<E> fromLegacyEnum(Supplier<E[]> elementsSupplier) {
-        return fromLegacyEnumWithMapping(elementsSupplier, Function.identity());
-    }*/
-
-    static <T extends Enum<T>> Codec<T> fromLegacyValues(Supplier<T[]> valuesSupplier) {
+public interface LenientEnumCodecs {
+        static <T extends Enum<T>> Codec<T> fromLegacyValues(Supplier<T[]> valuesSupplier) {
         final var values = valuesSupplier.get();
         final var nameLookup = createLegacyNameLookup(values, Function.identity());
         final var indexLookup = Util.createIndexLookup(Arrays.asList(values));
-        return new LegacyStringRepresentableCodec<>(values, nameLookup, indexLookup);
+        return new LenientStringRepresentableCodec<>(values, nameLookup, indexLookup);
     }
 
     private static <T extends Enum<T>> Function<String, T> createLegacyNameLookup(T[] values, Function<String, String> keyFunction) {
         if (values.length > 16) {
-            final var map = Arrays.stream(values).collect(Collectors.toMap((value) -> keyFunction.apply(getSerializedName(value)), Function.identity()));
-            return (name) -> name == null ? null : map.get(name);
+            final var map = Arrays.stream(values).collect(Collectors.toMap((value) -> keyFunction.apply(getSerializedName(value).toLowerCase(Locale.ROOT)), Function.identity()));
+            return (name) -> name == null ? null : map.get(name.toLowerCase(Locale.ROOT));
         } else {
             return (name) -> {
                 for (final var value : values) {
-                    if (keyFunction.apply(getSerializedName(value)).equals(name)) {
+                    if (keyFunction.apply(getSerializedName(value)).equalsIgnoreCase(name)) {
                         return value;
                     }
                 }
@@ -58,11 +48,11 @@ public interface LegacyStringRepresentable extends StringRepresentable {
         }
     }
 
-    class LegacyStringRepresentableCodec<S extends Enum<S>> implements Codec<S> {
+    class LenientStringRepresentableCodec<S extends Enum<S>> implements Codec<S> {
         private final Codec<S> codec;
 
-        public LegacyStringRepresentableCodec(S[] values, Function<String, S> nameLookup, ToIntFunction<S> indexLookup) {
-            this.codec = ExtraCodecs.orCompressed(Codec.stringResolver(LegacyStringRepresentable::getSerializedName, nameLookup),
+        public LenientStringRepresentableCodec(S[] values, Function<String, S> nameLookup, ToIntFunction<S> indexLookup) {
+            this.codec = ExtraCodecs.orCompressed(Codec.stringResolver(LenientEnumCodecs::getSerializedName, nameLookup),
                     ExtraCodecs.idResolverCodec(indexLookup, (p_304986_) -> p_304986_ >= 0 && p_304986_ < values.length ? values[p_304986_] : null, -1));
         }
 

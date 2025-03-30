@@ -7,7 +7,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ByIdMap;
-import net.minecraft.util.StringRepresentable;
 
 public class PrimitiveConfigCodecs {
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -34,7 +33,7 @@ public class PrimitiveConfigCodecs {
     }
 
     private static <T extends Enum<T>> Codec<T> enumCodec(Class<T> type) {
-        return LegacyStringRepresentable.fromLegacyValues(type::getEnumConstants);
+        return LenientEnumCodecs.fromLegacyValues(type::getEnumConstants);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

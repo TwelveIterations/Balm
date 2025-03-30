@@ -2,7 +2,7 @@ package net.blay09.mods.balm.api.config.schema.builder;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.blay09.mods.balm.api.config.LegacyStringRepresentable;
+import net.blay09.mods.balm.api.config.LenientEnumCodecs;
 import net.blay09.mods.balm.api.config.schema.ConfiguredEnum;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,7 +18,7 @@ public class EnumConfigProperty<T extends Enum<T>> extends AbstractConfigPropert
         this.defaultValue = defaultValue;
         final var enumClass = defaultValue.getDeclaringClass();
         final var byIdMapper = ByIdMap.continuous(Enum::ordinal, enumClass.getEnumConstants(), ByIdMap.OutOfBoundsStrategy.ZERO);
-        this.codec = LegacyStringRepresentable.fromLegacyValues(enumClass::getEnumConstants);
+        this.codec = LenientEnumCodecs.fromLegacyValues(enumClass::getEnumConstants);
         this.streamCodec = ByteBufCodecs.idMapper(byIdMapper, Enum::ordinal).cast();
     }
 
