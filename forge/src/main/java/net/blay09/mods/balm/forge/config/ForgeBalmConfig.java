@@ -187,7 +187,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 .orElseThrow(() -> new IllegalStateException("Mod container for " + schema.identifier()
                         .getNamespace() + " not found when registering config."));
         final var expectedModContainer = FMLJavaModLoadingContext.get().getContainer();
-        if (!modContainer.getModId().equals(modContainer.getModId())) {
+        if (!expectedModContainer.getModId().equals(modContainer.getModId())) {
             throw new IllegalStateException("registerConfig must be called in the initializer of " + schema.identifier().getNamespace());
         }
         final var eventBus = FMLJavaModLoadingContext.get().getModEventBus();
