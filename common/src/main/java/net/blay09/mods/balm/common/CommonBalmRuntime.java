@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
+import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 
@@ -69,6 +70,7 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
         }
 
         registerModule(new BaseModule());
+        registerModule(new ConfigSync());
     }
 
 }

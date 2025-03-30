@@ -14,6 +14,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated(forRemoval = true, since = "1.21.5")
 public class SyncConfigMessage<TData> {
 
     private final TData data;
