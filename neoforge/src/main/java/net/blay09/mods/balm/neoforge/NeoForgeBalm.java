@@ -1,13 +1,12 @@
 package net.blay09.mods.balm.neoforge;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.AbstractBalmConfig;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
-import net.blay09.mods.balm.common.command.BalmCommand;
-import net.blay09.mods.balm.config.ExampleConfig;
+import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
+import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
-import net.blay09.mods.balm.neoforge.client.NeoForgeBalmClient;
 import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
@@ -39,10 +38,12 @@ public class NeoForgeBalm {
             "energy_storage"), EnergyStorage.class);
 
     public NeoForgeBalm(IEventBus modBus) {
+        BalmLoadContexts.register("balm", new NeoForgeLoadContext(modBus));
+
         ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
-        ((AbstractBalmConfig) Balm.getConfig()).initialize();
-        ExampleConfig.initialize();
+        Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
+        Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
         DeferredRegisters.register("balm", modBus);
 

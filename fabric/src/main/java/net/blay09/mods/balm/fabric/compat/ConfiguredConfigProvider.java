@@ -3,8 +3,10 @@ package net.blay09.mods.balm.fabric.compat;
 import com.mrcrayfish.configured.api.*;
 import com.mrcrayfish.configured.api.util.ConfigScreenHelper;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.BalmConfigData;
-import net.blay09.mods.balm.api.config.BalmConfigProperty;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.api.config.schema.builder.ConfigCategory;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ClassUtils;
@@ -13,17 +15,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfiguredConfigProvider implements IModConfigProvider {
-    private static IModConfig mapConfig(String modId, BalmConfigData configData) {
+    private static IModConfig mapConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
         return new IModConfig() {
             @Override
             public ActionResult update(IConfigEntry entry) {
-                Balm.getConfig().saveBackingConfig(configData.getClass());
+                Balm.getConfig().saveLocalConfig(schema, config);
                 return ActionResult.success();
             }
 
             @Override
             public IConfigEntry createRootEntry() {
-                return mapConfigRoot(modId, configData);
+                return mapConfigSchema(schema, config);
             }
 
             @Override
@@ -33,29 +35,23 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getFileName() {
-                return modId + "-common.toml";
+                return Balm.getConfig().getConfigFile(schema).getName();
             }
 
             @Override
             public String getModId() {
-                return modId;
+                return schema.identifier().getNamespace();
             }
         };
     }
 
-    private static IConfigEntry mapConfigRoot(String modId, BalmConfigData configData) {
-        final var properties = Balm.getConfig().getConfigProperties(configData.getClass());
+    private static IConfigEntry mapConfigSchema(BalmConfigSchema schema, MutableLoadedConfig config) {
         final var children = new ArrayList<IConfigEntry>();
-        for (final var category : properties.rowKeySet()) {
-            if (category.isEmpty()) {
-                properties.row(category)
-                        .entrySet()
-                        .stream()
-                        .map(it -> mapConfigProperty(modId, category, it.getKey(), it.getValue()))
-                        .forEach(children::add);
-            } else {
-                children.add(mapConfigCategory(modId, category, properties.row(category)));
-            }
+        for (final var rootProperty : schema.rootProperties()) {
+            children.add(mapConfigProperty(config, rootProperty));
+        }
+        for (final var category : schema.categories()) {
+            children.add(mapConfigCategory(config, category));
         }
         return new IConfigEntry() {
             @Override
@@ -90,13 +86,15 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getTranslationKey() {
-                return "config." + modId + ".title";
+                final var configIdentifier = schema.identifier();
+                return configIdentifier.getNamespace() + ".configuration." + configIdentifier.getPath() + ".title";
             }
         };
     }
 
-    private static IConfigEntry mapConfigCategory(String modId, String category, Map<String, BalmConfigProperty<?>> properties) {
-        final var children = properties.keySet().stream().map(it -> mapConfigProperty(modId, category, it, properties.get(it))).toList();
+    private static IConfigEntry mapConfigCategory(MutableLoadedConfig config, ConfigCategory category) {
+        final var children = category.properties().stream()
+                .map(property -> mapConfigProperty(config, property)).toList();
         return new IConfigEntry() {
             @Override
             public List<IConfigEntry> getChildren() {
@@ -120,7 +118,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getEntryName() {
-                return category;
+                return category.name();
             }
 
             @Override
@@ -130,13 +128,14 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getTranslationKey() {
-                return "config." + modId + "." + category;
+                final var configIdentifier = category.parentSchema().identifier();
+                return configIdentifier.getNamespace() + ".configuration." + category;
             }
         };
     }
 
-    private static <T> IConfigEntry mapConfigProperty(String modId, String category, String key, BalmConfigProperty<T> property) {
-        final var initialValue = property.getValue();
+    private static <T> IConfigEntry mapConfigProperty(MutableLoadedConfig config, ConfiguredProperty<T> property) {
+        final var initialValue = config.getRaw(property);
         return new IConfigEntry() {
             @Override
             public List<IConfigEntry> getChildren() {
@@ -158,47 +157,53 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                 return new IConfigValue<T>() {
                     @Override
                     public T get() {
-                        return property.getValue();
+                        return config.getRaw(property);
                     }
 
                     @Override
                     public T getDefault() {
-                        return property.getDefaultValue();
+                        return property.defaultValue();
                     }
 
                     @Override
                     public void set(T o) {
-                        property.setValue(o);
+                        config.setRaw(property, o);
                     }
 
                     @Override
                     public boolean isValid(T o) {
-                        return ClassUtils.isAssignable(o.getClass(), property.getType(), true);
+                        return ClassUtils.isAssignable(o.getClass(), property.type(), true);
                     }
 
                     @Override
                     public boolean isDefault() {
-                        return Objects.equals(property.getDefaultValue(), property.getValue());
+                        return Objects.equals(property.defaultValue(), config.getRaw(property));
                     }
 
                     @Override
                     public boolean isChanged() {
-                        return !Objects.equals(property.getValue(), initialValue);
+                        return !Objects.equals(config.getRaw(property), initialValue);
                     }
 
                     @Override
                     public void restore() {
-                        property.setValue(property.getDefaultValue());
+                        config.setRaw(property, property.defaultValue());
                     }
 
                     @Override
                     public Component getComment() {
-                        return category.isEmpty() ? Component.translatable("config." + modId + "." + key + ".tooltip") : Component.translatable("config." + modId + "." + category + "." + key + ".tooltip");
+                        final var category = property.category();
+                        final var modId = property.parentSchema().identifier();
+                        final var key = property.name();
+                        return category.isEmpty() ? Component.translatable(modId + ".configuration." + key + ".tooltip") : Component.translatable(modId + ".configuration." + category + "." + key + ".tooltip");
                     }
 
                     @Override
                     public String getTranslationKey() {
-                        return category.isEmpty() ? "config." + modId + "." + key : "config." + modId + "." + category + "." + key;
+                        final var category = property.category();
+                        final var modId = property.parentSchema().identifier();
+                        final var key = property.name();
+                        return category.isEmpty() ? modId + ".configuration." + key : modId + ".configuration." + category + "." + key;
                     }
 
                     @Override
@@ -208,7 +213,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public String getName() {
-                        return key;
+                        return property.name();
                     }
 
                     @Override
@@ -229,35 +234,49 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getEntryName() {
-                return category + "." + key;
+                return property.category() + "." + property.name();
             }
 
             @Override
             public Component getTooltip() {
-                return category.isEmpty() ? Component.translatable("config." + modId + "." + key + ".tooltip") : Component.translatable("config." + modId + "." + category + "." + key + ".tooltip");
+                final var category = property.category();
+                final var modId = property.parentSchema().identifier();
+                final var key = property.name();
+                return category.isEmpty() ? Component.translatable(modId + ".configuration." + key + ".tooltip") : Component.translatable(modId + ".configuration." + category + "." + key + ".tooltip");
             }
 
             @Override
             public String getTranslationKey() {
-                return category.isEmpty() ? "config." + modId + "." + key : "config." + modId + "." + category + "." + key;
+                final var category = property.category();
+                final var modId = property.parentSchema().identifier();
+                final var key = property.name();
+                return category.isEmpty() ? modId + ".configuration." + key : modId + ".configuration." + category + "." + key;
             }
         };
     }
 
     public static Screen createConfigScreen(String modId, Screen parent) {
-        final var configs = Balm.getConfig().getConfigsByMod(modId);
+        final var configs = Balm.getConfig().getSchemasByNamespace(modId);
         final var configsByType = new HashMap<ConfigType, Set<IModConfig>>();
-        final var mappedConfigs = configs.stream().map(it -> mapConfig(modId, it)).collect(Collectors.toSet());
-        configsByType.put(ConfigType.UNIVERSAL, mappedConfigs);
+        final var universalConfigs = configs.stream()
+                .filter(it -> !it.identifier().getPath().equals("client"))
+                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema))).collect(Collectors.toSet());
+        final var clientConfigs = configs.stream()
+                .filter(it -> it.identifier().getPath().equals("client"))
+                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema))).collect(Collectors.toSet());
+        configsByType.put(ConfigType.UNIVERSAL, universalConfigs);
+        configsByType.put(ConfigType.CLIENT, clientConfigs);
         return ConfigScreenHelper.createSelectionScreen(parent,
-                Component.translatable("config." + modId + ".title"),
+                Component.translatable(modId + ".configuration.title"),
                 configsByType
         );
     }
 
     @Override
     public Set<IModConfig> getConfigurationsForMod(ModContext modContext) {
-        final var configs = Balm.getConfig().getConfigsByMod(modContext.modId());
-        return configs.stream().map(it -> mapConfig(modContext.modId(), it)).collect(Collectors.toSet());
+        final var configs = Balm.getConfig().getSchemasByNamespace(modContext.modId());
+        return configs.stream()
+                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema)))
+                .collect(Collectors.toSet());
     }
 }

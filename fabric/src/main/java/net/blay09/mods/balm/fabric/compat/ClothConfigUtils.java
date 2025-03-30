@@ -5,173 +5,180 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.BalmConfigData;
-import net.blay09.mods.balm.api.config.BalmConfigProperty;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.*;
+import net.blay09.mods.balm.api.network.ConfigReflection;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.*;
 
 public class ClothConfigUtils {
-    public static <T extends BalmConfigData> ConfigScreenFactory<?> getConfigScreen(Class<T> clazz) {
-        return (ConfigScreenFactory<Screen>) screen -> {
-            var configName = Balm.getConfig().getConfigName(clazz);
-            ConfigBuilder builder = ConfigBuilder.create()
-                    .setParentScreen(screen)
-                    .setTitle(Component.translatable("config." + configName + ".title"));
-            builder.setSavingRunnable(() -> Balm.getConfig().saveBackingConfig(clazz));
 
-            var properties = Balm.getConfig().getConfigProperties(clazz);
-            for (String category : properties.rowKeySet()) {
-                var categoryI18nBase = category.isEmpty() ? "config." + configName : "config." + configName + "." + category;
-                var categoryDisplayName = Component.translatable(categoryI18nBase);
-                ConfigCategory categoryInstance = builder.getOrCreateCategory(categoryDisplayName);
-                for (Map.Entry<String, BalmConfigProperty<?>> entry : properties.row(category).entrySet()) {
-                    var property = entry.getKey();
-                    var displayName = Component.translatable(categoryI18nBase + "." + property);
-                    var tooltip = Component.translatable(categoryI18nBase + "." + property + ".tooltip");
-                    var backingProperty = entry.getValue();
-                    if (backingProperty.getType() == String.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startStrField(displayName, (String) backingProperty.getValue())
-                                        .setDefaultValue((String) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<String>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (backingProperty.getType() == Integer.class || backingProperty.getType() == Integer.TYPE) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startIntField(displayName, (Integer) backingProperty.getValue())
-                                        .setDefaultValue((Integer) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Integer>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (backingProperty.getType() == Long.class || backingProperty.getType() == Long.TYPE) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startLongField(displayName, (Long) backingProperty.getValue())
-                                        .setDefaultValue((Long) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Long>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (backingProperty.getType() == Float.class || backingProperty.getType() == Float.TYPE) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startFloatField(displayName, (Float) backingProperty.getValue())
-                                        .setDefaultValue((Float) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Float>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (backingProperty.getType() == Double.class || backingProperty.getType() == Double.TYPE) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startDoubleField(displayName, (Double) backingProperty.getValue())
-                                        .setDefaultValue((Double) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Double>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (backingProperty.getType() == Boolean.class || backingProperty.getType() == Boolean.TYPE) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startBooleanToggle(displayName, (Boolean) backingProperty.getValue())
-                                        .setDefaultValue((Boolean) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Boolean>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (Enum.class.isAssignableFrom(backingProperty.getType())) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder()
-                                        .startEnumSelector(displayName, (Class<Enum<?>>) backingProperty.getType(), (Enum<?>) backingProperty.getValue())
-                                        .setDefaultValue((Enum<?>) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Enum<?>>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (List.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == String.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startStrList(displayName, (List<String>) backingProperty.getValue())
-                                        .setDefaultValue((List<String>) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<List<String>>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (List.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == Integer.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startIntList(displayName, (List<Integer>) backingProperty.getValue())
-                                        .setDefaultValue((List<Integer>) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<List<Integer>>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (List.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == Long.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startLongList(displayName, (List<Long>) backingProperty.getValue())
-                                        .setDefaultValue((List<Long>) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<List<Long>>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (List.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == Float.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startFloatList(displayName, (List<Float>) backingProperty.getValue())
-                                        .setDefaultValue((List<Float>) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<List<Float>>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (List.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == Double.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startDoubleList(displayName, (List<Double>) backingProperty.getValue())
-                                        .setDefaultValue((List<Double>) backingProperty.getDefaultValue())
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<List<Double>>) backingProperty).setValue(value))
-                                        .build()
-                        );
-                    } else if (Set.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == String.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startStrList(displayName, new ArrayList<>((Set<String>) backingProperty.getValue()))
-                                        .setDefaultValue(new ArrayList<>((Set<String>) backingProperty.getDefaultValue()))
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Set<String>>) backingProperty).setValue(new HashSet<>(value)))
-                                        .build()
-                        );
-                    } else if (Set.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == Integer.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startIntList(displayName, new ArrayList<>((Set<Integer>) backingProperty.getValue()))
-                                        .setDefaultValue(new ArrayList<>((Set<Integer>) backingProperty.getDefaultValue()))
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Set<Integer>>) backingProperty).setValue(new HashSet<>(value)))
-                                        .build()
-                        );
-                    } else if (Set.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == Long.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startLongList(displayName, new ArrayList<>((Set<Long>) backingProperty.getValue()))
-                                        .setDefaultValue(new ArrayList<>((Set<Long>) backingProperty.getDefaultValue()))
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Set<Long>>) backingProperty).setValue(new HashSet<>(value)))
-                                        .build()
-                        );
-                    } else if (Set.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == Float.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startFloatList(displayName, new ArrayList<>((Set<Float>) backingProperty.getValue()))
-                                        .setDefaultValue(new ArrayList<>((Set<Float>) backingProperty.getDefaultValue()))
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Set<Float>>) backingProperty).setValue(new HashSet<>(value)))
-                                        .build()
-                        );
-                    } else if (Set.class.isAssignableFrom(backingProperty.getType()) && backingProperty.getInnerType() == Double.class) {
-                        categoryInstance.addEntry(
-                                builder.entryBuilder().startDoubleList(displayName, new ArrayList<>((Set<Double>) backingProperty.getValue()))
-                                        .setDefaultValue(new ArrayList<>((Set<Double>) backingProperty.getDefaultValue()))
-                                        .setTooltip(tooltip)
-                                        .setSaveConsumer(value -> ((BalmConfigProperty<Set<Double>>) backingProperty).setValue(new HashSet<>(value)))
-                                        .build()
-                        );
+    public static ConfigScreenFactory<?> getConfigScreen(String modId) {
+        return (ConfigScreenFactory<Screen>) screen -> {
+            final var builder = ConfigBuilder.create()
+                    .setParentScreen(screen)
+                    .setTitle(Component.translatable(modId + ".configuration.title"));
+            final var schemas = Balm.getConfig().getSchemasByNamespace(modId);
+            builder.setSavingRunnable(() -> {
+                for (final var schema : schemas) {
+                    Balm.getConfig().saveLocalConfig(schema, Balm.getConfig().getLocalConfig(schema));
+                }
+            });
+            for (final var schema : schemas) {
+                final var config = Balm.getConfig().getLocalConfig(schema);
+                final var i18nBase = schema.identifier().getNamespace() + ".configuration";
+                final var categories = schema.categories();
+                ConfigCategory rootCategory = null;
+                for (final var rootProperty : schema.rootProperties()) {
+                    if (rootCategory == null) {
+                        rootCategory = builder.getOrCreateCategory(Component.translatable(i18nBase));
+                    }
+                    addPropertyToBuilder(config, rootProperty, rootCategory, builder);
+                }
+                for (final var category : categories) {
+                    var categoryI18nBase = i18nBase + "." + category;
+                    final var categoryInstance = builder.getOrCreateCategory(Component.translatable(categoryI18nBase));
+                    for (final var property : category.properties()) {
+                        addPropertyToBuilder(config, property, categoryInstance, builder);
                     }
                 }
             }
 
             return builder.build();
         };
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void addPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<?> property, ConfigCategory categoryInstance, ConfigBuilder builder) {
+        final var schema = property.parentSchema();
+        final var i18nBase = schema.identifier().getNamespace() + ".configuration";
+        var categoryI18nBase = i18nBase + (property.category().isEmpty() ? "" : ("." + property.category()));
+        var displayName = Component.translatable(categoryI18nBase + "." + property.name());
+        var tooltip = Component.translatable(categoryI18nBase + "." + property.name() + ".tooltip");
+        switch (property) {
+            case ConfiguredString stringProperty -> categoryInstance.addEntry(
+                    builder.entryBuilder().startStrField(displayName, stringProperty.get(config))
+                            .setDefaultValue(stringProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> stringProperty.set(config, value))
+                            .build()
+            );
+            case ConfiguredInt intProperty -> categoryInstance.addEntry(
+                    builder.entryBuilder().startIntField(displayName, intProperty.get(config))
+                            .setDefaultValue(intProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> intProperty.set(config, value))
+                            .build()
+            );
+            case ConfiguredFloat floatProperty -> categoryInstance.addEntry(
+                    builder.entryBuilder().startFloatField(displayName, floatProperty.get(config))
+                            .setDefaultValue(floatProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> floatProperty.set(config, value))
+                            .build()
+            );
+            case ConfiguredBoolean booleanProperty -> categoryInstance.addEntry(
+                    builder.entryBuilder().startBooleanToggle(displayName, booleanProperty.get(config))
+                            .setDefaultValue(booleanProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> booleanProperty.set(config, value))
+                            .build()
+            );
+            case ConfiguredEnum<?> enumProperty -> addEnumPropertyToBuilder(config, enumProperty, categoryInstance, builder, displayName, tooltip);
+            case ConfiguredList<?> listProperty when listProperty.nestedType() == String.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startStrList(displayName, (List<String>) listProperty.get(config))
+                            .setDefaultValue((List<String>) listProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredList<String>) listProperty).set(config, value))
+                            .build()
+            );
+            case ConfiguredList<?> listProperty when listProperty.nestedType() == Integer.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startIntList(displayName, (List<Integer>) listProperty.get(config))
+                            .setDefaultValue((List<Integer>) listProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredList<Integer>) listProperty).set(config, value))
+                            .build()
+            );
+            case ConfiguredList<?> listProperty when listProperty.nestedType() == Long.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startLongList(displayName, (List<Long>) listProperty.get(config))
+                            .setDefaultValue((List<Long>) listProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredList<Long>) listProperty).set(config, value))
+                            .build()
+            );
+            case ConfiguredList<?> listProperty when listProperty.nestedType() == Float.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startFloatList(displayName, (List<Float>) listProperty.get(config))
+                            .setDefaultValue((List<Float>) listProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredList<Float>) listProperty).set(config, value))
+                            .build()
+            );
+            case ConfiguredList<?> listProperty when listProperty.nestedType() == Double.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startDoubleList(displayName, (List<Double>) listProperty.get(config))
+                            .setDefaultValue((List<Double>) listProperty.defaultValue())
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredList<Double>) listProperty).set(config, value))
+                            .build()
+            );
+            case ConfiguredSet<?> setProperty when setProperty.nestedType() == String.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startStrList(displayName, new ArrayList<>((Set<String>) setProperty.get(config)))
+                            .setDefaultValue(new ArrayList<>((Set<String>) setProperty.defaultValue()))
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredSet<String>) setProperty).set(config, new HashSet<>(value)))
+                            .build()
+            );
+            case ConfiguredSet<?> setProperty when setProperty.nestedType() == Integer.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startIntList(displayName, new ArrayList<>((Set<Integer>) setProperty.get(config)))
+                            .setDefaultValue(new ArrayList<>((Set<Integer>) setProperty.defaultValue()))
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredSet<Integer>) setProperty).set(config, new HashSet<>(value)))
+                            .build()
+            );
+            case ConfiguredSet<?> setProperty when setProperty.nestedType() == Long.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startLongList(displayName, new ArrayList<>((Set<Long>) setProperty.get(config)))
+                            .setDefaultValue(new ArrayList<>((Set<Long>) setProperty.defaultValue()))
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredSet<Long>) setProperty).set(config, new HashSet<>(value)))
+                            .build()
+            );
+            case ConfiguredSet<?> setProperty when setProperty.nestedType() == Float.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startFloatList(displayName, new ArrayList<>((Set<Float>) setProperty.get(config)))
+                            .setDefaultValue(new ArrayList<>((Set<Float>) setProperty.defaultValue()))
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredSet<Float>) setProperty).set(config, new HashSet<>(value)))
+                            .build()
+            );
+            case ConfiguredSet<?> setProperty when setProperty.nestedType() == Double.class -> categoryInstance.addEntry(
+                    builder.entryBuilder().startDoubleList(displayName, new ArrayList<>((Set<Double>) setProperty.get(config)))
+                            .setDefaultValue(new ArrayList<>((Set<Double>) setProperty.defaultValue()))
+                            .setTooltip(tooltip)
+                            .setSaveConsumer(value -> ((ConfiguredSet<Double>) setProperty).set(config, new HashSet<>(value)))
+                            .build()
+            );
+            default -> {
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Enum<T>> void addEnumPropertyToBuilder(MutableLoadedConfig config, ConfiguredEnum<T> property, ConfigCategory categoryInstance, ConfigBuilder builder, Component displayName, Component tooltip) {
+        categoryInstance.addEntry(
+                builder.entryBuilder()
+                        .startEnumSelector(displayName, (Class<T>) property.type(), property.get(config))
+                        .setDefaultValue(property.defaultValue())
+                        .setTooltip(tooltip)
+                        .setSaveConsumer(value -> property.set(config, value))
+                        .build()
+        );
+    }
+
+    /**
+     * @deprecated Use {@link #getConfigScreen(String)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.21.5")
+    public static <T extends BalmConfigData> ConfigScreenFactory<?> getConfigScreen(Class<T> clazz) {
+        return getConfigScreen(ConfigReflection.getIdentifier(clazz).getNamespace());
     }
 }

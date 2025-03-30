@@ -27,6 +27,7 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
@@ -218,6 +219,8 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
 
     @Override
     public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
+        BalmLoadContexts.register(modId, context);
+
         initializer.run();
     }
 
