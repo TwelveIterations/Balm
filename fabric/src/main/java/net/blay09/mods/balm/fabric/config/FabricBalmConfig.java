@@ -1,64 +1,29 @@
 package net.blay09.mods.balm.fabric.config;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.config.AbstractBalmConfig;
-import net.blay09.mods.balm.api.config.BalmConfigData;
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.config.LoadedConfig;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
+import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class FabricBalmConfig extends AbstractBalmConfig {
 
     private static final Logger logger = LogUtils.getLogger();
-    private final Multimap<String, Class<?>> configsByMod = ArrayListMultimap.create();
-    private final Map<Class<?>, BalmConfigData> configs = new HashMap<>();
 
     @Override
-    public <T extends BalmConfigData> T initializeBackingConfig(Class<T> clazz) {
-        var configName = getConfigName(clazz);
-        var configFile = getConfigFile(configName);
-        var configData = createConfigDataInstance(clazz);
-        if (configFile.exists()) {
-            try {
-                FabricConfigLoader.load(configFile, configData);
-            } catch (IOException e) {
-                logger.error("Failed to load config file {}", configFile, e);
-            }
-        } else {
-            try {
-                FabricConfigSaver.save(configFile, configData);
-            } catch (IOException e) {
-                logger.error("Failed to generate config file {}", configFile, e);
-            }
-        }
-        configs.put(clazz, configData);
-        configsByMod.put(configName, clazz);
-        setActiveConfig(clazz, configData);
-        return configData;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends BalmConfigData> T getBackingConfig(Class<T> clazz) {
-        return (T) configs.get(clazz);
-    }
-
-    @Override
-    public <T extends BalmConfigData> void saveBackingConfig(Class<T> clazz) {
-        var configName = getConfigName(clazz);
-        var configFile = getConfigFile(configName);
-        try {
-            FabricConfigSaver.save(configFile, configs.get(clazz));
-        } catch (IOException e) {
-            logger.error("Failed to save config file {}", configFile, e);
-        }
+    public void registerConfig(BalmConfigSchema schema) {
+        super.registerConfig(schema);
+        final var config = loadConfigFromConfigFile(schema);
+        setLocalConfig(schema, config.mutable(schema));
+        setActiveConfig(schema, config);
+        Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
     }
 
     @Override
@@ -67,7 +32,33 @@ public class FabricBalmConfig extends AbstractBalmConfig {
     }
 
     @Override
-    public List<? extends BalmConfigData> getConfigsByMod(String modId) {
-        return configsByMod.get(modId).stream().map(configs::get).toList();
+    public void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
+        super.saveLocalConfig(schema, config);
+        final var configFile = getConfigFile(schema);
+        try {
+            FabricConfigSaver.save(configFile, schema, config);
+        } catch (IOException e) {
+            logger.error("Failed to save config file {}", configFile, e);
+        }
     }
+
+    private LoadedConfig loadConfigFromConfigFile(BalmConfigSchema schema) {
+        final var configFile = getConfigFile(schema);
+        LoadedConfig config = schema.defaults();
+        if (configFile.exists()) {
+            try {
+                config = FabricConfigLoader.load(configFile, schema);
+            } catch (IOException e) {
+                logger.error("Failed to load config file {}", configFile, e);
+            }
+        } else {
+            try {
+                FabricConfigSaver.save(configFile, schema, schema.defaults());
+            } catch (IOException e) {
+                logger.error("Failed to generate config file {}", configFile, e);
+            }
+        }
+        return config;
+    }
+
 }

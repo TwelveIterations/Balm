@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
+import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.fabric.FabricBalmRuntime;
 import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
@@ -99,6 +100,8 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
 
     @Override
     public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
+        BalmLoadContexts.register(modId, context);
+
         initializer.run();
     }
 

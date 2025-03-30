@@ -1,283 +1,178 @@
 package net.blay09.mods.balm.forge.config;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.electronwill.nightconfig.core.EnumGetMethod;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.AbstractBalmConfig;
-import net.blay09.mods.balm.api.config.BalmConfigData;
-import net.blay09.mods.balm.api.config.Comment;
-import net.blay09.mods.balm.api.config.ExpectedType;
+import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.schema.*;
+import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
 import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
-import net.blay09.mods.balm.api.network.ConfigReflection;
+import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.config.AbstractBalmConfig;
+import net.blay09.mods.balm.common.config.ConfigLocalization;
+import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.IConfigSpec;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.server.ServerLifecycleHooks;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ForgeBalmConfig extends AbstractBalmConfig {
 
-    private final Logger logger = LogManager.getLogger();
-    private final Map<Class<?>, ModConfig> configs = new HashMap<>();
-    private final Multimap<String, Class<?>> configsByMod = ArrayListMultimap.create();
-    private final Map<Class<?>, BalmConfigData> configData = new HashMap<>();
+    private final Map<ResourceLocation, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
+    private final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
 
-    private static Object parseEnumValue(Class<?> type, String value) {
-        for (Object enumConstant : type.getEnumConstants()) {
-            if (enumConstant.toString().equalsIgnoreCase(value)) {
-                return enumConstant;
-            }
-        }
+    private static ForgeConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ForgeConfigSpec.Builder spec) {
+        spec.comment(property.comment());
+        spec.translation(ConfigLocalization.forProperty(property));
 
-        return null;
+        return switch (property) {
+            case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue().booleanValue());
+            case ConfiguredDouble configuredDouble -> spec.define(configuredDouble.name(), configuredDouble.defaultValue());
+            case ConfiguredEnum<?> configuredEnum -> defineEnum(spec, configuredEnum);
+            case ConfiguredFloat configuredFloat -> spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
+            case ConfiguredInt configuredInt -> spec.define(configuredInt.name(), configuredInt.defaultValue());
+            case ConfiguredList<?> configuredList -> spec.defineListAllowEmpty(configuredList.name(),
+                    mapConfigCollectionToNeoForge(configuredList.defaultValue()),
+                    (it) -> validateListElement(configuredList, it));
+            case ConfiguredLong configuredLong -> spec.define(configuredLong.name(), configuredLong.defaultValue());
+            case ConfiguredResourceLocation configuredResourceLocation ->
+                    spec.define(configuredResourceLocation.name(), configuredResourceLocation.defaultValue().toString());
+            case ConfiguredSet<?> configuredSet -> spec.defineListAllowEmpty(configuredSet.name(),
+                    mapConfigCollectionToNeoForge(configuredSet.defaultValue()),
+                    (it) -> validateSetElement(configuredSet, it));
+            case ConfiguredString configuredString -> spec.define(configuredString.name(), configuredString.defaultValue());
+            default -> throw new IllegalStateException("Unexpected value: " + property);
+        };
     }
 
-    private <T extends BalmConfigData> IConfigSpec<?> createConfigSpec(Class<T> clazz) {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        try {
-            buildConfigSpec("", builder, clazz);
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("Config spec generation unexpectedly failed.", e);
-        }
-        return builder.build();
+    public static List<?> mapConfigCollectionToNeoForge(Collection<?> values) {
+        return values.stream().map(ForgeBalmConfig::mapConfigValueToNeoForge).toList();
     }
 
-    private void buildConfigSpec(String parentPath, ForgeConfigSpec.Builder builder, Class<?> clazz) throws IllegalAccessException {
-        List<Field> fields = ConfigReflection.getAllFields(clazz);
-        Object defaults = createConfigDataInstance(clazz);
-        for (Field field : fields) {
-            Class<?> type = field.getType();
-            Object defaultValue = field.get(defaults);
-            String path = parentPath + field.getName();
+    public static Object mapConfigValueToNeoForge(Object value) {
+        return switch (value) {
+            case ResourceLocation resourceLocation -> resourceLocation.toString();
+            case Float floatValue -> floatValue.doubleValue();
+            case Set<?> setValue -> mapConfigCollectionToNeoForge(setValue);
+            case List<?> listValue -> mapConfigCollectionToNeoForge(listValue);
+            case null, default -> value;
+        };
+    }
 
-            Comment comment = field.getAnnotation(Comment.class);
-            if (comment != null) {
-                builder.comment(comment.value());
-            }
+    public static List<?> mapConfigListFromNeoForge(ConfiguredList<?> property, List<?> value) {
+        return value.stream().map(it -> mapConfigValueFromNeoForge(property.nestedType(), it)).toList();
+    }
 
-            if (String.class.isAssignableFrom(type)) {
-                builder.define(path, (String) defaultValue);
-            } else if (ResourceLocation.class.isAssignableFrom(type)) {
-                builder.define(path, ((ResourceLocation) defaultValue).toString());
-            } else if (Collection.class.isAssignableFrom(type)) {
-                ExpectedType expectedType = field.getAnnotation(ExpectedType.class);
-                if (expectedType == null) {
-                    logger.warn("Config field without expected type, will not validate list content ({} in {})", field.getName(), clazz.getName());
-                }
+    public static Set<?> mapConfigSetFromNeoForge(ConfiguredSet<?> property, List<?> value) {
+        return value.stream().map(it -> mapConfigValueFromNeoForge(property.nestedType(), it)).collect(Collectors.toSet());
+    }
 
-                Supplier<List<?>> defaultSupplier = () -> new ArrayList<>((Collection<?>) defaultValue);
-                Predicate<Object> validator = (Object it) -> expectedType == null || expectedType.value()
-                        .isAssignableFrom(it.getClass()) || (expectedType.value()
-                        .isEnum() && Arrays.stream(
-                        expectedType.value().getEnumConstants()).anyMatch(constant -> constant.toString().equals(it)));
-                if (expectedType != null && ResourceLocation.class.isAssignableFrom(expectedType.value())) {
-                    defaultSupplier = () -> ((Collection<?>) defaultValue).stream().map(it -> ((ResourceLocation) it).toString()).collect(Collectors.toList());
-                    validator = (Object it) -> it instanceof String stringValue && ResourceLocation.tryParse(stringValue) != null;
-                }
+    public static Object mapConfigValueFromNeoForge(ConfiguredProperty<?> property, Object value) {
+        return switch (property) {
+            case ConfiguredResourceLocation ignored -> ResourceLocation.parse((String) value);
+            case ConfiguredFloat ignored -> ((Double) value).floatValue();
+            case ConfiguredList<?> configuredList -> mapConfigListFromNeoForge(configuredList, (List<?>) value);
+            case ConfiguredSet<?> configuredSet -> mapConfigSetFromNeoForge(configuredSet, (List<?>) value);
+            case null, default -> value;
+        };
+    }
 
-                builder.defineListAllowEmpty(List.of(path.split("\\.")), defaultSupplier, validator);
-            } else if (Enum.class.isAssignableFrom(type)) {
-                builder.defineEnum(path, (Enum) defaultValue);
-            } else if (int.class.isAssignableFrom(type)) {
-                builder.defineInRange(path, (int) defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            } else if (float.class.isAssignableFrom(type)) {
-                builder.defineInRange(path, (float) defaultValue, -Float.MAX_VALUE, Float.MAX_VALUE);
-            } else if (double.class.isAssignableFrom(type)) {
-                builder.defineInRange(path, (double) defaultValue, -Double.MAX_VALUE, Double.MAX_VALUE);
-            } else if (boolean.class.isAssignableFrom(type)) {
-                builder.define(path, (boolean) defaultValue);
-            } else if (long.class.isAssignableFrom(type)) {
-                builder.defineInRange(path, (long) defaultValue, Long.MIN_VALUE, Long.MAX_VALUE);
-            } else {
-                buildConfigSpec(path + ".", builder, type);
-            }
+    private static Object mapConfigValueFromNeoForge(Class<?> nestedType, Object value) {
+        if (nestedType == ResourceLocation.class) {
+            return ResourceLocation.parse((String) value);
+        } else if (nestedType == Float.class) {
+            return ((Double) value).floatValue();
+        } else if (nestedType.isEnum() && value instanceof String) {
+            return stringToEnum(value, nestedType);
+        } else {
+            return value;
         }
     }
 
-    private <T extends BalmConfigData> T readConfigValues(Class<T> clazz, ModConfig config) {
-        T instance = createConfigDataInstance(clazz);
-        try {
-            readConfigValues("", instance, config);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return instance;
+    private static <T> boolean validateListElement(ConfiguredList<T> configuredList, Object value) {
+        return validateCollectionElement(configuredList.nestedType(), value);
     }
 
-    private <T> void readConfigValues(String parentPath, T instance, ModConfig config) throws IllegalAccessException {
-        List<Field> fields = ConfigReflection.getAllFields(instance.getClass());
-        for (Field field : fields) {
-            String path = parentPath + field.getName();
-            boolean hasValue = config.getConfigData().contains(path);
-            Class<?> type = field.getType();
+    private static <T> boolean validateSetElement(ConfiguredSet<T> configuredSet, Object value) {
+        return validateCollectionElement(configuredSet.nestedType(), value);
+    }
+
+    private static <T> boolean validateCollectionElement(Class<T> nestedType, Object value) {
+        if (nestedType == Boolean.class) {
+            return value instanceof Boolean || ("true".equals(value) || "false".equals(value));
+        } else if (nestedType == Double.class) {
             try {
-                if (hasValue && Integer.TYPE.isAssignableFrom(type)) {
-                    field.set(instance, config.getConfigData().getInt(path));
-                } else if (hasValue && Long.TYPE.isAssignableFrom(type)) {
-                    field.set(instance, config.getConfigData().getLong(path));
-                } else if (hasValue && Float.TYPE.isAssignableFrom(type)) {
-                    Object value = config.getConfigData().get(path);
-                    if (value instanceof Double doubleValue) {
-                        field.set(instance, doubleValue.floatValue());
-                    } else if (value instanceof Float floatValue) {
-                        field.set(instance, floatValue);
-                    } else {
-                        logger.error("Invalid config value for " + path + ", expected " + type.getName() + " but got " + value.getClass());
-                    }
-                } else if (hasValue && Double.TYPE.isAssignableFrom(type)) {
-                    Object value = config.getConfigData().get(path);
-                    if (value instanceof Double doubleValue) {
-                        field.set(instance, doubleValue);
-                    } else if (value instanceof Float floatValue) {
-                        field.set(instance, floatValue.doubleValue());
-                    } else {
-                        logger.error("Invalid config value for " + path + ", expected " + type.getName() + " but got " + value.getClass());
-                    }
-                } else if (hasValue && ResourceLocation.class.isAssignableFrom(type)) {
-                    field.set(instance, ResourceLocation.parse(config.getConfigData().get(path)));
-                } else if (hasValue && (Collection.class.isAssignableFrom(type))) {
-                    Object raw = config.getConfigData().getRaw(path);
-                    if (raw instanceof List<?> list) {
-                        ExpectedType expectedType = field.getAnnotation(ExpectedType.class);
-                        Function<Object, Object> mapper = (it) -> it;
-                        if (expectedType != null && ResourceLocation.class.isAssignableFrom(expectedType.value())) {
-                            mapper = (it) -> ResourceLocation.parse((String) it);
-                        } else if (expectedType != null && Enum.class.isAssignableFrom(expectedType.value())) {
-                            mapper = (it) -> parseEnumValue(expectedType.value(), (String) it);
-                        }
-                        try {
-                            if (List.class.isAssignableFrom(type)) {
-                                field.set(instance, list.stream().map(mapper).collect(Collectors.toList()));
-                            } else if (Set.class.isAssignableFrom(type)) {
-                                field.set(instance, list.stream().map(mapper).collect(Collectors.toSet()));
-                            }
-                        } catch (IllegalArgumentException e) {
-                            logger.error("Invalid config value for " + path + ", expected " + type.getName() + " but got " + raw.getClass());
-                        }
-                    } else {
-                        logger.error("Null config value for " + path + ", falling back to default");
-                    }
-                } else if (hasValue && (type.isPrimitive() || String.class.isAssignableFrom(type))) {
-                    Object raw = config.getConfigData().getRaw(path);
-                    if (raw != null) {
-                        try {
-                            field.set(instance, raw);
-                        } catch (IllegalArgumentException e) {
-                            logger.error("Invalid config value for " + path + ", expected " + type.getName() + " but got " + raw.getClass());
-                        }
-                    } else {
-                        logger.error("Null config value for " + path + ", falling back to default");
-                    }
-                } else if (hasValue && type.isEnum()) {
-                    Enum<?> value = config.getConfigData().getEnum(path, (Class<Enum>) type);
-                    field.set(instance, value);
-                } else {
-                    readConfigValues(path + ".", field.get(instance), config);
+                return value instanceof Double || !Double.isNaN(Double.parseDouble(value.toString()));
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else if (nestedType == Float.class) {
+            try {
+                return value instanceof Float || !Float.isNaN(Float.parseFloat(value.toString()));
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else if (nestedType == Integer.class) {
+            try {
+                if (value instanceof Integer) {
+                    return true;
                 }
-            } catch (Exception e) {
-                logger.error("Unexpected error loading config value for " + path + ", falling back to default", e);
+
+                Integer.parseInt(value.toString());
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
             }
+        } else if (nestedType == Long.class) {
+            try {
+                if (value instanceof Long) {
+                    return true;
+                }
+
+                Long.parseLong(value.toString());
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else if (nestedType == ResourceLocation.class) {
+            return value instanceof String && ResourceLocation.tryParse(value.toString()) != null;
+        } else if (nestedType == String.class) {
+            return value instanceof String;
+        } else if (nestedType.isEnum()) {
+            return value instanceof String && validateEnum(value, nestedType);
+        } else {
+            throw new IllegalArgumentException("Unsupported type " + nestedType);
         }
     }
 
-    private <T extends BalmConfigData> void writeConfigValues(ModConfig config, T configData) {
-        try {
-            writeConfigValues("", config, configData);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private <T> void writeConfigValues(String parentPath, ModConfig config, T instance) throws IllegalAccessException {
-        List<Field> fields = ConfigReflection.getAllFields(instance.getClass());
-        for (Field field : fields) {
-            String path = parentPath + field.getName();
-            Class<?> type = field.getType();
-            Object value = field.get(instance);
-            if (type.isPrimitive() || Enum.class.isAssignableFrom(type) || String.class.isAssignableFrom(type)) {
-                config.getConfigData().set(path, value);
-            } else if (ResourceLocation.class.isAssignableFrom(type)) {
-                config.getConfigData().set(path, ((ResourceLocation) value).toString());
-            } else if (Collection.class.isAssignableFrom(type)) {
-                config.getConfigData().set(path, new ArrayList<>((Collection<?>) value));
-            } else {
-                writeConfigValues(path + ".", config, field.get(instance));
-            }
-        }
-    }
-
-    @Override
-    public <T extends BalmConfigData> T initializeBackingConfig(Class<T> clazz) {
-        IConfigSpec<?> configSpec = createConfigSpec(clazz);
-
-        // We set this early in case event handlers run upon registering, so we don't reset back to defaults
-        T initialData = createConfigDataInstance(clazz);
-        setActiveConfig(clazz, initialData);
-        configData.put(clazz, initialData);
-        configsByMod.put(getConfigName(clazz), clazz);
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((ModConfigEvent.Loading event) -> {
-            configs.put(clazz, event.getConfig());
-            T newConfigData = readConfigValues(clazz, event.getConfig());
-            configData.put(clazz, newConfigData);
-
-            setActiveConfig(clazz, newConfigData);
-        });
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((ModConfigEvent.Reloading event) -> {
-            configs.put(clazz, event.getConfig());
-            if (event.getConfig().getConfigData() == null) {
-                logger.warn("Received a config reload event with a null config data. Ignoring.");
-                return;
-            }
-
-            T newConfigData = readConfigValues(clazz, event.getConfig());
-            configData.put(clazz, newConfigData);
-
-            // Only rewrite active configs with reload if we're the hosting server or there is no syncing
-            // TODO would be good if this still applied non-synced properties
-            boolean hasSyncMessage = getConfigSyncMessageFactory(clazz) != null;
-            boolean isHostingServer = ServerLifecycleHooks.getCurrentServer() != null;
-            boolean isIngame = Balm.getProxy().isIngame();
-            if (!hasSyncMessage || isHostingServer || !isIngame) {
-                setActiveConfig(clazz, newConfigData);
-            }
-
-            Balm.getEvents().fireEvent(new ConfigReloadedEvent());
-        });
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, configSpec);
-
-        return getActive(clazz);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public <T extends BalmConfigData> T getBackingConfig(Class<T> clazz) {
-        return (T) configData.get(clazz);
+    private static <T extends Enum<T>> boolean validateEnum(Object value, Class<?> unknownClass) {
+        if (unknownClass.isEnum()) {
+            return EnumGetMethod.NAME_IGNORECASE.validate(value, (Class<T>) unknownClass);
+        } else {
+            throw new IllegalArgumentException("Not an enum class: " + unknownClass.getName());
+        }
     }
 
-    @Override
-    public <T extends BalmConfigData> void saveBackingConfig(Class<T> clazz) {
-        ModConfig modConfig = configs.get(clazz);
-        if (modConfig != null) {
-            writeConfigValues(modConfig, configData.get(clazz));
-            modConfig.save();
+    @SuppressWarnings("unchecked")
+    private static <T extends Enum<T>> T stringToEnum(Object value, Class<?> unknownClass) {
+        if (unknownClass.isEnum()) {
+            return EnumGetMethod.NAME_IGNORECASE.get(value, (Class<T>) unknownClass);
+        } else {
+            throw new IllegalArgumentException("Not an enum class: " + unknownClass.getName());
         }
+    }
+
+    private static <T extends Enum<T>> ForgeConfigSpec.ConfigValue<T> defineEnum(ForgeConfigSpec.Builder spec, ConfiguredEnum<T> configuredEnum) {
+        return spec.defineEnum(configuredEnum.name(), configuredEnum.defaultValue(), EnumGetMethod.NAME_IGNORECASE);
     }
 
     @Override
@@ -286,7 +181,81 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     }
 
     @Override
-    public List<? extends BalmConfigData> getConfigsByMod(String modId) {
-        return configsByMod.get(modId).stream().map(configData::get).toList();
+    public void registerConfig(BalmConfigSchema schema) {
+        super.registerConfig(schema);
+
+        final var modContainer = ModList.get().getModContainerById(schema.identifier().getNamespace())
+                .orElseThrow(() -> new IllegalStateException("Mod container for " + schema.identifier()
+                        .getNamespace() + " not found when registering config."));
+        final var loadContext = BalmLoadContexts.<ForgeLoadContext>get(schema.identifier().getNamespace())
+                .orElseThrow(() -> new IllegalStateException("Load context for " + schema.identifier() + " not found when registering config."));
+        final var eventBus = loadContext.modEventBus();
+        if (eventBus == null) {
+            throw new IllegalStateException("Missing event bus for " + schema.identifier().getNamespace() + " when registering config.");
+        }
+
+        eventBus.addListener((ModConfigEvent.Loading event) -> {
+            final var modConfig = event.getConfig();
+            final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+            if (schema.identifier().equals(identifier)) {
+                modConfigs.put(schema.identifier(), modConfig);
+                final var wrappedConfig = new LoadedForgeConfig(schema, modConfig, properties.get(schema.identifier()));
+                setLocalConfig(schema, wrappedConfig);
+                setActiveConfig(schema, wrappedConfig);
+
+                Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
+            }
+        });
+        eventBus.addListener((ModConfigEvent.Reloading event) -> {
+            final var modConfig = event.getConfig();
+            final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+            if (schema.identifier().equals(identifier)) {
+                modConfigs.put(schema.identifier(), modConfig);
+                final var wrappedConfig = new LoadedForgeConfig(schema, modConfig, properties.get(schema.identifier()));
+                setLocalConfig(schema, wrappedConfig);
+                updateActiveFromLocal(schema, wrappedConfig);
+
+                Balm.getEvents().fireEvent(new ConfigReloadedEvent(schema));
+            }
+        });
+
+        final var stringType = schema.identifier().getPath();
+        final var configType = switch (stringType) {
+            case "common" -> ModConfig.Type.COMMON;
+            case "client" -> ModConfig.Type.CLIENT;
+            default -> throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'common' and 'client' are supported.");
+        };
+        final var mappedConfigSpec = mapToConfigSpec(schema);
+        modContainer.addConfig(new ModConfig(configType, mappedConfigSpec.getFirst(), modContainer));
+
+        properties.put(schema.identifier(), mappedConfigSpec.getSecond());
+    }
+
+    @Override
+    public void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
+        super.saveLocalConfig(schema, config);
+        final var modConfig = modConfigs.get(schema.identifier());
+        if (modConfig == null) {
+            throw new IllegalStateException("Backing config not available for " + schema.identifier());
+        }
+        final var wrappedConfig = new LoadedForgeConfig(schema, modConfig, properties.get(schema.identifier()));
+        wrappedConfig.applyFrom(schema, config);
+        ((ForgeConfigSpec) modConfig.getSpec()).save();
+    }
+
+    private Pair<ForgeConfigSpec, HashBasedTable<String, String, ForgeConfigSpec.ConfigValue<?>>> mapToConfigSpec(BalmConfigSchema schema) {
+        final var spec = new ForgeConfigSpec.Builder();
+        final var properties = HashBasedTable.<String, String, ForgeConfigSpec.ConfigValue<?>>create();
+        for (final var rootProperty : schema.rootProperties()) {
+            properties.put("", rootProperty.name(), addPropertyToSpec(rootProperty, spec));
+        }
+        for (final var category : schema.categories()) {
+            spec.push(category.name());
+            for (final var property : category.properties()) {
+                properties.put(category.name(), property.name(), addPropertyToSpec(property, spec));
+            }
+            spec.pop();
+        }
+        return Pair.of(spec.build(), properties);
     }
 }
