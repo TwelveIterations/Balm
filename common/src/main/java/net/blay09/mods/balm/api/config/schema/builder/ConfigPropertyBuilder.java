@@ -2,7 +2,6 @@ package net.blay09.mods.balm.api.config.schema.builder;
 
 import net.blay09.mods.balm.api.config.schema.impl.ConfigSchemaImpl;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
 import java.util.Set;
@@ -60,7 +59,7 @@ public class ConfigPropertyBuilder {
         return schema.addAndReturn(new StringConfigProperty(this, defaultValue));
     }
 
-    public <T extends Enum<T> & StringRepresentable> EnumConfigProperty<T> enumOf(T defaultValue) {
+    public <T extends Enum<T>> EnumConfigProperty<T> enumOf(T defaultValue) {
         return schema.addAndReturn(new EnumConfigProperty<>(this, defaultValue));
     }
 

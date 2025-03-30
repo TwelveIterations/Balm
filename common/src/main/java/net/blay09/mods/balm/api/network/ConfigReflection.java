@@ -7,7 +7,6 @@ import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.builder.ConfigPropertyBuilder;
 import net.blay09.mods.balm.api.config.schema.builder.PropertyHolderBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.StringRepresentable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -111,17 +110,13 @@ public class ConfigReflection {
         }
     }
 
-    private static <T extends Enum<T> & StringRepresentable> void propertyOfEnum(ConfigPropertyBuilder property, Object obj) {
+    private static <T extends Enum<T>> void propertyOfEnum(ConfigPropertyBuilder property, Object obj) {
         if (obj == null) {
             throw new IllegalArgumentException("Object cannot be null");
         }
 
         if (!(obj instanceof Enum)) {
             throw new IllegalArgumentException("Object must be an Enum");
-        }
-
-        if (!(obj instanceof StringRepresentable)) {
-            throw new IllegalArgumentException("Object must implement StringRepresentable"); // TODO this is not backwards compatible
         }
 
         @SuppressWarnings("unchecked")

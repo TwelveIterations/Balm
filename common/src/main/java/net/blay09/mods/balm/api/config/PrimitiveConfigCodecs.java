@@ -26,15 +26,15 @@ public class PrimitiveConfigCodecs {
             return (Codec<T>) BooleanConfigProperty.CODEC;
         } else if (type == ResourceLocation.class) {
             return (Codec<T>) ResourceLocation.CODEC;
-        } else if (type.isEnum() && StringRepresentable.class.isAssignableFrom(type)) {
+        } else if (type.isEnum()) {
             return enumCodec((Class) type);
         } else {
             throw new IllegalArgumentException("Unsupported nested type: " + type.getName());
         }
     }
 
-    private static <T extends Enum<T> & StringRepresentable> Codec<T> enumCodec(Class<T> type) {
-        return StringRepresentable.fromEnum(type::getEnumConstants);
+    private static <T extends Enum<T>> Codec<T> enumCodec(Class<T> type) {
+        return LegacyStringRepresentable.fromLegacyValues(type::getEnumConstants);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -53,14 +53,14 @@ public class PrimitiveConfigCodecs {
             return (StreamCodec<ByteBuf, T>) ByteBufCodecs.BOOL;
         } else if (type == ResourceLocation.class) {
             return (StreamCodec<ByteBuf, T>) ResourceLocation.STREAM_CODEC;
-        } else if (type.isEnum() && StringRepresentable.class.isAssignableFrom(type)) {
+        } else if (type.isEnum()) {
             return enumStreamCodec((Class) type);
         } else {
             throw new IllegalArgumentException("Unsupported nested type: " + type.getName());
         }
     }
 
-    private static <T extends Enum<T> & StringRepresentable> StreamCodec<ByteBuf, T> enumStreamCodec(Class<T> type) {
+    private static <T extends Enum<T>> StreamCodec<ByteBuf, T> enumStreamCodec(Class<T> type) {
         final var byIdMapper = ByIdMap.continuous(Enum::ordinal, type.getEnumConstants(), ByIdMap.OutOfBoundsStrategy.ZERO);
         return ByteBufCodecs.idMapper(byIdMapper, Enum::ordinal);
     }
