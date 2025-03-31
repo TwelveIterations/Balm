@@ -142,12 +142,14 @@ public class ForgeBalmCapabilities implements BalmCapabilities {
         }
     }
 
-    public <TApi> void addExistingType(ResourceLocation identifier, Class<TApi> apiClass, Capability<TApi> capability) {
-        types.put(identifier, new CapabilityType<>(identifier,
+    public <TApi> CapabilityType<Block, TApi, Direction> addExistingType(ResourceLocation identifier, Class<TApi> apiClass, Capability<TApi> capability) {
+        final var type = new CapabilityType<>(identifier,
                 Block.class,
                 apiClass,
                 Direction.class,
-                capability));
+                capability);
+        types.put(identifier, type);
+        return type;
     }
 
     public void register(String modId, IEventBus eventBus) {

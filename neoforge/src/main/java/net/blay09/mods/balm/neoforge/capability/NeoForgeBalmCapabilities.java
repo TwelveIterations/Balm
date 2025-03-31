@@ -80,13 +80,15 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
         getRegistrations(identifier.getNamespace()).fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(type, provider));
     }
 
-    public <TApi, TContext> void addExistingType(ResourceLocation identifier, BaseCapability<TApi, TContext> capability) {
+    public <TApi, TContext> CapabilityType<Block, TApi, TContext> addExistingType(ResourceLocation identifier, BaseCapability<TApi, TContext> capability) {
         if (capability instanceof BlockCapability) {
-            types.put(identifier, new CapabilityType<>(identifier,
+            final var type = new CapabilityType<>(identifier,
                     Block.class,
                     capability.typeClass(),
                     capability.contextClass(),
-                    capability));
+                    capability);
+            types.put(identifier, type);
+            return type;
         } else {
             throw new IllegalArgumentException("Unsupported capability type " + capability.getClass());
         }
