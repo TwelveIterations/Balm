@@ -134,5 +134,7 @@ public class ForgeBalm {
                         return null;
                     }
                 });
+
+        ((ForgeBalmCapabilities) Balm.getCapabilities()).register("balm", context.getModEventBus());
     }
 }

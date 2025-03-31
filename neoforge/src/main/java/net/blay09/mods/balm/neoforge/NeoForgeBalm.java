@@ -139,6 +139,7 @@ public class NeoForgeBalm {
                     }
                 });
 
+        ((NeoForgeBalmCapabilities) Balm.getCapabilities()).register("balm", modBus);
         ((NeoForgeBalmNetworking) Balm.getNetworking()).register("balm", modBus);
     }
 
