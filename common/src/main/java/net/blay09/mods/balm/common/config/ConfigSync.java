@@ -15,6 +15,16 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ConfigSync implements BalmModule {
 
+    public static boolean hasSyncedProperties(BalmConfigSchema schema) {
+        return schema.rootProperties().stream().anyMatch(ConfiguredProperty::synced) || schema.categories()
+                .stream()
+                .anyMatch(ConfigSync::hasSyncedProperties);
+    }
+
+    public static boolean hasSyncedProperties(ConfigCategory category) {
+        return category.properties().stream().anyMatch(ConfiguredProperty::synced);
+    }
+
     @Override
     public ResourceLocation getId() {
         return ResourceLocation.fromNamespaceAndPath("balm", "config_sync");
@@ -35,8 +45,10 @@ public class ConfigSync implements BalmModule {
             for (final var schema : schemas) {
                 if (hasSyncedProperties(schema)) {
                     final var loaded = Balm.getConfig().getActiveConfig(schema);
-                    final var packet = new ClientboundConfigPacket(schema, loaded);
-                    Balm.getNetworking().sendTo(event.getPlayer(), packet);
+                    if (loaded != null) {
+                        final var packet = new ClientboundConfigPacket(schema, loaded);
+                        Balm.getNetworking().sendTo(event.getPlayer(), packet);
+                    }
                 }
             }
         });
@@ -47,8 +59,10 @@ public class ConfigSync implements BalmModule {
                 final var schema = event.getSchema();
                 if (schema != null && hasSyncedProperties(schema)) {
                     final var loaded = Balm.getConfig().getActiveConfig(schema);
-                    final var packet = new ClientboundConfigPacket(schema, loaded);
-                    Balm.getNetworking().sendToAll(server, packet);
+                    if (loaded != null) {
+                        final var packet = new ClientboundConfigPacket(schema, loaded);
+                        Balm.getNetworking().sendToAll(server, packet);
+                    }
                 }
             }
         });
@@ -59,15 +73,5 @@ public class ConfigSync implements BalmModule {
                 abstractBalmConfig.resetToLocalConfig();
             }
         });
-    }
-
-    public static boolean hasSyncedProperties(BalmConfigSchema schema) {
-        return schema.rootProperties().stream().anyMatch(ConfiguredProperty::synced) || schema.categories()
-                .stream()
-                .anyMatch(ConfigSync::hasSyncedProperties);
-    }
-
-    public static boolean hasSyncedProperties(ConfigCategory category) {
-        return category.properties().stream().anyMatch(ConfiguredProperty::synced);
     }
 }
