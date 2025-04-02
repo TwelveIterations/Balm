@@ -131,13 +131,15 @@ public class ForgeBalmCapabilities implements BalmCapabilities {
         }
 
         final var blockEntity = event.getObject();
+        int i = 0;
         for (final var blockEntityProvider : flattenedBlockEntityProviders.get(blockEntity.getType())) {
-            event.addCapability(blockEntityProvider.identifier(),
+            event.addCapability(blockEntityProvider.identifier().withSuffix("_" + i++),
                     new BlockEntityCapabilityProvider(blockEntity, blockEntityProvider.type(), blockEntityProvider.provider()));
         }
 
+        i = 0;
         for (final var fallbackBlockEntityProvider : fallbackBlockEntityProviders) {
-            event.addCapability(fallbackBlockEntityProvider.identifier(),
+            event.addCapability(fallbackBlockEntityProvider.identifier().withSuffix("_" + i++),
                     new BlockEntityCapabilityProvider(blockEntity, fallbackBlockEntityProvider.type(), fallbackBlockEntityProvider.provider()));
         }
     }
