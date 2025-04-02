@@ -1,6 +1,2 @@
-- Fixed crash on joining dedicated servers on NeoForge and Forge
-
-- Backported new config system from 1.21.5
-  - Waystones, Ex Compressum, Forgiving Void and Fertilization should be updated alongside this version to avoid crashes
-- Backported new capabilities system from 1.21.5
-- Backported other minor changes from 1.21.5
+- Fixed version reject when joining world on Forge
+- Fixed crash when joining world on Forge
