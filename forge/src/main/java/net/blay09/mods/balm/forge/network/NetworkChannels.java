@@ -19,15 +19,15 @@ public class NetworkChannels {
         return channels.computeIfAbsent(modId, key -> {
             ResourceLocation channelName = ResourceLocation.fromNamespaceAndPath(key, "network");
             ChannelBuilder builder = ChannelBuilder.named(channelName);
+            final var networkVersion = networkVersions.get(modId);
+            if (networkVersion != null) {
+                builder = builder.networkProtocolVersion(networkVersion);
+            }
             if (serverOnlyMods.contains(modId)) {
                 builder = builder.optionalClient();
             }
             if (clientOnlyMods.contains(modId)) {
                 builder = builder.optionalServer();
-            }
-            final var networkVersion = networkVersions.get(modId);
-            if (networkVersion != null) {
-                builder = builder.networkProtocolVersion(networkVersion);
             }
             return builder.simpleChannel();
         });
