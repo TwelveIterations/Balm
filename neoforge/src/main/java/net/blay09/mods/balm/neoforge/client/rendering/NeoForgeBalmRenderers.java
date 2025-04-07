@@ -73,7 +73,7 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        NeoForge.EVENT_BUS.addListener((FMLClientSetupEvent event) -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType));
+        NeoForge.EVENT_BUS.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
     }
 
     @Override
