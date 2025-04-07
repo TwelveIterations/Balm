@@ -7,6 +7,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -22,6 +23,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -63,8 +65,7 @@ public class ForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        // Do nothing in Forge. Forge unfortunately changes the Vanilla model format,
-        // so we have to have both this call (for Fabric) and change the JSON (for Forge).
+        MinecraftForge.EVENT_BUS.addListener((FMLClientSetupEvent event) -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType));
     }
 
     @Override
