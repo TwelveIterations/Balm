@@ -66,7 +66,7 @@ public class ForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        MinecraftForge.EVENT_BUS.addListener((FMLClientSetupEvent event) -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType));
+        MinecraftForge.EVENT_BUS.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
     }
 
     @Override
