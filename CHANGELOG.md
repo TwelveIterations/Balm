@@ -1,2 +1,1 @@
-- Fixed version reject when joining world on Forge
-- Fixed crash when joining world on Forge
+- Fixed crash when using the sink in Cooking for Blockheads
