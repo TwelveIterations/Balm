@@ -3,7 +3,9 @@ package net.blay09.mods.balm.fabric;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.EmptyLoadContext;
+import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.entity.BalmEntity;
+import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.network.NetworkVersions;
 import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
@@ -11,12 +13,14 @@ import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
+import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 
 import java.util.HashMap;
 
@@ -46,6 +50,11 @@ public class FabricBalm implements ModInitializer {
             CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();
             ((BalmEntity) newPlayer).setFabricBalmData(data);
         });
+
+        var providers = ((FabricBalmProviders) Balm.getProviders());
+        providers.registerProvider(new ResourceLocation("balm", "container"), Container.class);
+        providers.registerProvider(new ResourceLocation("balm", "fluid_tank"), FluidTank.class);
+        providers.registerProvider(new ResourceLocation("balm", "energy_storage"), EnergyStorage.class);
 
         Balm.getNetworking().registerServerboundPacket(new ResourceLocation("balm", "mod_list"),
                 ServerboundModListMessage.class, (message, buf) -> {
