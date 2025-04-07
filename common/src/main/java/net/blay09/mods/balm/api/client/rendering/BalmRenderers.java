@@ -43,8 +43,6 @@ public interface BalmRenderers {
 
     void registerItemColorHandler(ItemColor color, Supplier<ItemLike[]> items);
 
-
-    @Deprecated
     void setBlockRenderType(Supplier<Block> block, RenderType renderType);
 
     default <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
