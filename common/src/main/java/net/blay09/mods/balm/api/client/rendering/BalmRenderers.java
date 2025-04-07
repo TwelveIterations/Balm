@@ -39,10 +39,6 @@ public interface BalmRenderers {
         registerBlockColorHandler(color, blocks);
     }
 
-    /**
-     * @deprecated Works fine on Fabric, but on Forge and NeoForge they changed the vanilla format with no hook (sigh).
-     */
-    @Deprecated
     void setBlockRenderType(Supplier<Block> block, RenderType renderType);
 
     default <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
