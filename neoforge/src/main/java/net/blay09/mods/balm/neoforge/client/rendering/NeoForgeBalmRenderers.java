@@ -25,7 +25,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +64,8 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        NeoForge.EVENT_BUS.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
+        final var eventBus = ModLoadingContext.get().getActiveContainer().getEventBus();
+        eventBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
     }
 
     @Override
