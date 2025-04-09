@@ -33,6 +33,10 @@ public interface BalmRenderers {
 
     void registerBlockColorHandler(ResourceLocation id, BlockColor color, Supplier<Block[]> blocks);
 
+    /**
+     * @deprecated No-op on NeoForge. Specify "render_type" in your model as a workaround.
+     */
+    @Deprecated
     void setBlockRenderType(Supplier<Block> block, RenderType renderType);
 
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);

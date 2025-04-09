@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
@@ -64,8 +63,9 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        final var eventBus = ModLoadingContext.get().getActiveContainer().getEventBus();
-        eventBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
+        // TODO The method doesn't have enough context information to register to the mod event bus.
+        // final var eventBus = ModLoadingContext.get().getActiveContainer().getEventBus();
+        // eventBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
     }
 
     @Override
@@ -103,10 +103,6 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
         public final List<ColorRegistration<BlockColor, Block>> blockColors = new ArrayList<>();
         public final List<ParticleProviderFactoryRegistration<?>> particleProviderFactories = new ArrayList<>();
         public final List<ParticleProviderRegistration<?>> particleProviders = new ArrayList<>();
-
-        @SubscribeEvent
-        public void setupClient(FMLClientSetupEvent event) {
-        }
 
         @SubscribeEvent
         public void initRenderers(EntityRenderersEvent.RegisterRenderers event) {
