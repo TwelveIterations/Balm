@@ -43,6 +43,9 @@ public interface BalmRenderers {
 
     void registerItemColorHandler(ItemColor color, Supplier<ItemLike[]> items);
 
+    /**
+     * @deprecated No-op on Forge. Specify "render_type" in your model as a workaround.
+     */
     void setBlockRenderType(Supplier<Block> block, RenderType renderType);
 
     default <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {

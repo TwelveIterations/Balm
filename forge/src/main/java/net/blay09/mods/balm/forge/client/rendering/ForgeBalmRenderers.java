@@ -2,6 +2,8 @@ package net.blay09.mods.balm.forge.client.rendering;
 
 import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
+import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -25,6 +27,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -73,8 +76,11 @@ public class ForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        final var eventBus = ModLoadingContext.get().getActiveContainer().getEventBus();
-        eventBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
+        // TODO The method doesn't have enough context information to register to the mod event bus.
+        // BalmLoadContexts.get(ModLoadingContext.get().getContainer().getModId())
+        //         .map(it -> ((ForgeLoadContext) it).modEventBus())
+        //         .ifPresent(bus -> bus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(),
+        //                 renderType))));
     }
 
     @Override
