@@ -8,7 +8,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -73,7 +71,11 @@ public class ForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        MinecraftForge.EVENT_BUS.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
+        // TODO The method doesn't have enough context information to register to the mod event bus.
+        // BalmLoadContexts.get(ModLoadingContext.get().getContainer().getModId())
+        //         .map(it -> ((ForgeLoadContext) it).modEventBus())
+        //         .ifPresent(bus -> bus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(),
+        //                 renderType))));
     }
 
     @Override
