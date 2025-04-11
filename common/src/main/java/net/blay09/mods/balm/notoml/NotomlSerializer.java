@@ -19,7 +19,7 @@ public class NotomlSerializer {
         var sortedCategoryKeys = data.rowKeySet().stream().sorted().toList();
         for (String category : sortedCategoryKeys) {
             String categoryComment = comments.get(category, "");
-            if (categoryComment != null) {
+            if (categoryComment != null && !categoryComment.isEmpty()) {
                 sb.append("\n").append("# ").append(categoryComment).append("\n");
             }
 
@@ -31,7 +31,7 @@ public class NotomlSerializer {
             var sortedPropertyKeys = categoryProperties.keySet().stream().sorted().toList();
             for (String property : sortedPropertyKeys) {
                 String propertyComment = comments.get(category, property);
-                if (propertyComment != null) {
+                if (propertyComment != null && !propertyComment.isEmpty()) {
                     sb.append("\n").append("# ").append(propertyComment).append("\n");
                 }
 
