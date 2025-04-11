@@ -6,6 +6,9 @@ import com.mojang.math.Transformation;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.mixin.ModelBakeryAccessor;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.*;
@@ -15,8 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.slf4j.Logger;
@@ -25,20 +26,24 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class ForgeBalmModels implements BalmModels {
+public record ForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 
     private static final Logger LOGGER = LogUtils.getLogger();
-    public final List<DeferredModel> modelsToBake = Collections.synchronizedList(new ArrayList<>());
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
-    private ModelBakery modelBakery;
+    private static final List<DeferredModel> modelsToBake = Collections.synchronizedList(new ArrayList<>());
+    private static ModelBakery.TextureGetter textureGetter;
+    private static ModelBakery modelBakery;
 
-    public void onBakeModels(ModelBakery modelBakery, ModelBakery.TextureGetter textureGetter) {
-        this.modelBakery = modelBakery;
-        registrations.values().forEach(it -> it.setTextureGetter(textureGetter));
+    public static void onBakeModels(ModelBakery modelBakery, ModelBakery.TextureGetter textureGetter) {
+        ForgeBalmModels.modelBakery = modelBakery;
+        ForgeBalmModels.textureGetter = textureGetter;
 
         synchronized (modelsToBake) {
             for (DeferredModel deferredModel : modelsToBake) {
@@ -132,12 +137,8 @@ public class ForgeBalmModels implements BalmModels {
         return ((ModelBakeryAccessor) modelBakery).callGetModel(ModelBakery.MISSING_MODEL_LOCATION);
     }
 
-    public void register() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(getActiveRegistrations());
-    }
-
     private Registrations getActiveRegistrations() {
-        return registrations.computeIfAbsent(ModLoadingContext.get().getActiveNamespace(), it -> new Registrations());
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
     @Override
@@ -150,6 +151,11 @@ public class ForgeBalmModels implements BalmModels {
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Balm failed to create model baker", e);
         }
+    }
+
+    @Override
+    public BalmModels scoped(String modId) {
+        return new ForgeBalmModels(new StaticNamespaceResolver(modId));
     }
 
     private abstract static class DeferredModel extends DeferredObject<BakedModel> {
@@ -176,15 +182,9 @@ public class ForgeBalmModels implements BalmModels {
         }
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<DeferredModel> additionalModels = new ArrayList<>();
         public final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = new ArrayList<>();
-
-        private ModelBakery.TextureGetter textureGetter;
-
-        public void setTextureGetter(ModelBakery.TextureGetter textureGetter) {
-            this.textureGetter = textureGetter;
-        }
 
         @SubscribeEvent
         public void onRegisterAdditionalModels(ModelEvent.RegisterAdditional event) {
@@ -208,8 +208,6 @@ public class ForgeBalmModels implements BalmModels {
             for (DeferredModel deferredModel : additionalModels) {
                 deferredModel.resolveAndSet(event.getModelBakery(), event.getModels(), textureGetter);
             }
-
-            textureGetter = null;
         }
     }
 }

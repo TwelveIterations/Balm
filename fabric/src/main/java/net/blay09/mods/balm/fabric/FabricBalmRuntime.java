@@ -1,9 +1,6 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmRegistries;
-import net.blay09.mods.balm.api.EmptyLoadContext;
+import net.blay09.mods.balm.api.*;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -13,7 +10,6 @@ import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
@@ -27,9 +23,7 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.CommonBalmLootTables;
-import net.blay09.mods.balm.common.CommonBalmRuntime;
+import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
@@ -70,11 +64,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
+    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> {
+        throw new UnsupportedOperationException("No default namespace available");
+    });
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
-    private final BalmBlocks blocks = new FabricBalmBlocks();
+    private final BalmItems items = new FabricBalmItems(legacyNamespaceResolver);
+    private final BalmBlocks blocks = new FabricBalmBlocks(legacyNamespaceResolver, items);
     private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
     private final FabricBalmEvents events = new FabricBalmEvents();
-    private final BalmItems items = new FabricBalmItems();
     private final BalmMenus menus = new FabricBalmMenus();
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
@@ -97,22 +94,9 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
             .withFallback(new CommonBalmPermissions())
             .buildLazily();
     private final BalmResources resources = new FabricBalmResources();
-    private final List<String> addonClasses = new ArrayList<>();
 
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
-
-        events.onEvent(ServerStartingEvent.class, event -> {
-            if (event.getServer().isDedicatedServer()) {
-                for (final var className : addonClasses) {
-                    try {
-                        Class.forName(className).getConstructor().newInstance();
-                    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -224,13 +208,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public void initializeIfLoaded(String modId, String className) {
-        if (isModLoaded(modId)) {
-            addonClasses.add(className);
-        }
-    }
-
-    @Override
     public void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
             @Override
@@ -283,10 +260,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public String getPlatform() {
         return LoaderPlatforms.FABRIC;
-    }
-
-    public List<String> getAddonClasses() {
-        return addonClasses;
     }
 
     @Override

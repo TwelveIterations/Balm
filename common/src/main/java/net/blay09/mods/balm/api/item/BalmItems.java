@@ -66,4 +66,5 @@ public interface BalmItems {
         return registerItem((id) -> supplier.get(), identifier, creativeTab);
     }
 
+    BalmItems scoped(String modId);
 }

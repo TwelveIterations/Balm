@@ -4,7 +4,12 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.item.BalmItems;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.forge.DeferredRegisters;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -12,20 +17,17 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class ForgeBalmItems implements BalmItems {
+public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements BalmItems {
 
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+    private static final Set<ResourceLocation> managedCreativeTabs = new HashSet<>();
 
     @Override
     public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
@@ -39,9 +41,10 @@ public class ForgeBalmItems implements BalmItems {
 
     @Override
     public DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier) {
-        DeferredRegister<CreativeModeTab> register = DeferredRegisters.get(Registries.CREATIVE_MODE_TAB, identifier.getNamespace());
-        RegistryObject<CreativeModeTab> registryObject = register.register(identifier.getPath(), () -> {
-            Component displayName = Component.translatable("itemGroup." + identifier.toString().replace(':', '.'));
+        managedCreativeTabs.add(identifier);
+        final var register = DeferredRegisters.get(Registries.CREATIVE_MODE_TAB, identifier.getNamespace());
+        final var registryObject = register.register(identifier.getPath(), () -> {
+            final var displayName = Component.translatable("itemGroup." + identifier.toString().replace(':', '.'));
             final var registrations = getActiveRegistrations();
             return CreativeModeTab.builder()
                     .title(displayName)
@@ -62,20 +65,21 @@ public class ForgeBalmItems implements BalmItems {
         getActiveRegistrations().creativeTabSorting.put(tabIdentifier, comparator);
     }
 
-    public void register() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(getActiveRegistrations());
-    }
-
     private Registrations getActiveRegistrations() {
-        return registrations.computeIfAbsent(ModLoadingContext.get().getActiveNamespace(), it -> new Registrations());
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private static class Registrations {
+    @Override
+    public BalmItems scoped(String modId) {
+        return new ForgeBalmItems(new StaticNamespaceResolver(modId));
+    }
+
+    public static class Registrations {
         public final Multimap<ResourceLocation, Supplier<ItemLike[]>> creativeTabContents = ArrayListMultimap.create();
         private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
 
         public void buildCreativeTabContents(ResourceLocation tabIdentifier, CreativeModeTab.Output entries) {
-            Collection<Supplier<ItemLike[]>> itemStackArraySuppliers = creativeTabContents.get(tabIdentifier);
+            final var itemStackArraySuppliers = creativeTabContents.get(tabIdentifier);
             final var comparator = creativeTabSorting.get(tabIdentifier);
             if (!itemStackArraySuppliers.isEmpty()) {
                 itemStackArraySuppliers.forEach(it -> {
@@ -85,6 +89,14 @@ public class ForgeBalmItems implements BalmItems {
                         entries.accept(itemStack);
                     }
                 });
+            }
+        }
+
+        @SubscribeEvent
+        public void buildOtherCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
+            final var creativeModeTabId = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(event.getTab());
+            if (creativeModeTabId != null && !managedCreativeTabs.contains(creativeModeTabId)) {
+                buildCreativeTabContents(creativeModeTabId, event);
             }
         }
     }

@@ -62,4 +62,6 @@ public interface BalmModels {
     }
 
     ModelBaker createBaker(ModelResourceLocation location, ModelBakery.TextureGetter textureGetter);
+
+    BalmModels scoped(String modId);
 }

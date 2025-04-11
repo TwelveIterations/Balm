@@ -5,7 +5,10 @@ import com.mojang.logging.LogUtils;
 import com.mojang.math.Transformation;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.mixin.ModelBakeryAccessor;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.*;
@@ -29,16 +32,16 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class NeoForgeBalmModels implements BalmModels {
+public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 
     private static final Logger LOGGER = LogUtils.getLogger();
-    public final List<DeferredModel> modelsToBake = Collections.synchronizedList(new ArrayList<>());
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
-    private ModelBakery modelBakery;
+    private static final List<DeferredModel> modelsToBake = Collections.synchronizedList(new ArrayList<>());
+    private static ModelBakery.TextureGetter textureGetter;
+    private static ModelBakery modelBakery;
 
-    public void onBakeModels(ModelBakery modelBakery, ModelBakery.TextureGetter textureGetter) {
-        this.modelBakery = modelBakery;
-        registrations.values().forEach(it -> it.setTextureGetter(textureGetter));
+    public static void onBakeModels(ModelBakery modelBakery, ModelBakery.TextureGetter textureGetter) {
+        NeoForgeBalmModels.modelBakery = modelBakery;
+        NeoForgeBalmModels.textureGetter = textureGetter;
 
         synchronized (modelsToBake) {
             for (DeferredModel deferredModel : modelsToBake) {
@@ -132,16 +135,8 @@ public class NeoForgeBalmModels implements BalmModels {
         return ((ModelBakeryAccessor) modelBakery).callGetModel(ModelBakery.MISSING_MODEL_LOCATION);
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
-    }
-
     private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
-    }
-
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
     @Override
@@ -154,6 +149,11 @@ public class NeoForgeBalmModels implements BalmModels {
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Balm failed to create model baker", e);
         }
+    }
+
+    @Override
+    public BalmModels scoped(String modId) {
+        return new NeoForgeBalmModels(new StaticNamespaceResolver(modId));
     }
 
     private abstract static class DeferredModel extends DeferredObject<BakedModel> {
@@ -180,14 +180,9 @@ public class NeoForgeBalmModels implements BalmModels {
         }
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<DeferredModel> additionalModels = new ArrayList<>();
         public final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = new ArrayList<>();
-        private ModelBakery.TextureGetter textureGetter;
-
-        public void setTextureGetter(ModelBakery.TextureGetter textureGetter) {
-            this.textureGetter = textureGetter;
-        }
 
         @SubscribeEvent
         public void onRegisterAdditionalModels(ModelEvent.RegisterAdditional event) {
@@ -211,8 +206,6 @@ public class NeoForgeBalmModels implements BalmModels {
             for (DeferredModel deferredModel : additionalModels) {
                 deferredModel.resolveAndSet(event.getModelBakery(), event.getModels(), textureGetter);
             }
-
-            textureGetter = null;
         }
     }
 }

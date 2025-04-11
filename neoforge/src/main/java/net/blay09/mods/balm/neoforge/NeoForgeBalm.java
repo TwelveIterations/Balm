@@ -50,7 +50,7 @@ public class NeoForgeBalm {
         NeoForgeBalmWorldGen.initializeBalmBiomeModifiers(modBus);
         modBus.addListener(this::enqueueIMC);
 
-        NeoForgeBalmProviders providers = (NeoForgeBalmProviders) Balm.getProviders();
+        final var providers = (NeoForgeBalmProviders) Balm.getProviders();
         providers.registerBlockProvider(IItemHandler.class, Capabilities.ItemHandler.BLOCK);
         providers.registerBlockProvider(IFluidHandler.class, Capabilities.FluidHandler.BLOCK);
         providers.registerItemProvider(IFluidHandlerItem.class, Capabilities.FluidHandler.ITEM);

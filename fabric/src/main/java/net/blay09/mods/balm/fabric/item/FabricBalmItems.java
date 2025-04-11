@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.item.BalmItems;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
@@ -23,11 +25,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class FabricBalmItems implements BalmItems {
+public record FabricBalmItems(NamespaceResolver namespaceResolver) implements BalmItems {
 
-    private final Set<ResourceLocation> managedCreativeTabs = Collections.synchronizedSet(new HashSet<>());
-    private final Multimap<ResourceLocation, ItemLike> creativeTabContents = Multimaps.synchronizedMultimap(ArrayListMultimap.create());
-    private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
+    private static final Set<ResourceLocation> managedCreativeTabs = Collections.synchronizedSet(new HashSet<>());
+    private static final Multimap<ResourceLocation, ItemLike> creativeTabContents = Multimaps.synchronizedMultimap(ArrayListMultimap.create());
+    private static final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
 
     @Override
     public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
@@ -66,6 +68,11 @@ public class FabricBalmItems implements BalmItems {
     @Override
     public void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator) {
         creativeTabSorting.put(tabIdentifier, comparator);
+    }
+
+    @Override
+    public BalmItems scoped(String modId) {
+        return new FabricBalmItems(new StaticNamespaceResolver(modId));
     }
 
     private void manageCreativeModeTab(ResourceLocation creativeTab) {

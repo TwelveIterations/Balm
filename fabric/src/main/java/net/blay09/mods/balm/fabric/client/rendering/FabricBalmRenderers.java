@@ -1,9 +1,12 @@
 package net.blay09.mods.balm.fabric.client.rendering;
 
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -25,24 +28,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
-public class FabricBalmRenderers implements BalmRenderers {
-    private final Map<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinitions = new HashMap<>();
-
+public record FabricBalmRenderers(NamespaceResolver namespaceResolver) implements BalmRenderers {
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
         ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, layer);
-        layerDefinitions.put(modelLayerLocation, layerDefinition);
+        FabricModelLayers.register(modelLayerLocation, layerDefinition);
         return modelLayerLocation;
-    }
-
-    public Map<ModelLayerLocation, LayerDefinition> createRoots() {
-        return layerDefinitions.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, it -> it.getValue().get()));
     }
 
     @Override
@@ -78,5 +72,10 @@ public class FabricBalmRenderers implements BalmRenderers {
     @Override
     public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
         ParticleFactoryRegistry.getInstance().register(particleType.get(), provider);
+    }
+
+    @Override
+    public BalmRenderers scoped(String modId) {
+        return new FabricBalmRenderers(new StaticNamespaceResolver(modId));
     }
 }

@@ -101,13 +101,14 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     String getPlatform();
 
     default void initializeModule(BalmModule module) {
+        final var modId = module.getId().getNamespace();
         module.registerConfig(getConfig());
         module.registerResources(getResources());
         module.registerAdditional(getRegistries());
         module.registerComponents(getComponents());
-        module.registerBlocks(getBlocks());
+        module.registerBlocks(getBlocks().scoped(modId));
         module.registerBlockEntities(getBlockEntities());
-        module.registerItems(getItems());
+        module.registerItems(getItems().scoped(modId));
         module.registerEntities(getEntities());
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());

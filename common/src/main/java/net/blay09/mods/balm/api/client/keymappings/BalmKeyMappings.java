@@ -93,4 +93,6 @@ public interface BalmKeyMappings {
      */
     @Deprecated(forRemoval = true, since = "1.21.5")
     boolean shouldIgnoreConflicts(KeyMapping keyMapping);
+
+    BalmKeyMappings scoped(String modId);
 }

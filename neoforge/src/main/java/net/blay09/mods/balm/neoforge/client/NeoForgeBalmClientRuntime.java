@@ -7,7 +7,10 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.LegacyNamespaceResolver;
+import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
@@ -20,15 +23,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.neoforged.fml.ModLoadingContext;
 
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
 
-    private final BalmRenderers renderers = new NeoForgeBalmRenderers();
+    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
+    private final BalmRenderers renderers = new NeoForgeBalmRenderers(legacyNamespaceResolver);
     @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmTextures textures = new NeoForgeBalmTextures();
-    private final BalmScreens screens = new NeoForgeBalmScreens();
-    private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings();
-    private final BalmModels models = new NeoForgeBalmModels();
+    private final BalmScreens screens = new NeoForgeBalmScreens(legacyNamespaceResolver);
+    private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings(legacyNamespaceResolver);
+    private final BalmModels models = new NeoForgeBalmModels(legacyNamespaceResolver);
 
     public NeoForgeBalmClientRuntime() {
         NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.getEvents()));
@@ -64,12 +69,10 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
         BalmLoadContexts.register(modId, context);
 
-        ((NeoForgeBalmRenderers) renderers).register(modId, context.modBus());
-        ((NeoForgeBalmScreens) screens).register(modId, context.modBus());
-        ((NeoForgeBalmModels) models).register(modId, context.modBus());
-        ((NeoForgeBalmKeyMappings) keyMappings).register(modId, context.modBus());
-
         initializer.run();
+
+        final var modEventBus = context.modBus();
+        ModBusEventRegisters.register(modId, modEventBus);
     }
 
     @Override
