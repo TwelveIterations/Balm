@@ -13,4 +13,6 @@ public interface BalmScreens {
     <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreen(ResourceLocation id, Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory);
 
     AbstractWidget addRenderableWidget(Screen screen, AbstractWidget widget);
+
+    BalmScreens scoped(String modId);
 }

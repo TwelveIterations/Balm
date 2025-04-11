@@ -6,8 +6,11 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.LegacyNamespaceResolver;
+import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
@@ -18,13 +21,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraftforge.fml.ModLoadingContext;
 
 public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadContext> {
 
-    private final BalmRenderers renderers = new ForgeBalmRenderers();
-    private final BalmScreens screens = new ForgeBalmScreens();
-    private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings();
-    private final BalmModels models = new ForgeBalmModels();
+    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
+    private final BalmRenderers renderers = new ForgeBalmRenderers(legacyNamespaceResolver);
+    private final BalmScreens screens = new ForgeBalmScreens(legacyNamespaceResolver);
+    private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings(legacyNamespaceResolver);
+    private final BalmModels models = new ForgeBalmModels(legacyNamespaceResolver);
 
     public ForgeBalmClientRuntime() {
         ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.getEvents()));
@@ -54,12 +59,9 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     public void initializeMod(String modId, ForgeLoadContext context, Runnable initializer) {
         BalmLoadContexts.register(modId, context);
 
-        ((ForgeBalmRenderers) renderers).register(modId, context.modEventBus());
-        ((ForgeBalmScreens) screens).register(modId, context.modEventBus());
-        ((ForgeBalmModels) models).register(modId, context.modEventBus());
-        ((ForgeBalmKeyMappings) keyMappings).register(modId, context.modEventBus());
-
         initializer.run();
+
+        ModBusEventRegisters.register(modId, context.modEventBus());
     }
 
     @Override

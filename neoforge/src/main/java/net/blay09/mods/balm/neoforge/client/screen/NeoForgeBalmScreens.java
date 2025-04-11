@@ -3,7 +3,10 @@ package net.blay09.mods.balm.neoforge.client.screen;
 import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.client.screen.BalmScreenFactory;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.mixin.ScreenAccessor;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -20,9 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class NeoForgeBalmScreens implements BalmScreens {
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record NeoForgeBalmScreens(NamespaceResolver namespaceResolver) implements BalmScreens {
 
     private static <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void registerScreenImmediate(RegisterMenuScreensEvent event, MenuType<TMenu> type, BalmScreenFactory<TMenu, TScreen> screenFactory) {
         event.register(type, screenFactory::create);
@@ -34,6 +35,11 @@ public class NeoForgeBalmScreens implements BalmScreens {
     }
 
     @Override
+    public BalmScreens scoped(String modId) {
+        return new NeoForgeBalmScreens(new StaticNamespaceResolver(modId));
+    }
+
+    @Override
     public AbstractWidget addRenderableWidget(Screen screen, AbstractWidget widget) {
         ScreenAccessor accessor = ((ScreenAccessor) screen);
         accessor.balm_getChildren().add(widget);
@@ -42,21 +48,17 @@ public class NeoForgeBalmScreens implements BalmScreens {
         return widget;
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
-    }
-
-    private static class Registrations {
+    public static class Registrations {
         public final List<Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>>> menuTypes = new ArrayList<>();
 
         @SubscribeEvent
         @SuppressWarnings({"unchecked", "rawtypes"})
         public void registerMenuScreens(RegisterMenuScreensEvent event) {
-            for (Pair<Supplier<MenuType<? extends AbstractContainerMenu>>, BalmScreenFactory<?, ?>> entry : menuTypes) {
+            for (final var entry : menuTypes) {
                 final var menuType = entry.getFirst().get();
                 final var screenFactory = entry.getSecond();
                 registerScreenImmediate(event, (MenuType) menuType, (BalmScreenFactory) screenFactory);

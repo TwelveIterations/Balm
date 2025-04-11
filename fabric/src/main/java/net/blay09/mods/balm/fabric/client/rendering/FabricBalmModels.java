@@ -3,6 +3,9 @@ package net.blay09.mods.balm.fabric.client.rendering;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.mixin.ModelBakeryAccessor;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
 import net.minecraft.client.Minecraft;
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
+public record FabricBalmModels(NamespaceResolver namespaceResolver) implements BalmModels, ModelLoadingPlugin {
 
     private record ExtraModelRegistration(ResourceLocation identifier, ExtraModelKey<BlockStateModel> extraModelKey) {
     }
@@ -53,6 +56,11 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
         };
         additionalModels.add(new ExtraModelRegistration(identifier, standaloneModelKey));
         return deferredObject;
+    }
+
+    @Override
+    public BalmModels scoped(String modId) {
+        return new FabricBalmModels(new StaticNamespaceResolver(modId));
     }
 
 }

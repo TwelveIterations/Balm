@@ -14,4 +14,6 @@ public interface BalmKeyMappings {
     }
 
     KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, String category);
+
+    BalmKeyMappings scoped(String modId);
 }

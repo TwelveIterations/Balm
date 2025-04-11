@@ -42,4 +42,6 @@ public interface BalmRenderers {
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
+
+    BalmRenderers scoped(String modId);
 }

@@ -41,4 +41,6 @@ public interface BalmItems {
     void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier);
 
     void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator);
+
+    BalmItems scoped(String modId);
 }

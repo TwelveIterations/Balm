@@ -2,7 +2,9 @@ package net.blay09.mods.balm.forge.entity;
 
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.forge.DeferredRegisters;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -11,17 +13,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class ForgeBalmEntities implements BalmEntities {
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record ForgeBalmEntities(NamespaceResolver namespaceResolver) implements BalmEntities {
 
     @Override
     public <T extends Entity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder) {
@@ -33,7 +31,7 @@ public class ForgeBalmEntities implements BalmEntities {
     @Override
     public <T extends LivingEntity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder, Supplier<AttributeSupplier.Builder> attributeBuilder) {
         final var register = DeferredRegisters.get(Registries.ENTITY_TYPE, identifier.getNamespace());
-        final var registrations = getRegistrations(identifier.getNamespace());
+        final var registrations = getActiveRegistrations();
         final var registryObject = register.register(identifier.getPath(), () -> {
             EntityType<T> entityType = typeBuilder.build(ResourceKey.create(Registries.ENTITY_TYPE, identifier));
             registrations.attributeSuppliers.put(entityType, attributeBuilder.get().build());
@@ -42,22 +40,17 @@ public class ForgeBalmEntities implements BalmEntities {
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
-    }
-
-    private static class Registrations {
-        public final Map<EntityType<?>, AttributeSupplier> attributeSuppliers = new HashMap<>();
+    public static class Registrations {
+        public final Map<EntityType<? extends LivingEntity>, AttributeSupplier> attributeSuppliers = new HashMap<>();
 
         @SubscribeEvent
-        @SuppressWarnings("unchecked")
         public void registerAttributes(EntityAttributeCreationEvent event) {
-            for (Map.Entry<EntityType<?>, AttributeSupplier> entry : attributeSuppliers.entrySet()) {
-                event.put((EntityType<? extends LivingEntity>) entry.getKey(), entry.getValue());
+            for (final var entry : attributeSuppliers.entrySet()) {
+                event.put(entry.getKey(), entry.getValue());
             }
         }
     }

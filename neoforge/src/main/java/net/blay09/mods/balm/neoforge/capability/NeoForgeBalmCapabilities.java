@@ -2,6 +2,8 @@ package net.blay09.mods.balm.neoforge.capability;
 
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.capability.CapabilityType;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -26,10 +28,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class NeoForgeBalmCapabilities implements BalmCapabilities {
+public record NeoForgeBalmCapabilities(NamespaceResolver namespaceResolver) implements BalmCapabilities {
 
-    private final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+    private static final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
+    private static final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
 
     @Override
     public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type) {
@@ -72,12 +74,12 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
 
     @Override
     public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<List<BlockEntityType<?>>> blockEntityTypes) {
-        getRegistrations(identifier.getNamespace()).blockEntityProviders.add(new BlockEntityProviderRegistration<>(type, provider, blockEntityTypes));
+        getActiveRegistrations().blockEntityProviders.add(new BlockEntityProviderRegistration<>(type, provider, blockEntityTypes));
     }
 
     @Override
     public <TApi, TContext> void registerFallbackBlockEntityProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider) {
-        getRegistrations(identifier.getNamespace()).fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(type, provider));
+        getActiveRegistrations().fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(type, provider));
     }
 
     public <TApi, TContext> CapabilityType<Block, TApi, TContext> addExistingType(ResourceLocation identifier, BaseCapability<TApi, TContext> capability) {
@@ -94,12 +96,8 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
         }
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
     record BlockEntityProviderRegistration<TApi, TContext>(CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider,
@@ -110,7 +108,7 @@ public class NeoForgeBalmCapabilities implements BalmCapabilities {
                                                                    BiFunction<BlockEntity, TContext, TApi> provider) {
     }
 
-    private static class Registrations {
+    public static class Registrations {
 
         public final List<BlockEntityProviderRegistration<?, ?>> blockEntityProviders = new ArrayList<>();
         public final List<BlockEntityFallbackProviderRegistration<?, ?>> fallbackBlockEntityProviders = new ArrayList<>();

@@ -19,8 +19,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -31,7 +34,8 @@ import java.util.function.BiFunction;
 public class ForgeBalm {
 
     public ForgeBalm(FMLJavaModLoadingContext context) {
-        BalmLoadContexts.register("balm", new ForgeLoadContext(context.getModEventBus()));
+        final var modEventBus = context.getModEventBus();
+        BalmLoadContexts.register("balm", new ForgeLoadContext(modEventBus));
 
         Balm.registerModule(new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
@@ -39,7 +43,6 @@ public class ForgeBalm {
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
-        final var modEventBus = context.getModEventBus();
         ForgeBalmWorldGen.initializeBalmBiomeModifiers(modEventBus);
         modEventBus.addListener(ForgeBalmClient::onInitializeClient);
 

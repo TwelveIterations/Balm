@@ -36,4 +36,6 @@ public interface BalmBlocks {
     default void register(Function<ResourceLocation, Block> blockSupplier, BiFunction<Block, ResourceLocation, BlockItem> blockItemSupplier, ResourceLocation identifier) {
         register(blockSupplier, blockItemSupplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
+
+    BalmBlocks scoped(String modId);
 }

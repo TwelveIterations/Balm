@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 
 public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
-    private final Map<ResourceLocation, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
-    private final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
+    private static final Map<ResourceLocation, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
+    private static final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
 
     private static ModConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ModConfigSpec.Builder spec) {
         spec.comment(property.comment());
@@ -220,9 +220,9 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     public void registerConfig(BalmConfigSchema schema) {
         super.registerConfig(schema);
 
-        final var modContainer = ModList.get().getModContainerById(schema.identifier().getNamespace())
-                .orElseThrow(() -> new IllegalStateException("Mod container for " + schema.identifier()
-                        .getNamespace() + " not found when registering config."));
+        final var namespace = schema.identifier().getNamespace();
+        final var modContainer = ModList.get().getModContainerById(namespace)
+                .orElseThrow(() -> new IllegalStateException("Mod container for " + namespace + " not found when registering config."));
         final var eventBus = modContainer.getEventBus();
         if (eventBus == null) {
             throw new IllegalStateException("Missing event bus for " + schema.identifier().getNamespace() + " when registering config.");

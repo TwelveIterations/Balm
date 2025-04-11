@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
@@ -16,14 +15,12 @@ import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class NeoForgeBalmModels implements BalmModels {
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 
     @Override
     public DeferredObject<BlockStateModel> loadModel(ResourceLocation identifier) {
+        final var registrations = getActiveRegistrations();
         final var standaloneModelKey = new StandaloneModelKey<BlockStateModel>(identifier);
         final var deferredModel = new DeferredObject<BlockStateModel>(identifier) {
             @Override
@@ -37,19 +34,20 @@ public class NeoForgeBalmModels implements BalmModels {
                 return model != null;
             }
         };
-        getRegistrations(identifier.getNamespace()).additionalModels.add(standaloneModelKey);
+        registrations.additionalModels.add(standaloneModelKey);
         return deferredModel;
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
+    @Override
+    public BalmModels scoped(String modId) {
+        return new NeoForgeBalmModels(new StaticNamespaceResolver(modId));
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<StandaloneModelKey<BlockStateModel>> additionalModels = new ArrayList<>();
 
         @SubscribeEvent

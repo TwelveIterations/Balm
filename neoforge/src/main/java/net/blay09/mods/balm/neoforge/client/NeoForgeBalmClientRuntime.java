@@ -6,7 +6,10 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.LegacyNamespaceResolver;
+import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
@@ -23,15 +26,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.neoforged.fml.ModLoadingContext;
 
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
 
-    private final BalmRenderers renderers = new NeoForgeBalmRenderers();
-    private final BalmScreens screens = new NeoForgeBalmScreens();
-    private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings();
-    private final BalmModels models = new NeoForgeBalmModels();
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
+    private final BalmRenderers renderers = new NeoForgeBalmRenderers(legacyNamespaceResolver);
+    private final BalmScreens screens = new NeoForgeBalmScreens(legacyNamespaceResolver);
+    private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings(legacyNamespaceResolver);
+    private final BalmModels models = new NeoForgeBalmModels(legacyNamespaceResolver);
 
     public NeoForgeBalmClientRuntime() {
         NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.getEvents()));
@@ -61,14 +65,10 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
         BalmLoadContexts.register(modId, context);
 
-        ((NeoForgeBalmRenderers) renderers).register(modId, context.modBus());
-        ((NeoForgeBalmScreens) screens).register(modId, context.modBus());
-        ((NeoForgeBalmModels) models).register(modId, context.modBus());
-        ((NeoForgeBalmKeyMappings) keyMappings).register(modId, context.modBus());
-        ((NeoForgeBalmKeyMappings) keyMappings).register(modId, context.modBus());
-        context.modBus().register(getRegistrations(modId));
-
         initializer.run();
+
+        final var modEventBus = context.modBus();
+        ModBusEventRegisters.register(modId, modEventBus);
     }
 
     @Override
@@ -76,14 +76,10 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
         getRegistrations(identifier.getNamespace()).reloadListeners.add(new ReloadListenerRegistration(identifier, reloadListener));
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
-    }
-
     record ReloadListenerRegistration(ResourceLocation identifier, PreparableReloadListener listener) {
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<ReloadListenerRegistration> reloadListeners = new ArrayList<>();
 
         @SubscribeEvent

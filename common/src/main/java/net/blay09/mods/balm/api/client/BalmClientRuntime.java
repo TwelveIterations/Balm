@@ -22,11 +22,12 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void initializeMod(String modId, TLoadContext context, Runnable initializer);
 
     default void initializeModule(BalmClientModule module) {
+        final var modId = module.getId().getNamespace();
         module.registerEvents(Balm.getEvents());
-        module.registerRenderers(getRenderers());
-        module.registerScreens(getScreens());
-        module.registerModels(getModels());
-        module.registerKeyMappings(getKeyMappings());
+        module.registerRenderers(getRenderers().scoped(modId));
+        module.registerScreens(getScreens().scoped(modId));
+        module.registerModels(getModels().scoped(modId));
+        module.registerKeyMappings(getKeyMappings().scoped(modId));
         module.initialize();
     }
 

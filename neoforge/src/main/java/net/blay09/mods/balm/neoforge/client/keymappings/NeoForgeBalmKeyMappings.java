@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NeoForgeBalmKeyMappings implements BalmKeyMappings {
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record NeoForgeBalmKeyMappings(NamespaceResolver namespaceResolver) implements BalmKeyMappings {
 
     @Override
     public KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, String category) {
@@ -23,15 +22,16 @@ public class NeoForgeBalmKeyMappings implements BalmKeyMappings {
         return keyMapping;
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
+    @Override
+    public BalmKeyMappings scoped(String modId) {
+        return new NeoForgeBalmKeyMappings(new StaticNamespaceResolver(modId));
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<KeyMapping> keyMappings = new ArrayList<>();
 
         @SubscribeEvent

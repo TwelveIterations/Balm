@@ -2,7 +2,9 @@ package net.blay09.mods.balm.neoforge.entity;
 
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.neoforge.DeferredRegisters;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -19,9 +21,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class NeoForgeBalmEntities implements BalmEntities {
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record NeoForgeBalmEntities(NamespaceResolver namespaceResolver) implements BalmEntities {
 
     @Override
     public <T extends Entity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder) {
@@ -42,22 +42,17 @@ public class NeoForgeBalmEntities implements BalmEntities {
         return new DeferredObject<>(identifier, registryObject, registryObject::isBound);
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
-    }
-
-    private static class Registrations {
-        public final Map<EntityType<?>, AttributeSupplier> attributeSuppliers = new HashMap<>();
+    public static class Registrations {
+        public final Map<EntityType<? extends LivingEntity>, AttributeSupplier> attributeSuppliers = new HashMap<>();
 
         @SubscribeEvent
-        @SuppressWarnings("unchecked")
         public void registerAttributes(EntityAttributeCreationEvent event) {
-            for (Map.Entry<EntityType<?>, AttributeSupplier> entry : attributeSuppliers.entrySet()) {
-                event.put((EntityType<? extends LivingEntity>) entry.getKey(), entry.getValue());
+            for (final var entry : attributeSuppliers.entrySet()) {
+                event.put(entry.getKey(), entry.getValue());
             }
         }
     }
