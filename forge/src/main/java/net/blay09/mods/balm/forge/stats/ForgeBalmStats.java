@@ -28,7 +28,7 @@ public record ForgeBalmStats(NamespaceResolver namespaceResolver) implements Bal
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<ResourceLocation> customStats = new ArrayList<>();
 
         @SubscribeEvent

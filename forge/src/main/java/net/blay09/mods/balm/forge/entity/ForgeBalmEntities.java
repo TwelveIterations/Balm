@@ -43,7 +43,7 @@ public record ForgeBalmEntities(NamespaceResolver namespaceResolver) implements 
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final Map<EntityType<? extends LivingEntity>, AttributeSupplier> attributeSuppliers = new HashMap<>();
 
         @SubscribeEvent

@@ -162,7 +162,7 @@ public record ForgeBalmModels(NamespaceResolver namespaceResolver) implements Ba
         public abstract BakedModel resolve(ModelBakery modelBakery, Map<ResourceLocation, BakedModel> modelRegistry, BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction);
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<DeferredModel> additionalModels = new ArrayList<>();
         public final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = new ArrayList<>();
 

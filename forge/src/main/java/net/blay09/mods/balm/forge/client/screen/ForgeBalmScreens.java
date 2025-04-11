@@ -49,7 +49,7 @@ public record ForgeBalmScreens(NamespaceResolver namespaceResolver) implements B
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>>> menuTypes = new ArrayList<>();
 
         @SubscribeEvent

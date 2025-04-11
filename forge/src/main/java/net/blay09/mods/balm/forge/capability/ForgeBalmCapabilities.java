@@ -187,7 +187,7 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
     }
 
 
-    private static class Registrations {
+    public static class Registrations {
 
         private final List<Class<?>> apiClasses = new ArrayList<>();
 

@@ -113,7 +113,7 @@ public class ForgeBalmKeyMappings extends CommonBalmKeyMappings {
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<KeyMapping> keyMappings = new ArrayList<>();
 
         @SubscribeEvent

@@ -74,7 +74,7 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
         return new ForgeBalmItems(new StaticNamespaceResolver(modId));
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final Multimap<ResourceLocation, Supplier<ItemLike[]>> creativeTabContents = ArrayListMultimap.create();
         private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
 
