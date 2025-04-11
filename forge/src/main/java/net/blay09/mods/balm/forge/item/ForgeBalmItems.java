@@ -17,6 +17,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -24,6 +26,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements BalmItems {
+
+    private static final Set<ResourceLocation> managedCreativeTabs = new HashSet<>();
 
     @Override
     public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
@@ -37,6 +41,7 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
 
     @Override
     public DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier) {
+        managedCreativeTabs.add(identifier);
         final var register = DeferredRegisters.get(Registries.CREATIVE_MODE_TAB, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), () -> {
             final var displayName = Component.translatable("itemGroup." + identifier.toString().replace(':', '.'));
@@ -74,7 +79,7 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
         private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
 
         public void buildCreativeTabContents(ResourceLocation tabIdentifier, CreativeModeTab.Output entries) {
-            Collection<Supplier<ItemLike[]>> itemStackArraySuppliers = creativeTabContents.get(tabIdentifier);
+            final var itemStackArraySuppliers = creativeTabContents.get(tabIdentifier);
             final var comparator = creativeTabSorting.get(tabIdentifier);
             if (!itemStackArraySuppliers.isEmpty()) {
                 itemStackArraySuppliers.forEach(it -> {
@@ -84,6 +89,14 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
                         entries.accept(itemStack);
                     }
                 });
+            }
+        }
+
+        @SubscribeEvent
+        public void buildOtherCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
+            final var creativeModeTabId = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(event.getTab());
+            if (creativeModeTabId != null && !managedCreativeTabs.contains(creativeModeTabId)) {
+                buildCreativeTabContents(creativeModeTabId, event);
             }
         }
     }
