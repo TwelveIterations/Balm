@@ -21,6 +21,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
@@ -37,12 +38,12 @@ public class ForgeBalm {
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
-        ForgeBalmWorldGen.initializeBalmBiomeModifiers();
         final var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ForgeBalmWorldGen.initializeBalmBiomeModifiers(modEventBus);
         modEventBus.addListener(ForgeBalmClient::onInitializeClient);
         modEventBus.addListener(this::enqueueIMC);
 
-        ForgeBalmProviders providers = (ForgeBalmProviders) Balm.getProviders();
+        final var providers = (ForgeBalmProviders) Balm.getProviders();
         providers.register(IItemHandler.class, new CapabilityToken<>() {
         });
         providers.register(IFluidHandler.class, new CapabilityToken<>() {
@@ -62,6 +63,8 @@ public class ForgeBalm {
         capabilities.addExistingType(new ResourceLocation("forge", "item_handler"), IItemHandler.class, ForgeCapabilities.ITEM_HANDLER);
         capabilities.addExistingType(new ResourceLocation("forge", "fluid_handler"), IFluidHandler.class, ForgeCapabilities.FLUID_HANDLER);
         capabilities.addExistingType(new ResourceLocation("forge", "energy_storage"), IEnergyStorage.class, ForgeCapabilities.ENERGY);
+
+        modEventBus.addListener((FMLLoadCompleteEvent event) -> event.enqueueWork(() -> ((ForgeBalmRuntime) Balm.getRuntime()).initializeAddons()));
     }
 
     private void enqueueIMC(InterModEnqueueEvent event) {

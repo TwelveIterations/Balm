@@ -49,15 +49,6 @@ public class ForgeBalmClientEvents {
             });
         });
 
-        events.registerEvent(ClientStartedEvent.class, priority -> {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ForgeBalmEvents.toForge(priority), (FMLLoadCompleteEvent orig) -> {
-                orig.enqueueWork(() -> {
-                    final ClientStartedEvent event = new ClientStartedEvent(Minecraft.getInstance());
-                    events.fireEventHandlers(priority, event);
-                });
-            });
-        });
-
         events.registerEvent(ConnectedToServerEvent.class, priority -> {
             MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (ClientPlayerNetworkEvent.LoggingIn orig) -> {
                 final ConnectedToServerEvent event = new ConnectedToServerEvent(Minecraft.getInstance());

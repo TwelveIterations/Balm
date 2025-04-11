@@ -1,10 +1,5 @@
 package net.blay09.mods.balm.forge;
 
-import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmProxy;
-import net.blay09.mods.balm.api.BalmRegistries;
-import net.blay09.mods.balm.api.BalmRuntime;
-import net.blay09.mods.balm.api.*;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
@@ -28,9 +23,10 @@ import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.CommonBalmLootTables;
 import net.blay09.mods.balm.common.CommonBalmRuntime;
+import net.blay09.mods.balm.common.LegacyNamespaceResolver;
+import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
 import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
@@ -56,9 +52,8 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -69,24 +64,25 @@ import java.util.function.Consumer;
 
 public class ForgeBalmRuntime extends CommonBalmRuntime {
 
+    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
-    private final BalmBlocks blocks = new ForgeBalmBlocks();
+    private final BalmBlocks blocks = new ForgeBalmBlocks(legacyNamespaceResolver);
     private final BalmBlockEntities blockEntities = new ForgeBalmBlockEntities();
     private final ForgeBalmEvents events = new ForgeBalmEvents();
-    private final BalmItems items = new ForgeBalmItems();
+    private final BalmItems items = new ForgeBalmItems(legacyNamespaceResolver);
     private final BalmMenus menus = new ForgeBalmMenus();
     private final BalmNetworking networking = new ForgeBalmNetworking();
     private final BalmConfig config = new ForgeBalmConfig();
     private final BalmHooks hooks = new ForgeBalmHooks();
     private final BalmRegistries registries = new ForgeBalmRegistries();
     private final BalmSounds sounds = new ForgeBalmSounds();
-    private final BalmEntities entities = new ForgeBalmEntities();
+    private final BalmEntities entities = new ForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new ForgeBalmCapabilities();
     @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmProviders providers = new ForgeBalmProviders();
     private final BalmCommands commands = new ForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
-    private final BalmStats stats = new ForgeBalmStats();
+    private final BalmStats stats = new ForgeBalmStats(legacyNamespaceResolver);
     private final BalmRecipes recipes = new ForgeBalmRecipes();
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmParticles particles = new ForgeBalmParticles();
@@ -206,16 +202,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime {
 
     @Override
     public void initializeMod(String modId, Runnable initializer) {
-        ((ForgeBalmItems) items).register();
-        ((ForgeBalmEntities) entities).register();
-        ((ForgeBalmWorldGen) worldGen).register();
-        ((ForgeBalmStats) stats).register();
-
         initializer.run();
 
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener((FMLLoadCompleteEvent event) -> initializeAddons());
+        final var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         DeferredRegisters.register(modId, modEventBus);
+        ModBusEventRegisters.register(modId, modEventBus);
     }
 
     @Override
@@ -225,7 +216,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime {
         }
     }
 
-    private void initializeAddons() {
+    public void initializeAddons() {
         for (String addonClass : addonClasses) {
             try {
                 Class.forName(addonClass).getConstructor().newInstance();

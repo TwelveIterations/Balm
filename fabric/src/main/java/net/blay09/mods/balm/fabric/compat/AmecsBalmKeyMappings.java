@@ -3,9 +3,12 @@ package net.blay09.mods.balm.fabric.compat;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.siphalor.amecs.api.AmecsKeyBinding;
 import de.siphalor.amecs.api.KeyBindingUtils;
+import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.keymappings.KeyConflictContext;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifier;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifiers;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.common.client.keymappings.CommonBalmKeyMappings;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
@@ -16,7 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AmecsBalmKeyMappings extends CommonBalmKeyMappings {
 
-    private final Map<KeyMapping, KeyConflictContext> contextAwareKeyMappings = new ConcurrentHashMap<>();
+    private static final Map<KeyMapping, KeyConflictContext> contextAwareKeyMappings = new ConcurrentHashMap<>();
+
+    public AmecsBalmKeyMappings(NamespaceResolver namespaceResolver) {
+        super(namespaceResolver);
+    }
 
     @Override
     public KeyMapping registerKeyMapping(String name, KeyConflictContext conflictContext, KeyModifier modifier, InputConstants.Type type, int keyCode, String category) {
@@ -34,6 +41,11 @@ public class AmecsBalmKeyMappings extends CommonBalmKeyMappings {
             registerCustomModifierKeyMappings(keyMapping, conflictContext, modifiers.getCustomModifiers());
         }
         return keyMapping;
+    }
+
+    @Override
+    public BalmKeyMappings scoped(String modId) {
+        return new AmecsBalmKeyMappings(new StaticNamespaceResolver(modId));
     }
 
     @Override

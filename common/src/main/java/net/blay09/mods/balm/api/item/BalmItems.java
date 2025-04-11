@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.item;
 
 import net.blay09.mods.balm.api.DeferredObject;
+import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -71,4 +72,5 @@ public interface BalmItems {
         return registerItem((id) -> supplier.get(), identifier, creativeTab);
     }
 
+    BalmItems scoped(String modId);
 }

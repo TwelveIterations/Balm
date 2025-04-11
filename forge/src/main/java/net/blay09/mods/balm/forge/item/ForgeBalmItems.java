@@ -4,7 +4,10 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.item.BalmItems;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.forge.DeferredRegisters;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -14,24 +17,18 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class ForgeBalmItems implements BalmItems {
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements BalmItems {
 
     @Override
     public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
-        final var register = DeferredRegisters.get(Registries.ITEM, identifier.getNamespace());
+        final var namespace = namespaceResolver.getMatchingNamespaceOrThrow(identifier);
+        final var register = DeferredRegisters.get(Registries.ITEM, namespace);
         final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
         if (creativeTab != null) {
             getActiveRegistrations().creativeTabContents.put(creativeTab, () -> new ItemLike[]{registryObject.get()});
@@ -41,17 +38,16 @@ public class ForgeBalmItems implements BalmItems {
 
     @Override
     public DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier) {
-        DeferredRegister<CreativeModeTab> register = DeferredRegisters.get(Registries.CREATIVE_MODE_TAB, identifier.getNamespace());
-        RegistryObject<CreativeModeTab> registryObject = register.register(identifier.getPath(), () -> {
-            Component displayName = Component.translatable("itemGroup." + identifier.toString().replace(':', '.'));
+        final var namespace = namespaceResolver.getMatchingNamespaceOrThrow(identifier);
+        final var register = DeferredRegisters.get(Registries.CREATIVE_MODE_TAB, namespace);
+        final var registryObject = register.register(identifier.getPath(), () -> {
+            final var displayName = Component.translatable("itemGroup." + identifier.toString().replace(':', '.'));
             final var registrations = getActiveRegistrations();
-            CreativeModeTab creativeModeTab = CreativeModeTab.builder()
+            return Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, identifier, CreativeModeTab.builder()
                     .title(displayName)
                     .icon(iconSupplier)
                     .displayItems((enabledFeatures, entries) -> registrations.buildCreativeTabContents(identifier, entries))
-                    .build();
-            creativeModeTab = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, identifier, creativeModeTab);
-            return creativeModeTab;
+                    .build());
         });
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
@@ -66,12 +62,13 @@ public class ForgeBalmItems implements BalmItems {
         getActiveRegistrations().creativeTabSorting.put(tabIdentifier, comparator);
     }
 
-    public void register() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(getActiveRegistrations());
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private Registrations getActiveRegistrations() {
-        return registrations.computeIfAbsent(ModLoadingContext.get().getActiveNamespace(), it -> new Registrations());
+    @Override
+    public BalmItems scoped(String modId) {
+        return new ForgeBalmItems(new StaticNamespaceResolver(modId));
     }
 
     private static class Registrations {

@@ -29,9 +29,7 @@ import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.CommonBalmLootTables;
-import net.blay09.mods.balm.common.CommonBalmRuntime;
+import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
@@ -70,11 +68,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FabricBalmRuntime extends CommonBalmRuntime {
+    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> {
+        throw new UnsupportedOperationException("No default namespace available");
+    });
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
-    private final BalmBlocks blocks = new FabricBalmBlocks();
+    private final BalmBlocks blocks = new FabricBalmBlocks(legacyNamespaceResolver);
     private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
     private final FabricBalmEvents events = new FabricBalmEvents();
-    private final BalmItems items = new FabricBalmItems();
+    private final BalmItems items = new FabricBalmItems(legacyNamespaceResolver);
     private final BalmMenus menus = new FabricBalmMenus();
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
