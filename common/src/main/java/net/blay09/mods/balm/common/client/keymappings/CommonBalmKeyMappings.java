@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.keymappings.KeyConflictContext;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifier;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifiers;
+import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.mixin.KeyMappingAccessor;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -17,8 +18,15 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class CommonBalmKeyMappings implements BalmKeyMappings {
-    private final Set<KeyMapping> ignoreConflicts = Sets.newConcurrentHashSet();
-    private final Map<KeyMapping, Set<KeyMapping>> multiModifierKeyMappings = new ConcurrentHashMap<>();
+
+    protected final NamespaceResolver namespaceResolver;
+
+    public CommonBalmKeyMappings(NamespaceResolver namespaceResolver) {
+        this.namespaceResolver = namespaceResolver;
+    }
+
+    private static final Set<KeyMapping> ignoreConflicts = Sets.newConcurrentHashSet();
+    private static final Map<KeyMapping, Set<KeyMapping>> multiModifierKeyMappings = new ConcurrentHashMap<>();
 
     @Override
     public KeyMapping registerKeyMapping(String name, int keyCode, String category) {

@@ -4,6 +4,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.capability.CapabilityType;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,14 +29,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class ForgeBalmCapabilities implements BalmCapabilities {
-    private final Map<ResourceLocation, Capability<?>> backingTypes = new ConcurrentHashMap<>();
-    private final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
-    private final List<BlockEntityProviderRegistration<?, ?>> blockEntityProviders = new CopyOnWriteArrayList<>();
-    private final List<BlockEntityFallbackProviderRegistration<?, ?>> fallbackBlockEntityProviders = new CopyOnWriteArrayList<>();
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) implements BalmCapabilities {
+    private static final Map<ResourceLocation, Capability<?>> backingTypes = new ConcurrentHashMap<>();
+    private static final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
+    private static final List<BlockEntityProviderRegistration<?, ?>> blockEntityProviders = new CopyOnWriteArrayList<>();
+    private static final List<BlockEntityFallbackProviderRegistration<?, ?>> fallbackBlockEntityProviders = new CopyOnWriteArrayList<>();
 
-    private Multimap<BlockEntityType<?>, BlockEntityProviderRegistration<?, ?>> flattenedBlockEntityProviders;
+    private static Multimap<BlockEntityType<?>, BlockEntityProviderRegistration<?, ?>> flattenedBlockEntityProviders;
 
     @Override
     public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type) {
@@ -60,7 +60,7 @@ public class ForgeBalmCapabilities implements BalmCapabilities {
 
     @Override
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
-        getRegistrations(identifier.getNamespace()).apiClasses.add(apiClass);
+        getActiveRegistrations().apiClasses.add(apiClass);
         final var backingType = backingTypes.get(identifier);
         if (backingType == null) {
             throw new IllegalStateException(
@@ -152,12 +152,8 @@ public class ForgeBalmCapabilities implements BalmCapabilities {
                 capability));
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
-    }
-
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
     record BlockEntityCapabilityProvider(BlockEntity blockEntity, CapabilityType<Block, ?, ?> type,
@@ -191,7 +187,7 @@ public class ForgeBalmCapabilities implements BalmCapabilities {
     }
 
 
-    private static class Registrations {
+    public static class Registrations {
 
         private final List<Class<?>> apiClasses = new ArrayList<>();
 

@@ -65,15 +65,15 @@ public class Balm {
     }
 
     public static void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
-        runtime.initializeMod(modId, initializer);
+        runtime.initializeMod(modId, context, initializer);
     }
 
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {
-        runtime.initializeMod(modId, () -> registerModule(module));
+        runtime.initializeMod(modId, context, () -> registerModule(module));
     }
 
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule... modules) {
-        runtime.initializeMod(modId, () -> {
+        runtime.initializeMod(modId, context, () -> {
             for (final var module : modules) {
                 registerModule(module);
             }

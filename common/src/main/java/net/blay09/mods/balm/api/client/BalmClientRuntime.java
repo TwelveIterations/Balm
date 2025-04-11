@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.client;
 
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
@@ -19,14 +20,15 @@ public interface BalmClientRuntime {
 
     BalmKeyMappings getKeyMappings();
 
-    void initializeMod(String modId, Runnable initializer);
+    void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer);
 
     default void initializeModule(BalmClientModule module) {
+        final var modId = module.getId().getNamespace();
         module.registerEvents(Balm.getEvents());
-        module.registerRenderers(getRenderers());
-        module.registerScreens(getScreens());
-        module.registerModels(getModels());
-        module.registerKeyMappings(getKeyMappings());
+        module.registerRenderers(getRenderers().scoped(modId));
+        module.registerScreens(getScreens().scoped(modId));
+        module.registerModels(getModels().scoped(modId));
+        module.registerKeyMappings(getKeyMappings().scoped(modId));
         module.initialize();
     }
 

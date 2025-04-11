@@ -9,14 +9,15 @@ import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.*;
 import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
 import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
+import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.blay09.mods.balm.common.config.ConfigLocalization;
+import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
@@ -25,8 +26,8 @@ import java.util.stream.Collectors;
 
 public class ForgeBalmConfig extends AbstractBalmConfig {
 
-    private final Map<ResourceLocation, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
-    private final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
+    private static final Map<ResourceLocation, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
+    private static final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
 
     private static ForgeConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ForgeConfigSpec.Builder spec) {
         spec.comment(property.comment());
@@ -202,16 +203,12 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     public void registerConfig(BalmConfigSchema schema) {
         super.registerConfig(schema);
 
-        final var modContainer = ModList.get().getModContainerById(schema.identifier().getNamespace())
-                .orElseThrow(() -> new IllegalStateException("Mod container for " + schema.identifier()
-                        .getNamespace() + " not found when registering config."));
-        final var expectedModContainer = FMLJavaModLoadingContext.get().getContainer();
-        if (!expectedModContainer.getModId().equals(modContainer.getModId())) {
-            throw new IllegalStateException("registerConfig must be called in the initializer of " + schema.identifier().getNamespace());
-        }
-        final var eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        final var namespace = schema.identifier().getNamespace();
+        final var modContainer = ModList.get().getModContainerById(namespace)
+                .orElseThrow(() -> new IllegalStateException("Mod container for " + namespace + " not found when registering config."));
+        final var eventBus = BalmLoadContexts.get(namespace).map(it -> ((ForgeLoadContext) it).modEventBus()).orElse(null);
         if (eventBus == null) {
-            throw new IllegalStateException("Missing event bus for " + schema.identifier().getNamespace() + " when registering config.");
+            throw new IllegalStateException("Missing event bus for " + namespace + " when registering config.");
         }
 
         eventBus.addListener((ModConfigEvent.Loading event) -> {

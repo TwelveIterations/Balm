@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.client.keymappings;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.minecraft.client.KeyMapping;
 
 import java.util.Optional;
@@ -93,4 +94,6 @@ public interface BalmKeyMappings {
      */
     @Deprecated(forRemoval = true, since = "1.21.5")
     boolean shouldIgnoreConflicts(KeyMapping keyMapping);
+
+    BalmKeyMappings scoped(String modId);
 }

@@ -82,7 +82,7 @@ public interface BalmRuntime {
 
     <T> SidedProxy<T> sidedProxy(String commonName, String clientName);
 
-    void initializeMod(String modId, Runnable initializer);
+    void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer);
 
     void initializeIfLoaded(String modId, String className);
 
@@ -97,11 +97,12 @@ public interface BalmRuntime {
     String getPlatform();
 
     default void initializeModule(BalmModule module) {
+        final var modId = module.getId().getNamespace();
         module.registerConfig(getConfig());
         module.registerAdditional(getRegistries());
-        module.registerBlocks(getBlocks());
+        module.registerBlocks(getBlocks().scoped(modId));
         module.registerBlockEntities(getBlockEntities());
-        module.registerItems(getItems());
+        module.registerItems(getItems().scoped(modId));
         module.registerEntities(getEntities());
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());

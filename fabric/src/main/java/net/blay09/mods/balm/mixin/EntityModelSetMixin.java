@@ -3,6 +3,7 @@ package net.blay09.mods.balm.mixin;
 import com.google.common.collect.ImmutableMap;
 import net.blay09.mods.balm.api.client.BalmClient;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
+import net.blay09.mods.balm.fabric.client.rendering.FabricModelLayers;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -22,7 +23,7 @@ public class EntityModelSetMixin {
         Map<ModelLayerLocation, LayerDefinition> originalRoots = ((EntityModelSetAccessor) this).getRoots();
         ImmutableMap<ModelLayerLocation, LayerDefinition> roots = ImmutableMap.<ModelLayerLocation, LayerDefinition>builder()
                 .putAll(originalRoots)
-                .putAll(((FabricBalmRenderers) BalmClient.getRenderers()).createRoots())
+                .putAll(FabricModelLayers.createRoots())
                 .build();
         ((EntityModelSetAccessor) this).setRoots(roots);
     }

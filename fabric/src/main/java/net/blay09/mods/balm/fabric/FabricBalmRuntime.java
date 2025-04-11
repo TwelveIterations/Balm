@@ -1,13 +1,9 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmProxy;
-import net.blay09.mods.balm.api.BalmRegistries;
-import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
-import net.blay09.mods.balm.api.EmptyLoadContext;
+import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -29,9 +25,7 @@ import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.CommonBalmLootTables;
-import net.blay09.mods.balm.common.CommonBalmRuntime;
+import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
@@ -70,11 +64,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FabricBalmRuntime extends CommonBalmRuntime {
+    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> {
+        throw new UnsupportedOperationException("No default namespace available");
+    });
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
-    private final BalmBlocks blocks = new FabricBalmBlocks();
+    private final BalmItems items = new FabricBalmItems(legacyNamespaceResolver);
+    private final BalmBlocks blocks = new FabricBalmBlocks(legacyNamespaceResolver, items);
     private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
     private final FabricBalmEvents events = new FabricBalmEvents();
-    private final BalmItems items = new FabricBalmItems();
     private final BalmMenus menus = new FabricBalmMenus();
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
@@ -215,7 +212,8 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
     }
 
     @Override
-    public void initializeMod(String modId, Runnable initializer) {
+    public void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+        BalmLoadContexts.register(modId, context);
         initializer.run();
     }
 
