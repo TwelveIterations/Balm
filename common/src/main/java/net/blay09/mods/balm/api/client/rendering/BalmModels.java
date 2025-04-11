@@ -66,4 +66,6 @@ public interface BalmModels {
     }
 
     ModelBaker createBaker(ResourceLocation location, BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction);
+
+    BalmModels scoped(String modId);
 }

@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadContext> implements BalmRuntime {
+public abstract class CommonBalmRuntime implements BalmRuntime {
 
     private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());

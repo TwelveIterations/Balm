@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.client.BalmClient;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
@@ -17,6 +16,6 @@ import java.util.function.BiFunction;
 public class ModelBakeryMixin {
     @Inject(method = "bakeModels(Ljava/util/function/BiFunction;)V", at = @At("RETURN"))
     private void apply(BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction, CallbackInfo callbackInfo) {
-        ((ForgeBalmModels) BalmClient.getModels()).onBakeModels((ModelBakery) (Object) this, spriteBiFunction);
+        ForgeBalmModels.onBakeModels((ModelBakery) (Object) this, spriteBiFunction);
     }
 }

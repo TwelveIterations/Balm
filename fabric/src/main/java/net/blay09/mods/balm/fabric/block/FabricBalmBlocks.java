@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.fabric.block;
 
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.minecraft.core.Registry;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public record FabricBalmBlocks(NamespaceResolver namespaceResolver) implements BalmBlocks {
+public record FabricBalmBlocks(NamespaceResolver namespaceResolver, BalmItems items) implements BalmBlocks {
     @Override
     public DeferredObject<Block> registerBlock(Function<ResourceLocation, Block> supplier, ResourceLocation identifier) {
         return new DeferredObject<>(identifier, () -> {
@@ -27,7 +27,7 @@ public record FabricBalmBlocks(NamespaceResolver namespaceResolver) implements B
 
     @Override
     public DeferredObject<Item> registerBlockItem(Function<ResourceLocation, BlockItem> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
-        return Balm.getItems().scoped(namespaceResolver.getNamespaceFor(identifier)).registerItem(supplier::apply, identifier, creativeTab);
+        return items.registerItem(supplier::apply, identifier, creativeTab);
     }
 
     @Override
@@ -38,6 +38,6 @@ public record FabricBalmBlocks(NamespaceResolver namespaceResolver) implements B
 
     @Override
     public BalmBlocks scoped(String modId) {
-        return new FabricBalmBlocks(new StaticNamespaceResolver(modId));
+        return new FabricBalmBlocks(new StaticNamespaceResolver(modId), items.scoped(modId));
     }
 }

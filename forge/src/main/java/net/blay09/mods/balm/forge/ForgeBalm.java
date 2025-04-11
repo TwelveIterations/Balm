@@ -30,7 +30,8 @@ import net.minecraftforge.items.IItemHandler;
 public class ForgeBalm {
 
     public ForgeBalm() {
-        BalmLoadContexts.register("balm", EmptyLoadContext.INSTANCE);
+        final var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        BalmLoadContexts.register("balm", new ForgeLoadContext(modEventBus));
 
         Balm.registerModule(new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
@@ -38,7 +39,6 @@ public class ForgeBalm {
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
-        final var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ForgeBalmWorldGen.initializeBalmBiomeModifiers(modEventBus);
         modEventBus.addListener(ForgeBalmClient::onInitializeClient);
         modEventBus.addListener(this::enqueueIMC);

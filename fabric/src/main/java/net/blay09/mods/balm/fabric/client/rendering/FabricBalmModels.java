@@ -4,6 +4,8 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Transformation;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
@@ -28,20 +30,15 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
+public record FabricBalmModels(NamespaceResolver namespaceResolver) implements BalmModels, ModelLoadingPlugin {
 
-    public final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = Collections.synchronizedList(new ArrayList<>());
-    private final List<ResourceLocation> additionalModels = Collections.synchronizedList(new ArrayList<>());
-    private final List<DeferredModel> modelsToBake = Collections.synchronizedList(new ArrayList<>());
-    private ModelBakery modelBakery;
+    private static final List<Pair<Supplier<Block>, Supplier<BakedModel>>> overrides = Collections.synchronizedList(new ArrayList<>());
+    private static final List<ResourceLocation> additionalModels = Collections.synchronizedList(new ArrayList<>());
+    private static final List<DeferredModel> modelsToBake = Collections.synchronizedList(new ArrayList<>());
+    private static ModelBakery modelBakery;
 
-    @Override
-    public void onInitializeModelLoader(Context context) {
-        context.addModels(additionalModels);
-    }
-
-    public void onBakeModels(ModelBakery modelBakery, BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction) {
-        this.modelBakery = modelBakery;
+    public static void onBakeModels(ModelBakery modelBakery, BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction) {
+        FabricBalmModels.modelBakery = modelBakery;
 
         synchronized (modelsToBake) {
             for (DeferredModel model : modelsToBake) {
@@ -59,6 +56,11 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
                 });
             }
         }
+    }
+
+    @Override
+    public void onInitializeModelLoader(Context context) {
+        context.addModels(additionalModels);
     }
 
     @Override
@@ -156,6 +158,11 @@ public class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Balm failed to create model baker", e);
         }
+    }
+
+    @Override
+    public BalmModels scoped(String modId) {
+        return new FabricBalmModels(new StaticNamespaceResolver(modId));
     }
 
     private Function<Material, TextureAtlasSprite> createModelTextureGetter(ResourceLocation location, BiFunction<ResourceLocation, Material, TextureAtlasSprite> spriteBiFunction) {

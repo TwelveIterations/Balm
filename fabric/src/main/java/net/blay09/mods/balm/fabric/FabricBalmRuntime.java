@@ -1,13 +1,9 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmProxy;
-import net.blay09.mods.balm.api.BalmRegistries;
-import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
-import net.blay09.mods.balm.api.EmptyLoadContext;
+import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -72,10 +68,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
         throw new UnsupportedOperationException("No default namespace available");
     });
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
-    private final BalmBlocks blocks = new FabricBalmBlocks(legacyNamespaceResolver);
+    private final BalmItems items = new FabricBalmItems(legacyNamespaceResolver);
+    private final BalmBlocks blocks = new FabricBalmBlocks(legacyNamespaceResolver, items);
     private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
     private final FabricBalmEvents events = new FabricBalmEvents();
-    private final BalmItems items = new FabricBalmItems(legacyNamespaceResolver);
     private final BalmMenus menus = new FabricBalmMenus();
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
@@ -216,7 +212,8 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
     }
 
     @Override
-    public void initializeMod(String modId, Runnable initializer) {
+    public void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+        BalmLoadContexts.register(modId, context);
         initializer.run();
     }
 

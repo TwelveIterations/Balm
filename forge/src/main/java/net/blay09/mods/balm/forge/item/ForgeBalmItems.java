@@ -27,8 +27,7 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
 
     @Override
     public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
-        final var namespace = namespaceResolver.getMatchingNamespaceOrThrow(identifier);
-        final var register = DeferredRegisters.get(Registries.ITEM, namespace);
+        final var register = DeferredRegisters.get(Registries.ITEM, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
         if (creativeTab != null) {
             getActiveRegistrations().creativeTabContents.put(creativeTab, () -> new ItemLike[]{registryObject.get()});
@@ -38,8 +37,7 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
 
     @Override
     public DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier) {
-        final var namespace = namespaceResolver.getMatchingNamespaceOrThrow(identifier);
-        final var register = DeferredRegisters.get(Registries.CREATIVE_MODE_TAB, namespace);
+        final var register = DeferredRegisters.get(Registries.CREATIVE_MODE_TAB, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), () -> {
             final var displayName = Component.translatable("itemGroup." + identifier.toString().replace(':', '.'));
             final var registrations = getActiveRegistrations();

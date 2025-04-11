@@ -1,12 +1,14 @@
 package net.blay09.mods.balm.fabric.client;
 
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
+import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
@@ -43,7 +45,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime {
     private final BalmTextures textures = new FabricBalmTextures();
     private final BalmScreens screens = new FabricBalmScreens(legacyNamespaceResolver);
     private final BalmKeyMappings keyMappings = createKeyMappingsBindings();
-    private final BalmModels models = new FabricBalmModels();
+    private final BalmModels models = new FabricBalmModels(legacyNamespaceResolver);
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
@@ -103,7 +105,8 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime {
     }
 
     @Override
-    public void initializeMod(String modId, Runnable initializer) {
+    public void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+        BalmLoadContexts.register(modId, context);
         initializer.run();
     }
 

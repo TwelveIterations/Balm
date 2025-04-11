@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.forge.block;
 
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.block.BalmBlocks;
+import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.forge.DeferredRegisters;
@@ -16,18 +16,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public record ForgeBalmBlocks(NamespaceResolver namespaceResolver) implements BalmBlocks {
+public record ForgeBalmBlocks(NamespaceResolver namespaceResolver, BalmItems items) implements BalmBlocks {
 
     @Override
     public DeferredObject<Block> registerBlock(Function<ResourceLocation, Block> supplier, ResourceLocation identifier) {
-        final var register = DeferredRegisters.get(Registries.BLOCK, namespaceResolver.getMatchingNamespaceOrThrow(identifier));
+        final var register = DeferredRegisters.get(Registries.BLOCK, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
     @Override
     public DeferredObject<Item> registerBlockItem(Function<ResourceLocation, BlockItem> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
-        return Balm.getItems().scoped(namespaceResolver.getNamespaceFor(identifier)).registerItem(supplier::apply, identifier, creativeTab);
+        return items.registerItem(supplier::apply, identifier, creativeTab);
     }
 
     @Override
@@ -38,6 +38,6 @@ public record ForgeBalmBlocks(NamespaceResolver namespaceResolver) implements Ba
 
     @Override
     public BalmBlocks scoped(String modId) {
-        return new ForgeBalmBlocks(new StaticNamespaceResolver(modId));
+        return new ForgeBalmBlocks(new StaticNamespaceResolver(modId), items.scoped(modId));
     }
 }
