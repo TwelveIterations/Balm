@@ -11,6 +11,7 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -71,6 +72,17 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
 
         registerModule(new BaseModule());
         registerModule(new ConfigSync());
+    }
+
+    @Override
+    public void initializeIfLoaded(String modId, String className) {
+        if (isModLoaded(modId)) {
+            try {
+                Class.forName(className).getConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

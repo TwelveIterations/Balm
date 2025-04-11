@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.fabric.client.rendering;
 
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -27,7 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class FabricBalmRenderers implements BalmRenderers {
+public record FabricBalmRenderers(NamespaceResolver namespaceResolver) implements BalmRenderers {
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
         final var modelLayerLocation = new ModelLayerLocation(location, layer);
@@ -63,5 +65,10 @@ public class FabricBalmRenderers implements BalmRenderers {
     @Override
     public <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
         ParticleFactoryRegistry.getInstance().register(particleType.get(), provider);
+    }
+
+    @Override
+    public BalmRenderers scoped(String modId) {
+        return new FabricBalmRenderers(new StaticNamespaceResolver(modId));
     }
 }

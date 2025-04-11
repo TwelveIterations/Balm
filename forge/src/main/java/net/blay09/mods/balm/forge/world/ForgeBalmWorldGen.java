@@ -14,7 +14,6 @@ import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;
@@ -22,7 +21,6 @@ import net.minecraftforge.common.world.ModifiableBiomeInfo;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
@@ -46,15 +44,16 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
 
     @Override
     public <T extends Feature<?>> DeferredObject<T> registerFeature(ResourceLocation identifier, Supplier<T> supplier) {
-        DeferredRegister<Feature<?>> register = DeferredRegisters.get(ForgeRegistries.FEATURES, identifier.getNamespace());
-        RegistryObject<T> registryObject = register.register(identifier.getPath(), supplier);
+        final var namespace = identifier.getNamespace();
+        final var register = DeferredRegisters.get(ForgeRegistries.FEATURES, namespace);
+        final var registryObject = register.register(identifier.getPath(), supplier);
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
     @Override
     public <T extends PlacementModifierType<?>> DeferredObject<T> registerPlacementModifier(ResourceLocation identifier, Supplier<T> supplier) {
         final var register = DeferredRegisters.get(Registries.PLACEMENT_MODIFIER_TYPE, identifier.getNamespace());
-        RegistryObject<T> registryObject = register.register(identifier.getPath(), supplier);
+        final var registryObject = register.register(identifier.getPath(), supplier);
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
@@ -67,16 +66,16 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
 
     @Override
     public void addFeatureToBiomes(BiomePredicate biomePredicate, GenerationStep.Decoration step, ResourceLocation placedFeatureIdentifier) {
-        ResourceKey<PlacedFeature> resourceKey = ResourceKey.create(Registries.PLACED_FEATURE, placedFeatureIdentifier);
+        final var resourceKey = ResourceKey.create(Registries.PLACED_FEATURE, placedFeatureIdentifier);
         biomeModifications.add(new BiomeModification(biomePredicate, step, resourceKey));
     }
 
     public void modifyBiome(Holder<Biome> biome, BiomeModifier.Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == BiomeModifier.Phase.ADD) {
             for (var biomeModification : biomeModifications) {
-                ResourceLocation location = biome.unwrapKey().map(ResourceKey::location).orElse(null);
+                final var location = biome.unwrapKey().map(ResourceKey::location).orElse(null);
                 if (location != null && biomeModification.getBiomePredicate().test(location, biome)) {
-                    Registry<PlacedFeature> placedFeatures = ServerLifecycleHooks.getCurrentServer()
+                    final var placedFeatures = ServerLifecycleHooks.getCurrentServer()
                             .registryAccess()
                             .lookupOrThrow(Registries.PLACED_FEATURE);
                     placedFeatures.get(biomeModification.getConfiguredFeatureKey())

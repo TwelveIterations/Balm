@@ -7,10 +7,10 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
-import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
 import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.LegacyNamespaceResolver;
+import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
-import net.blay09.mods.balm.fabric.FabricBalmRuntime;
 import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
@@ -34,25 +34,18 @@ import java.util.concurrent.Executor;
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
 
     private static final Logger logger = LoggerFactory.getLogger(FabricBalmClientRuntime.class);
-    private final BalmRenderers renderers = new FabricBalmRenderers();
+    private static final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> {
+        throw new UnsupportedOperationException("No default namespace available");
+    });
+    private final BalmRenderers renderers = new FabricBalmRenderers(legacyNamespaceResolver);
     @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmTextures textures = new FabricBalmTextures();
-    private final BalmScreens screens = new FabricBalmScreens();
+    private final BalmScreens screens = new FabricBalmScreens(legacyNamespaceResolver);
     private final BalmKeyMappings keyMappings = createKeyMappingsBindings();
-    private final BalmModels models = new FabricBalmModels();
+    private final BalmModels models = new FabricBalmModels(legacyNamespaceResolver);
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
-
-        Balm.getEvents().onEvent(ClientStartedEvent.class, event -> {
-            for (final var className : ((FabricBalmRuntime) Balm.getRuntime()).getAddonClasses()) {
-                try {
-                    Class.forName(className).getConstructor().newInstance();
-                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private static BalmKeyMappings createKeyMappingsBindings() {
@@ -69,7 +62,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
                 // we silently ignore amecs if the api is missing which would only really be the case in a devenv pulling from cursemaven
             }
         }
-        return new FabricBalmKeyMappings();
+        return new FabricBalmKeyMappings(legacyNamespaceResolver);
     }
 
     @Override

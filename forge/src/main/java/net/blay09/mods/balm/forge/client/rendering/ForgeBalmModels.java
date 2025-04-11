@@ -2,6 +2,9 @@ package net.blay09.mods.balm.forge.client.rendering;
 
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -20,36 +23,36 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class ForgeBalmModels implements BalmModels {
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record ForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 
     @Override
     public DeferredObject<BakedModel> loadModel(ResourceLocation identifier) {
+        final var registrations = getActiveRegistrations();
         final var deferredModel = new DeferredObject<BakedModel>(identifier) {
             @Override
             public BakedModel resolve() {
-                return getRegistrations(identifier.getNamespace()).bakedStandaloneModels.get(identifier);
+                return registrations.bakedStandaloneModels.get(identifier);
             }
 
             @Override
             public boolean canResolve() {
-                return getRegistrations(identifier.getNamespace()).bakedStandaloneModels.containsKey(identifier);
+                return registrations.bakedStandaloneModels.containsKey(identifier);
             }
         };
-        getRegistrations(identifier.getNamespace()).additionalModels.add(identifier);
+        registrations.additionalModels.add(identifier);
         return deferredModel;
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
+    @Override
+    public BalmModels scoped(String modId) {
+        return new ForgeBalmModels(new StaticNamespaceResolver(modId));
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final List<ResourceLocation> additionalModels = new ArrayList<>();
         public Map<ResourceLocation, BakedModel> bakedStandaloneModels = new HashMap<>();
 

@@ -65,4 +65,6 @@ public interface BalmItems {
     default DeferredObject<Item> registerItem(Supplier<Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         return registerItem((id) -> supplier.get(), identifier, creativeTab);
     }
+
+    BalmItems scoped(String modId);
 }

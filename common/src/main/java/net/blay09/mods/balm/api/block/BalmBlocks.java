@@ -86,4 +86,6 @@ public interface BalmBlocks {
         registerBlock(blockSupplier, identifier);
         registerBlockItem((id) -> blockItemSupplier.get(), identifier, creativeTab);
     }
+
+    BalmBlocks scoped(String modId);
 }

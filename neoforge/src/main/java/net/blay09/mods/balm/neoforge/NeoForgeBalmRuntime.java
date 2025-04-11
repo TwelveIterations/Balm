@@ -23,11 +23,7 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.CommonBalmLootTables;
-import net.blay09.mods.balm.common.CommonBalmRuntime;
-import net.blay09.mods.balm.common.proxy.ModProxyImpl;
-import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
@@ -55,6 +51,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
@@ -69,32 +66,31 @@ import java.util.function.Function;
 
 public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> {
 
+    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
-    private final BalmBlocks blocks = new NeoForgeBalmBlocks();
+    private final BalmItems items = new NeoForgeBalmItems(legacyNamespaceResolver);
+    private final BalmBlocks blocks = new NeoForgeBalmBlocks(legacyNamespaceResolver, items);
     private final BalmBlockEntities blockEntities = new NeoForgeBalmBlockEntities();
     private final NeoForgeBalmEvents events = new NeoForgeBalmEvents();
-    private final BalmItems items = new NeoForgeBalmItems();
     private final BalmMenus menus = new NeoForgeBalmMenus();
     private final BalmNetworking networking = new NeoForgeBalmNetworking();
     private final BalmConfig config = new NeoForgeBalmConfig();
     private final BalmHooks hooks = new NeoForgeBalmHooks();
     private final BalmRegistries registries = new NeoForgeBalmRegistries();
     private final BalmSounds sounds = new NeoForgeBalmSounds();
-    private final BalmEntities entities = new NeoForgeBalmEntities();
-    private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities();
+    private final BalmEntities entities = new NeoForgeBalmEntities(legacyNamespaceResolver);
+    private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities(legacyNamespaceResolver);
     @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmProviders providers = new NeoForgeBalmProviders();
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
-    private final BalmStats stats = new NeoForgeBalmStats();
+    private final BalmStats stats = new NeoForgeBalmStats(legacyNamespaceResolver);
     private final BalmRecipes recipes = new NeoForgeBalmRecipes();
     private final BalmComponents components = new NeoForgeBalmComponents();
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmResources resources = new NeoForgeBalmResources();
-
-    private final List<String> addonClasses = new ArrayList<>();
 
     public NeoForgeBalmRuntime() {
         NeoForgeBalmCommonEvents.registerEvents(events);
@@ -205,32 +201,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
         BalmLoadContexts.register(modId, context);
 
-        ((NeoForgeBalmNetworking) networking).register(modId, context.modBus());
-        ((NeoForgeBalmEntities) entities).register(modId, context.modBus());
-        ((NeoForgeBalmStats) stats).register(modId, context.modBus());
-
         initializer.run();
 
         final var modBus = context.modBus();
-        modBus.addListener((FMLLoadCompleteEvent event) -> initializeAddons());
         DeferredRegisters.register(modId, modBus);
-    }
-
-    @Override
-    public void initializeIfLoaded(String modId, String className) {
-        if (isModLoaded(modId)) {
-            addonClasses.add(className);
-        }
-    }
-
-    private void initializeAddons() {
-        for (String addonClass : addonClasses) {
-            try {
-                Class.forName(addonClass).getConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

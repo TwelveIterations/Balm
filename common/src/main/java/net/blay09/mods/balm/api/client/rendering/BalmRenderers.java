@@ -78,4 +78,6 @@ public interface BalmRenderers {
      */
     @Deprecated(forRemoval = true, since = "1.21.5")
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
+
+    BalmRenderers scoped(String modId);
 }

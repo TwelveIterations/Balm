@@ -44,15 +44,6 @@ public class NeoForgeBalmClientEvents {
             });
         });
 
-        events.registerEvent(ClientStartedEvent.class, priority -> {
-            ModLoadingContext.get().getActiveContainer().getEventBus().addListener(NeoForgeBalmEvents.toForge(priority), (FMLLoadCompleteEvent orig) -> {
-                orig.enqueueWork(() -> {
-                    final ClientStartedEvent event = new ClientStartedEvent(Minecraft.getInstance());
-                    events.fireEventHandlers(priority, event);
-                });
-            });
-        });
-
         events.registerEvent(ConnectedToServerEvent.class, priority -> {
             NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (ClientPlayerNetworkEvent.LoggingIn orig) -> {
                 final ConnectedToServerEvent event = new ConnectedToServerEvent(Minecraft.getInstance());

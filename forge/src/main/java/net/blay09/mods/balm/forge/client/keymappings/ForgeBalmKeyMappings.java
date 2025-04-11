@@ -1,10 +1,14 @@
 package net.blay09.mods.balm.forge.client.keymappings;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.keymappings.KeyConflictContext;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifier;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifiers;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.common.client.keymappings.CommonBalmKeyMappings;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.IKeyConflictContext;
@@ -15,11 +19,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ForgeBalmKeyMappings extends CommonBalmKeyMappings {
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+
+    public ForgeBalmKeyMappings(NamespaceResolver namespaceResolver) {
+        super(namespaceResolver);
+    }
 
     private static IKeyConflictContext toForge(KeyConflictContext context) {
         return switch (context) {
@@ -66,6 +71,11 @@ public class ForgeBalmKeyMappings extends CommonBalmKeyMappings {
     }
 
     @Override
+    public BalmKeyMappings scoped(String modId) {
+        return new ForgeBalmKeyMappings(new StaticNamespaceResolver(modId));
+    }
+
+    @Override
     public boolean isActiveAndMatches(@Nullable KeyMapping keyMapping, int keyCode, int scanCode) {
         return isActive(keyMapping) && keyMapping.isActiveAndMatches(InputConstants.getKey(keyCode, scanCode));
     }
@@ -101,19 +111,11 @@ public class ForgeBalmKeyMappings extends CommonBalmKeyMappings {
         return keyMapping.getKeyConflictContext().isActive();
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
-    }
-
     private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
-    }
-
-    private static class Registrations {
+    public static class Registrations {
         public final List<KeyMapping> keyMappings = new ArrayList<>();
 
         @SubscribeEvent

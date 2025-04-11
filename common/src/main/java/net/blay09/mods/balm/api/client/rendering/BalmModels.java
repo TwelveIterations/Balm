@@ -6,4 +6,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public interface BalmModels {
     DeferredObject<BakedModel> loadModel(ResourceLocation identifier);
+
+    BalmModels scoped(String modId);
 }

@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.jetbrains.annotations.Nullable;
 
 public class ForgeBalmClientEvents {
 
@@ -41,15 +42,6 @@ public class ForgeBalmClientEvents {
                 if (orig.phase == TickEvent.Phase.END) {
                     handler.handle(Minecraft.getInstance().level);
                 }
-            });
-        });
-
-        events.registerEvent(ClientStartedEvent.class, priority -> {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ForgeBalmEvents.toForge(priority), (FMLLoadCompleteEvent orig) -> {
-                orig.enqueueWork(() -> {
-                    final ClientStartedEvent event = new ClientStartedEvent(Minecraft.getInstance());
-                    events.fireEventHandlers(priority, event);
-                });
             });
         });
 

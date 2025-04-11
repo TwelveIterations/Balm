@@ -2,6 +2,9 @@ package net.blay09.mods.balm.neoforge.client.rendering;
 
 import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -35,9 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class NeoForgeBalmRenderers implements BalmRenderers {
-
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+public record NeoForgeBalmRenderers(NamespaceResolver namespaceResolver) implements BalmRenderers {
 
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
@@ -65,6 +66,7 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
 
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
+        getActiveRegistrations().blockRenderTypes.add(new BlockRenderTypeRegistration(block, renderType));
         final var eventBus = ModLoadingContext.get().getActiveContainer().getEventBus();
         eventBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
     }
@@ -79,38 +81,41 @@ public class NeoForgeBalmRenderers implements BalmRenderers {
         getActiveRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
+    @Override
+    public BalmRenderers scoped(String modId) {
+        return new NeoForgeBalmRenderers(new StaticNamespaceResolver(modId));
     }
 
     private Registrations getActiveRegistrations() {
-        return getRegistrations(ModLoadingContext.get().getActiveNamespace());
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations());
+    public record BlockRenderTypeRegistration(Supplier<Block> blockSupplier, RenderType renderType) {
     }
 
-    private record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {
+    public record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {
     }
 
-    private record ParticleProviderFactoryRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType,
+    public record ParticleProviderFactoryRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType,
                                                                                   Function<SpriteSet, ParticleProvider<T>> value) {
     }
 
-    private record ParticleProviderRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType, ParticleProvider<T> value) {
+    public record ParticleProviderRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType, ParticleProvider<T> value) {
     }
 
-    private static class Registrations {
+    public static class Registrations {
         public final Map<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinitions = new HashMap<>();
         public final List<Pair<Supplier<BlockEntityType<?>>, BlockEntityRendererProvider<BlockEntity>>> blockEntityRenderers = new ArrayList<>();
         public final List<Pair<Supplier<EntityType<?>>, EntityRendererProvider<Entity>>> entityRenderers = new ArrayList<>();
         public final List<ColorRegistration<BlockColor, Block>> blockColors = new ArrayList<>();
         public final List<ParticleProviderFactoryRegistration<?>> particleProviderFactories = new ArrayList<>();
         public final List<ParticleProviderRegistration<?>> particleProviders = new ArrayList<>();
+        public final List<BlockRenderTypeRegistration> blockRenderTypes = new ArrayList<>();
 
         @SubscribeEvent
         public void setupClient(FMLClientSetupEvent event) {
+            event.enqueueWork(() -> blockRenderTypes.forEach(blockRenderType -> ItemBlockRenderTypes.setRenderLayer(blockRenderType.blockSupplier.get(),
+                    blockRenderType.renderType())));
         }
 
         @SubscribeEvent
