@@ -1,1 +1,1 @@
-- Fixed crash when using the sink in Cooking for Blockheads
+- Fixed synced config properties not being respected on Forge and NeoForge
