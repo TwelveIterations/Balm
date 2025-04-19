@@ -1,2 +1,1 @@
-- Fixed version reject when joining world on Forge
-- Fixed crash when joining world on Forge
+- Fixed synced config properties not being respected on Forge and NeoForge
