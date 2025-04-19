@@ -1,5 +1,1 @@
-- Backported new config system from 1.21.5
-    - Waystones, Ex Compressum, Forgiving Void and Fertilization should be updated alongside this version to avoid crashes
-- Backported new capabilities system from 1.21.5
-- Backported other minor changes from 1.21.5
-- Fixed empty comments being written into config file on Fabric
+- Fixed synced config properties not being respected on Forge and NeoForge
