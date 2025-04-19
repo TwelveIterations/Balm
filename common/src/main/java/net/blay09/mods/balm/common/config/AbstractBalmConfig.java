@@ -77,7 +77,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected void updateActiveFromLocal(BalmConfigSchema schema, MutableLoadedConfig config) {
-        // Reapply active config while retaining synced properties if in multiplayer
+        // Reapply active config from local config, but synced properties we will reset back to active values if connected to multiplayer
         final var newConfig = config.copy();
         if (Balm.getProxy().isConnected() && !Balm.getProxy().isLocalServer()) {
             final var activeConfig = activeConfigs.get(schema.identifier());
@@ -88,7 +88,9 @@ public abstract class AbstractBalmConfig implements BalmConfig {
             }
             for (final var category : schema.categories()) {
                 for (final var property : category.properties()) {
-                    newConfig.setRaw((ConfiguredProperty) property, activeConfig.getRaw(property));
+                    if (property.synced()) {
+                        newConfig.setRaw((ConfiguredProperty) property, activeConfig.getRaw(property));
+                    }
                 }
             }
         }
