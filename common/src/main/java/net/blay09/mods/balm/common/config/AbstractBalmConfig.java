@@ -82,13 +82,15 @@ public abstract class AbstractBalmConfig implements BalmConfig {
         if (Balm.getProxy().isConnected() && !Balm.getProxy().isLocalServer()) {
             final var activeConfig = activeConfigs.get(schema.identifier());
             for (final var rootProperty : schema.rootProperties()) {
-                if (rootProperty.synced()) {
+                if (!rootProperty.synced()) {
                     newConfig.setRaw((ConfiguredProperty) rootProperty, activeConfig.getRaw(rootProperty));
                 }
             }
             for (final var category : schema.categories()) {
                 for (final var property : category.properties()) {
-                    newConfig.setRaw((ConfiguredProperty) property, activeConfig.getRaw(property));
+                    if (!property.synced()) {
+                        newConfig.setRaw((ConfiguredProperty) property, activeConfig.getRaw(property));
+                    }
                 }
             }
         }
