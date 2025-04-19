@@ -39,7 +39,7 @@ public record LoadedReflectionConfig<ConfigData>(ConfigData data) implements Mut
     @Override
     public MutableLoadedConfig copy() {
         final var newConfig = new LoadedTableConfig();
-        newConfig.applyFrom(Balm.getConfig().getSchema(data.getClass()), newConfig);
+        newConfig.applyFrom(Balm.getConfig().getSchema(data.getClass()), this);
         return newConfig;
     }
 

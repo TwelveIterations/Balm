@@ -24,7 +24,7 @@ public record LoadedForgeConfig(BalmConfigSchema schema, ModConfig modConfig,
     @Override
     public MutableLoadedConfig copy() {
         final var newConfig = new LoadedTableConfig();
-        newConfig.applyFrom(schema, newConfig);
+        newConfig.applyFrom(schema, this);
         return newConfig;
     }
 
