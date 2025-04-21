@@ -1,1 +1,1 @@
-- Fixed synced config properties not being respected on Forge and NeoForge
+- Fixed ServerStartingEvent not firing on NeoForge
