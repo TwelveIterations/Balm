@@ -3,6 +3,7 @@ package net.blay09.mods.balm.neoforge.event;
 
 import net.blay09.mods.balm.api.event.*;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
+import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -75,6 +76,13 @@ public class NeoForgeBalmCommonEvents {
         events.registerTickEvent(TickType.Entity, TickPhase.End, (EntityTickHandler handler) -> {
             NeoForge.EVENT_BUS.addListener((EntityTickEvent.Post orig) -> {
                 handler.handle(orig.getEntity());
+            });
+        });
+
+        events.registerEvent(ServerStartingEvent.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (net.neoforged.neoforge.event.server.ServerAboutToStartEvent orig) -> {
+                final ServerStartingEvent event = new ServerStartingEvent(orig.getServer());
+                events.fireEventHandlers(priority, event);
             });
         });
 
