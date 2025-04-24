@@ -59,20 +59,17 @@ public class BalmCommand {
                         .requires(BalmCommands.requireAnyPermission(PERMISSION_BALM_EXPORT_CONFIG, PERMISSION_BALM_EXPORT_ICONS))
                         .then(Commands.literal("config")
                                 .requires(BalmCommands.requirePermission(PERMISSION_BALM_EXPORT_CONFIG))
-                                .then(Commands.argument("class", StringArgumentType.greedyString()).executes(context -> {
-                                            final var className = context.getArgument("class", String.class);
+                                .then(Commands.argument("mod", StringArgumentType.string()).executes(context -> {
+                                            final var mod = context.getArgument("mod", String.class);
+                                            final var schemas = Balm.getConfig().getSchemasByNamespace(mod);
                                             try {
-                                                final var configDataClass = Class.forName(className);
-                                                ConfigJsonExport.exportToFile(configDataClass, new File("exports/config/" + configDataClass.getSimpleName() + ".json"));
-                                            } catch (ClassNotFoundException e) {
-                                                e.printStackTrace();
-                                                throw new RuntimeException("Invalid config data class: " + className, e);
+                                                ConfigJsonExport.exportToFile(schemas, new File("exports/config/" + mod + ".json"));
                                             } catch (Exception e) {
                                                 e.printStackTrace();
-                                                throw new RuntimeException("Error exporting config data class: " + className, e);
+                                                throw new RuntimeException("Error exporting config data class: " + mod, e);
                                             }
 
-                                            context.getSource().sendSuccess(() -> Component.literal("Exported config for " + className), false);
+                                            context.getSource().sendSuccess(() -> Component.literal("Exported config schema for " + mod), false);
                                             return 0;
                                         })
                                 )).then(Commands.literal("icons")
