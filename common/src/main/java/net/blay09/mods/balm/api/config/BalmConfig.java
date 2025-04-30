@@ -97,6 +97,12 @@ public interface BalmConfig {
 
     void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config);
 
+    void onConfigAvailable(BalmConfigSchema schema, Consumer<MutableLoadedConfig> handler);
+
+    default <T> void onConfigAvailable(Class<T> configDataClass, Consumer<T> handler) {
+        onConfigAvailable(getSchema(configDataClass), (config) -> handler.accept(getActiveConfig(configDataClass)));
+    }
+
     /**
      * @deprecated Use {@link #registerConfig(Class)} instead.
      */

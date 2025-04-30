@@ -201,6 +201,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 setLocalConfig(schema, wrappedConfig);
                 setActiveConfig(schema, wrappedConfig);
 
+                fireConfigLoadHandlers(schema, wrappedConfig);
                 Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
             }
         });
