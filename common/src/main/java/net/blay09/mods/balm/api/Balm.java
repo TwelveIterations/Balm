@@ -206,4 +206,8 @@ public class Balm {
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
     }
+
+    public static boolean isDevelopmentEnvironment() {
+        return runtime.isDevelopmentEnvironment();
+    }
 }
