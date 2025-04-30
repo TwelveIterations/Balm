@@ -14,7 +14,6 @@ import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -30,7 +29,7 @@ public record ForgeBalmScreens(NamespaceResolver namespaceResolver) implements B
 
     @Override
     public <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreen(ResourceLocation identifier, Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory) {
-        getRegistrations(identifier.getNamespace()).menuTypes.add(Pair.of(type::get, screenFactory));
+        getActiveRegistrations().menuTypes.add(Pair.of(type::get, screenFactory));
     }
 
     @Override

@@ -12,13 +12,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public record NeoForgeBalmEntities(NamespaceResolver namespaceResolver) implements BalmEntities {
@@ -33,7 +31,7 @@ public record NeoForgeBalmEntities(NamespaceResolver namespaceResolver) implemen
     @Override
     public <T extends LivingEntity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder, Supplier<AttributeSupplier.Builder> attributeBuilder) {
         final var register = DeferredRegisters.get(Registries.ENTITY_TYPE, identifier.getNamespace());
-        final var registrations = getRegistrations(identifier.getNamespace());
+        final var registrations = getActiveRegistrations();
         final var registryObject = register.register(identifier.getPath(), () -> {
             EntityType<T> entityType = typeBuilder.build(ResourceKey.create(Registries.ENTITY_TYPE, identifier));
             registrations.attributeSuppliers.put(entityType, attributeBuilder.get().build());

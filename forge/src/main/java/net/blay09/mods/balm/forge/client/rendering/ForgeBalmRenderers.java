@@ -50,18 +50,18 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
-        getRegistrations(identifier.getNamespace()).entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
+        getActiveRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
-        getRegistrations(identifier.getNamespace()).blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
+        getActiveRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
     }
 
     @Override
     public void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
-        getRegistrations(identifier.getNamespace()).blockColors.add(new ColorRegistration<>(color, blocks));
+        getActiveRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
     }
 
     @Override
@@ -71,12 +71,12 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
 
     @Override
     public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
-        getRegistrations(identifier.getNamespace()).particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
+        getActiveRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
     }
 
     @Override
     public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
-        getRegistrations(identifier.getNamespace()).particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
+        getActiveRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
     }
 
     @Override
@@ -88,17 +88,17 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private record BlockRenderTypeRegistration(Supplier<Block> blockSupplier, RenderType renderType) {
+    public record BlockRenderTypeRegistration(Supplier<Block> blockSupplier, RenderType renderType) {
     }
 
-    private record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {
+    public record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {
     }
 
-    private record ParticleProviderFactoryRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType,
+    public record ParticleProviderFactoryRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType,
                                                                                   Function<SpriteSet, ParticleProvider<T>> value) {
     }
 
-    private record ParticleProviderRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType, ParticleProvider<T> value) {
+    public record ParticleProviderRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType, ParticleProvider<T> value) {
     }
 
     public static class Registrations {

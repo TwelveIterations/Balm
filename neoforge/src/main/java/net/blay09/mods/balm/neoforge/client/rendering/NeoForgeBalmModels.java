@@ -2,6 +2,9 @@ package net.blay09.mods.balm.neoforge.client.rendering;
 
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
@@ -14,7 +17,6 @@ import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 

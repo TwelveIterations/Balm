@@ -12,7 +12,6 @@ import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
 import net.blay09.mods.balm.neoforge.energy.NeoForgeEnergyStorage;
 import net.blay09.mods.balm.neoforge.fluid.NeoForgeFluidTank;
-import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -40,6 +39,7 @@ public class NeoForgeBalm {
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
         DeferredRegisters.register("balm", modBus);
+        ModBusEventRegisters.register("balm", modBus);
 
         NeoForgeBalmWorldGen.initializeBalmBiomeModifiers(modBus);
         modBus.addListener(this::enqueueIMC);
@@ -138,9 +138,6 @@ public class NeoForgeBalm {
                         return null;
                     }
                 });
-
-        ((NeoForgeBalmCapabilities) Balm.getCapabilities()).register("balm", modBus);
-        ((NeoForgeBalmNetworking) Balm.getNetworking()).register("balm", modBus);
     }
 
     private void enqueueIMC(InterModEnqueueEvent event) {

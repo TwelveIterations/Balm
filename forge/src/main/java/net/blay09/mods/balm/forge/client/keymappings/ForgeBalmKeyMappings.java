@@ -2,10 +2,12 @@ package net.blay09.mods.balm.forge.client.keymappings;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public record ForgeBalmKeyMappings(NamespaceResolver namespaceResolver) implemen
     @Override
     public KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, String category) {
         KeyMapping keyMapping = new KeyMapping(id.getPath(), type, keyCode, category);
-        getRegistrations(id.getNamespace()).keyMappings.add(keyMapping);
+        getActiveRegistrations().keyMappings.add(keyMapping);
         return keyMapping;
     }
 

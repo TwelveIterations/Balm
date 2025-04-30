@@ -6,6 +6,9 @@ import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.network.ClientboundMessageRegistration;
 import net.blay09.mods.balm.api.network.MessageRegistration;
 import net.blay09.mods.balm.api.network.ServerboundMessageRegistration;
+import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -18,7 +21,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -29,24 +31,29 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
-public class NeoForgeBalmNetworking implements BalmNetworking {
+public record NeoForgeBalmNetworking(NamespaceResolver namespaceResolver) implements BalmNetworking {
 
     private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmNetworking.class);
     private static IPayloadContext replyContext;
-    private final Map<String, Registrations> registrations = new ConcurrentHashMap<>();
+    private static final Set<String> clientOnlyMods = Collections.synchronizedSet(new HashSet<>());
+    private static final Set<String> serverOnlyMods = Collections.synchronizedSet(new HashSet<>());
+    private static final Map<String, String> networkVersions = new ConcurrentHashMap<>();
 
     @Override
     public void allowClientOnly(String modId) {
-        getRegistrations(modId).allowClientOnly();
+        clientOnlyMods.add(modId);
     }
 
     @Override
     public void allowServerOnly(String modId) {
-        getRegistrations(modId).allowServerOnly();
+        serverOnlyMods.add(modId);
     }
 
     @Override
@@ -62,7 +69,7 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public void defineNetworkVersion(String modId, String version) {
-        getRegistrations(modId).setNetworkVersion(version);
+        networkVersions.put(modId, version);
     }
 
     private <T> void openGui(ServerPlayer player, BalmMenuProvider<T> menuProvider) {
@@ -113,43 +120,40 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
     @Override
     public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {
         final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
-        final var registrations = getRegistrations(type.id().getNamespace());
+        final var registrations = getActiveRegistrations();
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 
     @Override
     public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<ServerPlayer, T> handler) {
         final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
-        final var registrations = getRegistrations(type.id().getNamespace());
+        final var registrations = getActiveRegistrations();
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 
-    public void register(String modId, IEventBus eventBus) {
-        eventBus.register(getRegistrations(modId));
+    @Override
+    public BalmNetworking scoped(String modId) {
+        return new NeoForgeBalmNetworking(new StaticNamespaceResolver(modId));
     }
 
-    private Registrations getRegistrations(String modId) {
-        return registrations.computeIfAbsent(modId, it -> new Registrations(modId));
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    private static class Registrations {
+    public static class Registrations {
         private final String modId;
         private final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> playMessagesByType = new ConcurrentHashMap<>();
-        private boolean optional;
-        private String networkVersion;
 
-        private Registrations(String modId) {
+        public Registrations(String modId) {
             this.modId = modId;
         }
 
         @SubscribeEvent
         public void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
-            var registrar = event.registrar(modId);
-            if (optional) {
+            final var networkVersion = networkVersions.get(modId);
+            var registrar = event.registrar(networkVersion != null ? networkVersion : modId);
+            if (clientOnlyMods.contains(modId) || serverOnlyMods.contains(modId)) {
                 registrar = registrar.optional();
-            }
-            if (networkVersion != null) {
-                registrar = registrar.versioned(networkVersion);
             }
             for (final var entry : playMessagesByType.entrySet()) {
                 final var messageRegistration = entry.getValue();
@@ -159,18 +163,6 @@ public class NeoForgeBalmNetworking implements BalmNetworking {
                     registrar = playToClient(registrar, clientboundMessageRegistration);
                 }
             }
-        }
-
-        public void allowClientOnly() {
-            optional = true;
-        }
-
-        public void allowServerOnly() {
-            optional = true;
-        }
-
-        public void setNetworkVersion(String networkVersion) {
-            this.networkVersion = networkVersion;
         }
 
         private <TPayload extends CustomPacketPayload> PayloadRegistrar playToServer(PayloadRegistrar registrar, ServerboundMessageRegistration<RegistryFriendlyByteBuf, TPayload> registration) {

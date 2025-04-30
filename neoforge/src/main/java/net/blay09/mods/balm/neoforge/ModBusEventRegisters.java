@@ -22,7 +22,12 @@ public class ModBusEventRegisters {
             return (T) existing;
         }
         try {
-            final var instance = clazz.getConstructor().newInstance();
+            T instance;
+            try {
+                instance = clazz.getConstructor(String.class).newInstance(namespace);
+            } catch (NoSuchMethodException e) {
+                instance = clazz.getConstructor().newInstance();
+            }
             registrations.put(namespace, clazz, instance);
             final var modEventBus = modEventBuses.get(namespace);
             if (modEventBus != null) {
@@ -33,7 +38,6 @@ public class ModBusEventRegisters {
             throw new RuntimeException(e);
         }
     }
-
     public static void register(String modId, IEventBus modEventBus) {
         modEventBuses.put(modId, modEventBus);
         synchronized (registrations) {

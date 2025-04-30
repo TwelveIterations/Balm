@@ -22,23 +22,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
 
-    private static final Logger logger = LoggerFactory.getLogger(FabricBalmClientRuntime.class);
     private static final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> {
         throw new UnsupportedOperationException("No default namespace available");
     });
     private final BalmRenderers renderers = new FabricBalmRenderers(legacyNamespaceResolver);
     private final BalmScreens screens = new FabricBalmScreens(legacyNamespaceResolver);
-    private final BalmKeyMappings keyMappings = new FabricBalmKeyMappings(legacyNamespaceResolver);
-    private final BalmModels models = new FabricBalmModels(legacyNamespaceResolver);
+    private final BalmKeyMappings keyMappings = new FabricBalmKeyMappings();
+    private final BalmModels models = new FabricBalmModels();
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));

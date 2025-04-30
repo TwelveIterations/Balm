@@ -24,9 +24,6 @@ import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.neoforged.fml.ModLoadingContext;
 
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
@@ -73,10 +70,14 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
 
     @Override
     public void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
-        getRegistrations(identifier.getNamespace()).reloadListeners.add(new ReloadListenerRegistration(identifier, reloadListener));
+        getActiveRegistrations().reloadListeners.add(new ReloadListenerRegistration(identifier, reloadListener));
     }
 
-    record ReloadListenerRegistration(ResourceLocation identifier, PreparableReloadListener listener) {
+    private Registrations getActiveRegistrations() {
+        return ModBusEventRegisters.getRegistrations(legacyNamespaceResolver.getDefaultNamespace(), Registrations.class);
+    }
+
+    public record ReloadListenerRegistration(ResourceLocation identifier, PreparableReloadListener listener) {
     }
 
     public static class Registrations {

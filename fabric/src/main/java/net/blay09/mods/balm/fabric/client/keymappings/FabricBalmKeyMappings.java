@@ -11,4 +11,9 @@ public class FabricBalmKeyMappings implements BalmKeyMappings {
     public KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, String category) {
         return KeyBindingHelper.registerKeyBinding(new KeyMapping(id.getPath(), type, keyCode, category));
     }
+
+    @Override
+    public BalmKeyMappings scoped(String modId) {
+        return this;
+    }
 }

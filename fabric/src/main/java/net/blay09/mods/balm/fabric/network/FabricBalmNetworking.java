@@ -183,4 +183,9 @@ public class FabricBalmNetworking implements BalmNetworking {
         })));
     }
 
+    @Override
+    public BalmNetworking scoped(String modId) {
+        return this;
+    }
+
 }

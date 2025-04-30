@@ -22,8 +22,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -41,25 +40,25 @@ public record NeoForgeBalmRenderers(NamespaceResolver namespaceResolver) impleme
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
         ModelLayerLocation modelLayerLocation = new ModelLayerLocation(location, layer);
-        getRegistrations(location.getNamespace()).layerDefinitions.put(modelLayerLocation, layerDefinition);
+        getActiveRegistrations().layerDefinitions.put(modelLayerLocation, layerDefinition);
         return modelLayerLocation;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
-        getRegistrations(identifier.getNamespace()).entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
+        getActiveRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
-        getRegistrations(identifier.getNamespace()).blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
+        getActiveRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
     }
 
     @Override
     public void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
-        getRegistrations(identifier.getNamespace()).blockColors.add(new ColorRegistration<>(color, blocks));
+        getActiveRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
     }
 
     @Override
@@ -69,12 +68,12 @@ public record NeoForgeBalmRenderers(NamespaceResolver namespaceResolver) impleme
 
     @Override
     public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
-        getRegistrations(identifier.getNamespace()).particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
+        getActiveRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
     }
 
     @Override
     public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
-        getRegistrations(identifier.getNamespace()).particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
+        getActiveRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
     }
 
     @Override

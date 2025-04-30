@@ -13,14 +13,11 @@ import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public record NeoForgeBalmScreens(NamespaceResolver namespaceResolver) implements BalmScreens {
@@ -31,7 +28,7 @@ public record NeoForgeBalmScreens(NamespaceResolver namespaceResolver) implement
 
     @Override
     public <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreen(ResourceLocation identifier, Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory) {
-        getRegistrations(identifier.getNamespace()).menuTypes.add(Pair.of(type::get, screenFactory));
+        getActiveRegistrations().menuTypes.add(Pair.of(type::get, screenFactory));
     }
 
     @Override

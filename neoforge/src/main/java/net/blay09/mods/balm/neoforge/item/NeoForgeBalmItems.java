@@ -17,12 +17,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -35,7 +33,7 @@ public record NeoForgeBalmItems(NamespaceResolver namespaceResolver) implements 
         final var register = DeferredRegisters.get(Registries.ITEM, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), supplier);
         if (creativeTab != null) {
-            getRegistrations(identifier.getNamespace()).creativeTabContents.put(creativeTab, () -> new ItemLike[]{registryObject.get()});
+            getActiveRegistrations().creativeTabContents.put(creativeTab, () -> new ItemLike[]{registryObject.get()});
         }
         return new DeferredObject<>(identifier, registryObject, registryObject::isBound);
     }
@@ -58,12 +56,12 @@ public record NeoForgeBalmItems(NamespaceResolver namespaceResolver) implements 
 
     @Override
     public void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier) {
-        getRegistrations(tabIdentifier.getNamespace()).creativeTabContents.put(tabIdentifier, itemsSupplier);
+        getActiveRegistrations().creativeTabContents.put(tabIdentifier, itemsSupplier);
     }
 
     @Override
     public void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator) {
-        getRegistrations(tabIdentifier.getNamespace()).creativeTabSorting.put(tabIdentifier, comparator);
+        getActiveRegistrations().creativeTabSorting.put(tabIdentifier, comparator);
     }
 
     private Registrations getActiveRegistrations() {

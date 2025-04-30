@@ -75,7 +75,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmBlockEntities blockEntities = new NeoForgeBalmBlockEntities();
     private final NeoForgeBalmEvents events = new NeoForgeBalmEvents();
     private final BalmMenus menus = new NeoForgeBalmMenus();
-    private final BalmNetworking networking = new NeoForgeBalmNetworking();
+    private final BalmNetworking networking = new NeoForgeBalmNetworking(legacyNamespaceResolver);
     private final BalmConfig config = new NeoForgeBalmConfig();
     private final BalmHooks hooks = new NeoForgeBalmHooks();
     private final BalmRegistries registries = new NeoForgeBalmRegistries();

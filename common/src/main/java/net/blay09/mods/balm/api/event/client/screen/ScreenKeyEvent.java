@@ -68,6 +68,7 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         /**
          * @deprecated On Forge, Post events only fire if Vanilla didn't handle the press. Consider listening to Pre instead.
          */
+        @Deprecated
         public static class Post extends Release {
             public Post(Screen screen, int key, int scanCode, int modifiers) {
                 super(screen, key, scanCode, modifiers);
