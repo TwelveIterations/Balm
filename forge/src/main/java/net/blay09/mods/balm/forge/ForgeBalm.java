@@ -39,6 +39,9 @@ public class ForgeBalm {
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
+        DeferredRegisters.register("balm", modEventBus);
+        ModBusEventRegisters.register("balm", modEventBus);
+
         ForgeBalmWorldGen.initializeBalmBiomeModifiers(modEventBus);
         modEventBus.addListener(ForgeBalmClient::onInitializeClient);
         modEventBus.addListener(this::enqueueIMC);
