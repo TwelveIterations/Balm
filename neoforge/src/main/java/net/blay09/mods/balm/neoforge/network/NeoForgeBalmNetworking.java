@@ -22,7 +22,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -121,14 +120,14 @@ public record NeoForgeBalmNetworking(NamespaceResolver namespaceResolver) implem
     @Override
     public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {
         final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
-        final var registrations = getRegistrations(type.id().getNamespace());
+        final var registrations = getActiveRegistrations();
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 
     @Override
     public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<ServerPlayer, T> handler) {
         final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
-        final var registrations = getRegistrations(type.id().getNamespace());
+        final var registrations = getActiveRegistrations();
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 

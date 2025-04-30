@@ -67,4 +67,6 @@ public interface BalmNetworking {
     default void openGui(Player player, MenuProvider menuProvider) {
         openMenu(player, menuProvider);
     }
+
+    BalmNetworking scoped(String modId);
 }
