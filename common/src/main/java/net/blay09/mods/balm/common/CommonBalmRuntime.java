@@ -10,6 +10,7 @@ import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.minecraft.SharedConstants;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -85,4 +86,8 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
         }
     }
 
+    @Override
+    public boolean isDevelopmentEnvironment() {
+        return SharedConstants.IS_RUNNING_IN_IDE;
+    }
 }
