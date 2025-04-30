@@ -136,4 +136,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmResources getResources();
 
     BalmEnvironment getEnvironment();
+
+    boolean isDevelopmentEnvironment();
 }
