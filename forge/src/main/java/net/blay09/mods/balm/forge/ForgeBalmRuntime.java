@@ -49,6 +49,7 @@ import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
 import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -261,5 +262,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
             case CLIENT -> BalmEnvironment.CLIENT;
             case DEDICATED_SERVER -> BalmEnvironment.SERVER;
         };
+    }
+
+    @Override
+    public boolean isDevelopmentEnvironment() {
+        return SharedConstants.IS_RUNNING_IN_IDE;
     }
 }

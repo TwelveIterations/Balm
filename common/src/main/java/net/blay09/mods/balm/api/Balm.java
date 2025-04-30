@@ -215,4 +215,8 @@ public class Balm {
     public static BalmProviders getProviders() {
         return runtime.getProviders();
     }
+
+    public static boolean isDevelopmentEnvironment() {
+        return runtime.isDevelopmentEnvironment();
+    }
 }

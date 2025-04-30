@@ -55,9 +55,6 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -276,5 +273,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
             case CLIENT -> BalmEnvironment.CLIENT;
             case SERVER -> BalmEnvironment.SERVER;
         };
+    }
+
+    @Override
+    public boolean isDevelopmentEnvironment() {
+        return FabricLoader.getInstance().isDevelopmentEnvironment();
     }
 }
