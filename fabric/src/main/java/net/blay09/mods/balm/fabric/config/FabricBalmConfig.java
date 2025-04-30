@@ -21,8 +21,10 @@ public class FabricBalmConfig extends AbstractBalmConfig {
     public void registerConfig(BalmConfigSchema schema) {
         super.registerConfig(schema);
         final var config = loadConfigFromConfigFile(schema);
-        setLocalConfig(schema, config.mutable(schema));
+        final var mutableConfig = config.mutable(schema);
+        setLocalConfig(schema, mutableConfig);
         setActiveConfig(schema, config);
+        fireConfigLoadHandlers(schema, mutableConfig);
         Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
     }
 
