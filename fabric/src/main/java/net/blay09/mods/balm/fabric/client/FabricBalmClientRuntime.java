@@ -49,16 +49,6 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime {
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
-
-        Balm.getEvents().onEvent(ClientStartedEvent.class, event -> {
-            for (final var className : ((FabricBalmRuntime) Balm.getRuntime()).getAddonClasses()) {
-                try {
-                    Class.forName(className).getConstructor().newInstance();
-                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private static BalmKeyMappings createKeyMappingsBindings() {

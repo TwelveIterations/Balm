@@ -63,8 +63,6 @@ public class ForgeBalm {
         capabilities.addExistingType(new ResourceLocation("forge", "item_handler"), IItemHandler.class, ForgeCapabilities.ITEM_HANDLER);
         capabilities.addExistingType(new ResourceLocation("forge", "fluid_handler"), IFluidHandler.class, ForgeCapabilities.FLUID_HANDLER);
         capabilities.addExistingType(new ResourceLocation("forge", "energy_storage"), IEnergyStorage.class, ForgeCapabilities.ENERGY);
-
-        modEventBus.addListener((FMLLoadCompleteEvent event) -> event.enqueueWork(() -> ((ForgeBalmRuntime) Balm.getRuntime()).initializeAddons()));
     }
 
     private void enqueueIMC(InterModEnqueueEvent event) {

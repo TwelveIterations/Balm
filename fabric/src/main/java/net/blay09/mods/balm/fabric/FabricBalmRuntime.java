@@ -92,22 +92,9 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
             .buildLazily();
-    private final List<String> addonClasses = new ArrayList<>();
 
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
-
-        events.onEvent(ServerStartingEvent.class, event -> {
-            if (event.getServer().isDedicatedServer()) {
-                for (final var className : addonClasses) {
-                    try {
-                        Class.forName(className).getConstructor().newInstance();
-                    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -218,13 +205,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
     }
 
     @Override
-    public void initializeIfLoaded(String modId, String className) {
-        if (isModLoaded(modId)) {
-            addonClasses.add(className);
-        }
-    }
-
-    @Override
     public void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
             @Override
@@ -272,10 +252,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
     @Override
     public String getPlatform() {
         return LoaderPlatforms.FABRIC;
-    }
-
-    public List<String> getAddonClasses() {
-        return addonClasses;
     }
 
     @Override

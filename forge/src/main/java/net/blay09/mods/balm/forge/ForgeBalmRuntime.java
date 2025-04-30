@@ -86,8 +86,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime {
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
 
-    private final List<String> addonClasses = new ArrayList<>();
-
     public ForgeBalmRuntime() {
         ForgeBalmCommonEvents.registerEvents(events);
     }
@@ -213,23 +211,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime {
         final var modEventBus = forgeLoadContext.modEventBus();
         DeferredRegisters.register(modId, modEventBus);
         ModBusEventRegisters.register(modId, modEventBus);
-    }
-
-    @Override
-    public void initializeIfLoaded(String modId, String className) {
-        if (isModLoaded(modId)) {
-            addonClasses.add(className);
-        }
-    }
-
-    public void initializeAddons() {
-        for (String addonClass : addonClasses) {
-            try {
-                Class.forName(addonClass).getConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
