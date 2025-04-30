@@ -16,12 +16,9 @@ import net.minecraft.world.Container;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
 
@@ -37,6 +34,9 @@ public class ForgeBalm {
 
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
+
+        DeferredRegisters.register("balm", modEventBus);
+        ModBusEventRegisters.register("balm", modEventBus);
 
         ForgeBalmWorldGen.initializeBalmBiomeModifiers(modEventBus);
         modEventBus.addListener(ForgeBalmClient::onInitializeClient);
