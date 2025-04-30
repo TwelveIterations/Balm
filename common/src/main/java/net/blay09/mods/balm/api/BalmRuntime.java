@@ -128,4 +128,6 @@ public interface BalmRuntime {
     void registerModule(BalmModule module);
 
     BalmEnvironment getEnvironment();
+
+    boolean isDevelopmentEnvironment();
 }

@@ -44,6 +44,7 @@ import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
 import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
 import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
+import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -55,9 +56,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class ForgeBalmRuntime extends CommonBalmRuntime {
@@ -250,5 +248,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime {
             case CLIENT -> BalmEnvironment.CLIENT;
             case DEDICATED_SERVER -> BalmEnvironment.SERVER;
         };
+    }
+
+    @Override
+    public boolean isDevelopmentEnvironment() {
+        return SharedConstants.IS_RUNNING_IN_IDE;
     }
 }
