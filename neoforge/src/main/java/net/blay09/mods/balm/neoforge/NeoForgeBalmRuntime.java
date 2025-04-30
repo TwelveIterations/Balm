@@ -51,15 +51,10 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> {
@@ -203,6 +198,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
         final var modBus = context.modBus();
         DeferredRegisters.register(modId, modBus);
+        ModBusEventRegisters.register(modId, modBus);
     }
 
     @Override

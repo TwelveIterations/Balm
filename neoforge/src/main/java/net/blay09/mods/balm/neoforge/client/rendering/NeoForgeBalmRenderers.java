@@ -74,8 +74,6 @@ public record NeoForgeBalmRenderers(NamespaceResolver namespaceResolver) impleme
     @Override
     public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
         getActiveRegistrations().blockRenderTypes.add(new BlockRenderTypeRegistration(block, renderType));
-        final var eventBus = ModLoadingContext.get().getActiveContainer().getEventBus();
-        eventBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)));
     }
 
     @Override
