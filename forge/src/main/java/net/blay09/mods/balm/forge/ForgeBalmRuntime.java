@@ -250,8 +250,4 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
         super.initializeRuntime();
     }
 
-    @Override
-    public boolean isDevelopmentEnvironment() {
-        return SharedConstants.IS_RUNNING_IN_IDE;
-    }
 }
