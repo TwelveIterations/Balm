@@ -168,4 +168,9 @@ public class ForgeBalmNetworking implements BalmNetworking {
                 })
                 .add();
     }
+
+    @Override
+    public BalmNetworking scoped(String modId) {
+        return this;
+    }
 }
