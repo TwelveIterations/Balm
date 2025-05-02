@@ -14,15 +14,16 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public abstract class AbstractBalmConfig implements BalmConfig {
 
-    private final Map<ResourceLocation, BalmConfigSchema> schemas = new HashMap<>();
-    private final Map<ResourceLocation, MutableLoadedConfig> localConfigs = new HashMap<>();
-    private final Map<ResourceLocation, LoadedConfig> activeConfigs = new HashMap<>();
+    private final Map<ResourceLocation, BalmConfigSchema> schemas = new ConcurrentHashMap<>();
+    private final Map<ResourceLocation, MutableLoadedConfig> localConfigs = new ConcurrentHashMap<>();
+    private final Map<ResourceLocation, LoadedConfig> activeConfigs = new ConcurrentHashMap<>();
 
-    private final Map<ResourceLocation, Object> activeReflectionConfigs = new HashMap<>();
+    private final Map<ResourceLocation, Object> activeReflectionConfigs = new ConcurrentHashMap<>();
     private final Multimap<ResourceLocation, Consumer<MutableLoadedConfig>> configLoadHandlers = ArrayListMultimap.create();
 
     @Override
@@ -120,11 +121,15 @@ public abstract class AbstractBalmConfig implements BalmConfig {
         if (loaded != null) {
             handler.accept(loaded);
         } else {
-            configLoadHandlers.put(schema.identifier(), handler);
+            synchronized (configLoadHandlers) {
+                configLoadHandlers.put(schema.identifier(), handler);
+            }
         }
     }
 
     protected void fireConfigLoadHandlers(BalmConfigSchema schema, MutableLoadedConfig config) {
-        configLoadHandlers.get(schema.identifier()).forEach(handler -> handler.accept(config));
+        synchronized (configLoadHandlers) {
+            configLoadHandlers.get(schema.identifier()).forEach(handler -> handler.accept(config));
+        }
     }
 }
