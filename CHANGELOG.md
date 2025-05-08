@@ -1,1 +1,6 @@
-- Fixed ServerStartingEvent not firing on NeoForge
+- Added `BalmConfig.onConfigAvailable` to access config safely during initialization
+- Added `Balm.isDevelopmentEnvironment()`
+- Fixed ResourceLocation options not showing in Cloth Config screen
+- Fixed crash when accessing config from multiple threads
+- Fixed `BalmItems` being unable to add items to existing creative tabs
+- Changed `/balm export config` command to take schema id instead of class name
