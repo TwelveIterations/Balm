@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.LoadedConfig;
 import net.blay09.mods.balm.api.config.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.PropertyAwareConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
@@ -14,6 +15,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+
+import java.util.function.Predicate;
 
 public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig config) implements CustomPacketPayload {
 
@@ -78,7 +81,8 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
     public static void handle(Player player, ClientboundConfigPacket packet) {
         final var localConfig = Balm.getConfig().getLocalConfig(packet.schema);
         final var newConfig = localConfig.copy();
-        newConfig.applyFrom(packet.schema, packet.config);
+        final Predicate<ConfiguredProperty<?>> propertyFilter = packet.config instanceof PropertyAwareConfig propertyAwareConfig ? propertyAwareConfig::hasProperty : (it -> true);
+        newConfig.applyFrom(packet.schema, packet.config, propertyFilter);
         if (Balm.getConfig() instanceof AbstractBalmConfig config) {
             config.setActiveConfig(packet.schema, newConfig);
         }
