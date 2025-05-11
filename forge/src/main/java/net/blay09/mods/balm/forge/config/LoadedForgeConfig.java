@@ -3,13 +3,14 @@ package net.blay09.mods.balm.forge.config;
 import com.google.common.collect.Table;
 import net.blay09.mods.balm.api.config.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.PropertyAwareConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
 public record LoadedForgeConfig(BalmConfigSchema schema, ModConfig modConfig,
-                                Table<String, String, ForgeConfigSpec.ConfigValue<?>> properties) implements MutableLoadedConfig {
+                                Table<String, String, ForgeConfigSpec.ConfigValue<?>> properties) implements MutableLoadedConfig, PropertyAwareConfig {
 
     @Override
     @SuppressWarnings("unchecked")
@@ -44,4 +45,8 @@ public record LoadedForgeConfig(BalmConfigSchema schema, ModConfig modConfig,
         return this;
     }
 
+    @Override
+    public boolean hasProperty(ConfiguredProperty<?> property) {
+        return properties.contains(property.category(), property.name());
+    }
 }
