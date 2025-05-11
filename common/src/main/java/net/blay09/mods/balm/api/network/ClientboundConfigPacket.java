@@ -13,6 +13,8 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.function.Predicate;
+
 public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig config) {
 
     public static ClientboundConfigPacket decode(FriendlyByteBuf buf) {
@@ -72,7 +74,8 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
     public static void handle(Player player, ClientboundConfigPacket packet) {
         final var localConfig = Balm.getConfig().getLocalConfig(packet.schema);
         final var newConfig = localConfig.copy();
-        newConfig.applyFrom(packet.schema, packet.config, packet.config instanceof PropertyAwareConfig propertyAwareConfig ? propertyAwareConfig::hasProperty : it -> true);
+        final Predicate<ConfiguredProperty<?>> propertyFilter = packet.config instanceof PropertyAwareConfig propertyAwareConfig ? propertyAwareConfig::hasProperty : (it -> true);
+        newConfig.applyFrom(packet.schema, packet.config, propertyFilter);
         if (Balm.getConfig() instanceof AbstractBalmConfig config) {
             config.setActiveConfig(packet.schema, newConfig);
         }
