@@ -11,7 +11,8 @@ import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public record LoadedTableConfig(Table<String, String, Object> table) implements MutableLoadedConfig {
+public record LoadedTableConfig(
+        Table<String, String, Object> table) implements MutableLoadedConfig, PropertyAwareConfig {
 
     private static final Gson GSON = new Gson();
 
@@ -82,5 +83,10 @@ public record LoadedTableConfig(Table<String, String, Object> table) implements 
             return property.defaultValue();
         }
         return (T) value;
+    }
+
+    @Override
+    public boolean hasProperty(ConfiguredProperty<?> property) {
+        return table.contains(property.category(), property.name());
     }
 }

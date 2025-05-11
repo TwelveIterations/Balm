@@ -4,6 +4,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.LoadedConfig;
 import net.blay09.mods.balm.api.config.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.PropertyAwareConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.common.codec.ByteBufCodecs;
@@ -71,7 +72,7 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
     public static void handle(Player player, ClientboundConfigPacket packet) {
         final var localConfig = Balm.getConfig().getLocalConfig(packet.schema);
         final var newConfig = localConfig.copy();
-        newConfig.applyFrom(packet.schema, packet.config);
+        newConfig.applyFrom(packet.schema, packet.config, packet.config instanceof PropertyAwareConfig propertyAwareConfig ? propertyAwareConfig::hasProperty : it -> true);
         if (Balm.getConfig() instanceof AbstractBalmConfig config) {
             config.setActiveConfig(packet.schema, newConfig);
         }
