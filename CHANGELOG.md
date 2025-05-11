@@ -1,3 +1,5 @@
+- Fixed unsynced properties resetting to default when joining a world 
+
 - Backported new config system from 1.21.5
     - Waystones, Ex Compressum, Forgiving Void and Fertilization should be updated alongside this version to avoid crashes
 - Backported new capabilities system from 1.21.5
