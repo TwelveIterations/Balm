@@ -3,10 +3,11 @@ package net.blay09.mods.balm.api.config.reflection;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.LoadedTableConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
+import net.blay09.mods.balm.api.config.PropertyAwareConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 
-public record LoadedReflectionConfig<ConfigData>(ConfigData data) implements MutableLoadedConfig {
+public record LoadedReflectionConfig<ConfigData>(ConfigData data) implements MutableLoadedConfig, PropertyAwareConfig {
 
     @Override
     public <T> void setRaw(ConfiguredProperty<T> property, T value) {
@@ -55,6 +56,17 @@ public record LoadedReflectionConfig<ConfigData>(ConfigData data) implements Mut
             return categoryField.get(data);
         } else {
             return data;
+        }
+    }
+
+    @Override
+    public boolean hasProperty(ConfiguredProperty<?> property) {
+        try {
+            final var holder = locatePropertyHolder(property);
+            holder.getClass().getField(property.name());
+            return true;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            return false;
         }
     }
 }
