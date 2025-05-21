@@ -3,24 +3,41 @@ package net.blay09.mods.balm.fabric;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.EmptyLoadContext;
+import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.entity.BalmEntity;
+import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.network.NetworkVersions;
 import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
 import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
+import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -49,6 +66,61 @@ public class FabricBalm implements ModInitializer {
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();
             ((BalmEntity) newPlayer).setFabricBalmData(data);
+        });
+
+        ItemStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
+            private boolean running;
+
+            @Override
+            public @Nullable Storage<ItemVariant> find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Direction direction) {
+                if (running) {
+                    return null;
+                }
+
+                if (blockEntity instanceof BalmContainerProvider containerProvider) {
+                    final var container = direction != null ? containerProvider.getContainer(direction) : containerProvider.getContainer();
+                    if (container != null) {
+                        return InventoryStorage.of(container, direction);
+                    }
+                } else if (blockEntity != null) {
+                    running = true;
+                    final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
+                    running = false;
+                    if (container != null) {
+                        return InventoryStorage.of(container, direction);
+                    }
+                }
+
+                return null;
+            }
+        });
+
+        FluidStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
+            private boolean running;
+
+            @Override
+            public @Nullable Storage<FluidVariant> find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Direction direction) {
+                if (running) {
+                    return null;
+                }
+
+                if (blockEntity instanceof BalmFluidTankProvider fluidTankProvider) {
+                    final var fluidTank = direction != null ? fluidTankProvider.getFluidTank(direction) : fluidTankProvider.getFluidTank();
+                    if (fluidTank != null) {
+                        return new BalmFluidStorage(fluidTank);
+                    }
+                } else if (blockEntity != null) {
+                    running = true;
+                    // Backwards compatibility requires us to use Void as context. Fixed in 1.21.5+
+                    final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, null, CommonCapabilities.FLUID_TANK);
+                    running = false;
+                    if (fluidTank != null) {
+                        return new BalmFluidStorage(fluidTank);
+                    }
+                }
+
+                return null;
+            }
         });
 
         var providers = ((FabricBalmProviders) Balm.getProviders());
