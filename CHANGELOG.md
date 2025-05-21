@@ -1,1 +1,1 @@
-- Fixed unsynced properties resetting to default when joining a world
+- Fixed Balm capabilities not being exposed as mod-loader native capabilities on Fabric and NeoForge 
