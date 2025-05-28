@@ -9,6 +9,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,10 @@ public interface ImplementedContainer extends Container {
         return of(NonNullList.withSize(size, ItemStack.EMPTY));
     }
 
+    /**
+     * @deprecated Use {@link net.minecraft.world.ContainerHelper#loadAllItems(ValueInput, NonNullList)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.22")
     static NonNullList<ItemStack> deserializeInventory(CompoundTag tag, int minimumSize, HolderLookup.Provider provider) {
         int size = Math.max(minimumSize, tag.getIntOr("Size", minimumSize));
         NonNullList<ItemStack> items = NonNullList.withSize(size, ItemStack.EMPTY);
@@ -39,7 +44,7 @@ public interface ImplementedContainer extends Container {
                     if (slot >= 0 && slot < items.size()) {
                         final var itemStack = ItemStack.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag)
                                 .resultOrPartial((key) -> LOGGER.error("Tried to load invalid item: '{}'", key))
-                                        .orElse(ItemStack.EMPTY);
+                                .orElse(ItemStack.EMPTY);
                         items.set(slot, itemStack);
                     }
                 });
@@ -181,5 +186,11 @@ public interface ImplementedContainer extends Container {
         nbt.put("Items", itemTags);
         nbt.putInt("Size", items.size());
         return nbt;
+    }
+
+    default void copyFrom(Container container) {
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            setItem(i, container.getItem(i));
+        }
     }
 }
