@@ -35,7 +35,7 @@ public class EntityMixin implements BalmEntity {
     }
 
     @Inject(method = "saveWithoutId(Lnet/minecraft/world/level/storage/ValueOutput;)V", at = @At("HEAD"))
-    private void saveWithoutId(ValueOutput output, CallbackInfoReturnable<CompoundTag> callbackInfo) {
+    private void saveWithoutId(ValueOutput output, CallbackInfo callbackInfo) {
         if (!balmData.isEmpty()) {
             output.store("BalmData", CompoundTag.CODEC,balmData);
         }
