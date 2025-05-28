@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.fabric.event.client;
 
+import net.blay09.mods.balm.api.event.EntityTickHandler;
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
 import net.blay09.mods.balm.api.event.client.*;
@@ -8,6 +9,7 @@ import net.blay09.mods.balm.api.event.client.screen.ScreenInitEvent;
 import net.blay09.mods.balm.api.event.client.screen.ScreenKeyEvent;
 import net.blay09.mods.balm.api.event.client.screen.ScreenMouseEvent;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
+import net.blay09.mods.balm.mixin.ClientLevelAccessor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -15,6 +17,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -43,6 +46,11 @@ public class FabricBalmClientEvents {
     private static final List<Consumer<Screen>> screenKeyReleasePostInitializers = new ArrayList<>();
 
     private static ScreenEvents.BeforeInit beforeInitListener = null;
+
+    private static final List<EntityTickHandler> entityTickStartHandlers = new ArrayList<>();
+    private static final List<EntityTickHandler> entityTickEndHandlers = new ArrayList<>();
+    private static ClientTickEvents.StartWorldTick clientTickEntitiesStartListener = null;
+    private static ClientTickEvents.EndWorldTick clientTickEntitiesEndListener = null;
 
     private static void initializeScreenEvents() {
         if (beforeInitListener == null) {
@@ -86,6 +94,38 @@ public class FabricBalmClientEvents {
         events.registerTickEvent(TickType.ClientLevel,
                 TickPhase.End,
                 (ClientLevelTickHandler handler) -> ClientTickEvents.END_WORLD_TICK.register(handler::handle));
+
+        events.registerTickEvent(TickType.ClientEntity, TickPhase.Start, (EntityTickHandler handler) -> {
+            if (clientTickEntitiesStartListener == null) {
+                clientTickEntitiesStartListener = level -> {
+                    ((ClientLevelAccessor) level).getTickingEntities().forEach(entity -> {
+                        for (final var entityTickHandler : entityTickStartHandlers) {
+                            entityTickHandler.handle(entity);
+                        }
+                    });
+                };
+
+                ClientTickEvents.START_WORLD_TICK.register(clientTickEntitiesStartListener);
+            }
+
+            entityTickStartHandlers.add(handler);
+        });
+
+        events.registerTickEvent(TickType.ClientEntity, TickPhase.End, (EntityTickHandler handler) -> {
+            if (clientTickEntitiesEndListener == null) {
+                clientTickEntitiesEndListener = level -> {
+                    ((ClientLevelAccessor) level).getTickingEntities().forEach(entity -> {
+                        for (final var entityTickHandler : entityTickEndHandlers) {
+                            entityTickHandler.handle(entity);
+                        }
+                    });
+                };
+
+                ClientTickEvents.END_WORLD_TICK.register(clientTickEntitiesEndListener);
+            }
+
+            entityTickEndHandlers.add(handler);
+        });
 
         events.registerEvent(ClientStartedEvent.class, () -> ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             final ClientStartedEvent event = new ClientStartedEvent(client);

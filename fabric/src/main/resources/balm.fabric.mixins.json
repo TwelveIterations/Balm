@@ -31,7 +31,8 @@
     "MinecraftMixin",
     "MouseHandlerMixin",
     "PlayerTabOverlayMixin",
-    "ClientLevelMixin"
+    "ClientLevelMixin",
+    "ClientLevelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

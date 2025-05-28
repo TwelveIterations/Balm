@@ -72,7 +72,7 @@ public class FabricBalmCommonEvents {
             playerTickEndHandlers.add(handler);
         });
 
-        events.registerTickEvent(TickType.Entity, TickPhase.Start, (EntityTickHandler handler) -> {
+        events.registerTickEvent(TickType.ServerEntity, TickPhase.Start, (EntityTickHandler handler) -> {
             if (serverTickEntitiesStartListener == null) {
                 serverTickEntitiesStartListener = server -> {
                     for (final var level : server.getAllLevels()) {
@@ -90,7 +90,7 @@ public class FabricBalmCommonEvents {
             entityTickStartHandlers.add(handler);
         });
 
-        events.registerTickEvent(TickType.Entity, TickPhase.End, (EntityTickHandler handler) -> {
+        events.registerTickEvent(TickType.ServerEntity, TickPhase.End, (EntityTickHandler handler) -> {
             if (serverTickEntitiesEndListener == null) {
                 serverTickEntitiesEndListener = server -> {
                     for (final var level : server.getAllLevels()) {
