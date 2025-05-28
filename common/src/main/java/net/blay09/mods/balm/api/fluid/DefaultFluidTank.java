@@ -5,6 +5,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class DefaultFluidTank implements FluidTank {
     private final int capacity;
@@ -96,6 +98,20 @@ public class DefaultFluidTank implements FluidTank {
         return amount <= 0 || fluid.isSame(Fluids.EMPTY);
     }
 
+    public void serialize(ValueOutput output) {
+        output.putString("Fluid", BuiltInRegistries.FLUID.getKey(fluid).toString());
+        output.putInt("Amount", amount);
+    }
+
+    public void deserialize(ValueInput input) {
+        fluid = input.getString("Fluid").map(ResourceLocation::tryParse).map(BuiltInRegistries.FLUID::getValue).orElse(Fluids.EMPTY);
+        amount = input.getIntOr("Amount", 0);
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true, since = "1.22")
     public CompoundTag serialize() {
         CompoundTag tag = new CompoundTag();
         tag.putString("Fluid", BuiltInRegistries.FLUID.getKey(fluid).toString());
@@ -103,6 +119,10 @@ public class DefaultFluidTank implements FluidTank {
         return tag;
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true, since = "1.22")
     public void deserialize(CompoundTag tag) {
         fluid = tag.getString("Fluid").map(ResourceLocation::tryParse).map(BuiltInRegistries.FLUID::getValue).orElse(Fluids.EMPTY);
         amount = tag.getIntOr("Amount", 0);
