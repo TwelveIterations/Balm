@@ -20,14 +20,6 @@ public class BalmClient {
         runtime.onRuntimeAvailable(callback);
     }
 
-    /**
-     * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    public static <T extends BalmRuntimeLoadContext> void initialize(String modId, T context, Runnable initializer) {
-        initializeMod(modId, context, initializer);
-    }
-
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, Runnable initializer) {
         runtime.initializeMod(modId, context, initializer);
     }

@@ -45,14 +45,4 @@ public class SidedProxy<T> {
         return proxy;
     }
 
-    /**
-     * @deprecated Use {@link #build()} or {@link #buildLazily()} instead.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    public T get() {
-        if (proxy == null) {
-            proxy = build();
-        }
-        return proxy;
-    }
 }
