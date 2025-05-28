@@ -5,8 +5,8 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -37,7 +37,7 @@ public interface BalmRenderers {
      * @deprecated No-op on NeoForge. Specify "render_type" in your model as a workaround.
      */
     @Deprecated
-    void setBlockRenderType(Supplier<Block> block, RenderType renderType);
+    void setBlockRenderType(Supplier<Block> block, ChunkSectionLayer chunkSectionLayer);
 
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
