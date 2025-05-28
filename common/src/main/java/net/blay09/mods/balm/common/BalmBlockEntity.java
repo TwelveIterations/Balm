@@ -9,9 +9,12 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class BalmBlockEntity extends BalmBlockEntityBase {
@@ -42,14 +45,14 @@ public class BalmBlockEntity extends BalmBlockEntityBase {
     }
 
     public CompoundTag createUpdateTag(BlockEntity blockEntity) {
-        final var tag = new CompoundTag();
+        final var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, blockEntity.getLevel().registryAccess());
         if (blockEntity instanceof BalmBlockEntity balmBlockEntity) {
-            balmBlockEntity.writeUpdateTag(tag);
+            balmBlockEntity.writeUpdateTag(output);
         }
-        return tag;
+        return output.buildResult();
     }
 
-    protected void writeUpdateTag(CompoundTag tag) {
+    protected void writeUpdateTag(ValueOutput output) {
     }
 
     @Override
