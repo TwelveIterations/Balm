@@ -1,13 +1,10 @@
 package net.blay09.mods.balm.common.client;
 
-import com.mojang.blaze3d.buffers.BufferType;
-import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.CreativeModeTabs;
 import org.slf4j.Logger;
@@ -36,8 +33,6 @@ public class IconExport {
                 if (!exportFolder.exists() && !exportFolder.mkdirs()) {
                     throw new RuntimeException("Failed to create export folder: " + exportFolder);
                 }
-
-                final var guiGraphics = new GuiGraphics(minecraft, minecraft.renderBuffers().bufferSource());
 
                 for (final var creativeModeTab : CreativeModeTabs.allTabs()) {
                     for (final var itemStack : creativeModeTab.getDisplayItems()) {
@@ -71,6 +66,7 @@ public class IconExport {
                         if (colorTexture == null) {
                             throw new IllegalStateException("Tried to capture screenshot of an incomplete framebuffer");
                         } else {
+                            /* TODO 1.21.6: Copy buffer to image and save as file
                             final var buffer = RenderSystem.getDevice()
                                     .createBuffer(() -> "Screenshot buffer",
                                             BufferType.PIXEL_PACK,
@@ -94,7 +90,7 @@ public class IconExport {
                                 }
 
                                 buffer.close();
-                            }, 0);
+                            }, 0);*/
                         }
                     }
                 }

@@ -16,6 +16,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -53,8 +54,8 @@ public record FabricBalmRenderers(NamespaceResolver namespaceResolver) implement
     }
 
     @Override
-    public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
-        BlockRenderLayerMap.INSTANCE.putBlock(block.get(), renderType);
+    public void setBlockRenderType(Supplier<Block> block, ChunkSectionLayer chunkSectionLayer) {
+        BlockRenderLayerMap.INSTANCE.putBlock(block.get(), chunkSectionLayer);
     }
 
     @Override

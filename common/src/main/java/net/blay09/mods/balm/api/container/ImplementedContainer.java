@@ -4,12 +4,17 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public interface ImplementedContainer extends Container {
+    Logger LOGGER = LoggerFactory.getLogger(ImplementedContainer.class);
+
     /**
      * Creates an inventory from the item list.
      */
@@ -32,7 +37,10 @@ public interface ImplementedContainer extends Container {
                 itemTags.getCompound(i).ifPresent(itemTag -> {
                     int slot = itemTag.getIntOr("Slot", -1);
                     if (slot >= 0 && slot < items.size()) {
-                        items.set(slot, ItemStack.parse(provider, itemTag).orElse(ItemStack.EMPTY));
+                        final var itemStack = ItemStack.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag)
+                                .resultOrPartial((key) -> LOGGER.error("Tried to load invalid item: '{}'", key))
+                                        .orElse(ItemStack.EMPTY);
+                        items.set(slot, itemStack);
                     }
                 });
             }
@@ -165,7 +173,8 @@ public interface ImplementedContainer extends Container {
             if (!items.get(i).isEmpty()) {
                 CompoundTag itemTag = new CompoundTag();
                 itemTag.putInt("Slot", i);
-                itemTags.add(items.get(i).save(provider, itemTag));
+                final var result = ItemStack.CODEC.encode(items.get(i), provider.createSerializationContext(NbtOps.INSTANCE), itemTag).getOrThrow();
+                itemTags.add(result);
             }
         }
         CompoundTag nbt = new CompoundTag();

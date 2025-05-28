@@ -22,6 +22,6 @@ public class ChunkMapMixin {
 
     @Inject(method = "dropChunk(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/ChunkPos;)V", at = @At(value = "HEAD"))
     private static void dropChunk(ServerPlayer player, ChunkPos chunkPos, CallbackInfo callbackInfo) {
-        Balm.getEvents().fireEvent(new ChunkTrackingEvent.Stop(player.serverLevel(), player, chunkPos));
+        Balm.getEvents().fireEvent(new ChunkTrackingEvent.Stop(player.level(), player, chunkPos));
     }
 }

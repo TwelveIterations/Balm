@@ -3,6 +3,8 @@ package net.blay09.mods.balm.mixin;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,34 +16,28 @@ public class EntityMixin implements BalmEntity {
 
     private CompoundTag balmData = new CompoundTag();
     private CompoundTag forgeBalmData = new CompoundTag();
-    private CompoundTag neoforgeBalmData = new CompoundTag();
+    private CompoundTag neoForgeBalmData = new CompoundTag();
 
-    @Inject(method = "load(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("HEAD"))
-    private void load(CompoundTag compound, CallbackInfo callbackInfo) {
-        if (compound.contains("BalmData")) {
-            balmData = compound.getCompound("BalmData").orElseGet(() -> compound.getCompound("ForgeData")
-                    .flatMap(it -> it.getCompound("PlayerPersisted"))
-                    .flatMap(it -> it.getCompound("BalmData"))
-                    .orElse(new CompoundTag()));
-        }
-        if (compound.contains("ForgeData")) {
-            forgeBalmData = compound.getCompound("ForgeData")
-                    .flatMap(it -> it.getCompound("PlayerPersisted"))
-                    .flatMap(it -> it.getCompound("BalmData"))
-                    .orElse(new CompoundTag());
-        }
-        if (compound.contains("NeoForgeData")) {
-            neoforgeBalmData = compound.getCompound("NeoForgeData")
-                    .flatMap(it -> it.getCompound("PlayerPersisted"))
-                    .flatMap(it -> it.getCompound("BalmData"))
-                    .orElse(new CompoundTag());
-        }
+    @Inject(method = "load(Lnet/minecraft/world/level/storage/ValueInput;)V", at = @At("HEAD"))
+    private void load(ValueInput input, CallbackInfo callbackInfo) {
+        balmData = input.read("BalmData", CompoundTag.CODEC).orElseGet(() -> input.child("ForgeData")
+                .flatMap(it -> it.child("PlayerPersisted"))
+                .flatMap(it -> it.read("BalmData", CompoundTag.CODEC))
+              .orElse(balmData));
+        forgeBalmData = input.child("ForgeData")
+                .flatMap(it -> it.child("PlayerPersisted"))
+                .flatMap(it -> it.read("BalmData", CompoundTag.CODEC))
+                .orElse(forgeBalmData);
+        neoForgeBalmData = input.child("NeoForgeData")
+                .flatMap(it -> it.child("PlayerPersisted"))
+                .flatMap(it -> it.read("BalmData", CompoundTag.CODEC))
+                .orElse(neoForgeBalmData);
     }
 
-    @Inject(method = "saveWithoutId(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;", at = @At("HEAD"))
-    private void saveWithoutId(CompoundTag compound, CallbackInfoReturnable<CompoundTag> callbackInfo) {
+    @Inject(method = "saveWithoutId(Lnet/minecraft/world/level/storage/ValueOutput;)V", at = @At("HEAD"))
+    private void saveWithoutId(ValueOutput output, CallbackInfoReturnable<CompoundTag> callbackInfo) {
         if (!balmData.isEmpty()) {
-            compound.put("BalmData", balmData);
+            output.store("BalmData", CompoundTag.CODEC,balmData);
         }
     }
 
@@ -67,11 +63,11 @@ public class EntityMixin implements BalmEntity {
 
     @Override
     public CompoundTag getNeoForgeBalmData() {
-        return neoforgeBalmData;
+        return neoForgeBalmData;
     }
 
     @Override
     public void setNeoForgeBalmData(CompoundTag tag) {
-        this.neoforgeBalmData = tag;
+        this.neoForgeBalmData = tag;
     }
 }

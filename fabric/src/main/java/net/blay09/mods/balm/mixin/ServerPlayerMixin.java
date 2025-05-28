@@ -33,7 +33,7 @@ public class ServerPlayerMixin {
     @Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("HEAD"))
     public void teleportHead(TeleportTransition transition, CallbackInfoReturnable<ServerPlayer> callbackInfo, @Share("fromDimHolder") LocalRef<ResourceKey<Level>> fromDimHolder) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        fromDimHolder.set(player.serverLevel().dimension());
+        fromDimHolder.set(player.level().dimension());
     }
 
     @Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("RETURN"))
