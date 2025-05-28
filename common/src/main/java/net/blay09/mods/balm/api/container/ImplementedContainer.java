@@ -10,6 +10,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,6 +172,10 @@ public interface ImplementedContainer extends Container {
         return true;
     }
 
+    /**
+     * @deprecated Use {@link net.minecraft.world.ContainerHelper#saveAllItems(ValueOutput, NonNullList)} instead.
+     */
+    @Deprecated(forRemoval = true, since = "1.22")
     default CompoundTag serializeInventory(HolderLookup.Provider provider) {
         NonNullList<ItemStack> items = getItems();
         ListTag itemTags = new ListTag();
