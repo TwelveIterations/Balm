@@ -35,7 +35,7 @@ public class SidedProxy<T> {
     public T build() {
         final var classNameForEnvironment = switch (environmentResolver.get()) {
             case CLIENT -> clientName;
-            case SERVER -> commonName;
+            case DEDICATED_SERVER -> commonName;
         };
         try {
             proxy = (T) Class.forName(classNameForEnvironment).getConstructor().newInstance();

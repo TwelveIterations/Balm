@@ -140,7 +140,7 @@ public class FabricBalm implements ModInitializer {
                     for (final var entry : message.modList().entrySet()) {
                         final var modId = entry.getKey();
                         final var clientVersions = entry.getValue();
-                        final var serverVersionsOpt = networking.getNetworkVersions(modId, BalmEnvironment.SERVER);
+                        final var serverVersionsOpt = networking.getNetworkVersions(modId, BalmEnvironment.DEDICATED_SERVER);
                         if (serverVersionsOpt.isEmpty()) {
                             if (clientVersions.requireRemote()) {
                                 player.connection.disconnect(Component.translatable("disconnect.balm.mod_missing_on_server",
@@ -162,7 +162,7 @@ public class FabricBalm implements ModInitializer {
                     }
 
                     for (final var modId : networking.getRegisteredMods()) {
-                        final var serverVersions = networking.getNetworkVersions(modId, BalmEnvironment.SERVER).orElseThrow();
+                        final var serverVersions = networking.getNetworkVersions(modId, BalmEnvironment.DEDICATED_SERVER).orElseThrow();
                         if (serverVersions.requireRemote() && !message.modList().containsKey(modId)) {
                             final var serverModVersion = serverVersions.modVersion();
                             player.connection.disconnect(Component.translatable("disconnect.balm.mod_missing_on_client",

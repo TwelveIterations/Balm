@@ -24,8 +24,6 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
-import net.blay09.mods.balm.common.proxy.ModProxyImpl;
-import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
 import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
@@ -45,7 +43,6 @@ import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
 import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -265,7 +262,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     public BalmEnvironment getEnvironment() {
         return switch(FabricLoader.getInstance().getEnvironmentType()) {
             case CLIENT -> BalmEnvironment.CLIENT;
-            case SERVER -> BalmEnvironment.SERVER;
+            case SERVER -> BalmEnvironment.DEDICATED_SERVER;
         };
     }
 
