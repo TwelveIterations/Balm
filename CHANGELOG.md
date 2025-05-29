@@ -1,1 +1,2 @@
-- Fixed Balm capabilities not being exposed as mod-loader native capabilities on Fabric and NeoForge 
+- Fixed Balm incorrectly exposing `ItemHandler`s for non-Balm `Container`s
+  - Balm now only automatically exposes the `balm:container` capability if `BalmContainerProvider` is implemented 
