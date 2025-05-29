@@ -1,1 +1,2 @@
-- Fixed unsynced properties resetting to default when joining a world
+- Fixed Balm incorrectly exposing `ItemHandler`s for non-Balm `Container`s
+  - Balm now only automatically exposes the `balm:container` capability if `BalmContainerProvider` is implemented 
