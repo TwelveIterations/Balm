@@ -29,8 +29,6 @@ public class CommonCapabilities {
                 } else {
                     return provider.getContainer();
                 }
-            } else if (blockEntity instanceof Container container) {
-                return container;
             }
             return null;
         }));
