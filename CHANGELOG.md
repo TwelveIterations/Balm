@@ -1,1 +1,1 @@
-- Fixed unsynced properties resetting to default when joining a world
+- Updated to Minecraft 1.21.6

@@ -10,7 +10,7 @@ import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-// TODO 1.21.6: import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 
 import java.util.HashMap;
 
@@ -21,7 +21,7 @@ public class FabricBalmClient implements ClientModInitializer {
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 
-        // TODO 1.21.6: ModelLoadingPlugin.register((FabricBalmModels) BalmClient.getModels());
+        ModelLoadingPlugin.register((FabricBalmModels) BalmClient.getModels());
 
         Balm.getEvents().onEvent(ConnectedToServerEvent.class, event -> {
             final var networking = (FabricBalmNetworking) Balm.getNetworking();
