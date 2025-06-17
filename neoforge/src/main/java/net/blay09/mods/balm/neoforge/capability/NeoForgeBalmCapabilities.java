@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -73,7 +74,7 @@ public record NeoForgeBalmCapabilities(NamespaceResolver namespaceResolver) impl
     }
 
     @Override
-    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<List<BlockEntityType<?>>> blockEntityTypes) {
+    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
         getActiveRegistrations().blockEntityProviders.add(new BlockEntityProviderRegistration<>(type, provider, blockEntityTypes));
     }
 
@@ -101,7 +102,7 @@ public record NeoForgeBalmCapabilities(NamespaceResolver namespaceResolver) impl
     }
 
     record BlockEntityProviderRegistration<TApi, TContext>(CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider,
-                                                           Supplier<List<BlockEntityType<?>>> blockEntityTypes) {
+                                                           Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
     }
 
     record BlockEntityFallbackProviderRegistration<TApi, TContext>(CapabilityType<Block, TApi, TContext> type,

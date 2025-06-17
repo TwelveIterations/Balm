@@ -3,6 +3,7 @@ package net.blay09.mods.balm.mixin;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,17 +15,13 @@ public class EntityMixin implements BalmEntity {
     private CompoundTag fabricBalmData = new CompoundTag();
     private CompoundTag forgeBalmData = new CompoundTag();
 
-    @Inject(method = "load(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("HEAD"))
-    private void load(CompoundTag compound, CallbackInfo callbackInfo) {
-        if (compound.contains("BalmData")) {
-            fabricBalmData = compound.getCompound("BalmData").orElse(fabricBalmData);
-        }
-        if (compound.contains("ForgeData")) {
-            forgeBalmData = compound.getCompound("ForgeData")
-                    .flatMap(it -> it.getCompound("PlayerPersisted"))
-                    .flatMap(it -> it.getCompound("BalmData"))
-                    .orElse(forgeBalmData);
-        }
+    @Inject(method = "load(Lnet/minecraft/world/level/storage/ValueInput;)V", at = @At("HEAD"))
+    private void load(ValueInput input, CallbackInfo callbackInfo) {
+        fabricBalmData = input.read("BalmData", CompoundTag.CODEC).orElse(fabricBalmData);
+        forgeBalmData = input.child("ForgeData")
+                .flatMap(it -> it.child("PlayerPersisted"))
+                .flatMap(it -> it.read("BalmData", CompoundTag.CODEC))
+                .orElse(forgeBalmData);
     }
 
     @Override

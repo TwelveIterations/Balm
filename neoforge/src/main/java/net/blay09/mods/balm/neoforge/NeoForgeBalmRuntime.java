@@ -240,7 +240,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     public BalmEnvironment getEnvironment() {
         return switch (FMLEnvironment.dist) {
             case CLIENT -> BalmEnvironment.CLIENT;
-            case DEDICATED_SERVER -> BalmEnvironment.SERVER;
+            case DEDICATED_SERVER -> BalmEnvironment.DEDICATED_SERVER;
         };
     }
 

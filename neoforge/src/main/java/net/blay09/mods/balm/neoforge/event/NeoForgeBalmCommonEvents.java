@@ -67,13 +67,13 @@ public class NeoForgeBalmCommonEvents {
             });
         });
 
-        events.registerTickEvent(TickType.Entity, TickPhase.Start, (EntityTickHandler handler) -> {
+        events.registerTickEvent(TickType.ServerEntity, TickPhase.Start, (EntityTickHandler handler) -> {
             NeoForge.EVENT_BUS.addListener((EntityTickEvent.Pre orig) -> {
                 handler.handle(orig.getEntity());
             });
         });
 
-        events.registerTickEvent(TickType.Entity, TickPhase.End, (EntityTickHandler handler) -> {
+        events.registerTickEvent(TickType.ServerEntity, TickPhase.End, (EntityTickHandler handler) -> {
             NeoForge.EVENT_BUS.addListener((EntityTickEvent.Post orig) -> {
                 handler.handle(orig.getEntity());
             });
