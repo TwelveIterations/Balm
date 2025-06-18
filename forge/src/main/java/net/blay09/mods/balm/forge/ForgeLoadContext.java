@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.forge;
 
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 
-public record ForgeLoadContext(IEventBus modEventBus) implements BalmRuntimeLoadContext {
+public record ForgeLoadContext(BusGroup modBusGroup) implements BalmRuntimeLoadContext {
 }

@@ -7,8 +7,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.event.EventPriority;
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.listener.Priority;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -24,13 +23,13 @@ public class ForgeBalmEvents implements BalmEvents {
     private final Table<Class<?>, EventPriority, List<Consumer<?>>> eventHandlers = HashBasedTable.create();
     private final Table<TickType<?>, TickPhase, Consumer<?>> tickEventInitializers = HashBasedTable.create();
 
-    public static net.minecraftforge.eventbus.api.EventPriority toForge(EventPriority priority) {
+    public static byte toForge(EventPriority priority) {
         return switch (priority) {
-            case Lowest -> net.minecraftforge.eventbus.api.EventPriority.LOWEST;
-            case Low -> net.minecraftforge.eventbus.api.EventPriority.LOW;
-            case Normal -> net.minecraftforge.eventbus.api.EventPriority.NORMAL;
-            case High -> net.minecraftforge.eventbus.api.EventPriority.HIGH;
-            case Highest -> net.minecraftforge.eventbus.api.EventPriority.HIGHEST;
+            case Lowest -> Priority.LOWEST;
+            case Low -> Priority.LOW;
+            case Normal -> Priority.NORMAL;
+            case High -> Priority.HIGH;
+            case Highest -> Priority.HIGHEST;
         };
     }
 
@@ -85,10 +84,6 @@ public class ForgeBalmEvents implements BalmEvents {
             for (EventPriority priority : EventPriority.values) {
                 fireEventHandlers(priority, event);
             }
-        }
-
-        if (event instanceof Event forgeEvent) {
-            MinecraftForge.EVENT_BUS.post(forgeEvent);
         }
     }
 

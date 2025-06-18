@@ -7,7 +7,6 @@ import net.blay09.mods.balm.common.permission.PlayerPermissionContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.events.PermissionGatherEvent;
 import net.minecraftforge.server.permission.nodes.PermissionNode;
@@ -22,7 +21,7 @@ public class ForgeBalmPermissions extends CommonBalmPermissions {
     private final Map<ResourceLocation, PermissionNode<?>> nodes = new HashMap<>();
 
     public ForgeBalmPermissions() {
-        MinecraftForge.EVENT_BUS.addListener(this::registerNodes);
+        PermissionGatherEvent.Nodes.BUS.addListener(this::registerNodes);
     }
 
     private void registerNodes(PermissionGatherEvent.Nodes event) {

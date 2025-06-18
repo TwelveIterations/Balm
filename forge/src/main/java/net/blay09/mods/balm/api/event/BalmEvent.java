@@ -1,8 +1,16 @@
 package net.blay09.mods.balm.api.event;
 
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.event.MutableEvent;
+import net.minecraftforge.eventbus.api.event.characteristic.Cancellable;
 
-@Cancelable
-public abstract class BalmEvent extends Event {
+public abstract class BalmEvent extends MutableEvent implements Cancellable {
+    private boolean canceled;
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
+    }
 }

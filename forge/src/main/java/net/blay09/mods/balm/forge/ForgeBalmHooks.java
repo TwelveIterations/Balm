@@ -22,10 +22,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Result;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -39,7 +38,7 @@ public class ForgeBalmHooks implements BalmHooks {
     public final Map<Item, Integer> burnTimes = new HashMap<>();
 
     public ForgeBalmHooks() {
-        MinecraftForge.EVENT_BUS.addListener(this::furnaceFuelBurnTime);
+        FurnaceFuelBurnTimeEvent.BUS.addListener(this::furnaceFuelBurnTime);
     }
 
     private void furnaceFuelBurnTime(FurnaceFuelBurnTimeEvent event) {
@@ -51,7 +50,7 @@ public class ForgeBalmHooks implements BalmHooks {
 
     @Override
     public boolean blockGrowFeature(Level level, RandomSource random, BlockPos pos, @Nullable Holder<ConfiguredFeature<?, ?>> holder) {
-        return !ForgeEventFactory.blockGrowFeature(level, random, pos, holder).getResult().equals(Event.Result.DENY);
+        return !ForgeEventFactory.blockGrowFeature(level, random, pos, holder).getResult().equals(Result.DENY);
     }
 
     @Override

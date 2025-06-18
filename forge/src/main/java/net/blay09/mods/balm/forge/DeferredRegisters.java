@@ -5,7 +5,7 @@ import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -33,7 +33,7 @@ public class DeferredRegisters {
         return deferredRegisters.column(modId).values();
     }
 
-    public static void register(String modId, IEventBus modEventBus) {
+    public static void register(String modId, BusGroup modEventBus) {
         synchronized (deferredRegisters) {
             for (DeferredRegister<?> deferredRegister : DeferredRegisters.getByModId(modId)) {
                 deferredRegister.register(modEventBus);

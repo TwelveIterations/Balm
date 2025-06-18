@@ -15,6 +15,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -27,8 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
     }
 
     @Override
-    public void setBlockRenderType(Supplier<Block> block, RenderType renderType) {
+    public void setBlockRenderType(Supplier<Block> block, ChunkSectionLayer renderType) {
         getActiveRegistrations().blockRenderTypes.add(new BlockRenderTypeRegistration(block, renderType));
     }
 
@@ -88,7 +88,7 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    public record BlockRenderTypeRegistration(Supplier<Block> blockSupplier, RenderType renderType) {
+    public record BlockRenderTypeRegistration(Supplier<Block> blockSupplier, ChunkSectionLayer renderType) {
     }
 
     public record ColorRegistration<THandler, TObject>(THandler color, Supplier<TObject[]> objects) {

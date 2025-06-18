@@ -187,12 +187,12 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
         final var namespace = schema.identifier().getNamespace();
         final var modContainer = ModList.get().getModContainerById(namespace)
                 .orElseThrow(() -> new IllegalStateException("Mod container for " + namespace + " not found when registering config."));
-        final var eventBus = BalmLoadContexts.get(namespace).map(it -> ((ForgeLoadContext) it).modEventBus()).orElse(null);
-        if (eventBus == null) {
-            throw new IllegalStateException("Missing event bus for " + namespace + " when registering config.");
+        final var modBusGroup = BalmLoadContexts.get(namespace).map(it -> ((ForgeLoadContext) it).modBusGroup()).orElse(null);
+        if (modBusGroup == null) {
+            throw new IllegalStateException("Missing event bus group for " + namespace + " when registering config.");
         }
 
-        eventBus.addListener((ModConfigEvent.Loading event) -> {
+        ModConfigEvent.Loading.getBus(modBusGroup).addListener((event) -> {
             final var modConfig = event.getConfig();
             final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
@@ -205,7 +205,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
             }
         });
-        eventBus.addListener((ModConfigEvent.Reloading event) -> {
+        ModConfigEvent.Reloading.getBus(modBusGroup).addListener((event) -> {
             final var modConfig = event.getConfig();
             final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {

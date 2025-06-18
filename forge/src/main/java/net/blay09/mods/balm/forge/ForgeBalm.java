@@ -21,6 +21,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -31,8 +32,8 @@ import java.util.function.BiFunction;
 public class ForgeBalm {
 
     public ForgeBalm(FMLJavaModLoadingContext context) {
-        final var modEventBus = context.getModEventBus();
-        BalmLoadContexts.register("balm", new ForgeLoadContext(modEventBus));
+        final var modBusGroup = context.getModBusGroup();
+        BalmLoadContexts.register("balm", new ForgeLoadContext(modBusGroup));
 
         Balm.registerModule(new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
@@ -40,11 +41,11 @@ public class ForgeBalm {
         Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
         Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
-        DeferredRegisters.register("balm", modEventBus);
-        ModBusEventRegisters.register("balm", modEventBus);
+        DeferredRegisters.register("balm", modBusGroup);
+        ModBusEventRegisters.register("balm", modBusGroup);
 
-        ForgeBalmWorldGen.initializeBalmBiomeModifiers(modEventBus);
-        modEventBus.addListener(ForgeBalmClient::onInitializeClient);
+        ForgeBalmWorldGen.initializeBalmBiomeModifiers(modBusGroup);
+        FMLClientSetupEvent.getBus(modBusGroup).addListener(ForgeBalmClient::onInitializeClient);
 
         final var capabilities = (ForgeBalmCapabilities) Balm.getCapabilities();
         final var nativeItemHandler = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("forge", "item_handler"), IItemHandler.class, ForgeCapabilities.ITEM_HANDLER);

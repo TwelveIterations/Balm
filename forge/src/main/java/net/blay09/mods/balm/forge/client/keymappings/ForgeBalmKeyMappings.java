@@ -8,7 +8,7 @@ import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;

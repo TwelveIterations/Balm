@@ -18,7 +18,8 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ModifiableBiomeInfo;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -36,7 +37,7 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static void initializeBalmBiomeModifiers(IEventBus modEventBus) {
+    public static void initializeBalmBiomeModifiers(BusGroup modEventBus) {
         var registry = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "balm");
         registry.register("balm", () -> BALM_BIOME_MODIFIER_CODEC);
         registry.register(modEventBus);

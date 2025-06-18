@@ -61,7 +61,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
 
         initializer.run();
 
-        ModBusEventRegisters.register(modId, context.modEventBus());
+        ModBusEventRegisters.register(modId, context.modBusGroup());
     }
 
     @Override

@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -98,18 +98,8 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
     }
 
     @Override
-    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<List<BlockEntityType<?>>> blockEntityTypes) {
-        blockEntityProviders.add(new BlockEntityProviderRegistration<>(identifier, type, provider, new Supplier<>() {
-            private Set<BlockEntityType<?>> set;
-
-            @Override
-            public Set<BlockEntityType<?>> get() {
-                if (set == null) {
-                    set = Set.copyOf(blockEntityTypes.get());
-                }
-                return set;
-            }
-        }));
+    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
+        blockEntityProviders.add(new BlockEntityProviderRegistration<>(identifier, type, provider, blockEntityTypes));
         flattenedBlockEntityProviders = null;
     }
 

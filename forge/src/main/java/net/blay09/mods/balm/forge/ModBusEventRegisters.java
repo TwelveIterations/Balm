@@ -3,8 +3,9 @@ package net.blay09.mods.balm.forge;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ModBusEventRegisters {
 
-    private static final Map<String, IEventBus> modEventBuses = new ConcurrentHashMap<>();
+    private static final Map<String, BusGroup> modEventBuses = new ConcurrentHashMap<>();
     private static final Table<String, Class<?>, Object> registrations = Tables.synchronizedTable(HashBasedTable.create());
 
     @SuppressWarnings("unchecked")
@@ -31,7 +32,7 @@ public class ModBusEventRegisters {
             registrations.put(namespace, clazz, instance);
             final var modEventBus = modEventBuses.get(namespace);
             if (modEventBus != null) {
-                modEventBus.register(instance);
+                modEventBus.register(MethodHandles.lookup(), instance);
             }
             return instance;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -39,11 +40,11 @@ public class ModBusEventRegisters {
         }
     }
 
-    public static void register(String modId, IEventBus modEventBus) {
+    public static void register(String modId, BusGroup modEventBus) {
         modEventBuses.put(modId, modEventBus);
         synchronized (registrations) {
             for (final var registrations : getByModId(modId)) {
-                modEventBus.register(registrations);
+                modEventBus.register(MethodHandles.lookup(), registrations);
             }
         }
     }

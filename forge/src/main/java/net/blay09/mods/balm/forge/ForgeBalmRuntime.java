@@ -46,7 +46,6 @@ import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
 import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -196,19 +195,19 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
         initializer.run();
 
-        final var modEventBus = context.modEventBus();
+        final var modEventBus = context.modBusGroup();
         DeferredRegisters.register(modId, modEventBus);
         ModBusEventRegisters.register(modId, modEventBus);
     }
 
     @Override
     public void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        MinecraftForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> event.addListener(reloadListener.apply(event.getRegistries())));
+        AddReloadListenerEvent.BUS.addListener((event) -> event.addListener(reloadListener.apply(event.getRegistries())));
     }
 
     @Override
     public void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        MinecraftForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> event.addListener((ResourceManagerReloadListener) reloadListener::accept));
+        AddReloadListenerEvent.BUS.addListener((event) -> event.addListener((ResourceManagerReloadListener) reloadListener::accept));
     }
 
     @Override
@@ -240,7 +239,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     public BalmEnvironment getEnvironment() {
         return switch (FMLEnvironment.dist) {
             case CLIENT -> BalmEnvironment.CLIENT;
-            case DEDICATED_SERVER -> BalmEnvironment.SERVER;
+            case DEDICATED_SERVER -> BalmEnvironment.DEDICATED_SERVER;
         };
     }
 
