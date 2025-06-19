@@ -243,10 +243,4 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
         };
     }
 
-    @Override
-    public void initializeRuntime() {
-        MinecraftForge.EVENT_BUS.register(capabilities);
-        super.initializeRuntime();
-    }
-
 }

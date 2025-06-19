@@ -49,7 +49,11 @@ public class ModBusEventRegisters {
         modEventBuses.put(modId, modEventBus);
         synchronized (registrations) {
             for (final var registrations : getByModId(modId)) {
-                modEventBus.register(MethodHandles.lookup(), registrations);
+                if (registrations instanceof ModBusEventRegister modBusEventRegister) {
+                    modBusEventRegister.register(modEventBus);
+                } else {
+                    modEventBus.register(MethodHandles.lookup(), registrations);
+                }
             }
         }
     }
