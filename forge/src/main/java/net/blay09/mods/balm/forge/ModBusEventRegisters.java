@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.forge;
 
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
@@ -9,12 +10,14 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ModBusEventRegisters {
 
     private static final Map<String, BusGroup> modEventBuses = new ConcurrentHashMap<>();
     private static final Table<String, Class<?>, Object> registrations = Tables.synchronizedTable(HashBasedTable.create());
+    private static final Set<Object> registeredRegistrations = Sets.newConcurrentHashSet();
 
     @SuppressWarnings("unchecked")
     public static <T> T getRegistrations(String namespace, Class<T> clazz) {
@@ -32,11 +35,7 @@ public class ModBusEventRegisters {
             registrations.put(namespace, clazz, instance);
             final var modEventBus = modEventBuses.get(namespace);
             if (modEventBus != null) {
-                if (instance instanceof ModBusEventRegister modBusEventRegister) {
-                    modBusEventRegister.register(modEventBus);
-                } else {
-                    modEventBus.register(MethodHandles.lookup(), instance);
-                }
+                registerToEventBus(instance, modEventBus);
             }
             return instance;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
@@ -49,12 +48,20 @@ public class ModBusEventRegisters {
         modEventBuses.put(modId, modEventBus);
         synchronized (registrations) {
             for (final var registrations : getByModId(modId)) {
-                if (registrations instanceof ModBusEventRegister modBusEventRegister) {
-                    modBusEventRegister.register(modEventBus);
-                } else {
-                    modEventBus.register(MethodHandles.lookup(), registrations);
-                }
+                registerToEventBus(registrations, modEventBus);
             }
+        }
+    }
+
+    private static <T> void registerToEventBus(T instance, BusGroup modEventBus) {
+        if (!registeredRegistrations.add(instance)) {
+            return;
+        }
+
+        if (instance instanceof ModBusEventRegister modBusEventRegister) {
+            modBusEventRegister.register(modEventBus);
+        } else {
+            modEventBus.register(MethodHandles.lookup(), instance);
         }
     }
 
