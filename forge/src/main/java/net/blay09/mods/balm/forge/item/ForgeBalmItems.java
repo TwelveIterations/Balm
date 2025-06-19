@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.forge.DeferredRegisters;
+import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -17,7 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -73,7 +74,7 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
         return new ForgeBalmItems(new StaticNamespaceResolver(modId));
     }
 
-    public static class Registrations {
+    public static class Registrations implements ModBusEventRegister {
         public final Multimap<ResourceLocation, Supplier<ItemLike[]>> creativeTabContents = ArrayListMultimap.create();
         private final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
 
@@ -91,12 +92,16 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
             }
         }
 
-        @SubscribeEvent
-        public void buildOtherCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
+        private void buildOtherCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
             final var creativeModeTabId = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(event.getTab());
             if (creativeModeTabId != null && !managedCreativeTabs.contains(creativeModeTabId)) {
                 buildCreativeTabContents(creativeModeTabId, event);
             }
+        }
+
+        @Override
+        public void register(BusGroup busGroup) {
+            BuildCreativeModeTabContentsEvent.getBus(busGroup).addListener(this::buildOtherCreativeTabContents);
         }
     }
 }

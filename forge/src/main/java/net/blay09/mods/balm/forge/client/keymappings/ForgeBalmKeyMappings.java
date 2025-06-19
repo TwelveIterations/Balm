@@ -4,11 +4,12 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +32,16 @@ public record ForgeBalmKeyMappings(NamespaceResolver namespaceResolver) implemen
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    public static class Registrations {
+    public static class Registrations implements ModBusEventRegister {
         public final List<KeyMapping> keyMappings = new ArrayList<>();
 
-        @SubscribeEvent
-        public void registerKeyMappings(RegisterKeyMappingsEvent event) {
+        private void registerKeyMappings(RegisterKeyMappingsEvent event) {
             keyMappings.forEach(event::register);
+        }
+
+        @Override
+        public void register(BusGroup busGroup) {
+            RegisterKeyMappingsEvent.getBus(busGroup).addListener(this::registerKeyMappings);
         }
     }
 

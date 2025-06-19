@@ -32,10 +32,15 @@ public class ModBusEventRegisters {
             registrations.put(namespace, clazz, instance);
             final var modEventBus = modEventBuses.get(namespace);
             if (modEventBus != null) {
-                modEventBus.register(MethodHandles.lookup(), instance);
+                if (instance instanceof ModBusEventRegister modBusEventRegister) {
+                    modBusEventRegister.register(modEventBus);
+                } else {
+                    modEventBus.register(MethodHandles.lookup(), instance);
+                }
             }
             return instance;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }

@@ -4,6 +4,7 @@ import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.forge.DeferredRegisters;
+import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -13,7 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,14 +45,18 @@ public record ForgeBalmEntities(NamespaceResolver namespaceResolver) implements 
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    public static class Registrations {
+    public static class Registrations implements ModBusEventRegister {
         public final Map<EntityType<? extends LivingEntity>, AttributeSupplier> attributeSuppliers = new HashMap<>();
 
-        @SubscribeEvent
-        public void registerAttributes(EntityAttributeCreationEvent event) {
+        private void registerAttributes(EntityAttributeCreationEvent event) {
             for (final var entry : attributeSuppliers.entrySet()) {
                 event.put(entry.getKey(), entry.getValue());
             }
+        }
+
+        @Override
+        public void register(BusGroup busGroup) {
+            EntityAttributeCreationEvent.getBus(busGroup).addListener(this::registerAttributes);
         }
     }
 }

@@ -4,6 +4,7 @@ import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,17 +52,21 @@ public record ForgeBalmModels(NamespaceResolver namespaceResolver) implements Ba
         return new ForgeBalmModels(new StaticNamespaceResolver(modId));
     }
 
-    public static class Registrations {
+    public static class Registrations implements ModBusEventRegister {
         public final List<ResourceLocation> extraModels = new ArrayList<>();
         public final Map<ResourceLocation, StateDefinition<Block, BlockState>> extraStateDefinitions = new HashMap<>();
 
-        @SubscribeEvent
-        public void onRegisterAdditionalModels(ModelEvent.RegisterModelStateDefinitions event) {
+        private void onRegisterAdditionalModels(ModelEvent.RegisterModelStateDefinitions event) {
             extraModels.forEach(it -> {
                 final var stateDefinition = new StateDefinition.Builder<Block, BlockState>(Blocks.AIR).create(Block::defaultBlockState, BlockState::new);
                 event.register(it, stateDefinition);
                 extraStateDefinitions.put(it, stateDefinition);
             });
+        }
+
+        @Override
+        public void register(BusGroup busGroup) {
+            ModelEvent.RegisterModelStateDefinitions.getBus(busGroup).addListener(this::onRegisterAdditionalModels);
         }
     }
 }

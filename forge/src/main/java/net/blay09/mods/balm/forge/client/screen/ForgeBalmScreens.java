@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.client.screen.BalmScreenFactory;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.mixin.ScreenAccessor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -14,7 +15,7 @@ import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
@@ -50,15 +51,19 @@ public record ForgeBalmScreens(NamespaceResolver namespaceResolver) implements B
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
     }
 
-    public static class Registrations {
+    public static class Registrations implements ModBusEventRegister {
         public final List<Pair<Supplier<MenuType<?>>, BalmScreenFactory<?, ?>>> menuTypes = new ArrayList<>();
 
-        @SubscribeEvent
         @SuppressWarnings({"rawtypes", "unchecked"})
-        public void setupClient(FMLClientSetupEvent event) {
+        private void setupClient(FMLClientSetupEvent event) {
             for (final var entry : menuTypes) {
                 registerScreenImmediate(entry.getFirst()::get, (BalmScreenFactory) entry.getSecond()); // I hate Java generics.
             }
+        }
+
+        @Override
+        public void register(BusGroup busGroup) {
+            FMLClientSetupEvent.getBus(busGroup).addListener(this::setupClient);
         }
     }
 }

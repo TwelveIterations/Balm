@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.capability.CapabilityType;
 import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -36,6 +37,10 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
     private static final List<BlockEntityFallbackProviderRegistration<?, ?>> fallbackBlockEntityProviders = new CopyOnWriteArrayList<>();
 
     private static Multimap<BlockEntityType<?>, BlockEntityProviderRegistration<?, ?>> flattenedBlockEntityProviders;
+
+    public ForgeBalmCapabilities {
+        AttachCapabilitiesEvent.BlockEntities.BUS.addListener(this::attachBlockEntityCapabilities);
+    }
 
     @Override
     public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type) {
@@ -108,8 +113,7 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
         fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(identifier, type, provider));
     }
 
-    @SubscribeEvent
-    public void attachBlockEntityCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
+    private void attachBlockEntityCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         if (flattenedBlockEntityProviders == null) {
             flattenedBlockEntityProviders = ArrayListMultimap.create();
             for (final var blockEntityProvider : blockEntityProviders) {
@@ -179,16 +183,19 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
     }
 
 
-    public static class Registrations {
+    public static class Registrations implements ModBusEventRegister {
 
         private final List<Class<?>> apiClasses = new ArrayList<>();
 
-        @SubscribeEvent
-        public void registerCapabilities(final RegisterCapabilitiesEvent event) {
+        private void registerCapabilities(final RegisterCapabilitiesEvent event) {
             for (final var apiClass : apiClasses) {
                 event.register(apiClass);
             }
         }
 
+        @Override
+        public void register(BusGroup busGroup) {
+            RegisterCapabilitiesEvent.getBus(busGroup).addListener(this::registerCapabilities);
+        }
     }
 }
