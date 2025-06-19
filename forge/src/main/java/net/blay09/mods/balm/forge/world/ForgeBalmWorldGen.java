@@ -33,10 +33,6 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
     public static final MapCodec<BalmBiomeModifier> BALM_BIOME_MODIFIER_CODEC = MapCodec.unit(BalmBiomeModifier.INSTANCE);
     private static final List<BiomeModification> biomeModifications = new ArrayList<>();
 
-    public ForgeBalmWorldGen() {
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-
     public static void initializeBalmBiomeModifiers(BusGroup modEventBus) {
         var registry = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, "balm");
         registry.register("balm", () -> BALM_BIOME_MODIFIER_CODEC);
