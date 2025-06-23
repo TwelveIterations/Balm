@@ -1,1 +1,1 @@
-- Updated to Minecraft 1.21.6
+- Updated for breaking changes in NeoForge 21.6.10+
