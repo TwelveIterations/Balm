@@ -7,12 +7,11 @@ import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
-import net.minecraft.client.renderer.block.model.SingleVariant;
-import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 
 import java.util.ArrayList;
@@ -20,23 +19,45 @@ import java.util.List;
 
 public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 
+    public static class AdditionalModel implements ModelDebugName {
+        private final ResourceLocation identifier;
+        private final StandaloneModelKey<BlockStateModel> modelKey = new StandaloneModelKey<>(this);
+
+        public AdditionalModel(ResourceLocation identifier) {
+            this.identifier = identifier;
+        }
+
+        @Override
+        public String debugName() {
+            return identifier.toString();
+        }
+
+        public ResourceLocation identifier() {
+            return identifier;
+        }
+
+        public StandaloneModelKey<BlockStateModel> modelKey() {
+            return modelKey;
+        }
+    }
+
     @Override
     public DeferredObject<BlockStateModel> loadModel(ResourceLocation identifier) {
         final var registrations = getActiveRegistrations();
-        final var standaloneModelKey = new StandaloneModelKey<BlockStateModel>(identifier);
+        final var additionalModel = new AdditionalModel(identifier);
         final var deferredModel = new DeferredObject<BlockStateModel>(identifier) {
             @Override
             public BlockStateModel resolve() {
-                return Minecraft.getInstance().getModelManager().getStandaloneModel(standaloneModelKey);
+                return Minecraft.getInstance().getModelManager().getStandaloneModel(additionalModel.modelKey());
             }
 
             @Override
             public boolean canResolve() {
-                final var model = Minecraft.getInstance().getModelManager().getStandaloneModel(standaloneModelKey);
+                final var model = Minecraft.getInstance().getModelManager().getStandaloneModel(additionalModel.modelKey());
                 return model != null;
             }
         };
-        registrations.additionalModels.add(standaloneModelKey);
+        registrations.additionalModels.add(additionalModel);
         return deferredModel;
     }
 
@@ -50,18 +71,12 @@ public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements
     }
 
     public static class Registrations {
-        public final List<StandaloneModelKey<BlockStateModel>> additionalModels = new ArrayList<>();
+        public final List<AdditionalModel> additionalModels = new ArrayList<>();
 
         @SubscribeEvent
         public void onRegisterAdditionalModels(ModelEvent.RegisterStandalone event) {
-            for (final var additionalModel : additionalModels) {
-                event.register(additionalModel, (model, baker) -> {
-                    final var textureSlots = model.getTopTextureSlots();
-                    final var ambientOcclusion = model.getTopAmbientOcclusion();
-                    final var quadCollection = model.bakeTopGeometry(textureSlots, baker, BlockModelRotation.X0_Y0);
-                    final var particleSprite = model.resolveParticleSprite(textureSlots, baker);
-                    return new SingleVariant(new SimpleModelWrapper(quadCollection, ambientOcclusion, particleSprite));
-                });
+            for (final var entry : additionalModels) {
+                event.register(entry.modelKey(), SimpleUnbakedStandaloneModel.blockStateModel(entry.identifier()));
             }
         }
     }
