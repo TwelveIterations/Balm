@@ -261,8 +261,8 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             default -> throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'common', 'client' and 'startup' are supported.");
         };
         final var mappedConfigSpec = mapToConfigSpec(schema);
-        modContainer.registerConfig(configType, mappedConfigSpec.getFirst());
         properties.put(schema.identifier(), mappedConfigSpec.getSecond());
+        modContainer.registerConfig(configType, mappedConfigSpec.getFirst());
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             initializeConfigurationScreen(modContainer);
