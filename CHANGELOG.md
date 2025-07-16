@@ -1,1 +1,1 @@
-- Updated to Minecraft 1.21.7
+- Fixed occasional config crash on Forge and possibly NeoForge
