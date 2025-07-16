@@ -244,9 +244,8 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
             default -> throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'common' and 'client' are supported.");
         };
         final var mappedConfigSpec = mapToConfigSpec(schema);
-        modContainer.addConfig(new ModConfig(configType, mappedConfigSpec.getFirst(), modContainer));
-
         properties.put(schema.identifier(), mappedConfigSpec.getSecond());
+        modContainer.addConfig(new ModConfig(configType, mappedConfigSpec.getFirst(), modContainer));
     }
 
     @Override
