@@ -35,12 +35,10 @@ public class MinecraftMixin {
 
     @Inject(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
     public void startUseItem(CallbackInfo callbackInfo, InteractionHand[] hands, int var2, int var3, InteractionHand hand) {
-        if (this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS) {
-            UseItemInputEvent event = new UseItemInputEvent(hand);
-            Balm.getEvents().fireEvent(event);
-            if (event.isCanceled()) {
-                callbackInfo.cancel();
-            }
+        UseItemInputEvent event = new UseItemInputEvent(hand);
+        Balm.getEvents().fireEvent(event);
+        if (event.isCanceled()) {
+            callbackInfo.cancel();
         }
     }
 
