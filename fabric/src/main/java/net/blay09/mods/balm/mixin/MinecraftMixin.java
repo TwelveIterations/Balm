@@ -46,11 +46,9 @@ public class MinecraftMixin {
 
     @ModifyArg(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"), index = 0)
     public InteractionHand modifyHand(InteractionHand hand, @Share("currentUseEvent") LocalRef<UseItemInputEvent> balmCurrentUseEvent) {
-        if (this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS) {
-            UseItemInputEvent event = new UseItemInputEvent(hand);
-            Balm.getEvents().fireEvent(event);
-            balmCurrentUseEvent.set(event);
-        }
+        UseItemInputEvent event = new UseItemInputEvent(hand);
+        Balm.getEvents().fireEvent(event);
+        balmCurrentUseEvent.set(event);
         return hand;
     }
 
