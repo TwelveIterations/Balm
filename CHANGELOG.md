@@ -1,1 +1,2 @@
 - Fixed occasional config crash on Forge and possibly NeoForge
+- Fixed `UseItemInputEvent` not firing when using an item on air
