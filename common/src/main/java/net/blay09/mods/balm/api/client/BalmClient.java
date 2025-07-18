@@ -9,6 +9,8 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.entity.player.Player;
 
 public class BalmClient {
@@ -86,6 +88,9 @@ public class BalmClient {
         return runtime.getModels();
     }
 
+    public static void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+        runtime.addResourceReloadListener(identifier, reloadListener);
+    }
 
     public static BalmClientRuntime getRuntime() {
         return runtime;
