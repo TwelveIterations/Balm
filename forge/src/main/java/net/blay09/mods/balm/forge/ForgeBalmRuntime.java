@@ -55,8 +55,13 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.forgespi.language.IModInfo;
 
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ForgeBalmRuntime extends CommonBalmRuntime {
 
@@ -253,5 +258,17 @@ public class ForgeBalmRuntime extends CommonBalmRuntime {
     @Override
     public boolean isDevelopmentEnvironment() {
         return SharedConstants.IS_RUNNING_IN_IDE;
+    }
+
+    @Override
+    public Map<String, Path> lookupAllModPaths(String path) {
+        return ModList.get().getMods().stream()
+                .collect(Collectors.toMap(IModInfo::getModId, it -> it.getOwningFile().getFile().findResource(path)));
+    }
+
+    @Override
+    public Optional<Path> lookupModPath(String modId, String path) {
+        final var modFile = ModList.get().getModFileById(modId);
+        return Optional.of(modFile.getFile().findResource(path));
     }
 }

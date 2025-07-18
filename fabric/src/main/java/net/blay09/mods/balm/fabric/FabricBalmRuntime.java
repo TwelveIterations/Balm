@@ -54,6 +54,10 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -261,5 +265,19 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
     @Override
     public boolean isDevelopmentEnvironment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
+
+    @Override
+    public Map<String, Path> lookupAllModPaths(String path) {
+        final var result = new HashMap<String, Path>();
+        FabricLoader.getInstance().getAllMods().forEach(modContainer -> modContainer.findPath(path)
+                .ifPresent(foundPath -> result.put(modContainer.getMetadata().getId(), foundPath)));
+        return result;
+    }
+
+    @Override
+    public Optional<Path> lookupModPath(String modId, String path) {
+        return FabricLoader.getInstance().getModContainer(modId)
+                .flatMap(modContainer -> modContainer.findPath(path));
     }
 }
