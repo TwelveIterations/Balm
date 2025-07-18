@@ -1,1 +1,2 @@
 - Added `lookupAllModPaths` and `lookupModPaths` methods for loading mod-specific files outside of data or resource packs
+- Fixed occasional crash on startup when multiple Balm mods are present
