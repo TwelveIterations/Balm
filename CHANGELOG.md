@@ -1,2 +1,1 @@
-- Fixed occasional config crash on Forge
-- Fixed `UseItemInputEvent` not firing when using an item on air
+- Added `lookupAllModPaths` and `lookupModPaths` methods for loading mod-specific files outside of data or resource packs
