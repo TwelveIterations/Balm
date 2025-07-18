@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.forge;
 
+import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
@@ -60,6 +61,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.forgespi.language.IModInfo;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
@@ -273,12 +275,15 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public Map<String, Path> lookupAllModPaths(String path) {
         return ModList.get().getMods().stream()
-                .collect(Collectors.toMap(IModInfo::getModId, it -> it.getOwningFile().getFile().findResource(path)));
+                .map(it -> Pair.of(it.getModId(), it.getOwningFile().getFile().findResource(path)))
+                .filter(it -> Files.exists(it.getSecond()))
+                .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
     }
 
     @Override
     public Optional<Path> lookupModPath(String modId, String path) {
         final var modFile = ModList.get().getModFileById(modId);
-        return Optional.of(modFile.getFile().findResource(path));
+        final var resource = modFile.getFile().findResource(path);
+        return Files.exists(resource) ? Optional.of(resource) : Optional.empty();
     }
 }

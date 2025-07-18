@@ -12,7 +12,6 @@ import net.blay09.mods.balm.api.network.ConfigReflection;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
