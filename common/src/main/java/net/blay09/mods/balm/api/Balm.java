@@ -29,6 +29,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -197,6 +200,14 @@ public class Balm {
 
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
+    }
+
+    public static Map<String, Path> lookupAllModPaths(String path) {
+        return runtime.lookupAllModPaths(path);
+    }
+
+    public static Optional<Path> lookupModPaths(String modId, String path) {
+        return runtime.lookupModPath(modId, path);
     }
 
     public static boolean isDevelopmentEnvironment() {
