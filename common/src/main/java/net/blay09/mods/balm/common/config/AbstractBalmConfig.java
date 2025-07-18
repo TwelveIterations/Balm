@@ -12,17 +12,17 @@ import net.blay09.mods.balm.api.network.ConfigReflection;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public abstract class AbstractBalmConfig implements BalmConfig {
 
-    private final Map<ResourceLocation, BalmConfigSchema> schemas = new HashMap<>();
-    private final Map<ResourceLocation, MutableLoadedConfig> localConfigs = new HashMap<>();
-    private final Map<ResourceLocation, LoadedConfig> activeConfigs = new HashMap<>();
+    private final Map<ResourceLocation, BalmConfigSchema> schemas = new ConcurrentHashMap<>();
+    private final Map<ResourceLocation, MutableLoadedConfig> localConfigs = new ConcurrentHashMap<>();
+    private final Map<ResourceLocation, LoadedConfig> activeConfigs = new ConcurrentHashMap<>();
 
-    private final Map<ResourceLocation, Object> activeReflectionConfigs = new HashMap<>();
+    private final Map<ResourceLocation, Object> activeReflectionConfigs = new ConcurrentHashMap<>();
     private final Multimap<ResourceLocation, Consumer<MutableLoadedConfig>> configLoadHandlers = ArrayListMultimap.create();
 
     @Override
