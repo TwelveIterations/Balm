@@ -1,1 +1,1 @@
-- Fixed occasional config crash on Forge and possibly NeoForge
+- Added `lookupAllModPaths` and `lookupModPaths` methods for loading mod-specific files outside of data or resource packs
