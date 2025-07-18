@@ -30,6 +30,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -140,4 +143,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmEnvironment getEnvironment();
 
     boolean isDevelopmentEnvironment();
+
+    Map<String, Path> lookupAllModPaths(String path);
+
+    Optional<Path> lookupModPath(String modId, String path);
 }
