@@ -1,1 +1,1 @@
-- Updated to Minecraft 1.21.8
+- Added `lookupAllModPaths` and `lookupModPaths` methods for loading mod-specific files outside of data or resource packs
