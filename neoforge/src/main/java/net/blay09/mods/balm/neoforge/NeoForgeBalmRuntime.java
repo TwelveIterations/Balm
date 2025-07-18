@@ -54,8 +54,13 @@ import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforgespi.language.IModInfo;
 
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> {
 
@@ -249,4 +254,15 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
         };
     }
 
+    @Override
+    public Map<String, Path> lookupAllModPaths(String path) {
+        return ModList.get().getMods().stream()
+                .collect(Collectors.toMap(IModInfo::getModId, it -> it.getOwningFile().getFile().findResource(path)));
+    }
+
+    @Override
+    public Optional<Path> lookupModPath(String modId, String path) {
+        final var modFile = ModList.get().getModFileById(modId);
+        return Optional.of(modFile.getFile().findResource(path));
+    }
 }
