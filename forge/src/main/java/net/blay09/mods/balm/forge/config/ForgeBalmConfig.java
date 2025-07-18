@@ -22,12 +22,13 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class ForgeBalmConfig extends AbstractBalmConfig {
 
-    private static final Map<ResourceLocation, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
-    private static final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
+    private static final Map<ResourceLocation, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new ConcurrentHashMap<>();
+    private static final Map<ResourceLocation, ModConfig> modConfigs = new ConcurrentHashMap<>();
 
     private static ForgeConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ForgeConfigSpec.Builder spec) {
         spec.comment(property.comment());
