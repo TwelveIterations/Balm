@@ -8,6 +8,7 @@
     "PlayerListMixin"
   ],
   "client": [
+    "MinecraftMixin",
     "ScreenMixin"
   ],
   "injectors": {
