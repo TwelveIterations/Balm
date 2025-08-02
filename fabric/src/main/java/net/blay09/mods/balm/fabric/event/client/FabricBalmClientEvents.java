@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.fabric.event.client;
 
+import net.blay09.mods.balm.api.event.ChunkLoadingEvent;
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
 import net.blay09.mods.balm.api.event.client.*;
@@ -8,6 +9,7 @@ import net.blay09.mods.balm.api.event.client.screen.ScreenInitEvent;
 import net.blay09.mods.balm.api.event.client.screen.ScreenKeyEvent;
 import net.blay09.mods.balm.api.event.client.screen.ScreenMouseEvent;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -201,6 +203,17 @@ public class FabricBalmClientEvents {
             events.fireEventHandlers(event);
         }));
 
+        events.registerEvent(ChunkLoadingEvent.Unload.class, () -> {
+            ClientChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
+                events.fireEventHandlers(new ChunkLoadingEvent.Unload(level, chunk));
+            });
+        });
+
+        events.registerEvent(ChunkLoadingEvent.Load.class, () -> {
+            ClientChunkEvents.CHUNK_LOAD.register((level, chunk) -> {
+                events.fireEventHandlers(new ChunkLoadingEvent.Load(level, chunk));
+            });
+        });
     }
 
 }
