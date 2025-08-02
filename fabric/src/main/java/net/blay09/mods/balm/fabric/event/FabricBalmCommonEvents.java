@@ -5,7 +5,6 @@ import net.blay09.mods.balm.api.event.*;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.*;
@@ -183,16 +182,10 @@ public class FabricBalmCommonEvents {
             ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
                 events.fireEventHandlers(new ChunkLoadingEvent.Unload(level, chunk));
             });
-            ClientChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
-                events.fireEventHandlers(new ChunkLoadingEvent.Unload(level, chunk));
-            });
         });
 
         events.registerEvent(ChunkLoadingEvent.Load.class, () -> {
             ServerChunkEvents.CHUNK_LOAD.register((level, chunk) -> {
-                events.fireEventHandlers(new ChunkLoadingEvent.Load(level, chunk));
-            });
-            ClientChunkEvents.CHUNK_LOAD.register((level, chunk) -> {
                 events.fireEventHandlers(new ChunkLoadingEvent.Load(level, chunk));
             });
         });
