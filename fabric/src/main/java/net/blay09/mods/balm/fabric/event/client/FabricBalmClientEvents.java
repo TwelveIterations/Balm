@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric.event.client;
 
 import net.blay09.mods.balm.api.event.EntityTickHandler;
+import net.blay09.mods.balm.api.event.ChunkLoadingEvent;
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
 import net.blay09.mods.balm.api.event.client.*;
@@ -10,6 +11,7 @@ import net.blay09.mods.balm.api.event.client.screen.ScreenKeyEvent;
 import net.blay09.mods.balm.api.event.client.screen.ScreenMouseEvent;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.mixin.ClientLevelAccessor;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -17,7 +19,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -241,6 +242,17 @@ public class FabricBalmClientEvents {
             events.fireEventHandlers(event);
         }));
 
+        events.registerEvent(ChunkLoadingEvent.Unload.class, () -> {
+            ClientChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
+                events.fireEventHandlers(new ChunkLoadingEvent.Unload(level, chunk));
+            });
+        });
+
+        events.registerEvent(ChunkLoadingEvent.Load.class, () -> {
+            ClientChunkEvents.CHUNK_LOAD.register((level, chunk) -> {
+                events.fireEventHandlers(new ChunkLoadingEvent.Load(level, chunk));
+            });
+        });
     }
 
 }
