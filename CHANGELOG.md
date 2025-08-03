@@ -1,1 +1,1 @@
-- Fixed `ClientStartedEvent` not firing on NeoForge
+- Fixed dedicated server crash with Balm mods using ChunkLoadingEvents
