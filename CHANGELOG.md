@@ -1,1 +1,1 @@
-- Fixed dedicated server crash with Balm mods using ChunkLoadingEvents
+- Updated Kuma to fix input bug with unbound keys
