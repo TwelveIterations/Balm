@@ -11,8 +11,6 @@ import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.CommonCapabilities;
-import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
-import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.fabricmc.api.ModInitializer;
@@ -55,9 +53,6 @@ public class FabricBalm implements ModInitializer {
         ((FabricBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         ((FabricBalmHooks) Balm.getHooks()).initialize();
-
-        Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
-        Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();

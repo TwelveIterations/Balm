@@ -6,8 +6,6 @@ import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.CommonCapabilities;
-import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
-import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.capability.ForgeCommonCapabilities;
 import net.blay09.mods.balm.forge.client.ForgeBalmClient;
@@ -36,9 +34,6 @@ public class ForgeBalm {
 
         Balm.registerModule(new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
-
-        Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
-        Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
         DeferredRegisters.register("balm", modEventBus);
         ModBusEventRegisters.register("balm", modEventBus);
