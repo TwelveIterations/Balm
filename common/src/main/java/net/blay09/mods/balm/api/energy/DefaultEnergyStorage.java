@@ -1,10 +1,5 @@
 package net.blay09.mods.balm.api.energy;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -87,22 +82,6 @@ public class DefaultEnergyStorage implements EnergyStorage {
 
     public void deserialize(ValueInput input) {
         energy = input.getIntOr("Energy", 0);
-    }
-
-    /**
-     * @deprecated Use {@link #serialize(ValueOutput)} instead. Note that the data format now uses an "Energy" key instead of returning an IntTag directly.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    public IntTag serialize() {
-        return IntTag.valueOf(energy);
-    }
-
-    /**
-     * @deprecated Use {@link #deserialize(ValueInput)} instead. Note that the data format now uses an "Energy" key instead of returning an IntTag directly.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    public void deserialize(Tag tag) {
-        energy = ((IntTag) tag).intValue();
     }
 
     public void setChanged() {

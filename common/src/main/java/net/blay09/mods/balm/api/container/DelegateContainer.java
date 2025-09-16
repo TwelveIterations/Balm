@@ -3,6 +3,7 @@ package net.blay09.mods.balm.api.container;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,13 +25,13 @@ public class DelegateContainer implements Container, WorldlyContainer {
     }
 
     @Override
-    public void startOpen(Player player) {
-        delegate.startOpen(player);
+    public void startOpen(ContainerUser user) {
+        delegate.startOpen(user);
     }
 
     @Override
-    public void stopOpen(Player player) {
-        delegate.stopOpen(player);
+    public void stopOpen(ContainerUser user) {
+        delegate.stopOpen(user);
     }
 
     @Override

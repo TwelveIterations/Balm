@@ -21,7 +21,6 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -76,8 +75,8 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
             }
 
             @Override
-            public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager manager, Executor backgroundExecutor, Executor gameExecutor) {
-                return reloadListener.reload(barrier, manager, backgroundExecutor, gameExecutor);
+            public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier preparationBarrier, Executor executor2) {
+                return reloadListener.reload(sharedState, executor, preparationBarrier, executor2);
             }
         });
     }

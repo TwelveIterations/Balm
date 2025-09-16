@@ -32,29 +32,6 @@ public interface ImplementedContainer extends Container {
     }
 
     /**
-     * @deprecated Use {@link net.minecraft.world.ContainerHelper#loadAllItems(ValueInput, NonNullList)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    static NonNullList<ItemStack> deserializeInventory(CompoundTag tag, int minimumSize, HolderLookup.Provider provider) {
-        int size = Math.max(minimumSize, tag.getIntOr("Size", minimumSize));
-        NonNullList<ItemStack> items = NonNullList.withSize(size, ItemStack.EMPTY);
-        tag.getList("Items").ifPresent(itemTags -> {
-            for (int i = 0; i < itemTags.size(); i++) {
-                itemTags.getCompound(i).ifPresent(itemTag -> {
-                    int slot = itemTag.getIntOr("Slot", -1);
-                    if (slot >= 0 && slot < items.size()) {
-                        final var itemStack = ItemStack.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag)
-                                .resultOrPartial((key) -> LOGGER.error("Tried to load invalid item: '{}'", key))
-                                .orElse(ItemStack.EMPTY);
-                        items.set(slot, itemStack);
-                    }
-                });
-            }
-        });
-        return items;
-    }
-
-    /**
      * Retrieves the item list of this inventory.
      * Must return the same instance every time it's called.
      */
@@ -170,27 +147,6 @@ public interface ImplementedContainer extends Container {
     @Override
     default boolean stillValid(Player player) {
         return true;
-    }
-
-    /**
-     * @deprecated Use {@link net.minecraft.world.ContainerHelper#saveAllItems(ValueOutput, NonNullList)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    default CompoundTag serializeInventory(HolderLookup.Provider provider) {
-        NonNullList<ItemStack> items = getItems();
-        ListTag itemTags = new ListTag();
-        for (int i = 0; i < items.size(); i++) {
-            if (!items.get(i).isEmpty()) {
-                CompoundTag itemTag = new CompoundTag();
-                itemTag.putInt("Slot", i);
-                final var result = ItemStack.CODEC.encode(items.get(i), provider.createSerializationContext(NbtOps.INSTANCE), itemTag).getOrThrow();
-                itemTags.add(result);
-            }
-        }
-        CompoundTag nbt = new CompoundTag();
-        nbt.put("Items", itemTags);
-        nbt.putInt("Size", items.size());
-        return nbt;
     }
 
     default void copyFrom(Container container) {

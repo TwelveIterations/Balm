@@ -3,6 +3,7 @@ package net.blay09.mods.balm.api.container;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -111,16 +112,16 @@ public class CombinedContainer implements Container, WorldlyContainer {
     }
 
     @Override
-    public void startOpen(Player player) {
+    public void startOpen(ContainerUser user) {
         for (Container container : containers) {
-            container.startOpen(player);
+            container.startOpen(user);
         }
     }
 
     @Override
-    public void stopOpen(Player player) {
+    public void stopOpen(ContainerUser user) {
         for (Container container : containers) {
-            container.stopOpen(player);
+            container.stopOpen(user);
         }
     }
 

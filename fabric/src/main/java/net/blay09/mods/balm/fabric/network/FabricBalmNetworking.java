@@ -176,7 +176,7 @@ public class FabricBalmNetworking implements BalmNetworking {
         messagesByType.put(type, messageRegistration);
 
         PayloadTypeRegistry.playC2S().register(type, messageRegistration.getCodec());
-        ServerPlayNetworking.registerGlobalReceiver(type, ((payload, context) -> context.player().getServer().execute(() -> {
+        ServerPlayNetworking.registerGlobalReceiver(type, ((payload, context) -> context.server().execute(() -> {
             replyPacketSender = context.responseSender();
             handler.accept(context.player(), payload);
             replyPacketSender = null;

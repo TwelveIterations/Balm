@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.event.client;
 
-import net.blay09.mods.balm.api.event.EntityTickHandler;
 import net.blay09.mods.balm.api.event.ChunkLoadingEvent;
+import net.blay09.mods.balm.api.event.EntityTickHandler;
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
 import net.blay09.mods.balm.api.event.client.*;
@@ -171,8 +171,8 @@ public class FabricBalmClientEvents {
 
         events.registerEvent(ScreenMouseEvent.Click.Pre.class, () -> {
             initializeScreenEvents();
-            screenMouseClickPreInitializers.add((scr) -> ScreenMouseEvents.allowMouseClick(scr).register((screen, mouseX, mouseY, button) -> {
-                final ScreenMouseEvent.Click.Pre event = new ScreenMouseEvent.Click.Pre(screen, mouseX, mouseY, button);
+            screenMouseClickPreInitializers.add((scr) -> ScreenMouseEvents.allowMouseClick(scr).register((screen, mouseEvent) -> {
+                final ScreenMouseEvent.Click.Pre event = new ScreenMouseEvent.Click.Pre(screen, mouseEvent.x(), mouseEvent.y(), mouseEvent.button());
                 events.fireEventHandlers(event);
                 return !event.isCanceled();
             }));
@@ -180,16 +180,21 @@ public class FabricBalmClientEvents {
 
         events.registerEvent(ScreenMouseEvent.Click.Post.class, () -> {
             initializeScreenEvents();
-            screenMouseClickPostInitializers.add((scr) -> ScreenMouseEvents.afterMouseClick(scr).register((screen, mouseX, mouseY, button) -> {
-                final ScreenMouseEvent.Click.Post event = new ScreenMouseEvent.Click.Post(screen, mouseX, mouseY, button);
-                events.fireEventHandlers(event);
+            screenMouseClickPostInitializers.add((scr) -> ScreenMouseEvents.afterMouseClick(scr).register((screen, mouseEvent, consumed) -> {
+                if (!consumed) {
+                    final ScreenMouseEvent.Click.Post event = new ScreenMouseEvent.Click.Post(screen, mouseEvent.x(), mouseEvent.y(), mouseEvent.button());
+                    events.fireEventHandlers(event);
+                    return event.isCanceled();
+                } else {
+                    return false;
+                }
             }));
         });
 
         events.registerEvent(ScreenMouseEvent.Release.Pre.class, () -> {
             initializeScreenEvents();
-            screenMouseReleasePreInitializers.add((scr) -> ScreenMouseEvents.allowMouseRelease(scr).register((screen, mouseX, mouseY, button) -> {
-                final ScreenMouseEvent.Release.Pre event = new ScreenMouseEvent.Release.Pre(screen, mouseX, mouseY, button);
+            screenMouseReleasePreInitializers.add((scr) -> ScreenMouseEvents.allowMouseRelease(scr).register((screen, mouseEvent) -> {
+                final ScreenMouseEvent.Release.Pre event = new ScreenMouseEvent.Release.Pre(screen, mouseEvent.x(), mouseEvent.y(), mouseEvent.button());
                 events.fireEventHandlers(event);
                 return !event.isCanceled();
             }));
@@ -197,16 +202,21 @@ public class FabricBalmClientEvents {
 
         events.registerEvent(ScreenMouseEvent.Release.Post.class, () -> {
             initializeScreenEvents();
-            screenMouseReleasePostInitializers.add((scr) -> ScreenMouseEvents.afterMouseRelease(scr).register((screen, mouseX, mouseY, button) -> {
-                final ScreenMouseEvent.Release.Post event = new ScreenMouseEvent.Release.Post(screen, mouseX, mouseY, button);
-                events.fireEventHandlers(event);
+            screenMouseReleasePostInitializers.add((scr) -> ScreenMouseEvents.afterMouseRelease(scr).register((screen, mouseEvent, consumed) -> {
+                if (!consumed) {
+                    final ScreenMouseEvent.Release.Post event = new ScreenMouseEvent.Release.Post(screen, mouseEvent.x(), mouseEvent.y(), mouseEvent.button());
+                    events.fireEventHandlers(event);
+                    return event.isCanceled();
+                } else {
+                    return false;
+                }
             }));
         });
 
         events.registerEvent(ScreenKeyEvent.Press.Pre.class, () -> {
             initializeScreenEvents();
-            screenKeyPressPreInitializers.add((scr) -> ScreenKeyboardEvents.allowKeyPress(scr).register((screen, KeyX, KeyY, button) -> {
-                final ScreenKeyEvent.Press.Pre event = new ScreenKeyEvent.Press.Pre(screen, KeyX, KeyY, button);
+            screenKeyPressPreInitializers.add((scr) -> ScreenKeyboardEvents.allowKeyPress(scr).register((screen, keyEvent) -> {
+                final ScreenKeyEvent.Press.Pre event = new ScreenKeyEvent.Press.Pre(screen, keyEvent.key(), keyEvent.scancode(), keyEvent.modifiers());
                 events.fireEventHandlers(event);
                 return !event.isCanceled();
             }));
@@ -214,16 +224,16 @@ public class FabricBalmClientEvents {
 
         events.registerEvent(ScreenKeyEvent.Press.Post.class, () -> {
             initializeScreenEvents();
-            screenKeyPressPostInitializers.add((scr) -> ScreenKeyboardEvents.afterKeyPress(scr).register((screen, KeyX, KeyY, button) -> {
-                final ScreenKeyEvent.Press.Post event = new ScreenKeyEvent.Press.Post(screen, KeyX, KeyY, button);
+            screenKeyPressPostInitializers.add((scr) -> ScreenKeyboardEvents.afterKeyPress(scr).register((screen, keyEvent) -> {
+                final ScreenKeyEvent.Press.Post event = new ScreenKeyEvent.Press.Post(screen, keyEvent.key(), keyEvent.scancode(), keyEvent.modifiers());
                 events.fireEventHandlers(event);
             }));
         });
 
         events.registerEvent(ScreenKeyEvent.Release.Pre.class, () -> {
             initializeScreenEvents();
-            screenKeyReleasePreInitializers.add((scr) -> ScreenKeyboardEvents.allowKeyRelease(scr).register((screen, KeyX, KeyY, button) -> {
-                final ScreenKeyEvent.Release.Pre event = new ScreenKeyEvent.Release.Pre(screen, KeyX, KeyY, button);
+            screenKeyReleasePreInitializers.add((scr) -> ScreenKeyboardEvents.allowKeyRelease(scr).register((screen, keyEvent) -> {
+                final ScreenKeyEvent.Release.Pre event = new ScreenKeyEvent.Release.Pre(screen, keyEvent.key(), keyEvent.scancode(), keyEvent.modifiers());
                 events.fireEventHandlers(event);
                 return !event.isCanceled();
             }));
@@ -231,8 +241,8 @@ public class FabricBalmClientEvents {
 
         events.registerEvent(ScreenKeyEvent.Release.Post.class, () -> {
             initializeScreenEvents();
-            screenKeyReleasePostInitializers.add((scr) -> ScreenKeyboardEvents.afterKeyRelease(scr).register((screen, KeyX, KeyY, button) -> {
-                final ScreenKeyEvent.Release.Post event = new ScreenKeyEvent.Release.Post(screen, KeyX, KeyY, button);
+            screenKeyReleasePostInitializers.add((scr) -> ScreenKeyboardEvents.afterKeyRelease(scr).register((screen, keyEvent) -> {
+                final ScreenKeyEvent.Release.Post event = new ScreenKeyEvent.Release.Post(screen, keyEvent.key(), keyEvent.scancode(), keyEvent.modifiers());
                 events.fireEventHandlers(event);
             }));
         });

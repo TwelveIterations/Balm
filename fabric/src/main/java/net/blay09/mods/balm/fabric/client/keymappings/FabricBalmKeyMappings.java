@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class FabricBalmKeyMappings implements BalmKeyMappings {
     @Override
-    public KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, String category) {
+    public KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, KeyMapping.Category category) {
         return KeyBindingHelper.registerKeyBinding(new KeyMapping(id.getPath(), type, keyCode, category));
     }
 

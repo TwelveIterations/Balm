@@ -27,22 +27,6 @@ public class DefaultContainer implements ImplementedContainer, WorldlyContainer 
         return items;
     }
 
-    /**
-     * @deprecated Use {@link net.minecraft.world.ContainerHelper#loadAllItems(ValueInput, NonNullList)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    public void deserialize(CompoundTag tag, HolderLookup.Provider provider) {
-        items = ImplementedContainer.deserializeInventory(tag, items.size(), provider);
-    }
-
-    /**
-     * @deprecated Use {@link net.minecraft.world.ContainerHelper#saveAllItems(ValueOutput, NonNullList)} instead.
-     */
-    @Deprecated(forRemoval = true, since = "1.22")
-    public CompoundTag serialize(HolderLookup.Provider provider) {
-        return serializeInventory(provider);
-    }
-
     @Override
     public int[] getSlotsForFace(Direction direction) {
         final var slots = new int[items.size()];

@@ -9,11 +9,11 @@ import net.minecraft.resources.ResourceLocation;
  * For features like conflict contexts and key modifiers, use {@link net.blay09.mods.kuma.api.Kuma} instead.
  */
 public interface BalmKeyMappings {
-    default KeyMapping registerKeyMapping(ResourceLocation id, int keyCode, String category) {
+    default KeyMapping registerKeyMapping(ResourceLocation id, int keyCode, KeyMapping.Category category) {
         return registerKeyMapping(id, InputConstants.Type.KEYSYM, keyCode, category);
     }
 
-    KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, String category);
+    KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, KeyMapping.Category category);
 
     BalmKeyMappings scoped(String modId);
 }

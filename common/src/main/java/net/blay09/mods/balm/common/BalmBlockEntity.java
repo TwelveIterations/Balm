@@ -35,7 +35,7 @@ public class BalmBlockEntity extends BalmBlockEntityBase {
     }
 
     public void sync() {
-        if (this.getLevel() != null && !this.getLevel().isClientSide) {
+        if (this.getLevel() != null && !this.getLevel().isClientSide()) {
             ((ServerLevel) this.getLevel()).getChunkSource().blockChanged(this.getBlockPos());
         }
     }

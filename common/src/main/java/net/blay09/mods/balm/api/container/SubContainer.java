@@ -3,6 +3,7 @@ package net.blay09.mods.balm.api.container;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -48,13 +49,13 @@ public class SubContainer implements Container, WorldlyContainer {
     }
 
     @Override
-    public void startOpen(Player player) {
-        container.startOpen(player);
+    public void startOpen(ContainerUser user) {
+        container.startOpen(user);
     }
 
     @Override
-    public void stopOpen(Player player) {
-        container.stopOpen(player);
+    public void stopOpen(ContainerUser user) {
+        container.stopOpen(user);
     }
 
     @Override
