@@ -20,7 +20,8 @@
     "ImageButtonAccessor",
     "KeyMappingAccessor",
     "MouseHandlerAccessor",
-    "ScreenAccessor"
+    "ScreenAccessor",
+    "DebugScreenOverlayMixin"
   ],
   "server": [
   ],
