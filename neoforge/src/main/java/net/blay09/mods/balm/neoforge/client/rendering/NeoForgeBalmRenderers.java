@@ -11,8 +11,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
@@ -53,8 +53,8 @@ public record NeoForgeBalmRenderers(NamespaceResolver namespaceResolver) impleme
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
-        getActiveRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity>) provider));
+    public <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider) {
+        getActiveRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity, BlockEntityRenderState>) provider));
     }
 
     @Override
@@ -101,7 +101,7 @@ public record NeoForgeBalmRenderers(NamespaceResolver namespaceResolver) impleme
 
     public static class Registrations {
         public final Map<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinitions = new HashMap<>();
-        public final List<Pair<Supplier<BlockEntityType<?>>, BlockEntityRendererProvider<BlockEntity>>> blockEntityRenderers = new ArrayList<>();
+        public final List<Pair<Supplier<BlockEntityType<?>>, BlockEntityRendererProvider<BlockEntity, BlockEntityRenderState>>> blockEntityRenderers = new ArrayList<>();
         public final List<Pair<Supplier<EntityType<?>>, EntityRendererProvider<Entity>>> entityRenderers = new ArrayList<>();
         public final List<ColorRegistration<BlockColor, Block>> blockColors = new ArrayList<>();
         public final List<ParticleProviderFactoryRegistration<?>> particleProviderFactories = new ArrayList<>();
@@ -116,7 +116,7 @@ public record NeoForgeBalmRenderers(NamespaceResolver namespaceResolver) impleme
 
         @SubscribeEvent
         public void initRenderers(EntityRenderersEvent.RegisterRenderers event) {
-            for (Pair<Supplier<BlockEntityType<?>>, BlockEntityRendererProvider<BlockEntity>> entry : blockEntityRenderers) {
+            for (Pair<Supplier<BlockEntityType<?>>, BlockEntityRendererProvider<BlockEntity, BlockEntityRenderState>> entry : blockEntityRenderers) {
                 event.registerBlockEntityRenderer(entry.getFirst().get(), entry.getSecond());
             }
 

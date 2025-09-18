@@ -355,8 +355,6 @@ public class NeoForgeBalmClientEvents {
             type = GuiDrawEvent.Element.HEALTH;
         } else if (id.equals(VanillaGuiLayers.CHAT)) {
             type = GuiDrawEvent.Element.CHAT;
-        } else if (id.equals(VanillaGuiLayers.DEBUG_OVERLAY)) {
-            type = GuiDrawEvent.Element.DEBUG;
         } else if (id.equals(VanillaGuiLayers.BOSS_OVERLAY)) {
             type = GuiDrawEvent.Element.BOSS_INFO;
         } else if (id.equals(VanillaGuiLayers.TAB_LIST)) {

@@ -16,7 +16,7 @@ import java.util.List;
 public record NeoForgeBalmKeyMappings(NamespaceResolver namespaceResolver) implements BalmKeyMappings {
 
     @Override
-    public KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, String category) {
+    public KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, KeyMapping.Category category) {
         KeyMapping keyMapping = new KeyMapping(id.getPath(), type, keyCode, category);
         getActiveRegistrations().keyMappings.add(keyMapping);
         return keyMapping;
