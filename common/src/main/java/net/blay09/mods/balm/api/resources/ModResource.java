@@ -16,4 +16,17 @@ public interface ModResource {
     InputStream inputStream() throws IOException;
 
     byte[] bytes() throws IOException;
+
+    String path();
+
+    String name();
+
+    default String extension() {
+        final var lastDotIndex = path().lastIndexOf('.');
+        if (lastDotIndex == -1) {
+            return "";
+        }
+
+        return path().substring(lastDotIndex + 1);
+    }
 }
