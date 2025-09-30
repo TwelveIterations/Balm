@@ -1,1 +1,1 @@
-- Removed test configs that were preventing Balm from running in a server-side only scenario
+- Fixed fluid tanks and energy storage not supporting snapshot rollbacks on NeoForge
