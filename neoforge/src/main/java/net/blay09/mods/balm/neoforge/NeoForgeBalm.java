@@ -13,15 +13,19 @@ import net.blay09.mods.balm.neoforge.fluid.NeoForgeFluidTank;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
+import net.neoforged.neoforge.transfer.item.WorldlyContainerWrapper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
@@ -41,11 +45,11 @@ public class NeoForgeBalm {
 
         NeoForgeBalmCapabilities capabilities = (NeoForgeBalmCapabilities) Balm.getCapabilities();
         final var nativeItemHandler = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "item_handler"),
-                Capabilities.ItemHandler.BLOCK);
+                Capabilities.Item.BLOCK);
         final var nativeFluidHandler = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "fluid_handler"),
-                Capabilities.FluidHandler.BLOCK);
+                Capabilities.Fluid.BLOCK);
         final var nativeEnergyStorage = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "energy_storage"),
-                Capabilities.EnergyStorage.BLOCK);
+                Capabilities.Energy.BLOCK);
 
         capabilities.registerFallbackBlockEntityProvider(ResourceLocation.fromNamespaceAndPath("balm", "item_handler"),
                 nativeItemHandler,
@@ -53,22 +57,26 @@ public class NeoForgeBalm {
                     private boolean running;
 
                     @Override
-                    public IItemHandler apply(BlockEntity blockEntity, Direction direction) {
+                    public ResourceHandler<ItemResource> apply(BlockEntity blockEntity, Direction direction) {
                         if (running) {
                             return null;
                         }
 
                         if (blockEntity instanceof BalmContainerProvider containerProvider) {
                             final var container = direction != null ? containerProvider.getContainer(direction) : containerProvider.getContainer();
-                            if (container != null) {
-                                return new InvWrapper(container);
+                            if (container instanceof WorldlyContainer worldlyContainer) {
+                                return new WorldlyContainerWrapper(worldlyContainer, direction);
+                            } else if (container != null) {
+                                return VanillaContainerWrapper.of(container);
                             }
                         } else if (blockEntity != null) {
                             running = true;
                             final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
                             running = false;
-                            if (container != null) {
-                                return new InvWrapper(container);
+                            if (container instanceof WorldlyContainer worldlyContainer) {
+                                return new WorldlyContainerWrapper(worldlyContainer, direction);
+                            } else if (container != null) {
+                                return VanillaContainerWrapper.of(container);
                             }
                         }
 
@@ -82,7 +90,7 @@ public class NeoForgeBalm {
                     private boolean running;
 
                     @Override
-                    public IFluidHandler apply(BlockEntity blockEntity, Direction direction) {
+                    public ResourceHandler<FluidResource> apply(BlockEntity blockEntity, Direction direction) {
                         if (running) {
                             return null;
                         }
@@ -111,7 +119,7 @@ public class NeoForgeBalm {
                     private boolean running;
 
                     @Override
-                    public IEnergyStorage apply(BlockEntity blockEntity, Direction direction) {
+                    public EnergyHandler apply(BlockEntity blockEntity, @Nullable Direction direction) {
                         if (running) {
                             return null;
                         }

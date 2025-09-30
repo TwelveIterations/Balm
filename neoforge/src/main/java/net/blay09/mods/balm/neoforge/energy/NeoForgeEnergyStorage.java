@@ -1,43 +1,28 @@
 package net.blay09.mods.balm.neoforge.energy;
 
 import net.blay09.mods.balm.api.energy.EnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class NeoForgeEnergyStorage implements IEnergyStorage {
-
-    private final EnergyStorage energyStorage;
-
-    public NeoForgeEnergyStorage(EnergyStorage energyStorage) {
-        this.energyStorage = energyStorage;
-    }
+public record NeoForgeEnergyStorage(EnergyStorage energyStorage) implements EnergyHandler {
 
     @Override
-    public int receiveEnergy(int maxReceive, boolean simulate) {
-        return energyStorage.fill(maxReceive, simulate);
-    }
-
-    @Override
-    public int extractEnergy(int maxExtract, boolean simulate) {
-        return energyStorage.drain(maxExtract, simulate);
-    }
-
-    @Override
-    public int getEnergyStored() {
+    public long getAmountAsLong() {
         return energyStorage.getEnergy();
     }
 
     @Override
-    public int getMaxEnergyStored() {
+    public long getCapacityAsLong() {
         return energyStorage.getCapacity();
     }
 
     @Override
-    public boolean canExtract() {
-        return energyStorage.canDrain();
+    public int insert(int amount, TransactionContext context) {
+        return energyStorage.fill(amount, false);
     }
 
     @Override
-    public boolean canReceive() {
-        return energyStorage.canFill();
+    public int extract(int amount, TransactionContext context) {
+        return energyStorage.drain(amount, false);
     }
 }
