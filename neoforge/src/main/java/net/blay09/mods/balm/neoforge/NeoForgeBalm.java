@@ -8,8 +8,6 @@ import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.CommonCapabilities;
-import net.blay09.mods.balm.common.config.ExampleDeclarativeConfig;
-import net.blay09.mods.balm.common.config.ExampleReflectionConfig;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
 import net.blay09.mods.balm.neoforge.energy.NeoForgeEnergyStorage;
@@ -50,9 +48,6 @@ public class NeoForgeBalm {
         BalmLoadContexts.register("balm", new NeoForgeLoadContext(modBus));
 
         ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
-
-        Balm.getConfig().registerConfig(ExampleDeclarativeConfig.schema);
-        Balm.getConfig().registerConfig(ExampleReflectionConfig.class);
 
         DeferredRegisters.register("balm", modBus);
         ModBusEventRegisters.register("balm", modBus);
