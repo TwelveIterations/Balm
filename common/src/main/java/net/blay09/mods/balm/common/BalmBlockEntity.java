@@ -10,6 +10,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.Container;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,8 +58,18 @@ public class BalmBlockEntity extends BalmBlockEntityBase {
 
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        super.preRemoveSideEffects(pos, state);
-        if (this instanceof BalmContainerProvider containerProvider) {
+        if (shouldDropContents(pos, state)) {
+            super.preRemoveSideEffects(pos, state);
+            dropContents(pos, state);
+        }
+    }
+
+    protected boolean shouldDropContents(BlockPos pos, BlockState state) {
+        return true;
+    }
+
+    protected void dropContents(BlockPos pos, BlockState state) {
+        if (this instanceof BalmContainerProvider containerProvider && !(this instanceof Container)) {
             if (level != null) {
                 containerProvider.dropItems(level, pos);
             }
