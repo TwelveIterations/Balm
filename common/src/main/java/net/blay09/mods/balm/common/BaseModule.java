@@ -23,7 +23,7 @@ public class BaseModule implements BalmModule {
     @Override
     public void registerNetworking(BalmNetworking networking) {
         networking.allowClientAndServerOnly("balm");
-        networking.defineNetworkVersion(MOD_ID, "2");
+        networking.defineNetworkVersion(MOD_ID, "3");
     }
 
     @Override

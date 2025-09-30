@@ -27,6 +27,9 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
     private static ClientboundConfigPacket decode(RegistryFriendlyByteBuf buf) {
         final var identifier = ResourceLocation.STREAM_CODEC.decode(buf);
         final var schema = Balm.getConfig().getSchema(identifier);
+        if (schema == null) {
+            throw new RuntimeException("Received config packet for unknown schema: " + identifier);
+        }
         final var config = new LoadedTableConfig();
         final var rootPropertyCount = buf.readVarInt();
         for (int j = 0; j < rootPropertyCount; j++) {
