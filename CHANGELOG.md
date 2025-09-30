@@ -1,1 +1,2 @@
-- Updated Kuma to fix input bug with unbound keys
+- Removed test configs that were preventing Balm from running in a server-side only scenario
+- Updated Kuma to fix crash when checking keybinds too early
