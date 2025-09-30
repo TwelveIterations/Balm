@@ -1,1 +1,2 @@
-- Removed test configs that were preventing Balm from running in a server-side only scenario
+- Updated Kuma to fix input bug with unbound keys
+- Bumped Balm's network version to prevent config sync mismatch when mixing versions
