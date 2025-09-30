@@ -1,11 +1,19 @@
 package net.blay09.mods.balm.neoforge.fluid;
 
 import net.blay09.mods.balm.api.fluid.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public record NeoForgeFluidTank(FluidTank fluidTank) implements ResourceHandler<FluidResource> {
+public final class NeoForgeFluidTank implements ResourceHandler<FluidResource> {
+    private final FluidTank fluidTank;
+    private final FluidJournal fluidJournal = new FluidJournal();
+
+    public NeoForgeFluidTank(FluidTank fluidTank) {
+        this.fluidTank = fluidTank;
+    }
 
     @Override
     public int size() {
@@ -33,14 +41,24 @@ public record NeoForgeFluidTank(FluidTank fluidTank) implements ResourceHandler<
     }
 
     @Override
-    public int insert(int i, FluidResource fluidResource, int amount, TransactionContext transactionContext) {
+    public int insert(int i, FluidResource fluidResource, int amount, TransactionContext transaction) {
+        fluidJournal.updateSnapshots(transaction);
         return i == 0 ? fluidTank.fill(fluidResource.getFluid(), amount, false) : amount;
     }
 
     @Override
-    public int extract(int i, FluidResource fluidResource, int amount, TransactionContext transactionContext) {
+    public int extract(int i, FluidResource fluidResource, int amount, TransactionContext transaction) {
+        fluidJournal.updateSnapshots(transaction);
         return i == 0 ? fluidTank.drain(fluidResource.getFluid(), amount, false) : amount;
     }
 
+    private class FluidJournal extends SnapshotJournal<FluidStack> {
+        protected FluidStack createSnapshot() {
+            return new FluidStack(NeoForgeFluidTank.this.fluidTank.getFluid(), NeoForgeFluidTank.this.fluidTank.getAmount());
+        }
 
+        protected void revertToSnapshot(FluidStack snapshot) {
+            NeoForgeFluidTank.this.fluidTank.setFluid(snapshot.getFluid(), snapshot.getAmount());
+        }
+    }
 }
