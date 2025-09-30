@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.BoxStyle;
+import snownee.jade.api.view.ProgressView;
 import snownee.jade.impl.ui.ProgressElement;
 import snownee.jade.impl.ui.SimpleProgressStyle;
 
@@ -60,7 +61,9 @@ public class FabricJadeModCompat implements IWailaPlugin {
 
         @Override
         public void progress(float progress) {
-            tooltip.add(new ProgressElement(progress, Component.empty(), new SimpleProgressStyle(), BoxStyle.getNestedBox(), false));
+            final var part = new ProgressView.Part(0, progress, null, null, 0xFFFFFFFF);
+            final var view = new ProgressView(part, Component.empty(), new SimpleProgressStyle(), BoxStyle.nestedBox());
+            tooltip.add(new ProgressElement(view));
         }
     }
 }
