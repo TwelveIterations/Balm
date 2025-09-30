@@ -2,9 +2,16 @@ package net.blay09.mods.balm.neoforge.energy;
 
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public record NeoForgeEnergyStorage(EnergyStorage energyStorage) implements EnergyHandler {
+public final class NeoForgeEnergyStorage implements EnergyHandler {
+    private final EnergyStorage energyStorage;
+    private final EnergyJournal energyJournal = new EnergyJournal();
+
+    public NeoForgeEnergyStorage(EnergyStorage energyStorage) {
+        this.energyStorage = energyStorage;
+    }
 
     @Override
     public long getAmountAsLong() {
@@ -18,11 +25,23 @@ public record NeoForgeEnergyStorage(EnergyStorage energyStorage) implements Ener
 
     @Override
     public int insert(int amount, TransactionContext context) {
+        energyJournal.updateSnapshots(context);
         return energyStorage.fill(amount, false);
     }
 
     @Override
     public int extract(int amount, TransactionContext context) {
+        energyJournal.updateSnapshots(context);
         return energyStorage.drain(amount, false);
+    }
+
+    private class EnergyJournal extends SnapshotJournal<Integer> {
+        protected Integer createSnapshot() {
+            return NeoForgeEnergyStorage.this.energyStorage.getEnergy();
+        }
+
+        protected void revertToSnapshot(Integer snapshot) {
+            NeoForgeEnergyStorage.this.energyStorage.setEnergy(snapshot);
+        }
     }
 }
