@@ -1,6 +1,9 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.*;
+import net.blay09.mods.balm.api.BalmEnvironment;
+import net.blay09.mods.balm.api.BalmHooks;
+import net.blay09.mods.balm.api.BalmRegistries;
+import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -16,9 +19,12 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.proxy.*;
+import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
+import net.blay09.mods.balm.api.resources.ModResource;
+import net.blay09.mods.balm.api.resources.ModResourceVisitor;
+import net.blay09.mods.balm.api.resources.PathModResource;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -53,9 +59,9 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -264,7 +270,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
 
     @Override
     public BalmEnvironment getEnvironment() {
-        return switch(FabricLoader.getInstance().getEnvironmentType()) {
+        return switch (FabricLoader.getInstance().getEnvironmentType()) {
             case CLIENT -> BalmEnvironment.CLIENT;
             case SERVER -> BalmEnvironment.DEDICATED_SERVER;
         };
@@ -276,16 +282,29 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public Map<String, Path> lookupAllModPaths(String path) {
-        final var result = new HashMap<String, Path>();
-        FabricLoader.getInstance().getAllMods().forEach(modContainer -> modContainer.findPath(path)
-                .ifPresent(foundPath -> result.put(modContainer.getMetadata().getId(), foundPath)));
-        return result;
+    public List<String> getLoadedPrimaryModIds() {
+        return FabricLoader.getInstance().getAllMods().stream()
+                .map(it -> it.getMetadata().getId())
+                .toList();
     }
 
     @Override
-    public Optional<Path> lookupModPath(String modId, String path) {
+    public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
+        FabricLoader.getInstance().getModContainer(modId)
+                .flatMap(modContainer -> modContainer.findPath(path))
+                .ifPresent(rootPath -> {
+                    try (final var walker = Files.walk(rootPath)) {
+                        walker.forEach(childPath -> visitor.visit(new PathModResource(childPath)));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
+    @Override
+    public Optional<ModResource> lookupModResource(String modId, String path) {
         return FabricLoader.getInstance().getModContainer(modId)
-                .flatMap(modContainer -> modContainer.findPath(path));
+                .flatMap(modContainer -> modContainer.findPath(path))
+                .map(PathModResource::new);
     }
 }

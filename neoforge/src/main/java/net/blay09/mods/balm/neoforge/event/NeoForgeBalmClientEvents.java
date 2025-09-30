@@ -281,19 +281,6 @@ public class NeoForgeBalmClientEvents {
             });
         });
 
-        events.registerEvent(BlockHighlightDrawEvent.class, priority -> {
-            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (RenderHighlightEvent.Block orig) -> {
-                final BlockHighlightDrawEvent event = new BlockHighlightDrawEvent(orig.getTarget(),
-                        orig.getPoseStack(),
-                        orig.getMultiBufferSource(),
-                        orig.getCamera());
-                events.fireEventHandlers(priority, event);
-                if (event.isCanceled()) {
-                    orig.setCanceled(true);
-                }
-            });
-        });
-
         events.registerEvent(OpenScreenEvent.class, priority -> {
             NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (ScreenEvent.Opening orig) -> {
                 final OpenScreenEvent event = new OpenScreenEvent(orig.getScreen());

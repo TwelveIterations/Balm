@@ -21,6 +21,8 @@ import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
+import net.blay09.mods.balm.api.resources.ModResource;
+import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -30,6 +32,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -202,12 +205,16 @@ public class Balm {
         return runtime;
     }
 
-    public static Map<String, Path> lookupAllModPaths(String path) {
-        return runtime.lookupAllModPaths(path);
+    public static List<String> getLoadedPrimaryModIds() {
+        return runtime.getLoadedPrimaryModIds();
     }
 
-    public static Optional<Path> lookupModPaths(String modId, String path) {
-        return runtime.lookupModPath(modId, path);
+    public static void visitModResources(String path, String modId, ModResourceVisitor visitor) {
+        runtime.visitModResources(path, modId, visitor);
+    }
+
+    public static Optional<ModResource> lookupModResource(String modId, String path) {
+        return runtime.lookupModResource(modId, path);
     }
 
     public static boolean isDevelopmentEnvironment() {

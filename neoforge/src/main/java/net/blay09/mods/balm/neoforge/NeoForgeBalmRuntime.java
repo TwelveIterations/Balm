@@ -21,12 +21,15 @@ import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
+import net.blay09.mods.balm.api.resources.ModResource;
+import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
+import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
 import net.blay09.mods.balm.neoforge.component.NeoForgeBalmComponents;
@@ -39,9 +42,9 @@ import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
-import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
+import net.blay09.mods.balm.neoforge.resources.NeoForgeModResource;
 import net.blay09.mods.balm.neoforge.sound.NeoForgeBalmSounds;
 import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmStats;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
@@ -57,12 +60,10 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforgespi.language.IModInfo;
 
-import java.nio.file.Path;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> {
 
@@ -243,21 +244,27 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     @Override
     public BalmEnvironment getEnvironment() {
-        return switch (FMLEnvironment.dist) {
+        return switch (FMLEnvironment.getDist()) {
             case CLIENT -> BalmEnvironment.CLIENT;
             case DEDICATED_SERVER -> BalmEnvironment.DEDICATED_SERVER;
         };
     }
 
     @Override
-    public Map<String, Path> lookupAllModPaths(String path) {
-        return ModList.get().getMods().stream()
-                .collect(Collectors.toMap(IModInfo::getModId, it -> it.getOwningFile().getFile().findResource(path)));
+    public List<String> getLoadedPrimaryModIds() {
+        return ModList.get().getMods().stream().map(IModInfo::getModId).toList();
     }
 
     @Override
-    public Optional<Path> lookupModPath(String modId, String path) {
+    public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
         final var modFile = ModList.get().getModFileById(modId);
-        return Optional.of(modFile.getFile().findResource(path));
+        modFile.getFile().getContents().visitContent(path, (relativePath, resource) -> visitor.visit(new NeoForgeModResource(resource.retain())));
+    }
+
+    @Override
+    public Optional<ModResource> lookupModResource(String modId, String path) {
+        final var modFile = ModList.get().getModFileById(modId);
+        return Optional.ofNullable(modFile.getFile().getContents().get(path))
+                .map(it -> new NeoForgeModResource(it.retain()));
     }
 }

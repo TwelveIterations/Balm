@@ -21,6 +21,8 @@ import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
+import net.blay09.mods.balm.api.resources.ModResource;
+import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -29,7 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -137,7 +139,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     boolean isDevelopmentEnvironment();
 
-    Map<String, Path> lookupAllModPaths(String path);
+    List<String> getLoadedPrimaryModIds();
 
-    Optional<Path> lookupModPath(String modId, String path);
+    void visitModResources(String modId, String path, ModResourceVisitor visitor);
+
+    Optional<ModResource> lookupModResource(String modId, String path);
 }

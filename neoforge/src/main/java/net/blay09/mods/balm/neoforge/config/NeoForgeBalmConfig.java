@@ -265,7 +265,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         properties.put(schema.identifier(), mappedConfigSpec.getSecond());
         modContainer.registerConfig(configType, mappedConfigSpec.getFirst());
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             initializeConfigurationScreen(modContainer);
         }
     }
