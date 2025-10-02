@@ -68,8 +68,8 @@ repositories {
             includeGroup "org.ladysnake.cardinal-components-api"
         }
     }
-
-    maven {
+	
+	maven {
         url "https://maven.siphalor.de/"
         content {
             includeGroup "de.siphalor"
@@ -90,7 +90,7 @@ repositories {
             includeGroup "novamachina.exnihilosequentia"
         }
     }
-
+	
     exclusiveContent {
         forRepository {
             maven {

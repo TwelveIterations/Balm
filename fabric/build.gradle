@@ -60,7 +60,7 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     group = 'publishing'
 
     apiToken = project.findProperty("curseforge.api_key") ?: System.getenv("CURSEFORGE_TOKEN") ?: "none"
-
+    
     def projectId = findProperty("curseforge_project_id")
     onlyIf {
         projectId != null
