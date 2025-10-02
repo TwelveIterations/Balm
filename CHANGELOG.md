@@ -1,1 +1,2 @@
-- Fixed fluid tanks and energy storage not supporting snapshot rollbacks on NeoForge
+- Fixed wrong parameter names in visitModResources
+- Fixed crash when looking up mod resources for a mod that isn't found
