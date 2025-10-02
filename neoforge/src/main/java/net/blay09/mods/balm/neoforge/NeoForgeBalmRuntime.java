@@ -258,13 +258,15 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
         final var modFile = ModList.get().getModFileById(modId);
-        modFile.getFile().getContents().visitContent(path, (relativePath, resource) -> visitor.visit(new NeoForgeModResource(relativePath, resource.retain())));
+        if (modFile != null) {
+            modFile.getFile().getContents().visitContent(path, (relativePath, resource) -> visitor.visit(new NeoForgeModResource(relativePath, resource.retain())));
+        }
     }
 
     @Override
     public Optional<ModResource> lookupModResource(String modId, String path) {
-        final var modFile = ModList.get().getModFileById(modId);
-        return Optional.ofNullable(modFile.getFile().getContents().get(path))
+        return Optional.ofNullable(ModList.get().getModFileById(modId))
+                .map(it -> it.getFile().getContents().get(path))
                 .map(it -> new NeoForgeModResource(path, it.retain()));
     }
 }

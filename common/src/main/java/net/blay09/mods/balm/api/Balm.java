@@ -209,8 +209,8 @@ public class Balm {
         return runtime.getLoadedPrimaryModIds();
     }
 
-    public static void visitModResources(String path, String modId, ModResourceVisitor visitor) {
-        runtime.visitModResources(path, modId, visitor);
+    public static void visitModResources(String modId, String path, ModResourceVisitor visitor) {
+        runtime.visitModResources(modId, path, visitor);
     }
 
     public static Optional<ModResource> lookupModResource(String modId, String path) {
