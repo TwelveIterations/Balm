@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.neoforge.resources;
 
-import cpw.mods.jarhandling.JarResource;
 import net.blay09.mods.balm.api.resources.ModResource;
+import net.neoforged.fml.jarcontents.JarResource;
 
 import java.io.BufferedReader;
 import java.io.File;
