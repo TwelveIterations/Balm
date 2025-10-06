@@ -1,2 +1,1 @@
-- Fixed wrong parameter names in visitModResources
-- Fixed crash when looking up mod resources for a mod that isn't found
+- Updated for Breaking Change in NeoForge (NeoForge 21.9.14-beta and up)
