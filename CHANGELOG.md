@@ -1,2 +1,1 @@
-- Updated Kuma to fix input bug with unbound keys
-- Bumped Balm's network version to prevent config sync mismatch when mixing versions
+- Fixed NoSuchFileExceptions in lookupAllModPaths/lookupModPath
