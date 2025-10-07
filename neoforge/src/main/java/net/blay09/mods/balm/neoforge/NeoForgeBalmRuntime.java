@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.neoforge;
 
+import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.*;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
@@ -57,6 +58,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforgespi.language.IModInfo;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
@@ -260,12 +262,15 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public Map<String, Path> lookupAllModPaths(String path) {
         return ModList.get().getMods().stream()
-                .collect(Collectors.toMap(IModInfo::getModId, it -> it.getOwningFile().getFile().findResource(path)));
+                .map(it -> new Pair<>(it.getModId(), it.getOwningFile().getFile().findResource(path)))
+                .filter(it -> Files.exists(it.getSecond()))
+                .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
     }
 
     @Override
     public Optional<Path> lookupModPath(String modId, String path) {
         final var modFile = ModList.get().getModFileById(modId);
-        return Optional.of(modFile.getFile().findResource(path));
+        final var nioPath = modFile.getFile().findResource(path);
+        return Files.exists(nioPath) ? Optional.of(nioPath) : Optional.empty();
     }
 }
