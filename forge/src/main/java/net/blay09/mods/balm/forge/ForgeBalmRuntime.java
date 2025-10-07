@@ -253,7 +253,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public Map<String, Path> lookupAllModPaths(String path) {
         return ModList.get().getMods().stream()
-                .map(it -> Pair.of(it.getModId(), it.getOwningFile().getFile().findResource(path)))
+                .map(it -> new Pair<>(it.getModId(), it.getOwningFile().getFile().findResource(path)))
                 .filter(it -> Files.exists(it.getSecond()))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
     }
@@ -261,8 +261,8 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public Optional<Path> lookupModPath(String modId, String path) {
         final var modFile = ModList.get().getModFileById(modId);
-        final var resource = modFile.getFile().findResource(path);
-        return Files.exists(resource) ? Optional.of(resource) : Optional.empty();
+        final var nioPath = modFile.getFile().findResource(path);
+        return Files.exists(nioPath) ? Optional.of(nioPath) : Optional.empty();
     }
 
 }
