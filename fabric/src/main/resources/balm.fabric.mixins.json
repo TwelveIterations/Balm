@@ -27,7 +27,6 @@
     "GuiMixin",
     "ItemInHandRendererMixin",
     "KeyboardHandlerMixin",
-    "LevelRendererMixin",
     "MinecraftMixin",
     "MouseHandlerMixin",
     "PlayerTabOverlayMixin",

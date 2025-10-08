@@ -27,48 +27,48 @@ public class ForgeBalmCommonEvents {
         events.registerTickEvent(TickType.Server, TickPhase.Start, (ServerTickHandler handler) -> TickEvent.ServerTickEvent.Pre.BUS.addListener((orig) -> handler.handle(ServerLifecycleHooks.getCurrentServer())));
         events.registerTickEvent(TickType.Server, TickPhase.End, (ServerTickHandler handler) -> TickEvent.ServerTickEvent.Post.BUS.addListener((orig) -> handler.handle(ServerLifecycleHooks.getCurrentServer())));
         events.registerTickEvent(TickType.ServerLevel, TickPhase.Start, (ServerLevelTickHandler handler) -> TickEvent.LevelTickEvent.Pre.BUS.addListener((orig) -> {
-            if (orig.side == LogicalSide.SERVER) {
-                handler.handle(orig.level);
+            if (orig.side() == LogicalSide.SERVER) {
+                handler.handle(orig.level());
             }
         }));
         events.registerTickEvent(TickType.ServerLevel, TickPhase.End, (ServerLevelTickHandler handler) -> TickEvent.LevelTickEvent.Post.BUS.addListener((orig) -> {
-            if (orig.side == LogicalSide.SERVER) {
-                handler.handle(orig.level);
+            if (orig.side() == LogicalSide.SERVER) {
+                handler.handle(orig.level());
             }
         }));
 
         events.registerTickEvent(TickType.ServerPlayer, TickPhase.Start, (ServerPlayerTickHandler handler) -> TickEvent.PlayerTickEvent.Pre.BUS.addListener((orig) -> {
-            if (orig.side == LogicalSide.SERVER) {
-                handler.handle(((ServerPlayer) orig.player));
+            if (orig.side() == LogicalSide.SERVER) {
+                handler.handle(((ServerPlayer) orig.player()));
             }
         }));
 
         events.registerTickEvent(TickType.ServerPlayer, TickPhase.End, (ServerPlayerTickHandler handler) -> TickEvent.PlayerTickEvent.Post.BUS.addListener((orig) -> {
-            if (orig.side == LogicalSide.SERVER) {
-                handler.handle(((ServerPlayer) orig.player));
+            if (orig.side() == LogicalSide.SERVER) {
+                handler.handle(((ServerPlayer) orig.player()));
             }
         }));
 
         events.registerTickEvent(TickType.ClientEntity, TickPhase.Start, (EntityTickHandler handler) -> LivingEvent.LivingTickEvent.BUS.addListener((orig) -> { // TODO unlike Fabric and NeoForge, only ticks for living entities
-            if (orig.getEntity().level().isClientSide) {
+            if (orig.getEntity().level().isClientSide()) {
                 handler.handle(orig.getEntity());
             }
         }));
 
         events.registerTickEvent(TickType.ClientEntity, TickPhase.End, (EntityTickHandler handler) -> LivingEvent.LivingTickEvent.BUS.addListener((orig) -> { // TODO ticks at same time as START on Forge
-            if (orig.getEntity().level().isClientSide) {
+            if (orig.getEntity().level().isClientSide()) {
                 handler.handle(orig.getEntity());
             }
         }));
 
         events.registerTickEvent(TickType.ServerEntity, TickPhase.Start, (EntityTickHandler handler) -> LivingEvent.LivingTickEvent.BUS.addListener((orig) -> { // TODO unlike Fabric and NeoForge, only ticks for living entities
-            if (!orig.getEntity().level().isClientSide) {
+            if (!orig.getEntity().level().isClientSide()) {
                 handler.handle(orig.getEntity());
             }
         }));
 
         events.registerTickEvent(TickType.ServerEntity, TickPhase.End, (EntityTickHandler handler) -> LivingEvent.LivingTickEvent.BUS.addListener((orig) -> { // TODO ticks at same time as START on Forge
-            if (!orig.getEntity().level().isClientSide) {
+            if (!orig.getEntity().level().isClientSide()) {
                 handler.handle(orig.getEntity());
             }
         }));
@@ -200,7 +200,7 @@ public class ForgeBalmCommonEvents {
         }));
 
         events.registerEvent(ItemCraftedEvent.class, priority -> PlayerEvent.ItemCraftedEvent.BUS.addListener(ForgeBalmEvents.toForge(priority), (orig) -> {
-            final ItemCraftedEvent event = new ItemCraftedEvent(orig.getEntity(), orig.getCrafting(), orig.getInventory());
+            final ItemCraftedEvent event = new ItemCraftedEvent(orig.getEntity(), orig.getCrafting(), orig.getContainer());
             events.fireEventHandlers(priority, event);
         }));
 

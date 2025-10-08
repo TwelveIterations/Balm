@@ -195,7 +195,7 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
 
         @Override
         public void register(BusGroup busGroup) {
-            RegisterCapabilitiesEvent.getBus(busGroup).addListener(this::registerCapabilities);
+            RegisterCapabilitiesEvent.BUS.addListener(this::registerCapabilities);
         }
     }
 }

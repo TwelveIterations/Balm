@@ -9,8 +9,7 @@
   ],
   "client": [
     "MinecraftMixin",
-    "ScreenMixin",
-    "LevelRendererMixin"
+    "ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

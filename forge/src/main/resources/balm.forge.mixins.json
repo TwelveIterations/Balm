@@ -12,7 +12,6 @@
     "ScreenMixin",
     "BossHealthOverlayMixin",
     "ChatComponentMixin",
-    "DebugScreenOverlayMixin",
     "GuiMixin",
     "PlayerTabOverlayMixin"
   ],

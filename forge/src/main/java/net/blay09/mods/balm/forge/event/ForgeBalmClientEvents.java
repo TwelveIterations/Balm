@@ -189,15 +189,6 @@ public class ForgeBalmClientEvents {
             events.fireEventHandlers(priority, event);
         }));
 
-        events.registerEvent(BlockHighlightDrawEvent.class, priority -> RenderHighlightEvent.Block.BUS.addListener(ForgeBalmEvents.toForge(priority), (orig) -> {
-            final BlockHighlightDrawEvent event = new BlockHighlightDrawEvent(orig.getTarget(),
-                    orig.getPoseStack(),
-                    orig.getMultiBufferSource(),
-                    orig.getCamera());
-            events.fireEventHandlers(priority, event);
-            return event.isCanceled();
-        }));
-
         events.registerEvent(OpenScreenEvent.class, priority -> ScreenEvent.Opening.BUS.addListener(ForgeBalmEvents.toForge(priority), (orig) -> {
             final OpenScreenEvent event = new OpenScreenEvent(orig.getScreen());
             events.fireEventHandlers(priority, event);

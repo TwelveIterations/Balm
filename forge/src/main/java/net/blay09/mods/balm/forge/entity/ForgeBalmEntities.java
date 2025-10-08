@@ -56,7 +56,7 @@ public record ForgeBalmEntities(NamespaceResolver namespaceResolver) implements 
 
         @Override
         public void register(BusGroup busGroup) {
-            EntityAttributeCreationEvent.getBus(busGroup).addListener(this::registerAttributes);
+            EntityAttributeCreationEvent.BUS.addListener(this::registerAttributes);
         }
     }
 }

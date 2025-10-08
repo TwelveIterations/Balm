@@ -66,7 +66,7 @@ public record ForgeBalmModels(NamespaceResolver namespaceResolver) implements Ba
 
         @Override
         public void register(BusGroup busGroup) {
-            ModelEvent.RegisterModelStateDefinitions.getBus(busGroup).addListener(this::onRegisterAdditionalModels);
+            ModelEvent.RegisterModelStateDefinitions.BUS.addListener(this::onRegisterAdditionalModels);
         }
     }
 }

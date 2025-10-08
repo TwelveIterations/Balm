@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.forge;
 
-import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.BalmRegistries;
@@ -22,6 +21,9 @@ import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
+import net.blay09.mods.balm.api.resources.ModResource;
+import net.blay09.mods.balm.api.resources.ModResourceVisitor;
+import net.blay09.mods.balm.api.resources.PathModResource;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -51,20 +53,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.forgespi.language.IModInfo;
 
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
@@ -251,18 +251,28 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public Map<String, Path> lookupAllModPaths(String path) {
-        return ModList.get().getMods().stream()
-                .map(it -> Pair.of(it.getModId(), it.getOwningFile().getFile().findResource(path)))
-                .filter(it -> Files.exists(it.getSecond()))
-                .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+    public List<String> getLoadedPrimaryModIds() {
+        return ModList.get().getMods().stream().map(IModInfo::getModId).toList();
     }
 
     @Override
-    public Optional<Path> lookupModPath(String modId, String path) {
+    public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
+        final var modFile = ModList.get().getModFileById(modId);
+        final var nioPath = modFile.getFile().findResource(path);
+        if (Files.exists(nioPath)) {
+            try (final var walker = Files.walk(nioPath)) {
+                walker.forEach(childPath -> visitor.visit(new PathModResource(childPath)));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public Optional<ModResource> lookupModResource(String modId, String path) {
         final var modFile = ModList.get().getModFileById(modId);
         final var resource = modFile.getFile().findResource(path);
-        return Files.exists(resource) ? Optional.of(resource) : Optional.empty();
+        return Files.exists(resource) ? Optional.of(new PathModResource(resource)) : Optional.empty();
     }
 
 }

@@ -21,7 +21,8 @@
     "KeyMappingAccessor",
     "MouseHandlerAccessor",
     "ScreenAccessor",
-    "DebugScreenOverlayMixin"
+    "DebugScreenOverlayMixin",
+    "LevelRendererMixin"
   ],
   "server": [
   ],

@@ -101,7 +101,7 @@ public record ForgeBalmItems(NamespaceResolver namespaceResolver) implements Bal
 
         @Override
         public void register(BusGroup busGroup) {
-            BuildCreativeModeTabContentsEvent.getBus(busGroup).addListener(this::buildOtherCreativeTabContents);
+            BuildCreativeModeTabContentsEvent.BUS.addListener(this::buildOtherCreativeTabContents);
         }
     }
 }
