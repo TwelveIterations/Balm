@@ -1,1 +1,1 @@
-- Updated to Minecraft 1.21.10
+- Fixed possible race condition crash during config loading on NeoForge
