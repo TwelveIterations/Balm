@@ -27,12 +27,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
-    private static final Map<ResourceLocation, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
-    private static final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
+    private static final Map<ResourceLocation, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new ConcurrentHashMap<>();
+    private static final Map<ResourceLocation, ModConfig> modConfigs = new ConcurrentHashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmConfig.class);
 
     private static ModConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ModConfigSpec.Builder spec) {
