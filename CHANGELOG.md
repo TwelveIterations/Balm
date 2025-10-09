@@ -1,1 +1,2 @@
+- Fixed possible race condition crash during config loading on NeoForge
 - Fixed NoSuchFileExceptions in lookupAllModPaths/lookupModPath
