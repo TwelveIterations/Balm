@@ -19,6 +19,8 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
@@ -29,6 +31,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
     private static final Map<ResourceLocation, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new ConcurrentHashMap<>();
     private static final Map<ResourceLocation, ModConfig> modConfigs = new ConcurrentHashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(ForgeBalmConfig.class);
 
     private static ForgeConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ForgeConfigSpec.Builder spec) {
         spec.comment(property.comment());
@@ -198,7 +201,11 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
             final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
-                final var wrappedConfig = new LoadedForgeConfig(schema, modConfig, properties.get(schema.identifier()));
+                final var modConfigProperties = properties.get(schema.identifier());
+                if (modConfigProperties == null) {
+                    throw new IllegalStateException("Missing config properties for " + schema.identifier() + " when loading config. Properties present: " + properties.keySet());
+                }
+                final var wrappedConfig = new LoadedForgeConfig(schema, modConfig, modConfigProperties);
                 setLocalConfig(schema, wrappedConfig);
                 setActiveConfig(schema, wrappedConfig);
 
@@ -211,7 +218,11 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
             final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
-                final var wrappedConfig = new LoadedForgeConfig(schema, modConfig, properties.get(schema.identifier()));
+                final var modConfigProperties = properties.get(schema.identifier());
+                if (modConfigProperties == null) {
+                    throw new IllegalStateException("Missing config properties for " + schema.identifier() + " when loading config. Properties present: " + properties.keySet());
+                }
+                final var wrappedConfig = new LoadedForgeConfig(schema, modConfig, modConfigProperties);
                 setLocalConfig(schema, wrappedConfig);
                 updateActiveFromLocal(schema, wrappedConfig);
 
@@ -227,6 +238,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
         };
         final var mappedConfigSpec = mapToConfigSpec(schema);
         properties.put(schema.identifier(), mappedConfigSpec.getSecond());
+        logger.info("Registering config for {} ({}) with {} properties.", schema.identifier(), configType, mappedConfigSpec.getSecond().size());
         modContainer.addConfig(new ModConfig(configType, mappedConfigSpec.getFirst(), modContainer));
     }
 

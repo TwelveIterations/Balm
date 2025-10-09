@@ -22,6 +22,8 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
@@ -31,16 +33,20 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
     private static final Map<ResourceLocation, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new HashMap<>();
     private static final Map<ResourceLocation, ModConfig> modConfigs = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmConfig.class);
 
     private static ModConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ModConfigSpec.Builder spec) {
         spec.comment(property.comment());
         spec.translation(ConfigLocalization.forProperty(property));
 
         return switch (property) {
-            case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue().booleanValue());
-            case ConfiguredDouble configuredDouble -> spec.define(configuredDouble.name(), configuredDouble.defaultValue());
+            case ConfiguredBoolean configuredBoolean ->
+                    spec.define(configuredBoolean.name(), configuredBoolean.defaultValue().booleanValue());
+            case ConfiguredDouble configuredDouble ->
+                    spec.define(configuredDouble.name(), configuredDouble.defaultValue());
             case ConfiguredEnum<?> configuredEnum -> defineEnum(spec, configuredEnum);
-            case ConfiguredFloat configuredFloat -> spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
+            case ConfiguredFloat configuredFloat ->
+                    spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
             case ConfiguredInt configuredInt -> spec.define(configuredInt.name(), configuredInt.defaultValue());
             case ConfiguredList<?> configuredList -> spec.defineListAllowEmpty(configuredList.name(),
                     mapConfigCollectionToNeoForge(configuredList.defaultValue()),
@@ -53,7 +59,8 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                     mapConfigCollectionToNeoForge(configuredSet.defaultValue()),
                     () -> newSetElement(configuredSet),
                     (it) -> validateSetElement(configuredSet, it));
-            case ConfiguredString configuredString -> spec.define(configuredString.name(), configuredString.defaultValue());
+            case ConfiguredString configuredString ->
+                    spec.define(configuredString.name(), configuredString.defaultValue());
             default -> throw new IllegalStateException("Unexpected value: " + property);
         };
     }
@@ -233,7 +240,11 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
-                final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, properties.get(schema.identifier()));
+                final var modConfigProperties = properties.get(schema.identifier());
+                if (modConfigProperties == null) {
+                    throw new IllegalStateException("Missing config properties for " + schema.identifier() + " when loading config. Properties present: " + properties.keySet());
+                }
+                final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, modConfigProperties);
                 setLocalConfig(schema, wrappedConfig);
                 setActiveConfig(schema, wrappedConfig);
 
@@ -246,7 +257,11 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
-                final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, properties.get(schema.identifier()));
+                final var modConfigProperties = properties.get(schema.identifier());
+                if (modConfigProperties == null) {
+                    throw new IllegalStateException("Missing config properties for " + schema.identifier() + " when loading config. Properties present: " + properties.keySet());
+                }
+                final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, modConfigProperties);
                 setLocalConfig(schema, wrappedConfig);
                 updateActiveFromLocal(schema, wrappedConfig);
 
@@ -259,10 +274,12 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             case "common" -> ModConfig.Type.COMMON;
             case "client" -> ModConfig.Type.CLIENT;
             case "startup" -> ModConfig.Type.STARTUP;
-            default -> throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'common', 'client' and 'startup' are supported.");
+            default ->
+                    throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'common', 'client' and 'startup' are supported.");
         };
         final var mappedConfigSpec = mapToConfigSpec(schema);
         properties.put(schema.identifier(), mappedConfigSpec.getSecond());
+        logger.info("Registering config for {} ({}) with {} properties.", schema.identifier(), configType, mappedConfigSpec.getSecond().size());
         modContainer.registerConfig(configType, mappedConfigSpec.getFirst());
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -277,7 +294,12 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         if (modConfig == null) {
             throw new IllegalStateException("Backing config not available for " + schema.identifier());
         }
-        final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, properties.get(schema.identifier()));
+        final var modConfigProperties = properties.get(schema.identifier());
+        if (modConfigProperties == null) {
+            throw new IllegalStateException("Missing config properties for " + schema.identifier() + " when loading config. Properties present: " + properties.keySet());
+        }
+
+        final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, modConfigProperties);
         wrappedConfig.applyFrom(schema, config);
         ((ModConfigSpec) modConfig.getSpec()).save();
     }
