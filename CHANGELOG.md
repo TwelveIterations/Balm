@@ -1,1 +1,1 @@
-- Fixed possible race condition crash during config loading on NeoForge
+- Fixed crash on Forge when renderer events are used
