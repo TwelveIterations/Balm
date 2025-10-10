@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -26,7 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
@@ -93,13 +94,14 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
     }
 
     public record ParticleProviderFactoryRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType,
-                                                                                  Function<SpriteSet, ParticleProvider<T>> value) {
+                                                                                 Function<SpriteSet, ParticleProvider<T>> value) {
     }
 
-    public record ParticleProviderRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType, ParticleProvider<T> value) {
+    public record ParticleProviderRegistration<T extends ParticleOptions>(Supplier<ParticleType<T>> particleType,
+                                                                          ParticleProvider<T> value) {
     }
 
-    public static class Registrations {
+    public static class Registrations implements ModBusEventRegister {
         public final Map<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinitions = new HashMap<>();
         public final List<Pair<Supplier<BlockEntityType<?>>, BlockEntityRendererProvider<BlockEntity, BlockEntityRenderState>>> blockEntityRenderers = new ArrayList<>();
         public final List<Pair<Supplier<EntityType<?>>, EntityRendererProvider<Entity>>> entityRenderers = new ArrayList<>();
@@ -108,14 +110,12 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
         public final List<ParticleProviderRegistration<?>> particleProviders = new ArrayList<>();
         public final List<BlockRenderTypeRegistration> blockRenderTypes = new ArrayList<>();
 
-        @SubscribeEvent
-        public void setupClient(FMLClientSetupEvent event) {
+        private void setupClient(FMLClientSetupEvent event) {
             event.enqueueWork(() -> blockRenderTypes.forEach(blockRenderType -> ItemBlockRenderTypes.setRenderLayer(blockRenderType.blockSupplier.get(),
                     blockRenderType.renderType())));
         }
 
-        @SubscribeEvent
-        public void initRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        private void initRenderers(EntityRenderersEvent.RegisterRenderers event) {
             for (Pair<Supplier<BlockEntityType<?>>, BlockEntityRendererProvider<BlockEntity, BlockEntityRenderState>> entry : blockEntityRenderers) {
                 event.registerBlockEntityRenderer(entry.getFirst().get(), entry.getSecond());
             }
@@ -125,22 +125,19 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
             }
         }
 
-        @SubscribeEvent
-        public void initLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        private void initLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
             for (Map.Entry<ModelLayerLocation, Supplier<LayerDefinition>> entry : layerDefinitions.entrySet()) {
                 event.registerLayerDefinition(entry.getKey(), entry.getValue());
             }
         }
 
-        @SubscribeEvent
-        public void initBlockColors(RegisterColorHandlersEvent.Block event) {
+        private void initBlockColors(RegisterColorHandlersEvent.Block event) {
             for (ColorRegistration<BlockColor, Block> blockColor : blockColors) {
                 event.register(blockColor.color(), blockColor.objects().get());
             }
         }
 
-        @SubscribeEvent
-        public void initParticleProviders(RegisterParticleProvidersEvent event) {
+        private void initParticleProviders(RegisterParticleProvidersEvent event) {
             for (final var factory : particleProviderFactories) {
                 registerParticleProviderFactory(event, factory);
             }
@@ -155,6 +152,15 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
 
         private <T extends ParticleOptions> void registerParticleProvider(RegisterParticleProvidersEvent event, ParticleProviderRegistration<T> registration) {
             event.registerSpriteSet(registration.particleType.get(), spriteSet -> registration.value());
+        }
+
+        @Override
+        public void register(BusGroup busGroup) {
+            FMLClientSetupEvent.getBus(busGroup).addListener(this::setupClient);
+            EntityRenderersEvent.RegisterRenderers.BUS.addListener(this::initRenderers);
+            EntityRenderersEvent.RegisterLayerDefinitions.BUS.addListener(this::initLayerDefinitions);
+            RegisterColorHandlersEvent.Block.BUS.addListener(this::initBlockColors);
+            RegisterParticleProvidersEvent.BUS.addListener(this::initParticleProviders);
         }
     }
 }
