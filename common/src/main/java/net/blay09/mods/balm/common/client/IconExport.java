@@ -56,12 +56,14 @@ public class IconExport {
                         final var modelViewStack = RenderSystem.getModelViewStack();
                         modelViewStack.pushPose();
                         modelViewStack.translate(0f, 0f, -11000f);
+                        RenderSystem.applyModelViewMatrix();
                         Lighting.setupForFlatItems();
 
                         guiGraphics.renderItem(itemStack, 0, 0);
                         guiGraphics.flush();
 
                         modelViewStack.popPose();
+                        RenderSystem.applyModelViewMatrix();
                         renderTarget.unbindWrite();
                         RenderSystem.disableDepthTest();
 
