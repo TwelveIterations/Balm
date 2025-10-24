@@ -23,7 +23,7 @@ you use a mod that requires it.
 
 You can get started [using this template repository](https://github.com/TwelveIterationMods/balm-mod).
 Documentation is [limited](https://balm.twelveiterations.com/docs/getting-started), but the template gives an overview on how to get started, and you can browse [Blay's other mods'
-code](https://github.com/TwelveIterationMods) to learn how specific things are done.
+code](https://github.com/TwelveIterationMods) to learn how specific things are done. Join Blay and other developers using Balm on the [Balm Developers Discord](https://discord.gg/36qHFMNgAh) server.
 
 #### Downloads
 
@@ -94,7 +94,7 @@ If you're interested in contributing to the mod, you can check
 out [issues labelled as "help wanted"](https://github.com/TwelveIterationMods/Balm/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
 
 When it comes to new features, it's best to confer with me first to ensure we share the same vision. You can join us
-on [Discord](https://discord.gg/VAfZ2Nau6j) if you'd like to talk. Generally, Balm is designed to be a wrapper around existing mod and mod loader 
+on [Discord](https://discord.gg/36qHFMNgAh) if you'd like to talk. Generally, Balm is designed to be a wrapper around existing mod and mod loader 
 APIs and does not aim to provide its own systems beyond the core functionality (such as configs). Large emphasis is put 
 on whether a feature is maintainable in the long-term and provides value to the average mod developer.
 
