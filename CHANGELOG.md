@@ -1,1 +1,1 @@
-- Fixed crash on Forge when renderer events are used
+- Updated for breaking change in NeoForge
