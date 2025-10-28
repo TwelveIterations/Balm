@@ -2,17 +2,16 @@ package net.blay09.mods.balm.neoforge.event;
 
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
-import net.blay09.mods.balm.api.event.client.RenderHandEvent;
 import net.blay09.mods.balm.api.event.client.*;
+import net.blay09.mods.balm.api.event.client.RenderHandEvent;
 import net.blay09.mods.balm.api.event.client.screen.ContainerScreenDrawEvent;
 import net.blay09.mods.balm.api.event.client.screen.ScreenDrawEvent;
 import net.blay09.mods.balm.api.event.client.screen.ScreenKeyEvent;
 import net.blay09.mods.balm.api.event.client.screen.ScreenMouseEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
@@ -76,12 +75,14 @@ public class NeoForgeBalmClientEvents {
         });
 
         events.registerEvent(ContainerScreenDrawEvent.Background.class, priority -> {
-            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (ContainerScreenEvent.Render.Background orig) -> {
-                final ContainerScreenDrawEvent.Background event = new ContainerScreenDrawEvent.Background(orig.getContainerScreen(),
-                        orig.getGuiGraphics(),
-                        orig.getMouseX(),
-                        orig.getMouseY());
-                events.fireEventHandlers(priority, event);
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (ScreenEvent.Render.Background orig) -> {
+                if (orig.getScreen() instanceof AbstractContainerScreen<?> containerScreen) {
+                    final ContainerScreenDrawEvent.Background event = new ContainerScreenDrawEvent.Background(containerScreen,
+                            orig.getGuiGraphics(),
+                            orig.getMouseX(),
+                            orig.getMouseY());
+                    events.fireEventHandlers(priority, event);
+                }
             });
         });
 
