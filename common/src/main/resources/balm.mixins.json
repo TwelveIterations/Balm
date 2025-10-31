@@ -12,7 +12,9 @@
     "MinecraftServerMixin",
     "ReloadableServerResourcesMixin",
     "SlotAccessor",
-    "StemBlockMixin"
+    "StemBlockMixin",
+    "RandomizableContainerBlockEntityMixin",
+    "RandomizableContainerMixin"
   ],
   "client": [
     "AbstractContainerScreenAccessor",
