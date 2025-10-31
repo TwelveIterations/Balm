@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "EntityMixin",
-    "PlayerListMixin"
+    "PlayerListMixin",
+    "RandomizableContainerMixin"
   ],
   "client": [
     "MinecraftMixin",

@@ -13,8 +13,7 @@
     "ReloadableServerResourcesMixin",
     "SlotAccessor",
     "StemBlockMixin",
-    "RandomizableContainerBlockEntityMixin",
-    "RandomizableContainerMixin"
+    "RandomizableContainerBlockEntityMixin"
   ],
   "client": [
     "AbstractContainerScreenAccessor",
