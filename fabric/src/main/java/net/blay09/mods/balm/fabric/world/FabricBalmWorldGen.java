@@ -1,11 +1,18 @@
 package net.blay09.mods.balm.fabric.world;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.api.world.BiomeModificationBuilder;
+import net.blay09.mods.balm.api.world.BiomeModifier;
 import net.blay09.mods.balm.api.world.BiomePredicate;
 import net.blay09.mods.balm.mixin.PoiTypesAccessor;
+import net.fabricmc.fabric.api.biome.v1.BiomeModificationContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -13,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 import java.util.function.Supplier;
@@ -48,9 +56,20 @@ public class FabricBalmWorldGen implements BalmWorldGen {
         }).resolveImmediately();
     }
 
+    public record FabricBiomeModificationBuilder(RegistryAccess registryAccess,
+                                                 BiomeModificationContext builder) implements BiomeModificationBuilder {
+        @Override
+        public void addFeature(GenerationStep.Decoration step, Holder<PlacedFeature> placedFeature) {
+            placedFeature.unwrapKey().ifPresent(it -> builder.getGenerationSettings().addFeature(step, it));
+        }
+    }
+
     @Override
-    public void addFeatureToBiomes(BiomePredicate biomePredicate, GenerationStep.Decoration step, ResourceLocation placedFeatureIdentifier) {
-        BiomeModifications.addFeature(it -> biomePredicate.test(it.getBiomeKey().location(), it.getBiomeRegistryEntry()),
-                step, ResourceKey.create(Registries.PLACED_FEATURE, placedFeatureIdentifier));
+    public void modifyBiome(ResourceLocation id, BiomePredicate predicate, BiomeModifier modifier) {
+        BiomeModifications.create(id)
+                .add(ModificationPhase.ADDITIONS, it -> predicate.test(it.getBiomeRegistryEntry()), (selectionContext, modificationContext) -> {
+                    final var registryAccess = Balm.getHooks().getServer().registryAccess();
+                    modifier.modifyBiome(selectionContext.getBiomeRegistryEntry(), new FabricBiomeModificationBuilder(registryAccess, modificationContext));
+                });
     }
 }
