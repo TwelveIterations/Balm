@@ -2,13 +2,12 @@ package net.blay09.mods.balm.common;
 
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntityBase;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
+import net.blay09.mods.balm.world.level.block.entity.BlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,6 +17,10 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @deprecated Use {@link BlockEntity} with {@link BlockEntityUtils} instead, overriding {@link BlockEntity#getUpdateTag(HolderLookup.Provider)}, {@link BlockEntity#getUpdatePacket()} and {@link BlockEntity#preRemoveSideEffects(BlockPos, BlockState)} yourself.
+ */
+@Deprecated
 public class BalmBlockEntity extends BalmBlockEntityBase {
 
     public BalmBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
@@ -36,13 +39,11 @@ public class BalmBlockEntity extends BalmBlockEntityBase {
     }
 
     public void sync() {
-        if (this.getLevel() != null && !this.getLevel().isClientSide()) {
-            ((ServerLevel) this.getLevel()).getChunkSource().blockChanged(this.getBlockPos());
-        }
+        BlockEntityUtils.sync(this);
     }
 
     public Packet<ClientGamePacketListener> createUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, (blockEntity, registryAccess) -> createUpdateTag(blockEntity));
+        return BlockEntityUtils.createUpdatePacket(this);
     }
 
     public CompoundTag createUpdateTag(BlockEntity blockEntity) {

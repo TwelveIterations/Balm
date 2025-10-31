@@ -5,6 +5,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * @deprecated Use {@link BlockEntity} instead.
+ */
+@Deprecated
 public abstract class BalmBlockEntityBase extends BlockEntity {
     public BalmBlockEntityBase(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
