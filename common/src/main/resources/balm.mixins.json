@@ -24,7 +24,8 @@
     "MouseHandlerAccessor",
     "ScreenAccessor",
     "DebugScreenOverlayMixin",
-    "LevelRendererMixin"
+    "LevelRendererMixin",
+    "ChestRendererMixin"
   ],
   "server": [
   ],
