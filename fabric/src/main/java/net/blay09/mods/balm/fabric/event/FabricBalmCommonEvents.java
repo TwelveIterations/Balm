@@ -5,12 +5,14 @@ import net.blay09.mods.balm.api.event.*;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
+import net.blay09.mods.balm.world.item.BuildCreativeModeTabContentsEvent;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.*;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -201,6 +203,10 @@ public class FabricBalmCommonEvents {
             //Client levelUnload fired manually from mixin
         });
 
-
+        events.registerEvent(BuildCreativeModeTabContentsEvent.class, () -> {
+            ItemGroupEvents.MODIFY_ENTRIES_ALL.register((tab, entries) -> {
+                events.fireEventHandlers(new BuildCreativeModeTabContentsEvent(tab, entries));
+            });
+        });
     }
 }

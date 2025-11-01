@@ -4,19 +4,24 @@ import net.blay09.mods.balm.api.BalmProxy;
 import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.module.BalmModule;
-import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.item.BalmItemFactory;
+import net.blay09.mods.balm.world.item.BalmItemFactoryImpl;
+import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
+import net.blay09.mods.balm.world.level.block.BalmBlockFactoryImpl;
 import net.minecraft.SharedConstants;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadContext> implements BalmRuntime<TLoadContext> {
@@ -27,7 +32,6 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
             "net.blay09.mods.balm.api.client.BalmClientProxy").buildLazily();
 
     private boolean ready;
-
 
     @Override
     public BalmProxy getProxy() {
@@ -66,6 +70,16 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public <T> ModProxy<T> modProxy() {
         return new ModProxyImpl<>(this::isModLoaded);
+    }
+
+    @Override
+    public BalmBlockFactory blocks(String namespace) {
+        return new BalmBlockFactoryImpl(registrar(), namespace);
+    }
+
+    @Override
+    public BalmItemFactory items(String namespace) {
+        return new BalmItemFactoryImpl(registrar(), namespace);
     }
 
     public void initializeRuntime() {

@@ -2,9 +2,7 @@ package net.blay09.mods.balm.neoforge;
 
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
-import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
@@ -27,7 +25,7 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
-import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
+import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
@@ -37,17 +35,19 @@ import net.blay09.mods.balm.neoforge.config.NeoForgeBalmConfig;
 import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntities;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
-import net.blay09.mods.balm.neoforge.item.NeoForgeBalmItems;
 import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
+import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeModResource;
 import net.blay09.mods.balm.neoforge.sound.NeoForgeBalmSounds;
 import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmStats;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
+import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -69,15 +69,12 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
-    private final BalmItems items = new NeoForgeBalmItems(legacyNamespaceResolver);
-    private final BalmBlocks blocks = new NeoForgeBalmBlocks(legacyNamespaceResolver, items);
     private final BalmBlockEntities blockEntities = new NeoForgeBalmBlockEntities();
     private final NeoForgeBalmEvents events = new NeoForgeBalmEvents();
     private final BalmMenus menus = new NeoForgeBalmMenus();
     private final BalmNetworking networking = new NeoForgeBalmNetworking(legacyNamespaceResolver);
     private final BalmConfig config = new NeoForgeBalmConfig();
     private final BalmHooks hooks = new NeoForgeBalmHooks();
-    private final BalmRegistries registries = new NeoForgeBalmRegistries();
     private final BalmSounds sounds = new NeoForgeBalmSounds();
     private final BalmEntities entities = new NeoForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities(legacyNamespaceResolver);
@@ -90,6 +87,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmResources resources = new NeoForgeBalmResources();
+    private final BalmRegistrar registrar = new NeoForgeBalmRegistrar();
 
     public NeoForgeBalmRuntime() {
         NeoForgeBalmCommonEvents.registerEvents(events);
@@ -111,18 +109,8 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    public BalmBlocks getBlocks() {
-        return blocks;
-    }
-
-    @Override
     public BalmBlockEntities getBlockEntities() {
         return blockEntities;
-    }
-
-    @Override
-    public BalmItems getItems() {
-        return items;
     }
 
     @Override
@@ -138,11 +126,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmHooks getHooks() {
         return hooks;
-    }
-
-    @Override
-    public BalmRegistries getRegistries() {
-        return registries;
     }
 
     @Override
@@ -268,5 +251,15 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
         return Optional.ofNullable(ModList.get().getModFileById(modId))
                 .map(it -> it.getFile().getContents().get(path))
                 .map(it -> new NeoForgeModResource(path, it.retain()));
+    }
+
+    @Override
+    public BalmRegistrar registrar() {
+        return registrar;
+    }
+
+    @Override
+    public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
+        return new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace);
     }
 }

@@ -20,6 +20,10 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.item.BalmItemFactory;
+import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.minecraft.resources.ResourceLocation;
 
 public interface BalmModule {
@@ -49,7 +53,17 @@ public interface BalmModule {
     default void registerLootTables(BalmLootTables lootTables) {
     }
 
+    /**
+     * @deprecated Use {@link #registerItems(BalmItemFactory)} and {@link #registerCreativeModeTabs(BalmCreativeModeTabFactory)} instead.
+     */
+    @Deprecated
     default void registerItems(BalmItems items) {
+    }
+
+    default void registerItems(BalmItemFactory items) {
+    }
+
+    default void registerCreativeModeTabs(BalmCreativeModeTabFactory creativeModeTabs) {
     }
 
     default void registerBlockEntities(BalmBlockEntities blockEntities) {
@@ -70,7 +84,14 @@ public interface BalmModule {
     default void registerConfig(BalmConfig config) {
     }
 
+    /**
+     * @deprecated Use {@link #registerBlocks(BalmBlockFactory)} instead.
+     */
+    @Deprecated
     default void registerBlocks(BalmBlocks blocks) {
+    }
+
+    default void registerBlocks(BalmBlockFactory factory) {
     }
 
     default void registerEvents(BalmEvents events) {
@@ -79,7 +100,14 @@ public interface BalmModule {
     default void registerComponents(BalmComponents components) {
     }
 
+    /**
+     * @deprecated Use {@link #registerAdditional(BalmRegistrar)} instead.
+     */
+    @Deprecated
     default void registerAdditional(BalmRegistries registries) {
+    }
+
+    default void registerAdditional(BalmRegistrar registrar) {
     }
 
     default void initialize() {

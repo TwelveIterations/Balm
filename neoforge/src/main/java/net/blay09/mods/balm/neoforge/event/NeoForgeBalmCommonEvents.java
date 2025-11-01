@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.event.*;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
+import net.blay09.mods.balm.world.item.BuildCreativeModeTabContentsEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -290,6 +291,11 @@ public class NeoForgeBalmCommonEvents {
                 }
             });
         });
+
+        events.registerEvent(BuildCreativeModeTabContentsEvent.class, priority -> NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent orig) -> {
+            final var event = new BuildCreativeModeTabContentsEvent(orig.getTab(), orig);
+            events.fireEventHandlers(priority, event);
+        }));
     }
 
 }

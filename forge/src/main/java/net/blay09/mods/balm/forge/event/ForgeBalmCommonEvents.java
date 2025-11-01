@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.event.*;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
+import net.blay09.mods.balm.world.item.BuildCreativeModeTabContentsEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -242,6 +243,10 @@ public class ForgeBalmCommonEvents {
             events.fireEventHandlers(priority, event);
         }));
 
+        events.registerEvent(BuildCreativeModeTabContentsEvent.class, priority -> net.minecraftforge.event.BuildCreativeModeTabContentsEvent.BUS.addListener(ForgeBalmEvents.toForge(priority), (orig) -> {
+            final var event = new BuildCreativeModeTabContentsEvent(orig.getTab(), orig);
+            events.fireEventHandlers(priority, event);
+        }));
     }
 
 }

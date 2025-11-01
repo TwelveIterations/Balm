@@ -1,6 +1,9 @@
 package net.blay09.mods.balm.api;
 
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.item.BalmItemFactory;
+import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
@@ -20,6 +23,7 @@ import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
+import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
@@ -31,9 +35,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -121,6 +123,10 @@ public class Balm {
         return runtime.getWorldGen();
     }
 
+    /**
+     * @deprecated Use {@link Balm#blocks(String, Consumer)} instead.
+     */
+    @Deprecated
     public static BalmBlocks getBlocks() {
         return runtime.getBlocks();
     }
@@ -149,6 +155,10 @@ public class Balm {
         return runtime.getRecipes();
     }
 
+    /**
+     * @deprecated Use {@link Balm#registrar()} instead, or {@link Balm#getModSupport()} for the milk fluid.
+     */
+    @Deprecated
     public static BalmRegistries getRegistries() {
         return runtime.getRegistries();
     }
@@ -219,5 +229,33 @@ public class Balm {
 
     public static boolean isDevelopmentEnvironment() {
         return runtime.isDevelopmentEnvironment();
+    }
+
+    public static BalmBlockFactory blocks(String namespace) {
+        return runtime.blocks(namespace);
+    }
+
+    public static void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
+        runtime.blocks(namespace, initializer);
+    }
+
+    public static BalmItemFactory items(String namespace) {
+        return runtime.items(namespace);
+    }
+
+    public static void items(String namespace, Consumer<BalmItemFactory> initializer) {
+        runtime.items(namespace, initializer);
+    }
+
+    public static BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
+        return runtime.creativeModeTabs(namespace);
+    }
+
+    public static void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
+        runtime.creativeModeTabs(namespace, initializer);
+    }
+
+    public static BalmRegistrar registrar() {
+        return runtime.registrar();
     }
 }

@@ -2,10 +2,8 @@ package net.blay09.mods.balm.fabric;
 
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
-import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
@@ -30,7 +28,7 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
-import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
+import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
 import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
 import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
@@ -40,15 +38,17 @@ import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
 import net.blay09.mods.balm.fabric.entity.FabricBalmEntities;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
-import net.blay09.mods.balm.fabric.item.FabricBalmItems;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
+import net.blay09.mods.balm.fabric.core.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
 import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
+import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -74,15 +74,13 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
         throw new UnsupportedOperationException("No default namespace available");
     });
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
-    private final BalmItems items = new FabricBalmItems(legacyNamespaceResolver);
-    private final BalmBlocks blocks = new FabricBalmBlocks(legacyNamespaceResolver, items);
     private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
     private final FabricBalmEvents events = new FabricBalmEvents();
     private final BalmMenus menus = new FabricBalmMenus();
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
     private final BalmHooks hooks = new FabricBalmHooks();
-    private final BalmRegistries registries = new FabricBalmRegistries();
+    private final BalmRegistrar registrar = new FabricBalmRegistrar();
     private final BalmSounds sounds = new FabricBalmSounds();
     private final BalmEntities entities = new FabricBalmEntities();
     private final BalmCapabilities capabilities = new FabricBalmCapabilities();
@@ -119,18 +117,8 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public BalmBlocks getBlocks() {
-        return blocks;
-    }
-
-    @Override
     public BalmBlockEntities getBlockEntities() {
         return blockEntities;
-    }
-
-    @Override
-    public BalmItems getItems() {
-        return items;
     }
 
     @Override
@@ -146,11 +134,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmHooks getHooks() {
         return hooks;
-    }
-
-    @Override
-    public BalmRegistries getRegistries() {
-        return registries;
     }
 
     @Override
@@ -306,5 +289,15 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
         return FabricLoader.getInstance().getModContainer(modId)
                 .flatMap(modContainer -> modContainer.findPath(path))
                 .map(PathModResource::new);
+    }
+
+    @Override
+    public BalmRegistrar registrar() {
+        return registrar;
+    }
+
+    @Override
+    public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
+        return new FabricBalmCreativeModeTabFactory(registrar(), namespace);
     }
 }

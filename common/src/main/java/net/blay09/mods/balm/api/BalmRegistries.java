@@ -1,15 +1,28 @@
 package net.blay09.mods.balm.api;
 
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
+@Deprecated
 public interface BalmRegistries {
-    void enableMilkFluid();
+    default void enableMilkFluid() {
+        Balm.getModSupport().milkFluid().enable();
+    }
 
-    Fluid getMilkFluid();
+    default Fluid getMilkFluid() {
+        return Balm.getModSupport().milkFluid().get();
+    }
 
-    <T> DeferredObject<T> register(Registry<T> registryId, Function<ResourceLocation, T> supplier, ResourceLocation identifier);
+    default <T> DeferredObject<T> register(Registry<T> registryId, Function<ResourceLocation, T> supplier, ResourceLocation identifier) {
+        final var holder = Balm.registrar().register(ResourceKey.create(registryId.key(), identifier), (Supplier<T>) () -> supplier.apply(identifier));
+        return new DeferredObject<>(identifier, holder::value, holder::isBound);
+    }
+
+    BalmRegistries LEGACY = new BalmRegistries() {
+    };
 }

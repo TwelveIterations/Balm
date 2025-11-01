@@ -20,19 +20,24 @@ import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
+import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.item.BalmItemFactory;
+import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -44,11 +49,17 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmWorldGen getWorldGen();
 
-    BalmBlocks getBlocks();
+    @Deprecated
+    default BalmBlocks getBlocks() {
+        return BalmBlocks.LEGACY;
+    }
 
     BalmBlockEntities getBlockEntities();
 
-    BalmItems getItems();
+    @Deprecated
+    default BalmItems getItems() {
+        return BalmItems.LEGACY;
+    }
 
     BalmMenus getMenus();
 
@@ -56,7 +67,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmHooks getHooks();
 
-    BalmRegistries getRegistries();
+    @Deprecated
+    default BalmRegistries getRegistries() {
+        return BalmRegistries.LEGACY;
+    }
 
     BalmSounds getSounds();
 
@@ -104,11 +118,21 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         final var modId = module.getId().getNamespace();
         module.registerConfig(getConfig());
         module.registerResources(getResources());
+
         module.registerAdditional(getRegistries());
+        module.registerAdditional(registrar());
+
         module.registerComponents(getComponents());
+
         module.registerBlocks(getBlocks().scoped(modId));
+        blocks(modId, module::registerBlocks);
+
         module.registerBlockEntities(getBlockEntities());
+
         module.registerItems(getItems().scoped(modId));
+        items(modId, module::registerItems);
+        creativeModeTabs(modId, module::registerCreativeModeTabs);
+
         module.registerEntities(getEntities());
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());
@@ -144,4 +168,28 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void visitModResources(String modId, String path, ModResourceVisitor visitor);
 
     Optional<ModResource> lookupModResource(String modId, String path);
+
+    BalmRegistrar registrar();
+
+    default <T> BalmRegistrar.Scoped<T> registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+        return registrar().scoped(registryKey, namespace);
+    }
+
+    BalmBlockFactory blocks(String namespace);
+
+    default void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
+        initializer.accept(blocks(namespace));
+    }
+
+    BalmItemFactory items(String namespace);
+
+    default void items(String namespace, Consumer<BalmItemFactory> initializer) {
+        initializer.accept(items(namespace));
+    }
+
+    BalmCreativeModeTabFactory creativeModeTabs(String namespace);
+
+    default void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
+        initializer.accept(creativeModeTabs(namespace));
+    }
 }

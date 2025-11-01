@@ -2,9 +2,7 @@ package net.blay09.mods.balm.forge;
 
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
-import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
@@ -28,17 +26,17 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
-import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
+import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
+import net.blay09.mods.balm.forge.core.ForgeBalmRegistrar;
 import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
-import net.blay09.mods.balm.forge.item.ForgeBalmItems;
 import net.blay09.mods.balm.forge.menu.ForgeBalmMenus;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
@@ -48,6 +46,8 @@ import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
 import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
 import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
+import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -70,15 +70,12 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
-    private final BalmItems items = new ForgeBalmItems(legacyNamespaceResolver);
-    private final BalmBlocks blocks = new ForgeBalmBlocks(legacyNamespaceResolver, items);
     private final BalmBlockEntities blockEntities = new ForgeBalmBlockEntities();
     private final ForgeBalmEvents events = new ForgeBalmEvents();
     private final BalmMenus menus = new ForgeBalmMenus();
     private final BalmNetworking networking = new ForgeBalmNetworking();
     private final BalmConfig config = new ForgeBalmConfig();
     private final BalmHooks hooks = new ForgeBalmHooks();
-    private final BalmRegistries registries = new ForgeBalmRegistries();
     private final BalmSounds sounds = new ForgeBalmSounds();
     private final BalmEntities entities = new ForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new ForgeBalmCapabilities(legacyNamespaceResolver);
@@ -91,6 +88,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
     private final BalmResources resources = new ForgeBalmResources();
+    private final BalmRegistrar registrar = new ForgeBalmRegistrar();
 
     public ForgeBalmRuntime() {
         ForgeBalmCommonEvents.registerEvents(events);
@@ -112,18 +110,8 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public BalmBlocks getBlocks() {
-        return blocks;
-    }
-
-    @Override
     public BalmBlockEntities getBlockEntities() {
         return blockEntities;
-    }
-
-    @Override
-    public BalmItems getItems() {
-        return items;
     }
 
     @Override
@@ -139,11 +127,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmHooks getHooks() {
         return hooks;
-    }
-
-    @Override
-    public BalmRegistries getRegistries() {
-        return registries;
     }
 
     @Override
@@ -275,4 +258,13 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
         return Files.exists(resource) ? Optional.of(new PathModResource(resource)) : Optional.empty();
     }
 
+    @Override
+    public BalmRegistrar registrar() {
+        return registrar;
+    }
+
+    @Override
+    public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
+        return new ForgeBalmCreativeModeTabFactory(registrar(), namespace);
+    }
 }
