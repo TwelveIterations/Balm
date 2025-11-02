@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -77,5 +77,12 @@ public record DeferredItemImpl(Holder<Item> holder) implements DeferredItem {
     @Override
     public boolean canSerializeIn(HolderOwner<Item> holderOwner) {
         return holder.canSerializeIn(holderOwner);
+    }
+
+    @Override
+    public ItemStack createStack(int count) {
+        final var itemStack = asItem().getDefaultInstance();
+        itemStack.setCount(count);
+        return itemStack;
     }
 }

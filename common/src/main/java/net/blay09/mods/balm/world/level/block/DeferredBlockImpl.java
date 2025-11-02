@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -83,5 +84,12 @@ public record DeferredBlockImpl(Holder<Block> holder) implements DeferredBlock {
     @Override
     public boolean canSerializeIn(HolderOwner<Block> holderOwner) {
         return holder.canSerializeIn(holderOwner);
+    }
+
+    @Override
+    public ItemStack createStack(int count) {
+        final var itemStack = asItem().getDefaultInstance();
+        itemStack.setCount(count);
+        return itemStack;
     }
 }
