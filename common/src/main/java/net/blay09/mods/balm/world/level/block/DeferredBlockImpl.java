@@ -92,4 +92,9 @@ public record DeferredBlockImpl(Holder<Block> holder) implements DeferredBlock {
         itemStack.setCount(count);
         return itemStack;
     }
+
+    @Override
+    public Block asBlock() {
+        return holder.value();
+    }
 }
