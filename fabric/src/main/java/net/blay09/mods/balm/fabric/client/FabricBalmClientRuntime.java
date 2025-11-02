@@ -6,11 +6,13 @@ import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
+import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererFactory;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
 import net.blay09.mods.balm.fabric.client.screen.FabricBalmScreens;
@@ -24,6 +26,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
 
@@ -79,6 +82,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
                 return reloadListener.reload(sharedState, executor, preparationBarrier, executor2);
             }
         });
+    }
+
+    @Override
+    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer) {
+        initializer.accept(FabricBalmBlockEntityRendererFactory.INSTANCE);
     }
 
 }

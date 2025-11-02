@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -12,6 +13,7 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
+import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererFactory;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
 import net.blay09.mods.balm.forge.client.screen.ForgeBalmScreens;
@@ -21,7 +23,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.fml.ModLoadingContext;
+
+import java.util.function.Consumer;
 
 public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadContext> {
 
@@ -69,6 +74,13 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
         if (Minecraft.getInstance().getResourceManager() instanceof ReloadableResourceManager reloadableResourceManager) {
             reloadableResourceManager.registerReloadListener(reloadListener);
         }
+    }
+
+    @Override
+    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer) {
+        EntityRenderersEvent.RegisterRenderers.BUS.addListener((event) -> {
+           initializer.accept(new ForgeBalmBlockEntityRendererFactory(event));
+        });
     }
 
 }

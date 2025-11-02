@@ -10,7 +10,6 @@ import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
-import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactoryImpl;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
@@ -72,16 +71,6 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
         return new ModProxyImpl<>(this::isModLoaded);
     }
 
-    @Override
-    public BalmBlockFactory blocks(String namespace) {
-        return new BalmBlockFactoryImpl(registrar(), namespace);
-    }
-
-    @Override
-    public BalmItemFactory items(String namespace) {
-        return new BalmItemFactoryImpl(registrar(), namespace);
-    }
-
     public void initializeRuntime() {
         ready = true;
         for (final var callback : initCallbacks) {
@@ -106,5 +95,15 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public boolean isDevelopmentEnvironment() {
         return SharedConstants.IS_RUNNING_IN_IDE;
+    }
+
+    @Override
+    public void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
+        initializer.accept(new BalmBlockFactoryImpl(registrar(), namespace));
+    }
+
+    @Override
+    public void items(String namespace, Consumer<BalmItemFactory> initializer) {
+        initializer.accept(new BalmItemFactoryImpl(registrar(), namespace));
     }
 }

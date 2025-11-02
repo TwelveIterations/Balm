@@ -287,11 +287,23 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
+        initializer.accept(new FabricBalmCreativeModeTabFactory(registrar(), namespace));
+    }
+
+    @Override
+    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
+        initializer.accept(new FabricBalmBlockEntityTypeFactory(registrar(), namespace));
+    }
+
+    @Override
+    @Deprecated
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new FabricBalmCreativeModeTabFactory(registrar(), namespace);
     }
 
     @Override
+    @Deprecated
     public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
         return new FabricBalmBlockEntityTypeFactory(registrar(), namespace);
     }

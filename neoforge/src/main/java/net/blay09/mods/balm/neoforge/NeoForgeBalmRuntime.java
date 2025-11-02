@@ -252,6 +252,16 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
+        initializer.accept(new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace));
+    }
+
+    @Override
+    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
+        initializer.accept(new NeoForgeBalmBlockEntityTypeFactory(registrar(), namespace));
+    }
+
+    @Override
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace);
     }

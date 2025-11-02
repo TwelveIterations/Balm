@@ -7,8 +7,11 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+
+import java.util.function.Consumer;
 
 public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmRenderers getRenderers();
@@ -25,6 +28,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         final var modId = module.getId().getNamespace();
         module.registerEvents(Balm.getEvents());
         module.registerRenderers(getRenderers().scoped(modId));
+        blockEntityRenderers(modId, module::registerBlockEntityRenderers);
         module.registerScreens(getScreens().scoped(modId));
         module.registerModels(getModels().scoped(modId));
         module.registerKeyMappings(getKeyMappings().scoped(modId));
@@ -38,4 +42,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void registerModule(BalmClientModule module);
 
     void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
+
+    void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer);
 }

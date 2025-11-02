@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.BalmEvents;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
 import net.minecraft.resources.ResourceLocation;
 
 public interface BalmClientModule {
@@ -17,6 +18,9 @@ public interface BalmClientModule {
     }
 
     default void registerRenderers(BalmRenderers renderers) {
+    }
+
+    default void registerBlockEntityRenderers(BalmBlockEntityRendererFactory blockEntityRenderers) {
     }
 
     default void registerScreens(BalmScreens screens) {

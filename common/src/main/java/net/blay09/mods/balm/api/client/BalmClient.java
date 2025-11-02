@@ -6,8 +6,12 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+
+import java.util.function.Consumer;
 
 public class BalmClient {
     private static final BalmClientRuntime<BalmRuntimeLoadContext> runtime = BalmClientRuntimeSpi.create();
@@ -58,5 +62,9 @@ public class BalmClient {
 
     public static BalmClientRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
+    }
+
+    public static void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer) {
+        runtime.blockEntityRenderers(namespace, initializer);
     }
 }

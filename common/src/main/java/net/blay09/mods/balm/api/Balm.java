@@ -242,32 +242,16 @@ public class Balm {
         return runtime.isDevelopmentEnvironment();
     }
 
-    public static BalmBlockFactory blocks(String namespace) {
-        return runtime.blocks(namespace);
-    }
-
     public static void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
         runtime.blocks(namespace, initializer);
-    }
-
-    public static BalmItemFactory items(String namespace) {
-        return runtime.items(namespace);
     }
 
     public static void items(String namespace, Consumer<BalmItemFactory> initializer) {
         runtime.items(namespace, initializer);
     }
 
-    public static BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
-        return runtime.creativeModeTabs(namespace);
-    }
-
     public static void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
         runtime.creativeModeTabs(namespace, initializer);
-    }
-
-    public static BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
-        return runtime.blockEntityTypes(namespace);
     }
 
     public static void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {

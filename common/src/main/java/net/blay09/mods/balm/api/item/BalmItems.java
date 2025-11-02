@@ -84,7 +84,7 @@ public interface BalmItems {
      */
     @Deprecated
     default DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier) {
-        final var holder = Balm.creativeModeTabs(identifier.getNamespace()).register(identifier.getPath(), builder -> {
+        final var holder = Balm.getRuntime().creativeModeTabs(identifier.getNamespace()).register(identifier.getPath(), builder -> {
             final var displayName = Component.translatable(identifier.toLanguageKey("itemGroup"));
             return builder
                     .title(displayName)

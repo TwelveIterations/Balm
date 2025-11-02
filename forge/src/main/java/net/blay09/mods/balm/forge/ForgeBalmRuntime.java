@@ -257,6 +257,16 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
+    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
+        initializer.accept(new ForgeBalmBlockEntityTypeFactory(registrar(), namespace));
+    }
+
+    @Override
+    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
+        initializer.accept(new ForgeBalmCreativeModeTabFactory(registrar(), namespace));
+    }
+
+    @Override
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new ForgeBalmCreativeModeTabFactory(registrar(), namespace);
     }

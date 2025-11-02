@@ -3,9 +3,6 @@ package net.blay09.mods.balm.api.block;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.block.entity.BalmBlockEntityFactory;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,26 +22,25 @@ public interface BalmBlockEntities {
      * @deprecated Use {@link net.blay09.mods.balm.api.Balm#blockEntityTypes(String, Consumer)} instead.
      */
     @Deprecated
-    @SuppressWarnings({"unchecked", "rawtypes"})
     default <T extends BlockEntity> DeferredObject<BlockEntityType<T>> registerBlockEntity(ResourceLocation identifier, BalmBlockEntityFactory<T> factory, Supplier<Block[]> blocks) {
-        final var holder = Balm.blockEntityTypes(identifier.getNamespace()).register(identifier.getPath(), factory::create, () -> Set.of(blocks.get())).asHolder();
-        return (DeferredObject) new DeferredObject<>(identifier, holder::value, holder::isBound);
+        final var holder = Balm.getRuntime().blockEntityTypes(identifier.getNamespace()).register(identifier.getPath(), factory::create, () -> Set.of(blocks.get())).asHolder();
+        return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
 
     /**
      * @deprecated Use {@link net.blay09.mods.balm.api.Balm#blockEntityTypes(String, Consumer)} instead.
      */
     @Deprecated
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked"})
     default <T extends BlockEntity> DeferredObject<BlockEntityType<T>> registerBlockEntity(ResourceLocation identifier, BalmBlockEntityFactory<T> factory, DeferredObject<Block>... blocks) {
-        final var holder = Balm.blockEntityTypes(identifier.getNamespace()).register(identifier.getPath(), factory::create, () -> {
+        final var holder = Balm.getRuntime().blockEntityTypes(identifier.getNamespace()).register(identifier.getPath(), factory::create, () -> {
             final var resolvedBlocks = new HashSet<Block>();
             for (final var block : blocks) {
                 resolvedBlocks.add(block.get());
             }
             return resolvedBlocks;
         }).asHolder();
-        return (DeferredObject) new DeferredObject<>(identifier, holder::value, holder::isBound);
+        return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
 
     BalmBlockEntities LEGACY = new BalmBlockEntities() {

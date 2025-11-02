@@ -180,24 +180,22 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return registrar().scoped(registryKey, namespace);
     }
 
-    BalmBlockFactory blocks(String namespace);
+    void blocks(String namespace, Consumer<BalmBlockFactory> initializer);
 
-    default void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
-        initializer.accept(blocks(namespace));
-    }
+    void items(String namespace, Consumer<BalmItemFactory> initializer);
 
-    BalmItemFactory items(String namespace);
-
-    default void items(String namespace, Consumer<BalmItemFactory> initializer) {
-        initializer.accept(items(namespace));
-    }
-
+    /**
+     * @deprecated Use {@link Balm#creativeModeTabs(String, Consumer)} instead.
+     */
+    @Deprecated
     BalmCreativeModeTabFactory creativeModeTabs(String namespace);
 
-    default void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
-        initializer.accept(creativeModeTabs(namespace));
-    }
+    void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer);
 
+    /**
+     * @deprecated Use {@link Balm#blockEntityTypes(String, Consumer)} instead.
+     */
+    @Deprecated
     BalmBlockEntityTypeFactory blockEntityTypes(String namespace);
 
     default void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {

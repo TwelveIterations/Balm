@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -30,6 +31,10 @@ public interface BalmRenderers {
 
     <T extends Entity> void registerEntityRenderer(ResourceLocation id, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#blockEntityRenderers(String, Consumer)} instead.
+     */
+    @Deprecated
     <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(ResourceLocation id, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider);
 
     void registerBlockColorHandler(ResourceLocation id, BlockColor color, Supplier<Block[]> blocks);
