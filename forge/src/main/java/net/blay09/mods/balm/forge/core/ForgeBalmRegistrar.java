@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.forge.core;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.DeferredHolder;
 import net.blay09.mods.balm.forge.DeferredRegisters;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -13,8 +14,8 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
     @Override
     public <T> Holder<T> register(ResourceKey<T> resourceKey, Supplier<T> resourceSupplier) {
         final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.location().getNamespace());
-        final var registryObject = deferredRegister.register(resourceKey.location().getPath(), resourceSupplier);
-        return registryObject.getHolder().orElseThrow();
+        deferredRegister.register(resourceKey.location().getPath(), resourceSupplier);
+        return new DeferredHolder<>(resourceKey);
     }
 
     @Override
