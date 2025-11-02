@@ -6,6 +6,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -28,10 +29,25 @@ public class BalmItemFactoryImpl implements BalmItemFactory {
         return new BalmItemRegistrationImpl(holder);
     }
 
-    private record BalmItemRegistrationImpl(Holder<Item> holder) implements BalmItemRegistration {
+    private static final class BalmItemRegistrationImpl implements BalmItemRegistration {
+        private final Holder<Item> holder;
+        private ItemLike itemLike;
+
+        private BalmItemRegistrationImpl(Holder<Item> holder) {
+            this.holder = holder;
+        }
+
         @Override
         public Holder<Item> asHolder() {
             return holder;
+        }
+
+        @Override
+        public ItemLike asItemLike() {
+            if (itemLike == null) {
+                itemLike = new DeferredItem(holder);
+            }
+            return itemLike;
         }
     }
 }

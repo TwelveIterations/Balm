@@ -9,9 +9,5 @@ public interface BalmHolderRegistration<T> {
         return asHolder().unwrapKey().orElseThrow();
     }
 
-    default T asItem() {
-        return asHolder().value();
-    }
-
     Holder<T> asHolder();
 }

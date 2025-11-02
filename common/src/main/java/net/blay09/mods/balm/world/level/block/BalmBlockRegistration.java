@@ -1,13 +1,9 @@
 package net.blay09.mods.balm.world.level.block;
 
 import net.blay09.mods.balm.core.BalmHolderRegistration;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.BiFunction;
@@ -27,4 +23,8 @@ public interface BalmBlockRegistration extends BalmHolderRegistration<Block> {
     }
 
     BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Item.Properties properties);
+
+    BlockLike asBlockLike();
+
+    ItemLike asItemLike();
 }
