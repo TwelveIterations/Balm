@@ -1,13 +1,22 @@
 package net.blay09.mods.balm.world.level.block;
 
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
 public interface DiscriminatedBlocks<T> {
-    DeferredBlock getDeferred(T discriminator);
+    default DeferredBlock getUndiscriminatedDeferred() {
+        return getDeferred(null);
+    }
 
-    Block get(T discriminator);
+    DeferredBlock getDeferred(@Nullable T discriminator);
+
+    default Block getUndiscriminated() {
+        return get(null);
+    }
+
+    Block get(@Nullable T discriminator);
 
     Collection<DeferredBlock> getAllDeferred();
 
