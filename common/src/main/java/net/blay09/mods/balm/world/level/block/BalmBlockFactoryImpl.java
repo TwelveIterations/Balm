@@ -192,7 +192,7 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         public BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Supplier<Item.Properties> properties) {
             final var blockResourceKey = holder.unwrapKey().orElseThrow();
             final var itemResourceKey = ResourceKey.create(Registries.ITEM, blockResourceKey.location());
-            registrar.register(itemResourceKey, (Supplier<Item>) () -> constructor.apply(holder.value(), properties.get()));
+            registrar.register(itemResourceKey, (Supplier<Item>) () -> constructor.apply(holder.value(), properties.get().setId(itemResourceKey)));
             return this;
         }
 
