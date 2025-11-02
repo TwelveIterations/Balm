@@ -25,8 +25,8 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
     }
 
     @Override
-    public BalmBlockRegistration register(String location, Function<BlockBehaviour.Properties, Block> constructor, Supplier<BlockBehaviour.Properties> properties) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, location);
+    public BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, Supplier<BlockBehaviour.Properties> properties) {
+        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.BLOCK, resourceLocation);
         final var holder = registrar.register(resourceKey, (Supplier<Block>) () -> constructor.apply(properties.get().setId(resourceKey)));
         return new BalmBlockRegistrationImpl(registrar, holder);

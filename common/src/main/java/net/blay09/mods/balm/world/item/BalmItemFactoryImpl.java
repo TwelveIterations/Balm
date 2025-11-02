@@ -21,8 +21,8 @@ public class BalmItemFactoryImpl implements BalmItemFactory {
     }
 
     @Override
-    public BalmItemRegistration register(String location, Function<Item.Properties, Item> constructor, Supplier<Item.Properties> properties) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, location);
+    public BalmItemRegistration register(String name, Function<Item.Properties, Item> constructor, Supplier<Item.Properties> properties) {
+        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.ITEM, resourceLocation);
         final var holder = registrar.register(resourceKey, (Supplier<Item>) () -> constructor.apply(properties.get().setId(resourceKey)));
         return new BalmItemRegistrationImpl(holder);

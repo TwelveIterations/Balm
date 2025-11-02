@@ -10,18 +10,18 @@ import java.util.function.Supplier;
  */
 public interface BalmItemFactory {
 
-    default BalmItemRegistration register(String location, Function<Item.Properties, Item> constructor) {
-        return register(location, constructor, Item.Properties::new);
+    default BalmItemRegistration register(String name, Function<Item.Properties, Item> constructor) {
+        return register(name, constructor, Item.Properties::new);
     }
 
-    default BalmItemRegistration register(String location, Function<Item.Properties, Item> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
-        return register(location, constructor, () -> propertiesBuilder.apply(new Item.Properties()));
+    default BalmItemRegistration register(String name, Function<Item.Properties, Item> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
+        return register(name, constructor, () -> propertiesBuilder.apply(new Item.Properties()));
     }
 
-    default BalmItemRegistration register(String location, Function<Item.Properties, Item> constructor, Item.Properties properties) {
-        return register(location, constructor, () -> properties);
+    default BalmItemRegistration register(String name, Function<Item.Properties, Item> constructor, Item.Properties properties) {
+        return register(name, constructor, () -> properties);
     }
 
-    BalmItemRegistration register(String location, Function<Item.Properties, Item> constructor, Supplier<Item.Properties> propertiesSupplier);
+    BalmItemRegistration register(String name, Function<Item.Properties, Item> constructor, Supplier<Item.Properties> propertiesSupplier);
 
 }

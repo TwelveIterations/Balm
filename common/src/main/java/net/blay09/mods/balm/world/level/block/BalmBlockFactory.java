@@ -11,14 +11,14 @@ import java.util.function.Supplier;
  */
 public interface BalmBlockFactory {
 
-    default BalmBlockRegistration register(String location, Function<BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesBuilder) {
-        return register(location, constructor, () -> propertiesBuilder.apply(BlockBehaviour.Properties.of()));
+    default BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesBuilder) {
+        return register(name, constructor, () -> propertiesBuilder.apply(BlockBehaviour.Properties.of()));
     }
 
-    default BalmBlockRegistration register(String location, Function<BlockBehaviour.Properties, Block> constructor, BlockBehaviour.Properties properties) {
-        return register(location, constructor, () -> properties);
+    default BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, BlockBehaviour.Properties properties) {
+        return register(name, constructor, () -> properties);
     }
 
-    BalmBlockRegistration register(String location, Function<BlockBehaviour.Properties, Block> constructor, Supplier<BlockBehaviour.Properties> propertiesSupplier);
+    BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, Supplier<BlockBehaviour.Properties> propertiesSupplier);
 
 }

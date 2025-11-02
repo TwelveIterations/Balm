@@ -10,15 +10,15 @@ import java.util.function.Supplier;
  */
 public interface BalmCreativeModeTabFactory {
 
-    default BalmCreativeModeTabRegistration register(String location, Function<CreativeModeTab.Builder, CreativeModeTab.Builder> builderConsumer) {
-        return register(location, () -> builderConsumer.apply(createBuilder()).build());
+    default BalmCreativeModeTabRegistration register(String name, Function<CreativeModeTab.Builder, CreativeModeTab.Builder> builderConsumer) {
+        return register(name, () -> builderConsumer.apply(createBuilder()).build());
     }
 
-    default BalmCreativeModeTabRegistration register(String location, CreativeModeTab creativeModeTab) {
-        return register(location, () -> creativeModeTab);
+    default BalmCreativeModeTabRegistration register(String name, CreativeModeTab creativeModeTab) {
+        return register(name, () -> creativeModeTab);
     }
 
-    BalmCreativeModeTabRegistration register(String location, Supplier<CreativeModeTab> creativeModeTab);
+    BalmCreativeModeTabRegistration register(String name, Supplier<CreativeModeTab> creativeModeTab);
 
     CreativeModeTab.Builder createBuilder();
 }

@@ -21,8 +21,8 @@ public abstract class AbstractBalmCreativeModeTabFactory implements BalmCreative
     }
 
     @Override
-    public BalmCreativeModeTabRegistration register(String location, Supplier<CreativeModeTab> creativeModeTab) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, location);
+    public BalmCreativeModeTabRegistration register(String name, Supplier<CreativeModeTab> creativeModeTab) {
+        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.CREATIVE_MODE_TAB, resourceLocation);
         final var holder = registrar.register(resourceKey, creativeModeTab);
         return new BalmCreativeModeTabRegistrationImpl(holder);
