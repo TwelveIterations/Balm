@@ -119,10 +119,6 @@ public class Balm {
         return runtime.getWorldGen();
     }
 
-    public static BalmComponents getComponents() {
-        return runtime.getComponents();
-    }
-
     public static BalmMenus getMenus() {
         return runtime.getMenus();
     }
@@ -313,5 +309,13 @@ public class Balm {
     @Deprecated
     public static BalmSounds getSounds() {
         return runtime.getSounds();
+    }
+
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(net.minecraft.resources.ResourceKey, String)} instead.
+     */
+    @Deprecated
+    public static BalmComponents getComponents() {
+        return runtime.getComponents();
     }
 }

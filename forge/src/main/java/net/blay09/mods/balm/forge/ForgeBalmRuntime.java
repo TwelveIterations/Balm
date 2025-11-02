@@ -4,7 +4,6 @@ import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
-import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
@@ -25,7 +24,6 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
-import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
 import net.blay09.mods.balm.forge.core.ForgeBalmRegistrar;
 import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
@@ -75,7 +73,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmStats stats = new ForgeBalmStats(legacyNamespaceResolver);
     private final BalmRecipes recipes = new ForgeBalmRecipes();
-    private final BalmComponents components = new ForgeBalmComponents();
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
@@ -171,11 +168,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
         AddReloadListenerEvent.BUS.addListener((event) -> event.addListener((ResourceManagerReloadListener) reloadListener::accept));
-    }
-
-    @Override
-    public BalmComponents getComponents() {
-        return components;
     }
 
     @Override

@@ -121,7 +121,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener);
 
-    BalmComponents getComponents();
+    @Deprecated
+    default BalmComponents getComponents() {
+        return BalmComponents.LEGACY;
+    }
 
     <T> PlatformProxy<T> platformProxy();
 
@@ -141,6 +144,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerAdditional(registrar());
 
         module.registerComponents(getComponents());
+        module.registerDataComponentTypes(registrar().scoped(Registries.DATA_COMPONENT_TYPE, modId));
 
         module.registerBlocks(getBlocks().scoped(modId));
         blocks(modId, module::registerBlocks);
@@ -163,7 +167,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerStats(getStats());
 
         module.registerSounds(getSounds());
-        module.registerSounds(registrar().scoped(Registries.SOUND_EVENT, modId));
+        module.registerSoundEvents(registrar().scoped(Registries.SOUND_EVENT, modId));
 
         module.registerPermissions(getPermissions());
         module.registerParticles(getParticles());

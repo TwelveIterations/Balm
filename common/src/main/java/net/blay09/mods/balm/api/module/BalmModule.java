@@ -25,6 +25,7 @@ import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
@@ -35,13 +36,13 @@ public interface BalmModule {
     }
 
     /**
-     * @deprecated Use {@link #registerSounds(BalmRegistrar.Scoped)} instead.
+     * @deprecated Use {@link #registerSoundEvents(BalmRegistrar.Scoped)} instead.
      */
     @Deprecated
     default void registerSounds(BalmSounds sounds) {
     }
 
-    default void registerSounds(BalmRegistrar.Scoped<SoundEvent> sounds) {
+    default void registerSoundEvents(BalmRegistrar.Scoped<SoundEvent> sounds) {
     }
 
     default void registerParticles(BalmParticles particles) {
@@ -113,7 +114,14 @@ public interface BalmModule {
     default void registerEvents(BalmEvents events) {
     }
 
+    /**
+     * @deprecated Use {@link #registerDataComponentTypes(BalmRegistrar.Scoped)} instead.
+     */
+    @Deprecated
     default void registerComponents(BalmComponents components) {
+    }
+
+    default void registerDataComponentTypes(BalmRegistrar.Scoped<DataComponentType<?>> dataComponentTypes) {
     }
 
     /**

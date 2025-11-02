@@ -4,7 +4,6 @@ import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
-import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
@@ -25,7 +24,6 @@ import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
-import net.blay09.mods.balm.neoforge.component.NeoForgeBalmComponents;
 import net.blay09.mods.balm.neoforge.config.NeoForgeBalmConfig;
 import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntities;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
@@ -74,7 +72,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmStats stats = new NeoForgeBalmStats(legacyNamespaceResolver);
     private final BalmRecipes recipes = new NeoForgeBalmRecipes();
-    private final BalmComponents components = new NeoForgeBalmComponents();
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
@@ -166,11 +163,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     public void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
         NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier,
                 (ResourceManagerReloadListener) reloadListener::accept));
-    }
-
-    @Override
-    public BalmComponents getComponents() {
-        return components;
     }
 
     @Override

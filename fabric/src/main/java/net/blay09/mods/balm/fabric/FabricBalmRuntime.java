@@ -5,7 +5,6 @@ import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
-import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
@@ -27,7 +26,6 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
 import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
-import net.blay09.mods.balm.fabric.component.FabricBalmComponents;
 import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
 import net.blay09.mods.balm.fabric.entity.FabricBalmEntities;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
@@ -79,7 +77,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmStats stats = new FabricBalmStats();
     private final BalmRecipes recipes = new FabricBalmRecipes();
-    private final BalmComponents components = new FabricBalmComponents();
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
     private final BalmParticles particles = new FabricBalmParticles();
     private final BalmPlatform platform = new FabricBalmPlatform();
@@ -190,11 +187,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
                 return identifier;
             }
         });
-    }
-
-    @Override
-    public BalmComponents getComponents() {
-        return components;
     }
 
     @Override
