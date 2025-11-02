@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public interface DiscriminatedBlocks<T> {
     default DeferredBlock getUndiscriminatedDeferred() {
@@ -26,6 +27,10 @@ public interface DiscriminatedBlocks<T> {
     Collection<DeferredBlock> getDiscriminatedDeferred();
 
     Collection<Block> getDiscriminated();
+
+    void forEach(Consumer<Block> consumer);
+
+    void forEachDeferred(Consumer<DeferredBlock> consumer);
 
     void forEach(BiConsumer<T, Block> consumer);
 
