@@ -8,16 +8,17 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalmRegistrar implements BalmRegistrar {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Holder<T> register(ResourceKey<T> resourceKey, Supplier<T> resourceSupplier) {
+    public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<ResourceLocation, T> resourceFunction) {
         final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(resourceKey.registry());
         Objects.requireNonNull(registry);
-        return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceSupplier.get()));
+        return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.location())));
     }
 
     @Override
@@ -37,11 +38,11 @@ public class FabricBalmRegistrar implements BalmRegistrar {
 
         @Override
         @SuppressWarnings("unchecked")
-        public Holder<T> register(String resourcePath, Supplier<T> resourceSupplier) {
+        public Holder<T> register(String name, Function<ResourceLocation, T> resourceFunction) {
             final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(registryKey.location());
             Objects.requireNonNull(registry);
-            final var resourceKey = ResourceKey.create(registryKey, ResourceLocation.fromNamespaceAndPath(namespace, resourcePath));
-            return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceSupplier.get()));
+            final var resourceKey = ResourceKey.create(registryKey, ResourceLocation.fromNamespaceAndPath(namespace, name));
+            return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.location())));
         }
     }
 

@@ -26,6 +26,7 @@ import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 public interface BalmModule {
     ResourceLocation getId();
@@ -33,7 +34,14 @@ public interface BalmModule {
     default void registerStats(BalmStats stats) {
     }
 
+    /**
+     * @deprecated Use {@link #registerSounds(BalmRegistrar.Scoped)} instead.
+     */
+    @Deprecated
     default void registerSounds(BalmSounds sounds) {
+    }
+
+    default void registerSounds(BalmRegistrar.Scoped<SoundEvent> sounds) {
     }
 
     default void registerParticles(BalmParticles particles) {

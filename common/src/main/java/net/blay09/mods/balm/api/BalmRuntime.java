@@ -34,6 +34,7 @@ import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -77,7 +78,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return BalmRegistries.LEGACY;
     }
 
-    BalmSounds getSounds();
+    @Deprecated
+    default BalmSounds getSounds() {
+        return BalmSounds.LEGACY;
+    }
 
     BalmEntities getEntities();
 
@@ -157,7 +161,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerRecipes(getRecipes());
         module.registerLootTables(getLootTables());
         module.registerStats(getStats());
+
         module.registerSounds(getSounds());
+        module.registerSounds(registrar().scoped(Registries.SOUND_EVENT, modId));
+
         module.registerPermissions(getPermissions());
         module.registerParticles(getParticles());
         module.registerEvents(getEvents());

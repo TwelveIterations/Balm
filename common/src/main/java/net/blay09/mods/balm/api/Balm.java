@@ -135,10 +135,6 @@ public class Balm {
         return runtime.getRecipes();
     }
 
-    public static BalmSounds getSounds() {
-        return runtime.getSounds();
-    }
-
     public static BalmEntities getEntities() {
         return runtime.getEntities();
     }
@@ -309,5 +305,13 @@ public class Balm {
     @Deprecated
     public static boolean isDevelopmentEnvironment() {
         return runtime.isDevelopmentEnvironment();
+    }
+
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(net.minecraft.resources.ResourceKey, String)} instead.
+     */
+    @Deprecated
+    public static BalmSounds getSounds() {
+        return runtime.getSounds();
     }
 }

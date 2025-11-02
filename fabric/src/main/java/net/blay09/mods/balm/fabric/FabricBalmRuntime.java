@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -15,13 +14,11 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.resources.PathModResource;
-import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
@@ -43,7 +40,6 @@ import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.core.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
-import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
 import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabFactory;
@@ -77,7 +73,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmConfig config = new FabricBalmConfig();
     private final BalmHooks hooks = new FabricBalmHooks();
     private final BalmRegistrar registrar = new FabricBalmRegistrar();
-    private final BalmSounds sounds = new FabricBalmSounds();
     private final BalmEntities entities = new FabricBalmEntities();
     private final BalmCapabilities capabilities = new FabricBalmCapabilities();
     private final BalmCommands commands = new FabricBalmCommands();
@@ -126,11 +121,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmHooks getHooks() {
         return hooks;
-    }
-
-    @Override
-    public BalmSounds getSounds() {
-        return sounds;
     }
 
     @Override

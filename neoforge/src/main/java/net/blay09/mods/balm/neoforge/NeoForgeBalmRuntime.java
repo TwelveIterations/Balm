@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.neoforge;
 
-import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
@@ -14,12 +13,10 @@ import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
-import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
@@ -43,7 +40,6 @@ import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeModResource;
-import net.blay09.mods.balm.neoforge.sound.NeoForgeBalmSounds;
 import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmStats;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabFactory;
@@ -56,12 +52,9 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
-import net.neoforged.neoforgespi.language.IModInfo;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -75,7 +68,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmNetworking networking = new NeoForgeBalmNetworking(legacyNamespaceResolver);
     private final BalmConfig config = new NeoForgeBalmConfig();
     private final BalmHooks hooks = new NeoForgeBalmHooks();
-    private final BalmSounds sounds = new NeoForgeBalmSounds();
     private final BalmEntities entities = new NeoForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities(legacyNamespaceResolver);
     private final BalmCommands commands = new NeoForgeBalmCommands();
@@ -122,11 +114,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmHooks getHooks() {
         return hooks;
-    }
-
-    @Override
-    public BalmSounds getSounds() {
-        return sounds;
     }
 
     @Override
