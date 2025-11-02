@@ -36,6 +36,7 @@ import net.blay09.mods.balm.fabric.entity.FabricBalmEntities;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.level.block.entity.FabricBalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
@@ -46,6 +47,7 @@ import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
 import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabFactory;
+import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -60,7 +62,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -86,6 +87,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmComponents components = new FabricBalmComponents();
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
     private final BalmParticles particles = new FabricBalmParticles();
+    private final BalmPlatform platform = new FabricBalmPlatform();
     private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy()
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
@@ -162,17 +164,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public boolean isModLoaded(String modId) {
-        return FabricLoader.getInstance().isModLoaded(modId);
-    }
-
-    @Override
-    public String getModName(String modId) {
-        return FabricLoader.getInstance().getModContainer(modId).map(it -> it.getMetadata().getName()).orElse(modId);
-    }
-
-
-    @Override
     public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
         BalmLoadContexts.register(modId, context);
 
@@ -232,33 +223,8 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public String getPlatform() {
-        return LoaderPlatforms.FABRIC;
-    }
-
-    @Override
     public BalmResources getResources() {
         return resources;
-    }
-
-    @Override
-    public BalmEnvironment getEnvironment() {
-        return switch (FabricLoader.getInstance().getEnvironmentType()) {
-            case CLIENT -> BalmEnvironment.CLIENT;
-            case SERVER -> BalmEnvironment.DEDICATED_SERVER;
-        };
-    }
-
-    @Override
-    public boolean isDevelopmentEnvironment() {
-        return FabricLoader.getInstance().isDevelopmentEnvironment();
-    }
-
-    @Override
-    public List<String> getLoadedPrimaryModIds() {
-        return FabricLoader.getInstance().getAllMods().stream()
-                .map(it -> it.getMetadata().getId())
-                .toList();
     }
 
     @Override
@@ -294,6 +260,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
         initializer.accept(new FabricBalmBlockEntityTypeFactory(registrar(), namespace));
+    }
+
+    @Override
+    public BalmPlatform platform() {
+        return platform;
     }
 
     @Override

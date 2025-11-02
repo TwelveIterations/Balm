@@ -14,7 +14,6 @@ import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactoryImpl;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactoryImpl;
-import net.minecraft.SharedConstants;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -58,17 +57,17 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
 
     @Override
     public <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
-        return new SidedProxy<>(this::getEnvironment, commonName, clientName);
+        return new SidedProxy<>(() -> platform().physicalSide(), commonName, clientName);
     }
 
     @Override
     public <T> PlatformProxy<T> platformProxy() {
-        return new PlatformProxyImpl<>(getPlatform());
+        return new PlatformProxyImpl<>(platform().name());
     }
 
     @Override
     public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>(this::isModLoaded);
+        return new ModProxyImpl<>((modId) -> platform().isModLoaded(modId));
     }
 
     public void initializeRuntime() {
@@ -83,18 +82,13 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
 
     @Override
     public void initializeIfLoaded(String modId, String className) {
-        if (isModLoaded(modId)) {
+        if (platform().isModLoaded(modId)) {
             try {
                 Class.forName(className).getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public boolean isDevelopmentEnvironment() {
-        return SharedConstants.IS_RUNNING_IN_IDE;
     }
 
     @Override

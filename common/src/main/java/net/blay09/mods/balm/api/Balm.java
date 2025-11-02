@@ -27,6 +27,7 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
@@ -68,14 +69,6 @@ public class Balm {
                 registerModule(module);
             }
         });
-    }
-
-    public static boolean isModLoaded(String modId) {
-        return runtime.isModLoaded(modId);
-    }
-
-    public static String getModName(String modId) {
-        return runtime.getModName(modId);
     }
 
     public static <T> PlatformProxy<T> platformProxy() {
@@ -126,30 +119,6 @@ public class Balm {
         return runtime.getWorldGen();
     }
 
-    /**
-     * @deprecated Use {@link Balm#blocks(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmBlocks getBlocks() {
-        return runtime.getBlocks();
-    }
-
-    /**
-     * @deprecated Use {@link Balm#blockEntityTypes(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmBlockEntities getBlockEntities() {
-        return runtime.getBlockEntities();
-    }
-
-    /**
-     * @deprecated Use {@link Balm#items(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmItems getItems() {
-        return runtime.getItems();
-    }
-
     public static BalmComponents getComponents() {
         return runtime.getComponents();
     }
@@ -164,14 +133,6 @@ public class Balm {
 
     public static BalmRecipes getRecipes() {
         return runtime.getRecipes();
-    }
-
-    /**
-     * @deprecated Use {@link Balm#registrar()} instead, or {@link Balm#getModSupport()} for the milk fluid.
-     */
-    @Deprecated
-    public static BalmRegistries getRegistries() {
-        return runtime.getRegistries();
     }
 
     public static BalmSounds getSounds() {
@@ -198,7 +159,7 @@ public class Balm {
         return runtime.getStats();
     }
 
-    public static BalmModSupport getModSupport() {
+    public static BalmModSupport modSupport() {
         return runtime.getModSupport();
     }
 
@@ -206,7 +167,7 @@ public class Balm {
         return runtime.getParticles();
     }
 
-    public static BalmPermissions getPermissions() {
+    public static BalmPermissions permissions() {
         return runtime.getPermissions();
     }
 
@@ -214,20 +175,8 @@ public class Balm {
         return runtime.getResources();
     }
 
-    public static String getPlatform() {
-        return runtime.getPlatform();
-    }
-
-    public static BalmEnvironment getEnvironment() {
-        return runtime.getEnvironment();
-    }
-
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
-    }
-
-    public static List<String> getLoadedPrimaryModIds() {
-        return runtime.getLoadedPrimaryModIds();
     }
 
     public static void visitModResources(String modId, String path, ModResourceVisitor visitor) {
@@ -236,10 +185,6 @@ public class Balm {
 
     public static Optional<ModResource> lookupModResource(String modId, String path) {
         return runtime.lookupModResource(modId, path);
-    }
-
-    public static boolean isDevelopmentEnvironment() {
-        return runtime.isDevelopmentEnvironment();
     }
 
     public static void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
@@ -264,5 +209,105 @@ public class Balm {
 
     public static <T> BalmRegistrar.Scoped<T> registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
         return runtime.registrar(registryKey, namespace);
+    }
+
+    public static BalmPlatform platform() {
+        return runtime.platform();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#permissions()} instead.
+     */
+    @Deprecated
+    public static BalmPermissions getPermissions() {
+        return runtime.getPermissions();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#modSupport()} instead.
+     */
+    @Deprecated
+    public static BalmModSupport getModSupport() {
+        return runtime.getModSupport();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#registrar()} instead, or {@link Balm#getModSupport()} for the milk fluid.
+     */
+    @Deprecated
+    public static BalmRegistries getRegistries() {
+        return runtime.getRegistries();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#blockEntityTypes(String, Consumer)} instead.
+     */
+    @Deprecated
+    public static BalmBlockEntities getBlockEntities() {
+        return runtime.getBlockEntities();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#items(String, Consumer)} instead.
+     */
+    @Deprecated
+    public static BalmItems getItems() {
+        return runtime.getItems();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#blocks(String, Consumer)} instead.
+     */
+    @Deprecated
+    public static BalmBlocks getBlocks() {
+        return runtime.getBlocks();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#name()} instead.
+     */
+    @Deprecated
+    public static String getPlatform() {
+        return runtime.getPlatform();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#physicalSide()} instead.
+     */
+    @Deprecated
+    public static BalmEnvironment getEnvironment() {
+        return runtime.getEnvironment();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#loadedPrimaryModIds()} instead.
+     */
+    @Deprecated
+    public static List<String> getLoadedPrimaryModIds() {
+        return runtime.getLoadedPrimaryModIds();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#isModLoaded(String)} instead.
+     */
+    @Deprecated
+    public static boolean isModLoaded(String modId) {
+        return runtime.isModLoaded(modId);
+    }
+
+    /**
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#getModName(String)} instead.
+     */
+    @Deprecated
+    public static String getModName(String modId) {
+        return runtime.getModName(modId);
+    }
+
+    /**
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#isDevelopmentEnvironment()} instead.
+     */
+    @Deprecated
+    public static boolean isDevelopmentEnvironment() {
+        return runtime.isDevelopmentEnvironment();
     }
 }

@@ -27,6 +27,7 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
@@ -96,9 +97,15 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmPermissions getPermissions();
 
-    boolean isModLoaded(String modId);
+    @Deprecated
+    default boolean isModLoaded(String modId) {
+        return platform().isModLoaded(modId);
+    }
 
-    String getModName(String modId);
+    @Deprecated
+    default String getModName(String modId) {
+        return platform().getModName(modId);
+    }
 
     <TProxy> SidedProxy<TProxy> sidedProxy(String commonName, String clientName);
 
@@ -116,7 +123,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     <T> ModProxy<T> modProxy();
 
-    String getPlatform();
+    @Deprecated
+    default String getPlatform() {
+        return platform().name();
+    }
 
     default void initializeModule(BalmModule module) {
         final var modId = module.getId().getNamespace();
@@ -164,11 +174,20 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmResources getResources();
 
-    BalmEnvironment getEnvironment();
+    @Deprecated
+    default BalmEnvironment getEnvironment() {
+        return platform().physicalSide();
+    }
 
-    boolean isDevelopmentEnvironment();
+    @Deprecated
+    default boolean isDevelopmentEnvironment() {
+        return platform().isDevelopmentEnvironment();
+    }
 
-    List<String> getLoadedPrimaryModIds();
+    @Deprecated
+    default List<String> getLoadedPrimaryModIds() {
+        return platform().loadedPrimaryModIds();
+    }
 
     void visitModResources(String modId, String path, ModResourceVisitor visitor);
 
@@ -201,4 +220,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     default void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
         initializer.accept(blockEntityTypes(namespace));
     }
+
+    BalmPlatform platform();
 }

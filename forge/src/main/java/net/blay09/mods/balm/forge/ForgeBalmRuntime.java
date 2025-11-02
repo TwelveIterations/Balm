@@ -35,6 +35,7 @@ import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.level.block.entity.ForgeBalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.forge.loader.ForgeBalmPlatform;
 import net.blay09.mods.balm.forge.menu.ForgeBalmMenus;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
@@ -45,6 +46,7 @@ import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
 import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabFactory;
+import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
@@ -87,6 +89,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     private final BalmPermissions permissions = new ForgeBalmPermissions();
     private final BalmResources resources = new ForgeBalmResources();
     private final BalmRegistrar registrar = new ForgeBalmRegistrar();
+    private final BalmPlatform platform = new ForgeBalmPlatform();
 
     public ForgeBalmRuntime() {
         ForgeBalmCommonEvents.registerEvents(events);
@@ -163,16 +166,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public boolean isModLoaded(String modId) {
-        return ModList.get().isLoaded(modId);
-    }
-
-    @Override
-    public String getModName(String modId) {
-        return ModList.get().getModContainerById(modId).map(it -> it.getModInfo().getDisplayName()).orElse(modId);
-    }
-
-    @Override
     public void initializeMod(String modId, ForgeLoadContext context, Runnable initializer) {
         BalmLoadContexts.register(modId, context);
 
@@ -209,26 +202,8 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public String getPlatform() {
-        return LoaderPlatforms.FORGE;
-    }
-
-    @Override
     public BalmResources getResources() {
         return resources;
-    }
-
-    @Override
-    public BalmEnvironment getEnvironment() {
-        return switch (FMLEnvironment.dist) {
-            case CLIENT -> BalmEnvironment.CLIENT;
-            case DEDICATED_SERVER -> BalmEnvironment.DEDICATED_SERVER;
-        };
-    }
-
-    @Override
-    public List<String> getLoadedPrimaryModIds() {
-        return ModList.get().getMods().stream().map(IModInfo::getModId).toList();
     }
 
     @Override
@@ -274,5 +249,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
         return new ForgeBalmBlockEntityTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmPlatform platform() {
+        return platform;
     }
 }

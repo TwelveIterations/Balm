@@ -24,6 +24,7 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
@@ -33,6 +34,7 @@ import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntities;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.blay09.mods.balm.neoforge.level.block.entity.NeoForgeBalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.neoforge.loader.NeoForgeBalmPlatform;
 import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
@@ -86,6 +88,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmResources resources = new NeoForgeBalmResources();
     private final BalmRegistrar registrar = new NeoForgeBalmRegistrar();
+    private final BalmPlatform platform = new NeoForgeBalmPlatform();
 
     public NeoForgeBalmRuntime() {
         NeoForgeBalmCommonEvents.registerEvents(events);
@@ -157,16 +160,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    public boolean isModLoaded(String modId) {
-        return ModList.get().isLoaded(modId);
-    }
-
-    @Override
-    public String getModName(String modId) {
-        return ModList.get().getModContainerById(modId).map(it -> it.getModInfo().getDisplayName()).orElse(modId);
-    }
-
-    @Override
     public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
         BalmLoadContexts.register(modId, context);
 
@@ -209,26 +202,8 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    public String getPlatform() {
-        return LoaderPlatforms.NEOFORGE;
-    }
-
-    @Override
     public BalmResources getResources() {
         return resources;
-    }
-
-    @Override
-    public BalmEnvironment getEnvironment() {
-        return switch (FMLEnvironment.getDist()) {
-            case CLIENT -> BalmEnvironment.CLIENT;
-            case DEDICATED_SERVER -> BalmEnvironment.DEDICATED_SERVER;
-        };
-    }
-
-    @Override
-    public List<String> getLoadedPrimaryModIds() {
-        return ModList.get().getMods().stream().map(IModInfo::getModId).toList();
     }
 
     @Override
@@ -269,5 +244,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
         return new NeoForgeBalmBlockEntityTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmPlatform platform() {
+        return platform;
     }
 }
