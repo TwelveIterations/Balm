@@ -2,6 +2,7 @@ package net.blay09.mods.balm.world.level.block.entity;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.world.level.block.BlockLike;
+import net.blay09.mods.balm.world.level.block.DiscriminatedBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -33,6 +34,11 @@ public abstract class AbstractBalmBlockEntityTypeFactoryImpl implements BalmBloc
             }
             return resolvedBlocks;
         });
+    }
+
+    @Override
+    public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, DiscriminatedBlocks<?> blocks) {
+        return register(name, constructor, () -> Set.copyOf(blocks.all()));
     }
 
     @Override

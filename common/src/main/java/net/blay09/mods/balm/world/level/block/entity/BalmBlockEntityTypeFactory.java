@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.world.level.block.entity;
 
 import net.blay09.mods.balm.world.level.block.BlockLike;
+import net.blay09.mods.balm.world.level.block.DiscriminatedBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -12,6 +13,8 @@ import java.util.function.Supplier;
 
 public interface BalmBlockEntityTypeFactory {
     <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, BlockLike... blocks);
+
+    <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, DiscriminatedBlocks<?> blocks);
 
     <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Supplier<Set<Block>> blocksSupplier);
 
