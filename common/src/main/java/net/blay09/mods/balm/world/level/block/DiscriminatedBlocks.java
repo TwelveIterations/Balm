@@ -41,10 +41,10 @@ public interface DiscriminatedBlocks<T> {
     void forEachDiscriminatedDeferred(BiConsumer<T, DeferredBlock> consumer);
 
     static <T> String prefix(T value, String name) {
-        return value == null ? name : name + "_" + value;
+        return value == null ? name : value + "_" + name;
     }
 
-    static <T> String suffix(T value, String name) {
-        return value == null ? name : value + "_" + name;
+    static <T> String suffix(String name, T value) {
+        return value == null ? name : name + "_" + value;
     }
 }
