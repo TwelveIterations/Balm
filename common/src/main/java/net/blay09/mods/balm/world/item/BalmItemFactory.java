@@ -10,6 +10,10 @@ import java.util.function.Supplier;
  */
 public interface BalmItemFactory {
 
+    default BalmItemRegistration register(String location, Function<Item.Properties, Item> constructor) {
+        return register(location, constructor, Item.Properties::new);
+    }
+
     default BalmItemRegistration register(String location, Function<Item.Properties, Item> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
         return register(location, constructor, () -> propertiesBuilder.apply(new Item.Properties()));
     }
