@@ -10,7 +10,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -30,6 +34,34 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         final var resourceKey = ResourceKey.create(Registries.BLOCK, resourceLocation);
         final var holder = registrar.register(resourceKey, (Supplier<Block>) () -> constructor.apply(properties.get().setId(resourceKey)));
         return new BalmBlockRegistrationImpl(registrar, holder);
+    }
+
+    @Override
+    public <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction, Consumer<BalmBlockRegistration> callback) {
+        final var map = new HashMap<T, DeferredBlock>();
+        for (final var value : values) {
+            final var name = nameFunction.apply(value);
+            final var registration = register(name, (properties) -> constructor.apply(value, properties), propertiesFunction);
+            callback.accept(registration);
+            map.put(value, registration.asDeferredBlock());
+        }
+        return new DiscriminatedBlocksImpl<>(map);
+    }
+
+    private record DiscriminatedBlocksImpl<T>(Map<T, DeferredBlock> map) implements DiscriminatedBlocks<T> {
+        @Override
+        public DeferredBlock getDeferred(T discriminator) {
+            final var result = map.get(discriminator);
+            if (result == null) {
+                throw new IllegalArgumentException("Unknown block discriminator " + discriminator);
+            }
+            return result;
+        }
+
+        @Override
+        public Block get(T discriminator) {
+            return getDeferred(discriminator).value();
+        }
     }
 
     private static final class BalmBlockRegistrationImpl implements BalmBlockRegistration {
