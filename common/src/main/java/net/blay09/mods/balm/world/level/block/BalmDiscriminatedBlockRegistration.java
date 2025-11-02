@@ -7,6 +7,8 @@ import net.minecraft.world.level.block.Block;
 import java.util.function.*;
 
 public interface BalmDiscriminatedBlockRegistration<T> {
+    BalmDiscriminatedBlockRegistration<T> withNullDiscriminator();
+
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems() {
         return forEach(it -> it.withDefaultItem());
     }
