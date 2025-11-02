@@ -13,10 +13,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class BalmBlockFactoryImpl implements BalmBlockFactory {
 
@@ -37,12 +34,12 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
     }
 
     @Override
-    public <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction, Consumer<BalmBlockRegistration> callback) {
+    public <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction, BiConsumer<T, BalmBlockRegistration> callback) {
         final var map = new HashMap<T, DeferredBlock>();
         for (final var value : values) {
             final var name = nameFunction.apply(value);
             final var registration = register(name, (properties) -> constructor.apply(value, properties), propertiesFunction);
-            callback.accept(registration);
+            callback.accept(value, registration);
             map.put(value, registration.asDeferredBlock());
         }
         return new DiscriminatedBlocksImpl<>(map);

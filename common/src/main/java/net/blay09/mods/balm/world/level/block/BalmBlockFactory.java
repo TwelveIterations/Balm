@@ -1,14 +1,10 @@
 package net.blay09.mods.balm.world.level.block;
 
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /**
  * Provides convenience access to registering blocks and block items.
@@ -29,6 +25,10 @@ public interface BalmBlockFactory {
         return registerDiscriminated(Set.of(values), nameFunction, constructor, propertiesSupplier, callback);
     }
 
-    <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier, Consumer<BalmBlockRegistration> callback);
+    default <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier, Consumer<BalmBlockRegistration> callback) {
+        return registerDiscriminated(values, nameFunction, constructor, propertiesSupplier, (value, registration) -> callback.accept(registration));
+    }
+
+    <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier, BiConsumer<T, BalmBlockRegistration> callback);
 
 }
