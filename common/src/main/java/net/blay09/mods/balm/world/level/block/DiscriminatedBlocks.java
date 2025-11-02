@@ -36,6 +36,10 @@ public interface DiscriminatedBlocks<T> {
 
     void forEachDeferred(BiConsumer<T, DeferredBlock> consumer);
 
+    void forEachDiscriminated(BiConsumer<T, Block> consumer);
+
+    void forEachDiscriminatedDeferred(BiConsumer<T, DeferredBlock> consumer);
+
     static <T> String prefix(T value, String name) {
         return value == null ? name : name + "_" + value;
     }

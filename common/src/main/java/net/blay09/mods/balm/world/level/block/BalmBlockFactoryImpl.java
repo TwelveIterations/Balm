@@ -15,10 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class BalmBlockFactoryImpl implements BalmBlockFactory {
 
@@ -82,6 +79,34 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         @Override
         public void forEachDeferred(BiConsumer<T, DeferredBlock> consumer) {
             map.forEach((discriminator, registration) -> consumer.accept(discriminator, registration.asDeferredBlock()));
+        }
+
+        @Override
+        public void forEach(Consumer<Block> consumer) {
+            map.values().forEach(registration -> consumer.accept(registration.asHolder().value()));
+        }
+
+        @Override
+        public void forEachDeferred(Consumer<DeferredBlock> consumer) {
+            map.values().forEach(registration -> consumer.accept(registration.asDeferredBlock()));
+        }
+
+        @Override
+        public void forEachDiscriminated(BiConsumer<T, Block> consumer) {
+            map.forEach((discriminator, registration) -> {
+                if (discriminator != null) {
+                    consumer.accept(discriminator, registration.asHolder().value());
+                }
+            });
+        }
+
+        @Override
+        public void forEachDiscriminatedDeferred(BiConsumer<T, DeferredBlock> consumer) {
+            map.forEach((discriminator, registration) -> {
+                if (discriminator != null) {
+                    consumer.accept(discriminator, registration.asDeferredBlock());
+                }
+            });
         }
 
         @Override
