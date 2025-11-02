@@ -25,7 +25,7 @@ public abstract class AbstractBalmBlockEntityTypeFactoryImpl implements BalmBloc
     }
 
     @Override
-    public <T extends BlockEntity> BalmBlockEntityTypeRegistration register(String name, BlockEntitySupplier<T> constructor, BlockLike... blocks) {
+    public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, BlockLike... blocks) {
         return register(name, constructor, () -> {
             final var resolvedBlocks = new HashSet<Block>();
             for (final var blockLike : blocks) {
@@ -36,23 +36,34 @@ public abstract class AbstractBalmBlockEntityTypeFactoryImpl implements BalmBloc
     }
 
     @Override
-    public <T extends BlockEntity> BalmBlockEntityTypeRegistration register(String name, BlockEntitySupplier<T> constructor, Supplier<Set<Block>> blocksSupplier) {
+    public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Supplier<Set<Block>> blocksSupplier) {
         final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, resourceLocation);
         final var holder = registrar.register(resourceKey, (Supplier<BlockEntityType<?>>) () -> createBlockEntityType(constructor, blocksSupplier.get()));
-        return new BalmBlockEntityTypeRegistrationImpl(holder);
+        return new BalmBlockEntityTypeRegistrationImpl<>(holder);
     }
 
-    private static final class BalmBlockEntityTypeRegistrationImpl implements BalmBlockEntityTypeRegistration {
-        private final Holder<BlockEntityType<?>> holder;
+    private static final class BalmBlockEntityTypeRegistrationImpl<T extends BlockEntity> implements BalmBlockEntityTypeRegistration<T>, Supplier<BlockEntityType<T>> {
+        private final Holder<BlockEntityType<T>> holder;
 
-        private BalmBlockEntityTypeRegistrationImpl(Holder<BlockEntityType<?>> holder) {
-            this.holder = holder;
+        @SuppressWarnings("unchecked")
+        private BalmBlockEntityTypeRegistrationImpl(Holder<?> holder) {
+            this.holder = (Holder<BlockEntityType<T>>) holder;
         }
 
         @Override
-        public Holder<BlockEntityType<?>> asHolder() {
+        public Holder<BlockEntityType<T>> asHolder() {
             return holder;
+        }
+
+        @Override
+        public BlockEntityType<T> get() {
+            return holder.value();
+        }
+
+        @Override
+        public Supplier<BlockEntityType<T>> asSupplier() {
+            return this;
         }
     }
 }

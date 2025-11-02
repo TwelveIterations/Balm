@@ -14,7 +14,7 @@ public class ForgeBalmBlockEntityTypeFactory extends AbstractBalmBlockEntityType
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityType<?> createBlockEntityType(BlockEntitySupplier<T> constructor, Set<Block> blocks) {
+    public <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntitySupplier<T> constructor, Set<Block> blocks) {
         return new BlockEntityType<>(constructor::create, blocks);
     }
 }

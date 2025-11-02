@@ -11,11 +11,11 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public interface BalmBlockEntityTypeFactory {
-    <T extends BlockEntity> BalmBlockEntityTypeRegistration register(String name, BlockEntitySupplier<T> constructor, BlockLike... blocks);
+    <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, BlockLike... blocks);
 
-    <T extends BlockEntity> BalmBlockEntityTypeRegistration register(String name, BlockEntitySupplier<T> constructor, Supplier<Set<Block>> blocksSupplier);
+    <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Supplier<Set<Block>> blocksSupplier);
 
-    <T extends BlockEntity> BlockEntityType<?> createBlockEntityType(BlockEntitySupplier<T> constructor, Set<Block> blocks);
+    <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntitySupplier<T> constructor, Set<Block> blocks);
 
     @FunctionalInterface
     interface BlockEntitySupplier<T extends BlockEntity> {
