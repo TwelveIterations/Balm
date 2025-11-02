@@ -43,11 +43,11 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         }
 
         @Override
-        public BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Item.Properties properties) {
+        public BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Supplier<Item.Properties> properties) {
             final var blockResourceKey = holder.unwrapKey().orElseThrow();
             final var block = holder.value();
             final var itemResourceKey = ResourceKey.create(Registries.ITEM, blockResourceKey.location());
-            registrar.register(itemResourceKey, constructor.apply(block, properties));
+            registrar.register(itemResourceKey, (Supplier<Item>) () -> constructor.apply(block, properties.get()));
             return this;
         }
 
