@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +59,16 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         @Override
         public Block get(T discriminator) {
             return getDeferred(discriminator).value();
+        }
+
+        @Override
+        public Collection<DeferredBlock> allDeferred() {
+            return map.values();
+        }
+
+        @Override
+        public Collection<Block> all() {
+            return allDeferred().stream().map(DeferredBlock::value).toList();
         }
     }
 
