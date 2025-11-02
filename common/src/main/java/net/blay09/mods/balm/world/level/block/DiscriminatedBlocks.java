@@ -4,6 +4,7 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.function.BiConsumer;
 
 public interface DiscriminatedBlocks<T> {
     default DeferredBlock getUndiscriminatedDeferred() {
@@ -25,6 +26,10 @@ public interface DiscriminatedBlocks<T> {
     Collection<DeferredBlock> getDiscriminatedDeferred();
 
     Collection<Block> getDiscriminated();
+
+    void forEach(BiConsumer<T, Block> consumer);
+
+    void forEachDeferred(BiConsumer<T, DeferredBlock> consumer);
 
     static <T> String prefix(T value, String name) {
         return value == null ? name : name + "_" + value;

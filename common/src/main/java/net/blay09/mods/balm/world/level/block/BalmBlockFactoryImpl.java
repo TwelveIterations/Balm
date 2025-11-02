@@ -75,6 +75,16 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         }
 
         @Override
+        public void forEach(BiConsumer<T, Block> consumer) {
+            map.forEach((discriminator, registration) -> consumer.accept(discriminator, registration.asHolder().value()));
+        }
+
+        @Override
+        public void forEachDeferred(BiConsumer<T, DeferredBlock> consumer) {
+            map.forEach((discriminator, registration) -> consumer.accept(discriminator, registration.asDeferredBlock()));
+        }
+
+        @Override
         public Collection<DeferredBlock> getAllDeferred() {
             return map.values().stream().map(BalmBlockRegistration::asDeferredBlock).toList();
         }
