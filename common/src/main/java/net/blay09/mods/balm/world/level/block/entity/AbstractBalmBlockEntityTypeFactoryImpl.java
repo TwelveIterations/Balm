@@ -38,7 +38,7 @@ public abstract class AbstractBalmBlockEntityTypeFactoryImpl implements BalmBloc
 
     @Override
     public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, DiscriminatedBlocks<?> blocks) {
-        return register(name, constructor, () -> Set.copyOf(blocks.all()));
+        return register(name, constructor, () -> Set.copyOf(blocks.getAll()));
     }
 
     @Override
