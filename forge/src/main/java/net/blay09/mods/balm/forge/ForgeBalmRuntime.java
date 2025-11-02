@@ -186,26 +186,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
-        final var modFile = ModList.get().getModFileById(modId);
-        final var nioPath = modFile.getFile().findResource(path);
-        if (Files.exists(nioPath)) {
-            try (final var walker = Files.walk(nioPath)) {
-                walker.forEach(childPath -> visitor.visit(new PathModResource(childPath)));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
-    public Optional<ModResource> lookupModResource(String modId, String path) {
-        final var modFile = ModList.get().getModFileById(modId);
-        final var resource = modFile.getFile().findResource(path);
-        return Files.exists(resource) ? Optional.of(new PathModResource(resource)) : Optional.empty();
-    }
-
-    @Override
     public BalmRegistrar registrar() {
         return registrar;
     }

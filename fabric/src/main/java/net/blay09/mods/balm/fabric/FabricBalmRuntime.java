@@ -15,9 +15,6 @@ import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.resources.ModResource;
-import net.blay09.mods.balm.api.resources.ModResourceVisitor;
-import net.blay09.mods.balm.api.resources.PathModResource;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
@@ -47,16 +44,12 @@ import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -207,26 +200,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmResources getResources() {
         return resources;
-    }
-
-    @Override
-    public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
-        FabricLoader.getInstance().getModContainer(modId)
-                .flatMap(modContainer -> modContainer.findPath(path))
-                .ifPresent(rootPath -> {
-                    try (final var walker = Files.walk(rootPath)) {
-                        walker.forEach(childPath -> visitor.visit(new PathModResource(childPath)));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-    }
-
-    @Override
-    public Optional<ModResource> lookupModResource(String modId, String path) {
-        return FabricLoader.getInstance().getModContainer(modId)
-                .flatMap(modContainer -> modContainer.findPath(path))
-                .map(PathModResource::new);
     }
 
     @Override

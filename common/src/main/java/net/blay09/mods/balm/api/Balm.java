@@ -163,20 +163,12 @@ public class Balm {
         return runtime.getPermissions();
     }
 
-    public static BalmResources getResources() {
+    public static BalmResources resources() {
         return runtime.getResources();
     }
 
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
-    }
-
-    public static void visitModResources(String modId, String path, ModResourceVisitor visitor) {
-        runtime.visitModResources(modId, path, visitor);
-    }
-
-    public static Optional<ModResource> lookupModResource(String modId, String path) {
-        return runtime.lookupModResource(modId, path);
     }
 
     public static void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
@@ -212,7 +204,7 @@ public class Balm {
      */
     @Deprecated
     public static BalmPermissions getPermissions() {
-        return runtime.getPermissions();
+        return permissions();
     }
 
     /**
@@ -220,7 +212,7 @@ public class Balm {
      */
     @Deprecated
     public static BalmModSupport getModSupport() {
-        return runtime.getModSupport();
+        return modSupport();
     }
 
     /**
@@ -260,7 +252,7 @@ public class Balm {
      */
     @Deprecated
     public static String getPlatform() {
-        return runtime.getPlatform();
+        return platform().name();
     }
 
     /**
@@ -268,7 +260,7 @@ public class Balm {
      */
     @Deprecated
     public static BalmEnvironment getEnvironment() {
-        return runtime.getEnvironment();
+        return platform().physicalSide();
     }
 
     /**
@@ -276,7 +268,7 @@ public class Balm {
      */
     @Deprecated
     public static List<String> getLoadedPrimaryModIds() {
-        return runtime.getLoadedPrimaryModIds();
+        return platform().loadedPrimaryModIds();
     }
 
     /**
@@ -284,7 +276,7 @@ public class Balm {
      */
     @Deprecated
     public static boolean isModLoaded(String modId) {
-        return runtime.isModLoaded(modId);
+        return platform().isModLoaded(modId);
     }
 
     /**
@@ -292,7 +284,7 @@ public class Balm {
      */
     @Deprecated
     public static String getModName(String modId) {
-        return runtime.getModName(modId);
+        return platform().getModName(modId);
     }
 
     /**
@@ -300,7 +292,7 @@ public class Balm {
      */
     @Deprecated
     public static boolean isDevelopmentEnvironment() {
-        return runtime.isDevelopmentEnvironment();
+        return platform().isDevelopmentEnvironment();
     }
 
     /**
@@ -317,5 +309,29 @@ public class Balm {
     @Deprecated
     public static BalmComponents getComponents() {
         return runtime.getComponents();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#resources()} instead.
+     */
+    @Deprecated
+    public static BalmResources getResources() {
+        return resources();
+    }
+
+    /**
+     * @deprecated Use {@link Balm#resources()} and {@link BalmResources#visitModResources(String, String, ModResourceVisitor)} instead.
+     */
+    @Deprecated
+    public static void visitModResources(String modId, String path, ModResourceVisitor visitor) {
+        resources().visitModResources(modId, path, visitor);
+    }
+
+    /**
+     * @deprecated Use {@link Balm#resources()} and {@link BalmResources#lookupModResource(String, String)} instead.
+     */
+    @Deprecated
+    public static Optional<ModResource> lookupModResource(String modId, String path) {
+        return resources().lookupModResource(modId, path);
     }
 }

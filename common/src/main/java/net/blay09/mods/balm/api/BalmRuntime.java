@@ -200,9 +200,15 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return platform().loadedPrimaryModIds();
     }
 
-    void visitModResources(String modId, String path, ModResourceVisitor visitor);
+    @Deprecated
+    default void visitModResources(String modId, String path, ModResourceVisitor visitor) {
+        getResources().visitModResources(modId, path, visitor);
+    }
 
-    Optional<ModResource> lookupModResource(String modId, String path);
+    @Deprecated
+    default Optional<ModResource> lookupModResource(String modId, String path) {
+        return getResources().lookupModResource(modId, path);
+    }
 
     BalmRegistrar registrar();
 
