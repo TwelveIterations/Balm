@@ -32,7 +32,7 @@ public interface BalmBlockRegistration extends BalmHolderRegistration<Block> {
     }
 
     default BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
-        return withItem(constructor, propertiesBuilder.apply(new Item.Properties()));
+        return withItem(constructor, () -> propertiesBuilder.apply(new Item.Properties()));
     }
 
     default BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Item.Properties properties) {

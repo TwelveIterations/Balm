@@ -21,14 +21,10 @@ public interface BalmBlockFactory {
 
     BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, Supplier<BlockBehaviour.Properties> propertiesSupplier);
 
-    default <T> DiscriminatedBlocks<T> registerDiscriminated(T[] values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier, Consumer<BalmBlockRegistration> callback) {
-        return registerDiscriminated(Set.of(values), nameFunction, constructor, propertiesSupplier, callback);
+    default <T> BalmDiscriminatedBlockRegistration<T> registerDiscriminated(T[] values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier) {
+        return registerDiscriminated(Set.of(values), nameFunction, constructor, propertiesSupplier);
     }
 
-    default <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier, Consumer<BalmBlockRegistration> callback) {
-        return registerDiscriminated(values, nameFunction, constructor, propertiesSupplier, (value, registration) -> callback.accept(registration));
-    }
-
-    <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier, BiConsumer<T, BalmBlockRegistration> callback);
+    <T> BalmDiscriminatedBlockRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier);
 
 }

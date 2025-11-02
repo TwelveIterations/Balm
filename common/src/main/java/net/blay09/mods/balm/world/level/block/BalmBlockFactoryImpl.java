@@ -14,7 +14,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BalmBlockFactoryImpl implements BalmBlockFactory {
 
@@ -35,40 +38,55 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
     }
 
     @Override
-    public <T> DiscriminatedBlocks<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction, BiConsumer<T, BalmBlockRegistration> callback) {
-        final var map = new HashMap<T, DeferredBlock>();
+    public <T> BalmDiscriminatedBlockRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction) {
+        final var map = new HashMap<T, BalmBlockRegistration>();
         for (final var value : values) {
             final var name = nameFunction.apply(value);
             final var registration = register(name, (properties) -> constructor.apply(value, properties), propertiesFunction);
-            callback.accept(value, registration);
-            map.put(value, registration.asDeferredBlock());
+            map.put(value, registration);
         }
-        return new DiscriminatedBlocksImpl<>(map);
+        return new BalmDiscriminatedBlockRegistrationImpl<>(map);
     }
 
-    private record DiscriminatedBlocksImpl<T>(Map<T, DeferredBlock> map) implements DiscriminatedBlocks<T> {
+    private record BalmDiscriminatedBlockRegistrationImpl<T>(
+            Map<T, BalmBlockRegistration> map) implements BalmDiscriminatedBlockRegistration<T>, DiscriminatedBlocks<T> {
         @Override
         public DeferredBlock getDeferred(T discriminator) {
             final var result = map.get(discriminator);
             if (result == null) {
                 throw new IllegalArgumentException("Unknown block discriminator " + discriminator);
             }
-            return result;
+            return result.asDeferredBlock();
         }
 
         @Override
         public Block get(T discriminator) {
-            return getDeferred(discriminator).value();
+            final var result = map.get(discriminator);
+            if (result == null) {
+                throw new IllegalArgumentException("Unknown block discriminator " + discriminator);
+            }
+            return result.asHolder().value();
         }
 
         @Override
         public Collection<DeferredBlock> allDeferred() {
-            return map.values();
+            return map.values().stream().map(BalmBlockRegistration::asDeferredBlock).toList();
         }
 
         @Override
         public Collection<Block> all() {
-            return allDeferred().stream().map(DeferredBlock::value).toList();
+            return map.values().stream().map(BalmBlockRegistration::asHolder).map(Holder::value).toList();
+        }
+
+        @Override
+        public BalmDiscriminatedBlockRegistration<T> forEach(BiConsumer<T, BalmBlockRegistration> consumer) {
+            map.forEach(consumer);
+            return this;
+        }
+
+        @Override
+        public DiscriminatedBlocks<T> asDiscriminatedBlocks() {
+            return this;
         }
     }
 
