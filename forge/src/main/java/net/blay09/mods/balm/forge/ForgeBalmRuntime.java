@@ -2,7 +2,6 @@ package net.blay09.mods.balm.forge;
 
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
@@ -10,7 +9,6 @@ import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
@@ -27,7 +25,6 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
@@ -37,6 +34,7 @@ import net.blay09.mods.balm.forge.core.ForgeBalmRegistrar;
 import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
+import net.blay09.mods.balm.forge.level.block.entity.ForgeBalmBlockEntityTypeFactory;
 import net.blay09.mods.balm.forge.menu.ForgeBalmMenus;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
@@ -48,6 +46,7 @@ import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -70,7 +69,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
-    private final BalmBlockEntities blockEntities = new ForgeBalmBlockEntities();
     private final ForgeBalmEvents events = new ForgeBalmEvents();
     private final BalmMenus menus = new ForgeBalmMenus();
     private final BalmNetworking networking = new ForgeBalmNetworking();
@@ -107,11 +105,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmWorldGen getWorldGen() {
         return worldGen;
-    }
-
-    @Override
-    public BalmBlockEntities getBlockEntities() {
-        return blockEntities;
     }
 
     @Override
@@ -266,5 +259,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new ForgeBalmCreativeModeTabFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
+        return new ForgeBalmBlockEntityTypeFactory(registrar(), namespace);
     }
 }

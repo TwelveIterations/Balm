@@ -24,6 +24,7 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.resources.ResourceLocation;
 
 public interface BalmModule {
@@ -66,7 +67,14 @@ public interface BalmModule {
     default void registerCreativeModeTabs(BalmCreativeModeTabFactory creativeModeTabs) {
     }
 
+    /**
+     * @deprecated Use {@link #registerBlockEntityTypes(BalmBlockEntityTypeFactory)} instead.
+     */
+    @Deprecated
     default void registerBlockEntities(BalmBlockEntities blockEntities) {
+    }
+
+    default void registerBlockEntityTypes(BalmBlockEntityTypeFactory blockEntityTypes) {
     }
 
     default void registerWorldGen(BalmWorldGen worldGen) {

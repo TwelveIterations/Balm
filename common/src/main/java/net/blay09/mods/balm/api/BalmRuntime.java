@@ -20,16 +20,17 @@ import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
-import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -54,7 +55,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return BalmBlocks.LEGACY;
     }
 
-    BalmBlockEntities getBlockEntities();
+    @Deprecated
+    default BalmBlockEntities getBlockEntities() {
+        return BalmBlockEntities.LEGACY;
+    }
 
     @Deprecated
     default BalmItems getItems() {
@@ -128,6 +132,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         blocks(modId, module::registerBlocks);
 
         module.registerBlockEntities(getBlockEntities());
+        blockEntityTypes(modId, module::registerBlockEntityTypes);
 
         module.registerItems(getItems().scoped(modId));
         items(modId, module::registerItems);
@@ -191,5 +196,11 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     default void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
         initializer.accept(creativeModeTabs(namespace));
+    }
+
+    BalmBlockEntityTypeFactory blockEntityTypes(String namespace);
+
+    default void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
+        initializer.accept(blockEntityTypes(namespace));
     }
 }

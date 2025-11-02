@@ -3,7 +3,6 @@ package net.blay09.mods.balm.fabric;
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.EmptyLoadContext;
-import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
@@ -11,7 +10,6 @@ import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
@@ -29,7 +27,6 @@ import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
 import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
 import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
@@ -38,6 +35,7 @@ import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
 import net.blay09.mods.balm.fabric.entity.FabricBalmEntities;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
+import net.blay09.mods.balm.fabric.level.block.entity.FabricBalmBlockEntityTypeFactory;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
@@ -49,6 +47,7 @@ import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -70,11 +69,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
-    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> {
-        throw new UnsupportedOperationException("No default namespace available");
-    });
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
-    private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
     private final FabricBalmEvents events = new FabricBalmEvents();
     private final BalmMenus menus = new FabricBalmMenus();
     private final BalmNetworking networking = new FabricBalmNetworking();
@@ -114,11 +109,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmWorldGen getWorldGen() {
         return worldGen;
-    }
-
-    @Override
-    public BalmBlockEntities getBlockEntities() {
-        return blockEntities;
     }
 
     @Override
@@ -299,5 +289,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new FabricBalmCreativeModeTabFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
+        return new FabricBalmBlockEntityTypeFactory(registrar(), namespace);
     }
 }

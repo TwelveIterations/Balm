@@ -30,6 +30,7 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -133,10 +134,18 @@ public class Balm {
         return runtime.getBlocks();
     }
 
+    /**
+     * @deprecated Use {@link Balm#blockEntityTypes(String, Consumer)} instead.
+     */
+    @Deprecated
     public static BalmBlockEntities getBlockEntities() {
         return runtime.getBlockEntities();
     }
 
+    /**
+     * @deprecated Use {@link Balm#items(String, Consumer)} instead.
+     */
+    @Deprecated
     public static BalmItems getItems() {
         return runtime.getItems();
     }
@@ -255,6 +264,14 @@ public class Balm {
 
     public static void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
         runtime.creativeModeTabs(namespace, initializer);
+    }
+
+    public static BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
+        return runtime.blockEntityTypes(namespace);
+    }
+
+    public static void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
+        runtime.blockEntityTypes(namespace, initializer);
     }
 
     public static BalmRegistrar registrar() {

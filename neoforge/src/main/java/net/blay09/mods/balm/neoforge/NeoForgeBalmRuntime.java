@@ -2,7 +2,6 @@ package net.blay09.mods.balm.neoforge;
 
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
@@ -10,7 +9,6 @@ import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
@@ -26,7 +24,6 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
@@ -35,6 +32,7 @@ import net.blay09.mods.balm.neoforge.config.NeoForgeBalmConfig;
 import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntities;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
+import net.blay09.mods.balm.neoforge.level.block.entity.NeoForgeBalmBlockEntityTypeFactory;
 import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
@@ -48,6 +46,7 @@ import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmStats;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -69,7 +68,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
-    private final BalmBlockEntities blockEntities = new NeoForgeBalmBlockEntities();
     private final NeoForgeBalmEvents events = new NeoForgeBalmEvents();
     private final BalmMenus menus = new NeoForgeBalmMenus();
     private final BalmNetworking networking = new NeoForgeBalmNetworking(legacyNamespaceResolver);
@@ -106,11 +104,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmWorldGen getWorldGen() {
         return worldGen;
-    }
-
-    @Override
-    public BalmBlockEntities getBlockEntities() {
-        return blockEntities;
     }
 
     @Override
@@ -261,5 +254,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
+        return new NeoForgeBalmBlockEntityTypeFactory(registrar(), namespace);
     }
 }
