@@ -49,25 +49,11 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         return new BalmDiscriminatedBlockRegistrationImpl<>(map, this, nameFunction, constructor, propertiesFunction);
     }
 
-    private static class BalmDiscriminatedBlockRegistrationImpl<T> implements BalmDiscriminatedBlockRegistration<T>, DiscriminatedBlocks<T> {
+    private static class DiscriminatedBlocksImpl<T> implements DiscriminatedBlocks<T> {
         private final Map<T, BalmBlockRegistration> map;
-        private final BalmBlockFactory factory;
-        private final Function<T, String> nameFunction;
-        private final BiFunction<T, BlockBehaviour.Properties, Block> constructor;
-        private final BiFunction<T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction;
 
-        private BalmDiscriminatedBlockRegistrationImpl(
-                Map<T, BalmBlockRegistration> map,
-                BalmBlockFactory factory,
-                Function<T, String> nameFunction,
-                BiFunction<T, BlockBehaviour.Properties, Block> constructor,
-                BiFunction<T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction
-        ) {
+        private DiscriminatedBlocksImpl(Map<T, BalmBlockRegistration> map) {
             this.map = map;
-            this.factory = factory;
-            this.nameFunction = nameFunction;
-            this.constructor = constructor;
-            this.propertiesFunction = propertiesFunction;
         }
 
         private BalmBlockRegistration getRegistration(@Nullable T discriminator) {
@@ -89,13 +75,51 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         }
 
         @Override
-        public Collection<DeferredBlock> allDeferred() {
+        public Collection<DeferredBlock> getAllDeferred() {
             return map.values().stream().map(BalmBlockRegistration::asDeferredBlock).toList();
         }
 
         @Override
-        public Collection<Block> all() {
+        public Collection<Block> getAll() {
             return map.values().stream().map(BalmBlockRegistration::asHolder).map(Holder::value).toList();
+        }
+
+        @Override
+        public Collection<DeferredBlock> getDiscriminatedDeferred() {
+            return map.entrySet().stream()
+                    .filter(it -> it.getKey() != null)
+                    .map(it -> it.getValue().asDeferredBlock())
+                    .toList();
+        }
+
+        @Override
+        public Collection<Block> getDiscriminated() {
+            return map.entrySet().stream()
+                    .filter(it -> it.getKey() != null)
+                    .map(it -> it.getValue().asHolder().value())
+                    .toList();
+        }
+    }
+
+    private static class BalmDiscriminatedBlockRegistrationImpl<T> implements BalmDiscriminatedBlockRegistration<T> {
+        private final Map<T, BalmBlockRegistration> map;
+        private final BalmBlockFactory factory;
+        private final Function<T, String> nameFunction;
+        private final BiFunction<T, BlockBehaviour.Properties, Block> constructor;
+        private final BiFunction<T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction;
+
+        private BalmDiscriminatedBlockRegistrationImpl(
+                Map<T, BalmBlockRegistration> map,
+                BalmBlockFactory factory,
+                Function<T, String> nameFunction,
+                BiFunction<T, BlockBehaviour.Properties, Block> constructor,
+                BiFunction<T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction
+        ) {
+            this.map = map;
+            this.factory = factory;
+            this.nameFunction = nameFunction;
+            this.constructor = constructor;
+            this.propertiesFunction = propertiesFunction;
         }
 
         @Override
@@ -114,7 +138,7 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
 
         @Override
         public DiscriminatedBlocks<T> asDiscriminatedBlocks() {
-            return this;
+            return new DiscriminatedBlocksImpl<>(map);
         }
 
     }

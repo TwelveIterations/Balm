@@ -9,9 +9,13 @@ public interface DiscriminatedBlocks<T> {
 
     Block get(T discriminator);
 
-    Collection<DeferredBlock> allDeferred();
+    Collection<DeferredBlock> getAllDeferred();
 
-    Collection<Block> all();
+    Collection<Block> getAll();
+
+    Collection<DeferredBlock> getDiscriminatedDeferred();
+
+    Collection<Block> getDiscriminated();
 
     static <T> String prefix(T value, String name) {
         return value == null ? name : name + "_" + value;
