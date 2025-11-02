@@ -12,4 +12,12 @@ public interface DiscriminatedBlocks<T> {
     Collection<DeferredBlock> allDeferred();
 
     Collection<Block> all();
+
+    static <T> String prefix(T value, String name) {
+        return value == null ? name : name + "_" + value;
+    }
+
+    static <T> String suffix(T value, String name) {
+        return value == null ? name : value + "_" + name;
+    }
 }
