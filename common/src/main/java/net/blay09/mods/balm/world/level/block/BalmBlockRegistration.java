@@ -24,7 +24,13 @@ public interface BalmBlockRegistration extends BalmHolderRegistration<Block> {
 
     BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Item.Properties properties);
 
-    BlockLike asBlockLike();
+    default BlockLike asBlockLike() {
+        return asDeferredBlock();
+    }
 
-    ItemLike asItemLike();
+    default ItemLike asItemLike() {
+        return asDeferredBlock();
+    }
+
+    DeferredBlock asDeferredBlock();
 }

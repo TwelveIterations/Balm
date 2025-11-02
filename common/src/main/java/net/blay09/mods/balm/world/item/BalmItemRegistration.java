@@ -5,5 +5,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 
 public interface BalmItemRegistration extends BalmHolderRegistration<Item> {
-    ItemLike asItemLike();
+    default ItemLike asItemLike() {
+        return asDeferredItem();
+    }
+
+    DeferredItem asDeferredItem();
 }

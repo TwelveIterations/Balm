@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -36,7 +35,7 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
     private static final class BalmBlockRegistrationImpl implements BalmBlockRegistration {
         private final BalmRegistrar registrar;
         private final Holder<Block> holder;
-        private BlockLike blockLike;
+        private DeferredBlock deferredBlock;
 
         private BalmBlockRegistrationImpl(BalmRegistrar registrar, Holder<Block> holder) {
             this.registrar = registrar;
@@ -58,16 +57,11 @@ public class BalmBlockFactoryImpl implements BalmBlockFactory {
         }
 
         @Override
-        public BlockLike asBlockLike() {
-            if (blockLike == null) {
-                blockLike = new DeferredBlock(holder);
+        public DeferredBlock asDeferredBlock() {
+            if (deferredBlock == null) {
+                deferredBlock = new DeferredBlockImpl(holder);
             }
-            return blockLike;
-        }
-
-        @Override
-        public ItemLike asItemLike() {
-            return asBlockLike();
+            return deferredBlock;
         }
     }
 }
