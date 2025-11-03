@@ -6,14 +6,14 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeBookCategory;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -28,7 +28,7 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
     }
 
     @Override
-    public <T extends Recipe<?>> BalmRecipeTypeRegistration<T> register(String name, Function<ResourceLocation, RecipeType<T>> constructor) {
+    public <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> BalmRecipeTypeRegistration<TRecipeInput, TRecipe> register(String name, Function<ResourceLocation, RecipeType<TRecipe>> constructor) {
         final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.RECIPE_TYPE, resourceLocation);
         final var holder = registrar.register(resourceKey, constructor::apply);
@@ -36,7 +36,7 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
     }
 
     @Override
-    public <T extends Recipe<?>> BalmRecipeSerializerRegistration<T> registerSerializer(String name, Function<ResourceLocation, RecipeSerializer<T>> constructor) {
+    public <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> BalmRecipeSerializerRegistration<TRecipe> registerSerializer(String name, Function<ResourceLocation, RecipeSerializer<TRecipe>> constructor) {
         final var id = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.RECIPE_SERIALIZER, id);
         final var holder = registrar.register(key, constructor::apply);
@@ -67,11 +67,13 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
         return new SlotDisplayTypeRegistrationImpl<>(holder);
     }
 
-    private record DeferredRecipeTypeImpl<T extends Recipe<?>>(Holder<RecipeType<T>> type,
-                                                               @Nullable Holder<RecipeSerializer<T>> serializer,
-                                                               @Nullable Holder<RecipeBookCategory> bookCategory) implements DeferredRecipeType<T> {
+    private record DeferredRecipeTypeImpl<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>>(
+            Holder<RecipeType<TRecipe>> type,
+            @Nullable Holder<RecipeSerializer<TRecipe>> serializer,
+            @Nullable Holder<RecipeBookCategory> bookCategory
+    ) implements DeferredRecipeType<TRecipeInput, TRecipe> {
         @Override
-        public Holder<RecipeSerializer<T>> serializer() {
+        public Holder<RecipeSerializer<TRecipe>> serializer() {
             if (serializer == null) {
                 throw new IllegalStateException("Serializer not registered for recipe type " + type.unwrapKey().orElseThrow().location());
             }
@@ -85,43 +87,61 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
             }
             return bookCategory;
         }
+
+        @Override
+        public Optional<RecipeHolder<TRecipe>> getRecipeFor(Level level, TRecipeInput input, @Nullable ResourceKey<Recipe<?>> lastRecipe) {
+            if (level instanceof ServerLevel serverLevel) {
+                final var recipeManager = serverLevel.getServer().getRecipeManager();
+                return recipeManager.getRecipeFor(type.value(), input, level, lastRecipe);
+            }
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<RecipeHolder<TRecipe>> getRecipeFor(Level level, TRecipeInput input, @Nullable RecipeHolder<TRecipe> lastRecipe) {
+            if (level instanceof ServerLevel serverLevel) {
+                final var recipeManager = serverLevel.getServer().getRecipeManager();
+                return recipeManager.getRecipeFor(type.value(), input, level, lastRecipe);
+            }
+            return Optional.empty();
+        }
     }
 
-    private static class RecipeTypeRegistrationImpl<T extends Recipe<?>> implements BalmRecipeTypeRegistration<T> {
+    private static class RecipeTypeRegistrationImpl<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> implements BalmRecipeTypeRegistration<TRecipeInput, TRecipe> {
         private final BalmRecipeTypeFactory factory;
-        private final Holder<RecipeType<T>> holder;
+        private final Holder<RecipeType<TRecipe>> holder;
         @Nullable
-        private BalmRecipeSerializerRegistration<T> serializerRegistration;
+        private BalmRecipeSerializerRegistration<TRecipe> serializerRegistration;
         @Nullable
         private BalmRecipeBookCategoryRegistration bookCategoryRegistration;
 
         @SuppressWarnings("unchecked")
         private RecipeTypeRegistrationImpl(BalmRecipeTypeFactory factory, Holder<?> holder) {
             this.factory = factory;
-            this.holder = (Holder<RecipeType<T>>) holder;
+            this.holder = (Holder<RecipeType<TRecipe>>) holder;
         }
 
         @Override
-        public Holder<RecipeType<T>> asHolder() {
+        public Holder<RecipeType<TRecipe>> asHolder() {
             return holder;
         }
 
         @Override
-        public BalmRecipeTypeRegistration<T> withSerializer(Supplier<RecipeSerializer<T>> constructor) {
+        public BalmRecipeTypeRegistration<TRecipeInput, TRecipe> withSerializer(Supplier<RecipeSerializer<TRecipe>> constructor) {
             final var name = holder.unwrapKey().orElseThrow().location().getPath();
             serializerRegistration = factory.registerSerializer(name, (id) -> constructor.get());
             return this;
         }
 
         @Override
-        public BalmRecipeTypeRegistration<T> withRecipeBookCategory() {
+        public BalmRecipeTypeRegistration<TRecipeInput, TRecipe> withRecipeBookCategory() {
             final var name = holder.unwrapKey().orElseThrow().location().getPath();
             bookCategoryRegistration = factory.registerBookCategory(name, id -> new RecipeBookCategory());
             return this;
         }
 
         @Override
-        public DeferredRecipeType<T> asDeferredRecipeType() {
+        public DeferredRecipeType<TRecipeInput, TRecipe> asDeferredRecipeType() {
             return new DeferredRecipeTypeImpl<>(
                     holder,
                     serializerRegistration != null ? serializerRegistration.asHolder() : null,

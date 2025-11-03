@@ -4,5 +4,5 @@ import net.blay09.mods.balm.core.BalmHolderRegistration;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-public interface BalmRecipeSerializerRegistration<T extends Recipe<?>> extends BalmHolderRegistration<RecipeSerializer<T>> {
+public interface BalmRecipeSerializerRegistration<TRecipe extends Recipe<?>> extends BalmHolderRegistration<RecipeSerializer<TRecipe>> {
 }

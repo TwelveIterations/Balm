@@ -1,19 +1,18 @@
 package net.blay09.mods.balm.world.item.crafting;
 
 import net.blay09.mods.balm.core.BalmHolderRegistration;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface BalmRecipeTypeRegistration<T extends Recipe<?>> extends BalmHolderRegistration<RecipeType<T>> {
+public interface BalmRecipeTypeRegistration<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> extends BalmHolderRegistration<RecipeType<TRecipe>> {
 
-    BalmRecipeTypeRegistration<T> withSerializer(Supplier<RecipeSerializer<T>> constructor);
+    BalmRecipeTypeRegistration<TRecipeInput, TRecipe> withSerializer(Supplier<RecipeSerializer<TRecipe>> constructor);
 
-    BalmRecipeTypeRegistration<T> withRecipeBookCategory();
+    BalmRecipeTypeRegistration<TRecipeInput, TRecipe> withRecipeBookCategory();
 
-    DeferredRecipeType<T> asDeferredRecipeType();
+    DeferredRecipeType<TRecipeInput, TRecipe> asDeferredRecipeType();
 }
