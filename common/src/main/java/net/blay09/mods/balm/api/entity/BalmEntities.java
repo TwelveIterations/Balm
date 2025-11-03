@@ -21,7 +21,7 @@ public interface BalmEntities {
     @Deprecated
     default <T extends Entity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder) {
         final var holder = Balm.getRuntime().entityTypes(identifier.getNamespace())
-                .register(identifier.getPath(), typeBuilder)
+                .register(identifier.getPath(), () -> typeBuilder)
                 .asHolder();
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
@@ -32,8 +32,8 @@ public interface BalmEntities {
     @Deprecated
     default <T extends LivingEntity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder, Supplier<AttributeSupplier.Builder> attributeBuilder) {
         final var holder = Balm.getRuntime().entityTypes(identifier.getNamespace())
-                .register(identifier.getPath(), typeBuilder)
-                .withDefaultAttributes(attributeBuilder)
+                .register(identifier.getPath(), () -> typeBuilder)
+                .withDefaultAttributes((it) -> attributeBuilder.get())
                 .asHolder();
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
