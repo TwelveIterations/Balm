@@ -28,7 +28,7 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
     }
 
     @Override
-    public <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> BalmRecipeTypeRegistration<TRecipeInput, TRecipe> register(String name, Function<ResourceLocation, RecipeType<TRecipe>> constructor) {
+    public <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> BalmRecipeTypeRegistration<TRecipeInput, TRecipe> register(String name, Function<ResourceLocation, ? extends RecipeType<TRecipe>> constructor) {
         final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.RECIPE_TYPE, resourceLocation);
         final var holder = registrar.register(resourceKey, constructor::apply);
@@ -47,7 +47,7 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
     public BalmRecipeBookCategoryRegistration registerBookCategory(String name, Function<ResourceLocation, RecipeBookCategory> constructor) {
         final var id = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.RECIPE_BOOK_CATEGORY, id);
-        final var holder = registrar.register(key, constructor::apply);
+        final var holder = registrar.register(key, constructor);
         return new RecipeBookCategoryRegistrationImpl(holder);
     }
 
@@ -67,25 +67,35 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
         return new SlotDisplayTypeRegistrationImpl<>(holder);
     }
 
-    private record DeferredRecipeTypeImpl<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>>(
-            Holder<RecipeType<TRecipe>> type,
-            @Nullable Holder<RecipeSerializer<TRecipe>> serializer,
-            @Nullable Holder<RecipeBookCategory> bookCategory
-    ) implements DeferredRecipeType<TRecipeInput, TRecipe> {
-        @Override
-        public Holder<RecipeSerializer<TRecipe>> serializer() {
-            if (serializer == null) {
-                throw new IllegalStateException("Serializer not registered for recipe type " + type.unwrapKey().orElseThrow().location());
-            }
-            return serializer;
+    private static class DeferredRecipeTypeImpl<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> implements DeferredRecipeType<TRecipeInput, TRecipe> {
+        private final Holder<RecipeType<TRecipe>> type;
+        private final @Nullable Holder<RecipeSerializer<TRecipe>> serializer;
+        private final @Nullable Holder<RecipeBookCategory> bookCategory;
+
+        private DeferredRecipeTypeImpl(
+                Holder<RecipeType<TRecipe>> type,
+                @Nullable Holder<RecipeSerializer<TRecipe>> serializer,
+                @Nullable Holder<RecipeBookCategory> bookCategory
+        ) {
+            this.type = type;
+            this.serializer = serializer;
+            this.bookCategory = bookCategory;
         }
 
         @Override
-        public Holder<RecipeBookCategory> bookCategory() {
+        public RecipeSerializer<TRecipe> serializer() {
             if (serializer == null) {
+                throw new IllegalStateException("Serializer not registered for recipe type " + type.unwrapKey().orElseThrow().location());
+            }
+            return serializer.value();
+        }
+
+        @Override
+        public RecipeBookCategory bookCategory() {
+            if (bookCategory == null) {
                 throw new IllegalStateException("Book category not registered for recipe type " + type.unwrapKey().orElseThrow().location());
             }
-            return bookCategory;
+            return bookCategory.value();
         }
 
         @Override
@@ -105,6 +115,12 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
             }
             return Optional.empty();
         }
+
+        @Override
+        public RecipeType<TRecipe> type() {
+            return type.value();
+        }
+
     }
 
     private static class RecipeTypeRegistrationImpl<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> implements BalmRecipeTypeRegistration<TRecipeInput, TRecipe> {
