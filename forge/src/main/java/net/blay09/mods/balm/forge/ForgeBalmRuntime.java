@@ -5,7 +5,6 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -24,7 +23,6 @@ import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
 import net.blay09.mods.balm.forge.core.ForgeBalmRegistrar;
-import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
 import net.blay09.mods.balm.forge.entity.ForgeBalmEntityTypeFactory;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
@@ -61,7 +59,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     private final BalmNetworking networking = new ForgeBalmNetworking();
     private final BalmConfig config = new ForgeBalmConfig();
     private final BalmHooks hooks = new ForgeBalmHooks();
-    private final BalmEntities entities = new ForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new ForgeBalmCapabilities(legacyNamespaceResolver);
     private final BalmCommands commands = new ForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -101,11 +98,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmHooks getHooks() {
         return hooks;
-    }
-
-    @Override
-    public BalmEntities getEntities() {
-        return entities;
     }
 
     @Override

@@ -5,7 +5,6 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -24,7 +23,6 @@ import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
 import net.blay09.mods.balm.neoforge.config.NeoForgeBalmConfig;
-import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntities;
 import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntityTypeFactory;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
@@ -62,7 +60,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmNetworking networking = new NeoForgeBalmNetworking(legacyNamespaceResolver);
     private final BalmConfig config = new NeoForgeBalmConfig();
     private final BalmHooks hooks = new NeoForgeBalmHooks();
-    private final BalmEntities entities = new NeoForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities(legacyNamespaceResolver);
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -102,11 +99,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmHooks getHooks() {
         return hooks;
-    }
-
-    @Override
-    public BalmEntities getEntities() {
-        return entities;
     }
 
     @Override

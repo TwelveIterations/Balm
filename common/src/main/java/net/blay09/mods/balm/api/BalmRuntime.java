@@ -102,9 +102,11 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
      * @deprecated Use {@link Balm#entityTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
-    BalmEntities getEntities();
+    default BalmEntities getEntities() {
+        return BalmEntities.LEGACY;
+    }
 
-    void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeFactory> initializer);
+    void entityTypes(String namespace, Consumer<BalmEntityTypeFactory> initializer);
 
     /**
      * @deprecated Use {@link Balm#entityTypes(String, java.util.function.Consumer)} instead.

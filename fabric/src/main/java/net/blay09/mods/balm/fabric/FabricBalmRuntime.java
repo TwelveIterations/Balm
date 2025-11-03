@@ -6,7 +6,6 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -25,7 +24,6 @@ import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
 import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
-import net.blay09.mods.balm.fabric.entity.FabricBalmEntities;
 import net.blay09.mods.balm.fabric.entity.FabricBalmEntityTypeFactory;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
@@ -65,7 +63,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmConfig config = new FabricBalmConfig();
     private final BalmHooks hooks = new FabricBalmHooks();
     private final BalmRegistrar registrar = new FabricBalmRegistrar();
-    private final BalmEntities entities = new FabricBalmEntities();
     private final BalmCapabilities capabilities = new FabricBalmCapabilities();
     private final BalmCommands commands = new FabricBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -107,11 +104,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmHooks getHooks() {
         return hooks;
-    }
-
-    @Override
-    public BalmEntities getEntities() {
-        return entities;
     }
 
     @Override
