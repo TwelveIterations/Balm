@@ -6,8 +6,8 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
-import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
-import net.blay09.mods.balm.client.screen.BalmMenuScreenFactory;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.screen.BalmMenuScreenRegistrar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 
@@ -52,7 +52,7 @@ public class BalmClient {
         return runtime.getKeyMappings();
     }
 
-    public static void menuScreens(String namespace, Consumer<BalmMenuScreenFactory> initializer) {
+    public static void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
         runtime.menuScreens(namespace, initializer);
     }
 
@@ -64,7 +64,7 @@ public class BalmClient {
         return runtime;
     }
 
-    public static void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer) {
+    public static void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         runtime.blockEntityRenderers(namespace, initializer);
     }
 

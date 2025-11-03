@@ -8,16 +8,16 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
-import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
-import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
-import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
@@ -28,16 +28,16 @@ import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
-import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
-import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
-import net.blay09.mods.balm.world.item.BalmItemFactory;
-import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
-import net.blay09.mods.balm.world.component.BalmDataComponentTypeFactory;
-import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
-import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.item.BalmItemRegistrar;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
+import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -80,13 +80,13 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return BalmMenus.LEGACY;
     }
 
-    void menuTypes(String namespace, Consumer<BalmMenuTypeFactory> initializer);
+    void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer);
 
     /**
      * @deprecated Use {@link net.blay09.mods.balm.api.Balm#menuTypes(String, Consumer)} instead.
      */
     @Deprecated
-    BalmMenuTypeFactory menuTypes(String namespace);
+    BalmMenuTypeRegistrar menuTypes(String namespace);
 
     BalmNetworking getNetworking();
 
@@ -110,13 +110,13 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return BalmEntities.LEGACY;
     }
 
-    void entityTypes(String namespace, Consumer<BalmEntityTypeFactory> initializer);
+    void entityTypes(String namespace, Consumer<BalmEntityTypeRegistrar> initializer);
 
     /**
      * @deprecated Use {@link Balm#entityTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
-    BalmEntityTypeFactory entityTypes(String namespace);
+    BalmEntityTypeRegistrar entityTypes(String namespace);
 
     BalmCapabilities getCapabilities();
 
@@ -139,9 +139,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return BalmParticles.LEGACY;
     }
 
-    void particleTypes(String namespace, Consumer<BalmParticleTypeFactory> initializer);
+    void particleTypes(String namespace, Consumer<BalmParticleTypeRegistrar> initializer);
 
-    void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer);
+    void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer);
 
     BalmPermissions getPermissions();
 
@@ -275,29 +275,29 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return registrar().scoped(registryKey, namespace);
     }
 
-    void blocks(String namespace, Consumer<BalmBlockFactory> initializer);
+    void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer);
 
-    void items(String namespace, Consumer<BalmItemFactory> initializer);
+    void items(String namespace, Consumer<BalmItemRegistrar> initializer);
 
-    void recipeTypes(String namespace, Consumer<BalmRecipeTypeFactory> initializer);
+    void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer);
 
-    void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeFactory> initializer);
+    void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer);
 
     /**
      * @deprecated Use {@link Balm#creativeModeTabs(String, Consumer)} instead.
      */
     @Deprecated
-    BalmCreativeModeTabFactory creativeModeTabs(String namespace);
+    BalmCreativeModeTabRegistrar creativeModeTabs(String namespace);
 
-    void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer);
+    void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer);
 
     /**
      * @deprecated Use {@link Balm#blockEntityTypes(String, Consumer)} instead.
      */
     @Deprecated
-    BalmBlockEntityTypeFactory blockEntityTypes(String namespace);
+    BalmBlockEntityTypeRegistrar blockEntityTypes(String namespace);
 
-    default void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
+    default void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
         initializer.accept(blockEntityTypes(namespace));
     }
 
@@ -307,8 +307,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
      * @deprecated Use {@link Balm#particleTypes(String, Consumer)} instead.
      */
     @Deprecated
-    BalmParticleTypeFactory particleTypes(String namespace);
+    BalmParticleTypeRegistrar particleTypes(String namespace);
 
     @Deprecated
-    BalmCustomStatFactory customStats(String namespace);
+    BalmCustomStatRegistrar customStats(String namespace);
 }

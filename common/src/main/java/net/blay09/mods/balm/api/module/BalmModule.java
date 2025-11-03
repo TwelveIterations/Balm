@@ -8,28 +8,28 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
-import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
-import net.blay09.mods.balm.world.item.BalmItemFactory;
-import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
-import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
-import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.item.BalmItemRegistrar;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
+import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -38,7 +38,7 @@ public interface BalmModule {
     ResourceLocation getId();
 
     /**
-     * @deprecated Use {@link #registerCustomStats(BalmCustomStatFactory)} instead.
+     * @deprecated Use {@link #registerCustomStats(BalmCustomStatRegistrar)} instead.
      */
     @Deprecated
     default void registerStats(BalmStats stats) {
@@ -55,75 +55,75 @@ public interface BalmModule {
     }
 
     /**
-     * @deprecated Use {@link #registerParticleTypes(BalmParticleTypeFactory)} instead.
+     * @deprecated Use {@link #registerParticleTypes(BalmParticleTypeRegistrar)} instead.
      */
     @Deprecated
     default void registerParticles(BalmParticles particles) {
     }
 
-    default void registerParticleTypes(BalmParticleTypeFactory particleTypes) {
+    default void registerParticleTypes(BalmParticleTypeRegistrar particleTypes) {
     }
 
-    default void registerCustomStats(BalmCustomStatFactory customStats) {
+    default void registerCustomStats(BalmCustomStatRegistrar customStats) {
     }
 
     /**
-     * @deprecated Use {@link #registerMenuTypes(BalmMenuTypeFactory)} instead.
+     * @deprecated Use {@link #registerMenuTypes(BalmMenuTypeRegistrar)} instead.
      */
     @Deprecated
     default void registerMenus(BalmMenus menus) {
     }
 
-    default void registerMenuTypes(BalmMenuTypeFactory menuTypes) {
+    default void registerMenuTypes(BalmMenuTypeRegistrar menuTypes) {
     }
 
     /**
-     * @deprecated Use {@link #registerRecipeTypes(BalmRecipeTypeFactory)} instead.
+     * @deprecated Use {@link #registerRecipeTypes(BalmRecipeTypeRegistrar)} instead.
      */
     @Deprecated
     default void registerRecipes(BalmRecipes recipes) {
     }
 
-    default void registerRecipeTypes(BalmRecipeTypeFactory recipeTypes) {
+    default void registerRecipeTypes(BalmRecipeTypeRegistrar recipeTypes) {
     }
 
     default void registerCommands(BalmCommands commands) {
     }
 
     /**
-     * @deprecated Use {@link #registerEntityTypes(BalmEntityTypeFactory)} instead.
+     * @deprecated Use {@link #registerEntityTypes(BalmEntityTypeRegistrar)} instead.
      */
     @Deprecated
     default void registerEntities(BalmEntities entities) {
     }
 
-    default void registerEntityTypes(BalmEntityTypeFactory entityTypes) {
+    default void registerEntityTypes(BalmEntityTypeRegistrar entityTypes) {
     }
 
     default void registerLootTables(BalmLootTables lootTables) {
     }
 
     /**
-     * @deprecated Use {@link #registerItems(BalmItemFactory)} and {@link #registerCreativeModeTabs(BalmCreativeModeTabFactory)} instead.
+     * @deprecated Use {@link #registerItems(BalmItemRegistrar)} and {@link #registerCreativeModeTabs(BalmCreativeModeTabRegistrar)} instead.
      */
     @Deprecated
     default void registerItems(BalmItems items) {
     }
 
-    default void registerItems(BalmItemFactory items) {
+    default void registerItems(BalmItemRegistrar items) {
     }
 
-    default void registerCreativeModeTabs(BalmCreativeModeTabFactory creativeModeTabs) {
+    default void registerCreativeModeTabs(BalmCreativeModeTabRegistrar creativeModeTabs) {
     }
 
     /**
-     * @deprecated Use {@link #registerBlockEntityTypes(BalmBlockEntityTypeFactory)} instead.
+     * @deprecated Use {@link #registerBlockEntityTypes(BalmBlockEntityTypeRegistrar)} instead.
      */
     @Deprecated
     default void registerBlockEntities(BalmBlockEntities blockEntities) {
     }
 
-    default void registerBlockEntityTypes(BalmBlockEntityTypeFactory blockEntityTypes) {
+    default void registerBlockEntityTypes(BalmBlockEntityTypeRegistrar blockEntityTypes) {
     }
 
     default void registerWorldGen(BalmWorldGen worldGen) {
@@ -142,13 +142,13 @@ public interface BalmModule {
     }
 
     /**
-     * @deprecated Use {@link #registerBlocks(BalmBlockFactory)} instead.
+     * @deprecated Use {@link #registerBlocks(BalmBlockRegistrar)} instead.
      */
     @Deprecated
     default void registerBlocks(BalmBlocks blocks) {
     }
 
-    default void registerBlocks(BalmBlockFactory factory) {
+    default void registerBlocks(BalmBlockRegistrar factory) {
     }
 
     default void registerEvents(BalmEvents events) {

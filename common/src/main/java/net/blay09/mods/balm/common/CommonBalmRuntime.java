@@ -11,14 +11,14 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.module.internal.InternalsModule;
-import net.blay09.mods.balm.world.item.BalmItemFactory;
-import net.blay09.mods.balm.world.item.internal.BalmItemFactoryImpl;
-import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
-import net.blay09.mods.balm.world.item.crafting.internal.BalmRecipeTypeFactoryImpl;
-import net.blay09.mods.balm.world.component.BalmDataComponentTypeFactory;
-import net.blay09.mods.balm.world.component.internal.BalmDataComponentTypeFactoryImpl;
-import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
-import net.blay09.mods.balm.world.level.block.internal.BalmBlockFactoryImpl;
+import net.blay09.mods.balm.world.item.BalmItemRegistrar;
+import net.blay09.mods.balm.world.item.internal.BalmItemRegistrarImpl;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
+import net.blay09.mods.balm.world.item.crafting.internal.BalmRecipeTypeRegistrarImpl;
+import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.core.component.internal.BalmDataComponentTypeRegistrarImpl;
+import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
+import net.blay09.mods.balm.world.level.block.internal.BalmBlockRegistrarImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -97,23 +97,23 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     }
 
     @Override
-    public void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
-        initializer.accept(new BalmBlockFactoryImpl(registrar(), namespace));
+    public void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer) {
+        initializer.accept(new BalmBlockRegistrarImpl(registrar(), namespace));
     }
 
     @Override
-    public void items(String namespace, Consumer<BalmItemFactory> initializer) {
-        initializer.accept(new BalmItemFactoryImpl(registrar(), namespace));
+    public void items(String namespace, Consumer<BalmItemRegistrar> initializer) {
+        initializer.accept(new BalmItemRegistrarImpl(registrar(), namespace));
     }
 
     @Override
-    public void recipeTypes(String namespace, Consumer<BalmRecipeTypeFactory> initializer) {
-        initializer.accept(new BalmRecipeTypeFactoryImpl(registrar(), namespace));
+    public void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer) {
+        initializer.accept(new BalmRecipeTypeRegistrarImpl(registrar(), namespace));
     }
 
     @Override
-    public void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeFactory> initializer) {
-        initializer.accept(new BalmDataComponentTypeFactoryImpl(registrar(), namespace));
+    public void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer) {
+        initializer.accept(new BalmDataComponentTypeRegistrarImpl(registrar(), namespace));
     }
 
 }

@@ -4,8 +4,8 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.client.screen.BalmMenuScreenFactory;
-import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
+import net.blay09.mods.balm.client.screen.BalmMenuScreenRegistrar;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -13,10 +13,10 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
-import net.blay09.mods.balm.neoforge.client.renderer.blockentity.NeoForgeBalmBlockEntityRendererFactory;
+import net.blay09.mods.balm.neoforge.client.renderer.blockentity.NeoForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmRenderers;
-import net.blay09.mods.balm.neoforge.client.screen.NeoForgeBalmMenuScreenFactory;
+import net.blay09.mods.balm.neoforge.client.screen.NeoForgeBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmClientEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.minecraft.resources.ResourceLocation;
@@ -74,22 +74,22 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     }
 
     @Override
-    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer) {
+    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
                 modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
-                    initializer.accept(new NeoForgeBalmBlockEntityRendererFactory(event));
+                    initializer.accept(new NeoForgeBalmBlockEntityRendererRegistrar(event));
                 });
             }
         });
     }
 
     @Override
-    public void menuScreens(String namespace, Consumer<BalmMenuScreenFactory> initializer) {
+    public void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
                 modBus.addListener((RegisterMenuScreensEvent event) -> {
-                    initializer.accept(new NeoForgeBalmMenuScreenFactory(event));
+                    initializer.accept(new NeoForgeBalmMenuScreenRegistrar(event));
                 });
             }
         });

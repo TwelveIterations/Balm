@@ -4,8 +4,8 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.client.screen.BalmMenuScreenFactory;
-import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
+import net.blay09.mods.balm.client.screen.BalmMenuScreenRegistrar;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -13,10 +13,10 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
-import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererFactory;
+import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
-import net.blay09.mods.balm.forge.client.screen.ForgeBalmMenuScreenFactory;
+import net.blay09.mods.balm.forge.client.screen.ForgeBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.minecraft.client.Minecraft;
@@ -71,14 +71,14 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     }
 
     @Override
-    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer) {
+    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         EntityRenderersEvent.RegisterRenderers.BUS.addListener((event) -> {
-           initializer.accept(new ForgeBalmBlockEntityRendererFactory(event));
+           initializer.accept(new ForgeBalmBlockEntityRendererRegistrar(event));
         });
     }
 
     @Override
-    public void menuScreens(String namespace, Consumer<BalmMenuScreenFactory> initializer) {
-        initializer.accept(ForgeBalmMenuScreenFactory.INSTANCE);
+    public void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
+        initializer.accept(ForgeBalmMenuScreenRegistrar.INSTANCE);
     }
 }

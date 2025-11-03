@@ -2,17 +2,18 @@ package net.blay09.mods.balm.api.menu;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.DeferredObject;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
 /**
- * @deprecated Use the scoped factory via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeFactory}
+ * @deprecated Use the scoped factory via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeRegistrar}
  */
 @Deprecated
 public interface BalmMenus {
     /**
-     * @deprecated Use the scoped factory via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeFactory}
+     * @deprecated Use the scoped factory via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeRegistrar}
      */
     @Deprecated
     default <TMenu extends AbstractContainerMenu, TPayload> DeferredObject<MenuType<TMenu>> registerMenu(ResourceLocation identifier, BalmMenuFactory<TMenu, TPayload> factory) {

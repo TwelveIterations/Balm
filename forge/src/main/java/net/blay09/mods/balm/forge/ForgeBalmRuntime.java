@@ -5,16 +5,16 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.core.BalmRegistrar;
@@ -23,23 +23,23 @@ import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
 import net.blay09.mods.balm.forge.core.ForgeBalmRegistrar;
-import net.blay09.mods.balm.forge.entity.ForgeBalmEntityTypeFactory;
+import net.blay09.mods.balm.forge.entity.ForgeBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
-import net.blay09.mods.balm.forge.level.block.entity.ForgeBalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.forge.level.block.entity.ForgeBalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.forge.loader.ForgeBalmPlatform;
-import net.blay09.mods.balm.forge.menu.ForgeBalmMenuTypeFactory;
+import net.blay09.mods.balm.forge.menu.ForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
-import net.blay09.mods.balm.forge.particle.ForgeBalmParticleTypeFactory;
+import net.blay09.mods.balm.forge.particle.ForgeBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
 import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
 import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
-import net.blay09.mods.balm.forge.stats.ForgeBalmCustomStatFactory;
+import net.blay09.mods.balm.forge.stats.ForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
-import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabFactory;
+import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
-import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
-import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraftforge.fml.ModLoadingContext;
 
 import java.util.function.Consumer;
@@ -143,57 +143,57 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
-        initializer.accept(new ForgeBalmBlockEntityTypeFactory(registrar(), namespace));
+    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmBlockEntityTypeRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void entityTypes(String namespace, Consumer<BalmEntityTypeFactory> initializer) {
-        initializer.accept(new ForgeBalmEntityTypeFactory(registrar(), namespace));
+    public void entityTypes(String namespace, Consumer<BalmEntityTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmEntityTypeRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
-        initializer.accept(new ForgeBalmCreativeModeTabFactory(registrar(), namespace));
+    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
+        initializer.accept(new ForgeBalmCreativeModeTabRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void menuTypes(String namespace, Consumer<BalmMenuTypeFactory> initializer) {
-        initializer.accept(new ForgeBalmMenuTypeFactory(registrar(), namespace));
+    public void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmMenuTypeRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void particleTypes(String namespace, Consumer<BalmParticleTypeFactory> initializer) {
-        initializer.accept(new ForgeBalmParticleTypeFactory(registrar(), namespace));
+    public void particleTypes(String namespace, Consumer<BalmParticleTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmParticleTypeRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer) {
-        initializer.accept(new ForgeBalmCustomStatFactory(registrar(), namespace));
-    }
-
-    @Override
-    @Deprecated
-    public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
-        return new ForgeBalmCreativeModeTabFactory(registrar(), namespace);
+    public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
+        initializer.accept(new ForgeBalmCustomStatRegistrar(registrar(), namespace));
     }
 
     @Override
     @Deprecated
-    public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
-        return new ForgeBalmBlockEntityTypeFactory(registrar(), namespace);
+    public BalmCreativeModeTabRegistrar creativeModeTabs(String namespace) {
+        return new ForgeBalmCreativeModeTabRegistrar(registrar(), namespace);
     }
 
     @Override
     @Deprecated
-    public BalmEntityTypeFactory entityTypes(String namespace) {
-        return new ForgeBalmEntityTypeFactory(registrar(), namespace);
+    public BalmBlockEntityTypeRegistrar blockEntityTypes(String namespace) {
+        return new ForgeBalmBlockEntityTypeRegistrar(registrar(), namespace);
     }
 
     @Override
     @Deprecated
-    public BalmMenuTypeFactory menuTypes(String namespace) {
-        return new ForgeBalmMenuTypeFactory(registrar(), namespace);
+    public BalmEntityTypeRegistrar entityTypes(String namespace) {
+        return new ForgeBalmEntityTypeRegistrar(registrar(), namespace);
+    }
+
+    @Override
+    @Deprecated
+    public BalmMenuTypeRegistrar menuTypes(String namespace) {
+        return new ForgeBalmMenuTypeRegistrar(registrar(), namespace);
     }
 
     @Override
@@ -202,12 +202,12 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public BalmParticleTypeFactory particleTypes(String namespace) {
-        return new ForgeBalmParticleTypeFactory(registrar(), namespace);
+    public BalmParticleTypeRegistrar particleTypes(String namespace) {
+        return new ForgeBalmParticleTypeRegistrar(registrar(), namespace);
     }
 
     @Override
-    public BalmCustomStatFactory customStats(String namespace) {
-        return new ForgeBalmCustomStatFactory(registrar(), namespace);
+    public BalmCustomStatRegistrar customStats(String namespace) {
+        return new ForgeBalmCustomStatRegistrar(registrar(), namespace);
     }
 }

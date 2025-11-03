@@ -1,10 +1,11 @@
 package net.blay09.mods.balm.api.stats;
 
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * @deprecated Use {@link BalmCustomStatFactory} via
+ * @deprecated Use {@link BalmCustomStatRegistrar} via
  * {@link net.blay09.mods.balm.api.Balm#customStats(String, java.util.function.Consumer)} instead.
  */
 @Deprecated

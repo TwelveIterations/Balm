@@ -6,16 +6,16 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
@@ -24,23 +24,23 @@ import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
 import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
-import net.blay09.mods.balm.fabric.entity.FabricBalmEntityTypeFactory;
+import net.blay09.mods.balm.fabric.entity.FabricBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
-import net.blay09.mods.balm.fabric.level.block.entity.FabricBalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.fabric.level.block.entity.FabricBalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
-import net.blay09.mods.balm.fabric.menu.FabricBalmMenuTypeFactory;
+import net.blay09.mods.balm.fabric.world.inventory.FabricBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
-import net.blay09.mods.balm.fabric.particle.FabricBalmParticleTypeFactory;
+import net.blay09.mods.balm.fabric.particle.FabricBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.core.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
-import net.blay09.mods.balm.fabric.stats.FabricBalmCustomStatFactory;
+import net.blay09.mods.balm.fabric.stats.FabricBalmCustomStatRegistrar;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
-import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabFactory;
+import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
-import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
-import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -141,39 +141,39 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
-        initializer.accept(new FabricBalmCreativeModeTabFactory(registrar(), namespace));
+    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
+        initializer.accept(new FabricBalmCreativeModeTabRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
-        initializer.accept(new FabricBalmBlockEntityTypeFactory(registrar(), namespace));
+    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmBlockEntityTypeRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void menuTypes(String namespace, Consumer<BalmMenuTypeFactory> initializer) {
-        initializer.accept(new FabricBalmMenuTypeFactory(registrar(), namespace));
+    public void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmMenuTypeRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeFactory> initializer) {
-        initializer.accept(new FabricBalmEntityTypeFactory(registrar(), namespace));
+    public void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmEntityTypeRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void particleTypes(String namespace, Consumer<BalmParticleTypeFactory> initializer) {
-        initializer.accept(new FabricBalmParticleTypeFactory(registrar(), namespace));
+    public void particleTypes(String namespace, Consumer<BalmParticleTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmParticleTypeRegistrar(registrar(), namespace));
     }
 
     @Override
-    public void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer) {
-        initializer.accept(new FabricBalmCustomStatFactory(registrar(), namespace));
+    public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
+        initializer.accept(new FabricBalmCustomStatRegistrar(registrar(), namespace));
     }
 
     @Override
     @Deprecated
-    public BalmEntityTypeFactory entityTypes(String namespace) {
-        return new FabricBalmEntityTypeFactory(registrar(), namespace);
+    public BalmEntityTypeRegistrar entityTypes(String namespace) {
+        return new FabricBalmEntityTypeRegistrar(registrar(), namespace);
     }
 
     @Override
@@ -183,29 +183,29 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
 
     @Override
     @Deprecated
-    public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
-        return new FabricBalmCreativeModeTabFactory(registrar(), namespace);
+    public BalmCreativeModeTabRegistrar creativeModeTabs(String namespace) {
+        return new FabricBalmCreativeModeTabRegistrar(registrar(), namespace);
     }
 
     @Override
     @Deprecated
-    public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
-        return new FabricBalmBlockEntityTypeFactory(registrar(), namespace);
+    public BalmBlockEntityTypeRegistrar blockEntityTypes(String namespace) {
+        return new FabricBalmBlockEntityTypeRegistrar(registrar(), namespace);
     }
 
     @Override
     @Deprecated
-    public BalmMenuTypeFactory menuTypes(String namespace) {
-        return new FabricBalmMenuTypeFactory(registrar(), namespace);
+    public BalmMenuTypeRegistrar menuTypes(String namespace) {
+        return new FabricBalmMenuTypeRegistrar(registrar(), namespace);
     }
 
     @Override
-    public BalmParticleTypeFactory particleTypes(String namespace) {
-        return new FabricBalmParticleTypeFactory(registrar(), namespace);
+    public BalmParticleTypeRegistrar particleTypes(String namespace) {
+        return new FabricBalmParticleTypeRegistrar(registrar(), namespace);
     }
 
     @Override
-    public BalmCustomStatFactory customStats(String namespace) {
-        return new FabricBalmCustomStatFactory(registrar(), namespace);
+    public BalmCustomStatRegistrar customStats(String namespace) {
+        return new FabricBalmCustomStatRegistrar(registrar(), namespace);
     }
 }

@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api.particle;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.DeferredObject;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -10,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Function;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.api.particle.BalmParticleTypeFactory}
+ * @deprecated Use {@link BalmParticleTypeRegistrar}
  *             via {@link net.blay09.mods.balm.api.Balm#particleTypes(String, java.util.function.Consumer)} instead.
  */
 @Deprecated

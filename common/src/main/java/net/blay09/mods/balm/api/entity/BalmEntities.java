@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api.entity;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.DeferredObject;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,12 +12,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import java.util.function.Supplier;
 
 /**
- * @deprecated Use the scoped factory via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeFactory}
+ * @deprecated Use the scoped factory via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeRegistrar}
  */
 @Deprecated
 public interface BalmEntities {
     /**
-     * @deprecated Use the scoped factory via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeFactory}
+     * @deprecated Use the scoped factory via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeRegistrar}
      */
     @Deprecated
     default <T extends Entity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder) {
@@ -27,7 +28,7 @@ public interface BalmEntities {
     }
 
     /**
-     * @deprecated Use the scoped factory via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeFactory}
+     * @deprecated Use the scoped factory via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeRegistrar}
      */
     @Deprecated
     default <T extends LivingEntity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder, Supplier<AttributeSupplier.Builder> attributeBuilder) {

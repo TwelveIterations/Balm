@@ -8,15 +8,15 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
-import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.ModProxy;
@@ -27,17 +27,17 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
-import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
-import net.blay09.mods.balm.world.component.BalmDataComponentTypeFactory;
-import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
-import net.blay09.mods.balm.world.item.BalmItemFactory;
-import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
-import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
-import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
+import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.item.BalmItemRegistrar;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
+import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -231,7 +231,7 @@ public class Balm {
      * @param namespace   The mod id to register menu types under.
      * @param initializer Callback that receives a scoped factory for registering menu types.
      */
-    public static void menuTypes(String namespace, java.util.function.Consumer<BalmMenuTypeFactory> initializer) {
+    public static void menuTypes(String namespace, java.util.function.Consumer<BalmMenuTypeRegistrar> initializer) {
         runtime.menuTypes(namespace, initializer);
     }
 
@@ -241,7 +241,7 @@ public class Balm {
      * @param namespace   The mod id to register entity types under.
      * @param initializer Callback that receives a scoped factory for registering entity types.
      */
-    public static void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeFactory> initializer) {
+    public static void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeRegistrar> initializer) {
         runtime.entityTypes(namespace, initializer);
     }
 
@@ -259,7 +259,7 @@ public class Balm {
      * @param namespace   The mod id to register particle types under.
      * @param initializer Callback that receives a scoped factory for registering particle types.
      */
-    public static void particleTypes(String namespace, java.util.function.Consumer<BalmParticleTypeFactory> initializer) {
+    public static void particleTypes(String namespace, java.util.function.Consumer<BalmParticleTypeRegistrar> initializer) {
         runtime.particleTypes(namespace, initializer);
     }
 
@@ -269,7 +269,7 @@ public class Balm {
      * @param namespace   The mod id to register stats under.
      * @param initializer Callback that receives a scoped factory for registering custom stats.
      */
-    public static void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer) {
+    public static void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         runtime.customStats(namespace, initializer);
     }
 
@@ -342,7 +342,7 @@ public class Balm {
      * @param namespace   The mod id to register blocks under.
      * @param initializer Callback that receives a scoped factory for registering blocks.
      */
-    public static void blocks(String namespace, Consumer<BalmBlockFactory> initializer) {
+    public static void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer) {
         runtime.blocks(namespace, initializer);
     }
 
@@ -352,7 +352,7 @@ public class Balm {
      * @param namespace   The mod id to register items under.
      * @param initializer Callback that receives a scoped factory for registering items.
      */
-    public static void items(String namespace, Consumer<BalmItemFactory> initializer) {
+    public static void items(String namespace, Consumer<BalmItemRegistrar> initializer) {
         runtime.items(namespace, initializer);
     }
 
@@ -362,7 +362,7 @@ public class Balm {
      * @param namespace   The mod id to register recipe types under.
      * @param initializer Callback that receives a scoped factory for registering recipe types.
      */
-    public static void recipeTypes(String namespace, Consumer<BalmRecipeTypeFactory> initializer) {
+    public static void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer) {
         runtime.recipeTypes(namespace, initializer);
     }
 
@@ -372,7 +372,7 @@ public class Balm {
      * @param namespace   The mod id to register data component types under.
      * @param initializer Callback that receives a scoped factory for registering data component types.
      */
-    public static void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeFactory> initializer) {
+    public static void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer) {
         runtime.dataComponentTypes(namespace, initializer);
     }
 
@@ -382,7 +382,7 @@ public class Balm {
      * @param namespace   The mod id to register creative mode tabs under.
      * @param initializer Callback that receives a scoped factory for registering creative mode tabs.
      */
-    public static void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
+    public static void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
         runtime.creativeModeTabs(namespace, initializer);
     }
 
@@ -392,7 +392,7 @@ public class Balm {
      * @param namespace   The mod id to register block entity types under.
      * @param initializer Callback that receives a scoped factory for registering block entity types.
      */
-    public static void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
+    public static void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
         runtime.blockEntityTypes(namespace, initializer);
     }
 

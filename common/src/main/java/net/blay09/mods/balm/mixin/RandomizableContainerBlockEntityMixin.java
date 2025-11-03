@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.loot.UnpackedLootTableHolder;
+import net.blay09.mods.balm.world.level.storage.loot.UnpackedLootTableHolder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.storage.loot.LootTable;

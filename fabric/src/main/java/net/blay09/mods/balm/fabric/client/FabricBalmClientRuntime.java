@@ -5,17 +5,17 @@ import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.client.screen.BalmMenuScreenFactory;
-import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
+import net.blay09.mods.balm.client.screen.BalmMenuScreenRegistrar;
+import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
-import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererFactory;
+import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
-import net.blay09.mods.balm.fabric.client.screen.FabricBalmMenuScreenFactory;
+import net.blay09.mods.balm.fabric.client.screen.FabricBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.event.client.FabricBalmClientEvents;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -79,13 +79,13 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     }
 
     @Override
-    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer) {
-        initializer.accept(FabricBalmBlockEntityRendererFactory.INSTANCE);
+    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
+        initializer.accept(FabricBalmBlockEntityRendererRegistrar.INSTANCE);
     }
 
     @Override
-    public void menuScreens(String namespace, Consumer<BalmMenuScreenFactory> initializer) {
-        initializer.accept(FabricBalmMenuScreenFactory.INSTANCE);
+    public void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
+        initializer.accept(FabricBalmMenuScreenRegistrar.INSTANCE);
     }
 
 }
