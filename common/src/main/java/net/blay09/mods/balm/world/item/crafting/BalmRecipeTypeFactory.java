@@ -15,6 +15,10 @@ import java.util.function.Function;
  */
 public interface BalmRecipeTypeFactory {
 
+    default <T extends Recipe<?>> BalmRecipeTypeRegistration<T> register(String name) {
+        return register(name, SimpleRecipeType::new);
+    }
+
     <T extends Recipe<?>> BalmRecipeTypeRegistration<T> register(String name, Function<ResourceLocation, RecipeType<T>> constructor);
 
     <T extends Recipe<?>> BalmRecipeSerializerRegistration<T> registerSerializer(String name, Function<ResourceLocation, RecipeSerializer<T>> constructor);
