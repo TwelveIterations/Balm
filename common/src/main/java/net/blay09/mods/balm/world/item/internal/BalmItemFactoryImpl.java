@@ -1,6 +1,9 @@
-package net.blay09.mods.balm.world.item;
+package net.blay09.mods.balm.world.item.internal;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.world.item.BalmItemFactory;
+import net.blay09.mods.balm.world.item.BalmItemRegistration;
+import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;

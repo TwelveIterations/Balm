@@ -1,6 +1,7 @@
-package net.blay09.mods.balm.world.item;
+package net.blay09.mods.balm.world.item.internal;
 
 import com.mojang.datafixers.util.Either;
+import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.resources.ResourceKey;

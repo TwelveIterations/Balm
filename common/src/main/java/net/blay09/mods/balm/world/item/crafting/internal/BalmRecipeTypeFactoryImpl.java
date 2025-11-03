@@ -1,6 +1,7 @@
-package net.blay09.mods.balm.world.item.crafting;
+package net.blay09.mods.balm.world.item.crafting.internal;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.world.item.crafting.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;

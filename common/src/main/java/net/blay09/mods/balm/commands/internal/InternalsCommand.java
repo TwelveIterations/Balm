@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.commands;
+package net.blay09.mods.balm.commands.internal;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;

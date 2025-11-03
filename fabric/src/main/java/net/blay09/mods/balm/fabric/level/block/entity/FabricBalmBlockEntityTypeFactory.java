@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.level.block.entity;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.world.level.block.entity.AbstractBalmBlockEntityTypeFactoryImpl;
+import net.blay09.mods.balm.world.level.block.entity.internal.AbstractBalmBlockEntityTypeFactoryImpl;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

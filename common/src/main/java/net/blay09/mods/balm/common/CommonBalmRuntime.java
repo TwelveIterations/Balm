@@ -10,12 +10,13 @@ import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.blay09.mods.balm.module.internal.InternalsModule;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
-import net.blay09.mods.balm.world.item.BalmItemFactoryImpl;
+import net.blay09.mods.balm.world.item.internal.BalmItemFactoryImpl;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
-import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactoryImpl;
+import net.blay09.mods.balm.world.item.crafting.internal.BalmRecipeTypeFactoryImpl;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
-import net.blay09.mods.balm.world.level.block.BalmBlockFactoryImpl;
+import net.blay09.mods.balm.world.level.block.internal.BalmBlockFactoryImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

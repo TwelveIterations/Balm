@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.common;
+package net.blay09.mods.balm.module.internal;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
@@ -7,7 +7,8 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.commands.InternalsCommand;
+import net.blay09.mods.balm.commands.internal.InternalsCommand;
+import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.common.resources.ConfigResourceCondition;
 import net.minecraft.resources.ResourceLocation;
 

@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.neoforge.level.block.entity;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.world.level.block.entity.AbstractBalmBlockEntityTypeFactoryImpl;
+import net.blay09.mods.balm.world.level.block.entity.internal.AbstractBalmBlockEntityTypeFactoryImpl;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;

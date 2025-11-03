@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.world.item;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.world.item.AbstractBalmCreativeModeTabFactory;
+import net.blay09.mods.balm.world.item.internal.AbstractBalmCreativeModeTabFactory;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.world.item.CreativeModeTab;
 

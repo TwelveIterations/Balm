@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.util;
+package net.blay09.mods.balm.world.inventory;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

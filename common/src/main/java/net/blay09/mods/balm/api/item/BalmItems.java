@@ -29,8 +29,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Use {@link Balm#items(String, Consumer)} and {@link Balm#creativeModeTabs(String, Consumer)} instead.
+ * @deprecated Use {@link Balm#items(String, Consumer)} and {@link Balm#creativeModeTabs(String, Consumer)} instead.
  */
+@Deprecated
 public interface BalmItems {
 
     Multimap<String, ResourceKey<Item>> legacyCreativeModeTabItems = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
