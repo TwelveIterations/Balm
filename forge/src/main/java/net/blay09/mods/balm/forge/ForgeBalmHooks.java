@@ -122,8 +122,4 @@ public class ForgeBalmHooks implements BalmHooks {
         player.setForcedPose(pose);
     }
 
-    @Override
-    public MinecraftServer getServer() {
-        return ServerLifecycleHooks.getCurrentServer();
-    }
 }

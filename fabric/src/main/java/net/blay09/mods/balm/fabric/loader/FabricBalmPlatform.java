@@ -1,13 +1,27 @@
 package net.blay09.mods.balm.fabric.loader;
 
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmEnvironment;
+import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
+import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FabricBalmPlatform implements BalmPlatform {
+
+    private final AtomicReference<MinecraftServer> currentServer = new AtomicReference<>();
+
+    public void initialize() {
+        Balm.events().onEvent(ServerStartedEvent.class, event -> currentServer.set(event.getServer()));
+        Balm.events().onEvent(ServerStoppedEvent.class, event -> currentServer.set(null));
+    }
+
     @Override
     public BalmEnvironment physicalSide() {
         return switch (FabricLoader.getInstance().getEnvironmentType()) {
@@ -41,5 +55,10 @@ public class FabricBalmPlatform implements BalmPlatform {
     @Override
     public String name() {
         return LoaderPlatforms.FABRIC;
+    }
+
+    @Override
+    public @Nullable MinecraftServer server() {
+        return currentServer.get();
     }
 }

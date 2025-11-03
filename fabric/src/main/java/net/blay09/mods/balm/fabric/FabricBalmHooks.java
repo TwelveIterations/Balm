@@ -4,8 +4,6 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmHooks;
 import net.blay09.mods.balm.api.entity.BalmEntity;
 import net.blay09.mods.balm.api.entity.BalmPlayer;
-import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
-import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.blay09.mods.balm.common.CommonCapabilities;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
@@ -13,13 +11,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -32,16 +28,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 public class FabricBalmHooks implements BalmHooks {
-
-    private final AtomicReference<MinecraftServer> currentServer = new AtomicReference<>();
-
-    public void initialize() {
-        Balm.getEvents().onEvent(ServerStartedEvent.class, event -> currentServer.set(event.getServer()));
-        Balm.getEvents().onEvent(ServerStoppedEvent.class, event -> currentServer.set(null));
-    }
 
     @Override
     public boolean blockGrowFeature(Level level, RandomSource random, BlockPos pos, @Nullable Holder<ConfiguredFeature<?, ?>> holder) {
@@ -104,7 +91,7 @@ public class FabricBalmHooks implements BalmHooks {
     @Override
     public boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, hitResult.getDirection(), CommonCapabilities.FLUID_TANK);
+        final var fluidTank = Balm.capabilities().getCapability(blockEntity, hitResult.getDirection(), CommonCapabilities.FLUID_TANK);
         if (fluidTank != null) {
             ItemStack handItem = player.getItemInHand(hand);
             if (handItem.getItem() == Items.BUCKET) {
@@ -134,7 +121,7 @@ public class FabricBalmHooks implements BalmHooks {
                     int filled = fluidTank.fill(fluid, 1000, true);
                     if (filled >= 1000) {
                         if (handItem.getCount() > 1) {
-                            ItemStack restItem = Balm.getHooks().getCraftingRemainingItem(handItem);
+                            ItemStack restItem = Balm.hooks().getCraftingRemainingItem(handItem);
                             if (player.addItem(restItem)) {
                                 player.playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
                                 fluidTank.getFluid().getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
@@ -144,7 +131,7 @@ public class FabricBalmHooks implements BalmHooks {
                             }
                         } else {
                             player.playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
-                            player.setItemInHand(hand, Balm.getHooks().getCraftingRemainingItem(handItem));
+                            player.setItemInHand(hand, Balm.hooks().getCraftingRemainingItem(handItem));
                             fluidTank.fill(fluid, 1000, false);
                             return true;
                         }
@@ -160,8 +147,4 @@ public class FabricBalmHooks implements BalmHooks {
         ((BalmPlayer) player).setForcedPose(pose);
     }
 
-    @Override
-    public MinecraftServer getServer() {
-        return currentServer.get();
-    }
 }

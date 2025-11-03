@@ -4,9 +4,12 @@ import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.minecraft.SharedConstants;
+import net.minecraft.server.MinecraftServer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.neoforged.neoforgespi.language.IModInfo;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,6 +35,11 @@ public class NeoForgeBalmPlatform implements BalmPlatform {
     @Override
     public List<String> loadedPrimaryModIds() {
         return ModList.get().getMods().stream().map(IModInfo::getModId).toList();
+    }
+
+    @Override
+    public @Nullable MinecraftServer server() {
+        return ServerLifecycleHooks.getCurrentServer();
     }
 
     @Override

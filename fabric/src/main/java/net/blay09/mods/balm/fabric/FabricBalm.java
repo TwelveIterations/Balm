@@ -11,6 +11,7 @@ import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
+import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -51,7 +52,7 @@ public class FabricBalm implements ModInitializer {
 
         ((FabricBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
-        ((FabricBalmHooks) Balm.getHooks()).initialize();
+        ((FabricBalmPlatform) Balm.platform()).initialize();
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();
@@ -74,7 +75,7 @@ public class FabricBalm implements ModInitializer {
                     }
                 } else if (blockEntity != null) {
                     running = true;
-                    final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
+                    final var container = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
                     running = false;
                     if (container != null) {
                         return InventoryStorage.of(container, direction);
@@ -101,7 +102,7 @@ public class FabricBalm implements ModInitializer {
                     }
                 } else if (blockEntity != null) {
                     running = true;
-                    final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.FLUID_TANK);
+                    final var fluidTank = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.FLUID_TANK);
                     running = false;
                     if (fluidTank != null) {
                         return new BalmFluidStorage(fluidTank);
@@ -112,7 +113,7 @@ public class FabricBalm implements ModInitializer {
             }
         });
 
-        Balm.getNetworking().registerServerboundPacket(ServerboundModListMessage.TYPE,
+        Balm.networking().registerServerboundPacket(ServerboundModListMessage.TYPE,
                 ServerboundModListMessage.class, StreamCodec.of((buf, message) -> {
                     buf.writeVarInt(message.modList().size());
                     message.modList().forEach((modId, versions) -> {
@@ -130,7 +131,7 @@ public class FabricBalm implements ModInitializer {
                     }
                     return new ServerboundModListMessage(modVersions);
                 }), (player, message) -> {
-                    final var networking = (FabricBalmNetworking) Balm.getNetworking();
+                    final var networking = (FabricBalmNetworking) Balm.networking();
                     for (final var entry : message.modList().entrySet()) {
                         final var modId = entry.getKey();
                         final var clientVersions = entry.getValue();

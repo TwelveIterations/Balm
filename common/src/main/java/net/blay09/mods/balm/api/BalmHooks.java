@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.api;
 
+import net.blay09.mods.balm.loader.BalmPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -84,5 +85,11 @@ public interface BalmHooks {
 
     void setForcedPose(Player player, @Nullable Pose pose);
 
-    MinecraftServer getServer();
+    /**
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#server()} instead.
+     */
+    @Deprecated
+    default MinecraftServer getServer() {
+        return Balm.platform().server();
+    }
 }
