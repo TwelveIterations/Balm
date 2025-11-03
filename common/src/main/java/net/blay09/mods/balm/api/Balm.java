@@ -16,6 +16,7 @@ import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
+import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.ModProxy;
@@ -253,6 +254,16 @@ public class Balm {
 
     public static BalmParticles getParticles() {
         return runtime.getParticles();
+    }
+
+    /**
+     * Use this to register particle types using the factory provided in the consumer callback.
+     *
+     * @param namespace   The mod id to register particle types under.
+     * @param initializer Callback that receives a scoped factory for registering particle types.
+     */
+    public static void particleTypes(String namespace, java.util.function.Consumer<BalmParticleTypeFactory> initializer) {
+        runtime.particleTypes(namespace, initializer);
     }
 
     /**

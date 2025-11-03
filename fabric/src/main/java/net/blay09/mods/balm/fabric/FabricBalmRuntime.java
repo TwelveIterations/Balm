@@ -11,7 +11,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
@@ -31,7 +31,7 @@ import net.blay09.mods.balm.fabric.level.block.entity.FabricBalmBlockEntityTypeF
 import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenuTypeFactory;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
-import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
+import net.blay09.mods.balm.fabric.particle.FabricBalmParticleTypeFactory;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.core.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
@@ -41,19 +41,8 @@ import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
@@ -69,7 +58,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmStats stats = new FabricBalmStats();
     private final BalmRecipes recipes = new FabricBalmRecipes();
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
-    private final BalmParticles particles = new FabricBalmParticles();
     private final BalmPlatform platform = new FabricBalmPlatform();
     private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy()
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
@@ -144,11 +132,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public BalmParticles getParticles() {
-        return particles;
-    }
-
-    @Override
     public BalmPermissions getPermissions() {
         return permissions.get();
     }
@@ -184,6 +167,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    public void particleTypes(String namespace, Consumer<BalmParticleTypeFactory> initializer) {
+        initializer.accept(new FabricBalmParticleTypeFactory(registrar(), namespace));
+    }
+
+    @Override
     @Deprecated
     public BalmEntityTypeFactory entityTypes(String namespace) {
         return new FabricBalmEntityTypeFactory(registrar(), namespace);
@@ -210,5 +198,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Deprecated
     public BalmMenuTypeFactory menuTypes(String namespace) {
         return new FabricBalmMenuTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmParticleTypeFactory particleTypes(String namespace) {
+        return new FabricBalmParticleTypeFactory(registrar(), namespace);
     }
 }

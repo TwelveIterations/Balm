@@ -15,6 +15,7 @@ import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
+import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
@@ -48,7 +49,14 @@ public interface BalmModule {
     default void registerSoundEvents(BalmRegistrar.Scoped<SoundEvent> sounds) {
     }
 
+    /**
+     * @deprecated Use {@link #registerParticleTypes(BalmParticleTypeFactory)} instead.
+     */
+    @Deprecated
     default void registerParticles(BalmParticles particles) {
+    }
+
+    default void registerParticleTypes(BalmParticleTypeFactory particleTypes) {
     }
 
     /**

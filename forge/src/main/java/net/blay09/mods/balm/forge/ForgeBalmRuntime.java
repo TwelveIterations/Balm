@@ -10,7 +10,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
@@ -30,6 +30,7 @@ import net.blay09.mods.balm.forge.level.block.entity.ForgeBalmBlockEntityTypeFac
 import net.blay09.mods.balm.forge.loader.ForgeBalmPlatform;
 import net.blay09.mods.balm.forge.menu.ForgeBalmMenuTypeFactory;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
+import net.blay09.mods.balm.forge.particle.ForgeBalmParticleTypeFactory;
 import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
 import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
@@ -40,16 +41,9 @@ import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
@@ -65,7 +59,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     private final BalmStats stats = new ForgeBalmStats(legacyNamespaceResolver);
     private final BalmRecipes recipes = new ForgeBalmRecipes();
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
-    private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
     private final BalmResources resources = new ForgeBalmResources();
     private final BalmRegistrar registrar = new ForgeBalmRegistrar();
@@ -147,11 +140,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public BalmParticles getParticles() {
-        return particles;
-    }
-
-    @Override
     public BalmResources getResources() {
         return resources;
     }
@@ -182,6 +170,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
+    public void particleTypes(String namespace, Consumer<BalmParticleTypeFactory> initializer) {
+        initializer.accept(new ForgeBalmParticleTypeFactory(registrar(), namespace));
+    }
+
+    @Override
     @Deprecated
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new ForgeBalmCreativeModeTabFactory(registrar(), namespace);
@@ -208,5 +201,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmPlatform platform() {
         return platform;
+    }
+
+    @Override
+    public BalmParticleTypeFactory particleTypes(String namespace) {
+        return new ForgeBalmParticleTypeFactory(registrar(), namespace);
     }
 }

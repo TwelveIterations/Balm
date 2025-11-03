@@ -17,6 +17,7 @@ import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
@@ -129,7 +130,12 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmModSupport getModSupport();
 
-    BalmParticles getParticles();
+    @Deprecated
+    default BalmParticles getParticles() {
+        return BalmParticles.LEGACY;
+    }
+
+    void particleTypes(String namespace, Consumer<BalmParticleTypeFactory> initializer);
 
     BalmPermissions getPermissions();
 
@@ -212,7 +218,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerSoundEvents(registrar().scoped(Registries.SOUND_EVENT, modId));
 
         module.registerPermissions(getPermissions());
+
         module.registerParticles(getParticles());
+        particleTypes(modId, module::registerParticleTypes);
+
         module.registerEvents(getEvents());
         module.initialize();
     }
@@ -285,4 +294,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     }
 
     BalmPlatform platform();
+
+    /**
+     * @deprecated Use {@link Balm#particleTypes(String, Consumer)} instead.
+     */
+    @Deprecated
+    BalmParticleTypeFactory particleTypes(String namespace);
 }

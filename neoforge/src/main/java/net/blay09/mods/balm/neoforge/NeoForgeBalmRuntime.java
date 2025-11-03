@@ -10,7 +10,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.particle.BalmParticles;
+import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
@@ -30,7 +30,7 @@ import net.blay09.mods.balm.neoforge.level.block.entity.NeoForgeBalmBlockEntityT
 import net.blay09.mods.balm.neoforge.loader.NeoForgeBalmPlatform;
 import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenuTypeFactory;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
-import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
+import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticleTypeFactory;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
@@ -40,17 +40,9 @@ import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> {
 
@@ -66,7 +58,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmStats stats = new NeoForgeBalmStats(legacyNamespaceResolver);
     private final BalmRecipes recipes = new NeoForgeBalmRecipes();
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
-    private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmResources resources = new NeoForgeBalmResources();
     private final BalmRegistrar registrar = new NeoForgeBalmRegistrar();
@@ -143,11 +134,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    public BalmParticles getParticles() {
-        return particles;
-    }
-
-    @Override
     public BalmPermissions getPermissions() {
         return permissions;
     }
@@ -182,6 +168,11 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    public void particleTypes(String namespace, Consumer<BalmParticleTypeFactory> initializer) {
+        initializer.accept(new NeoForgeBalmParticleTypeFactory(registrar(), namespace));
+    }
+
+    @Override
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace);
     }
@@ -206,5 +197,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmPlatform platform() {
         return platform;
+    }
+
+    @Override
+    public BalmParticleTypeFactory particleTypes(String namespace) {
+        return new NeoForgeBalmParticleTypeFactory(registrar(), namespace);
     }
 }
