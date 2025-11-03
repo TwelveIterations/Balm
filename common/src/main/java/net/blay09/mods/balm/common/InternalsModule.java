@@ -1,15 +1,23 @@
 package net.blay09.mods.balm.common;
 
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.common.command.BalmCommand;
+import net.blay09.mods.balm.commands.InternalsCommand;
 import net.blay09.mods.balm.common.resources.ConfigResourceCondition;
 import net.minecraft.resources.ResourceLocation;
 
-public class BaseModule implements BalmModule {
+/**
+ * Internal module that registers Balm's own capabilities, commands, resources, and networking.
+ * Use {@link BalmModule} for your own modules.
+ * @see BalmModule
+ * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)
+ */
+public final class InternalsModule implements BalmModule {
     private static final String MOD_ID = "balm";
 
     @Override
@@ -19,7 +27,7 @@ public class BaseModule implements BalmModule {
 
     @Override
     public void registerCommands(BalmCommands commands) {
-        commands.register(BalmCommand::register);
+        commands.register(InternalsCommand::register);
     }
 
     @Override

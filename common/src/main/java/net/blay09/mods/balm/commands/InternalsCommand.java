@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.common.command;
+package net.blay09.mods.balm.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -16,7 +16,12 @@ import net.minecraft.world.level.GameRules;
 
 import java.io.File;
 
-public class BalmCommand {
+/**
+ * Registers the <code>/balm</code> commands for developers.
+ *
+ * @see Balm#getCommands()
+ */
+public final class InternalsCommand {
 
     private static final ResourceLocation PERMISSION_BALM_DEV = ResourceLocation.fromNamespaceAndPath("balm", "command.balm.dev");
     private static final ResourceLocation PERMISSION_BALM_EXPORT_CONFIG = ResourceLocation.fromNamespaceAndPath("balm", "command.balm.export.config");

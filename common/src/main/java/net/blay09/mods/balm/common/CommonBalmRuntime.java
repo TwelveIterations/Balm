@@ -78,7 +78,7 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
             callback.run();
         }
 
-        registerModule(new BaseModule());
+        registerModule(new InternalsModule());
         registerModule(new ConfigSync());
     }
 
