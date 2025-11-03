@@ -15,6 +15,8 @@ import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.item.internal.BalmItemFactoryImpl;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
 import net.blay09.mods.balm.world.item.crafting.internal.BalmRecipeTypeFactoryImpl;
+import net.blay09.mods.balm.world.component.BalmDataComponentTypeFactory;
+import net.blay09.mods.balm.world.component.internal.BalmDataComponentTypeFactoryImpl;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.internal.BalmBlockFactoryImpl;
 
@@ -107,5 +109,10 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public void recipeTypes(String namespace, Consumer<BalmRecipeTypeFactory> initializer) {
         initializer.accept(new BalmRecipeTypeFactoryImpl(registrar(), namespace));
+    }
+
+    @Override
+    public void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeFactory> initializer) {
+        initializer.accept(new BalmDataComponentTypeFactoryImpl(registrar(), namespace));
     }
 }

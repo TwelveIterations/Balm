@@ -31,6 +31,7 @@ import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
+import net.blay09.mods.balm.world.component.BalmDataComponentTypeFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
@@ -284,6 +285,16 @@ public class Balm {
      */
     public static void recipeTypes(String namespace, Consumer<BalmRecipeTypeFactory> initializer) {
         runtime.recipeTypes(namespace, initializer);
+    }
+
+    /**
+     * Use this to register data component types using the factory provided in the consumer callback.
+     *
+     * @param namespace   The mod id to register data component types under.
+     * @param initializer Callback that receives a scoped factory for registering data component types.
+     */
+    public static void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeFactory> initializer) {
+        runtime.dataComponentTypes(namespace, initializer);
     }
 
     /**

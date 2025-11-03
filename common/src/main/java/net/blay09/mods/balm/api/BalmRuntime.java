@@ -31,6 +31,7 @@ import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
+import net.blay09.mods.balm.world.component.BalmDataComponentTypeFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
@@ -225,6 +226,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void items(String namespace, Consumer<BalmItemFactory> initializer);
 
     void recipeTypes(String namespace, Consumer<BalmRecipeTypeFactory> initializer);
+
+    void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeFactory> initializer);
 
     /**
      * @deprecated Use {@link Balm#creativeModeTabs(String, Consumer)} instead.
