@@ -37,23 +37,44 @@ public interface BalmHooks {
 
     /**
      * Forge provides a tag in entity data, which for players is persisted across clones and death.
-     * Fabric does not provide such a tag; so we add our own
+     * Fabric does not provide such a tag; so we add our own.
      */
     CompoundTag getPersistentData(Entity entity);
 
     /**
-     * Forge provides a patch to cure potion effects specific to a given curative item.
-     * Fabric does not provide such patch, so on Fabric this will always clear all effects.
+     * @deprecated No longer implemented by mod loaders. Use {@link LivingEntity#removeAllEffects()} instead.
      */
-    void curePotionEffects(LivingEntity entity, ItemStack curativeItem);
+    default void curePotionEffects(LivingEntity entity, ItemStack curativeItem) {
+        entity.removeAllEffects();
+    }
 
+    /**
+     * Checks whether the given player is a fake player.
+     *
+     * <li>On Fabric and NeoForge, returns true if the player is an instance of their respective FakePlayer class</li>
+     * <li>On Forge, always returns false as they no longer have a FakePlayer class.</li>
+     *
+     * @return <code>true</code> if the player is fake
+     */
     boolean isFakePlayer(Player player);
 
     ItemStack getCraftingRemainingItem(ItemStack itemStack);
 
+    /**
+     * Returns the dye color for a dye item.
+     *
+     * <li>On Fabric, only returns a dye color if the item extends {@link net.minecraft.world.item.DyeItem}</li>
+     * <li>On NeoForge and Forge, also returns a dye color if the item has any of the dye tags.</li>
+     */
     DyeColor getColor(ItemStack itemStack);
 
-    boolean canItemsStack(ItemStack first, ItemStack second);
+    /**
+     * @deprecated Use {@link ItemStack#isSameItemSameComponents(ItemStack, ItemStack)} instead.
+     */
+    @Deprecated
+    default boolean canItemsStack(ItemStack first, ItemStack second) {
+        return ItemStack.isSameItemSameComponents(first, second);
+    }
 
     void setBurnTime(Item item, int burnTime);
 
@@ -61,7 +82,7 @@ public interface BalmHooks {
 
     boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult);
 
-    void setForcedPose(Player player, Pose pose);
+    void setForcedPose(Player player, @Nullable Pose pose);
 
     MinecraftServer getServer();
 }

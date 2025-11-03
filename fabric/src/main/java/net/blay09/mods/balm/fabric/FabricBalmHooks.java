@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.entity.BalmPlayer;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.blay09.mods.balm.common.CommonCapabilities;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -73,13 +74,8 @@ public class FabricBalmHooks implements BalmHooks {
     }
 
     @Override
-    public void curePotionEffects(LivingEntity entity, ItemStack curativeItem) {
-        entity.removeAllEffects();
-    }
-
-    @Override
     public boolean isFakePlayer(Player player) {
-        return false;
+        return player instanceof FakePlayer;
     }
 
     @Override
@@ -94,11 +90,6 @@ public class FabricBalmHooks implements BalmHooks {
         }
 
         return null;
-    }
-
-    @Override
-    public boolean canItemsStack(ItemStack first, ItemStack second) {
-        return !first.isEmpty() && ItemStack.isSameItemSameComponents(first, second);
     }
 
     @Override

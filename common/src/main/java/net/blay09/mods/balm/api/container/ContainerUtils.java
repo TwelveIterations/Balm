@@ -67,7 +67,7 @@ public class ContainerUtils {
 
         int limit = Math.min(container.getMaxStackSize(), itemStack.getMaxStackSize());
         if (!existing.isEmpty()) {
-            if (!Balm.getHooks().canItemsStack(itemStack, existing)) {
+            if (!ItemStack.isSameItemSameComponents(itemStack, existing)) {
                 return itemStack;
             }
 

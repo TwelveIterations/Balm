@@ -87,11 +87,6 @@ public class NeoForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public void curePotionEffects(LivingEntity entity, ItemStack curativeItem) {
-        entity.removeAllEffects();
-    }
-
-    @Override
     public boolean isFakePlayer(Player player) {
         return player instanceof FakePlayer;
     }
@@ -104,11 +99,6 @@ public class NeoForgeBalmHooks implements BalmHooks {
     @Override
     public DyeColor getColor(ItemStack itemStack) {
         return DyeColor.getColor(itemStack);
-    }
-
-    @Override
-    public boolean canItemsStack(ItemStack first, ItemStack second) {
-        return ItemStack.isSameItemSameComponents(first, second);
     }
 
     @Override

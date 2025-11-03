@@ -88,11 +88,6 @@ public class ForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public void curePotionEffects(LivingEntity entity, ItemStack curativeItem) {
-        entity.removeAllEffects();
-    }
-
-    @Override
     public boolean isFakePlayer(Player player) {
         return false;
     }
@@ -105,11 +100,6 @@ public class ForgeBalmHooks implements BalmHooks {
     @Override
     public DyeColor getColor(ItemStack itemStack) {
         return DyeColor.getColor(itemStack);
-    }
-
-    @Override
-    public boolean canItemsStack(ItemStack first, ItemStack second) {
-        return ItemHandlerHelper.canItemStacksStack(first, second);
     }
 
     @Override

@@ -244,16 +244,16 @@ public class Balm {
         runtime.entityTypes(namespace, initializer);
     }
 
-    public static BalmHooks getHooks() {
+    /**
+     * Provides access to mod loader-specific utilities and hooks.
+     * @return implementation of {@link BalmHooks} for the mod loader Balm is running on.
+     */
+    public static BalmHooks hooks() {
         return runtime.getHooks();
     }
 
     public static BalmStats getStats() {
         return runtime.getStats();
-    }
-
-    public static BalmParticles getParticles() {
-        return runtime.getParticles();
     }
 
     /**
@@ -722,5 +722,21 @@ public class Balm {
     @Deprecated
     public static BalmCapabilities getCapabilities() {
         return capabilities();
+    }
+
+    /**
+     * @deprecated Use {@link #particleTypes(String, Consumer)} instead.
+     */
+    @Deprecated
+    public static BalmParticles getParticles() {
+        return runtime.getParticles();
+    }
+
+    /**
+     * @deprecated Use {@link #hooks()} instead.
+     */
+    @Deprecated
+    public static BalmHooks getHooks() {
+        return hooks();
     }
 }
