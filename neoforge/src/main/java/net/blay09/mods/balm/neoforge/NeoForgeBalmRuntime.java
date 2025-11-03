@@ -138,17 +138,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    public void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier, reloadListener.apply(event.getRegistryAccess())));
-    }
-
-    @Override
-    public void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> event.addListener(identifier,
-                (ResourceManagerReloadListener) reloadListener::accept));
-    }
-
-    @Override
     public BalmModSupport getModSupport() {
         return modSupport;
     }

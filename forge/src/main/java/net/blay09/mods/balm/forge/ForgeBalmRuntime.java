@@ -142,16 +142,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        AddReloadListenerEvent.BUS.addListener((event) -> event.addListener(reloadListener.apply(event.getRegistries())));
-    }
-
-    @Override
-    public void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        AddReloadListenerEvent.BUS.addListener((event) -> event.addListener((ResourceManagerReloadListener) reloadListener::accept));
-    }
-
-    @Override
     public BalmModSupport getModSupport() {
         return modSupport;
     }

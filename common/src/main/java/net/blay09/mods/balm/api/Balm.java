@@ -156,16 +156,14 @@ public class Balm {
         runtime.initializeIfLoaded(modId, className);
     }
 
+    /**
+     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
+     * @see #resources()
+     * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
+     */
+    @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        runtime.addServerReloadListener(identifier, reloadListener);
-    }
-
-    public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
-        runtime.addServerReloadListener(identifier, it -> reloadListener);
-    }
-
-    public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        runtime.addServerReloadListener(identifier, reloadListener);
+        resources().addServerReloadListener(identifier, reloadListener);
     }
 
     public static BalmProxy getProxy() {
@@ -553,4 +551,23 @@ public class Balm {
         return runtime.getMenus();
     }
 
+    /**
+     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
+     * @see #resources()
+     * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
+     */
+    @Deprecated
+    public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+        resources().addServerReloadListener(identifier, it -> reloadListener);
+    }
+
+    /**
+     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
+     * @see #resources()
+     * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
+     */
+    @Deprecated
+    public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
+        resources().addServerReloadListener(identifier, reloadListener);
+    }
 }

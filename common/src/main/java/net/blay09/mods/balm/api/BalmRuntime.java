@@ -49,6 +49,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static net.blay09.mods.balm.api.Balm.resources;
+
 public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmConfig getConfig();
 
@@ -147,9 +149,15 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void initializeIfLoaded(String modId, String className);
 
-    void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener);
+    @Deprecated
+    default void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
+        resources().addServerReloadListener(identifier, reloadListener);
+    }
 
-    void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener);
+    @Deprecated
+    default void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
+        resources().addServerReloadListener(identifier, reloadListener);
+    }
 
     @Deprecated
     default BalmComponents getComponents() {
