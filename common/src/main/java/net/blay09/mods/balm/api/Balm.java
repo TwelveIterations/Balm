@@ -30,6 +30,7 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
@@ -38,6 +39,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -127,10 +129,6 @@ public class Balm {
         return runtime.getHooks();
     }
 
-    public static BalmRecipes getRecipes() {
-        return runtime.getRecipes();
-    }
-
     public static BalmEntities getEntities() {
         return runtime.getEntities();
     }
@@ -167,6 +165,11 @@ public class Balm {
         return runtime.getResources();
     }
 
+    /**
+     * For internal use. Provides access to the runtime powering mod-loader specific functions.
+     * Generally, you should not need to access the runtime directly, as all its methods are exposed on {@link Balm}.
+     */
+    @ApiStatus.Internal
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
     }
@@ -177,6 +180,10 @@ public class Balm {
 
     public static void items(String namespace, Consumer<BalmItemFactory> initializer) {
         runtime.items(namespace, initializer);
+    }
+
+    public static void recipeTypes(String namespace, Consumer<BalmRecipeTypeFactory> initializer) {
+        runtime.recipeTypes(namespace, initializer);
     }
 
     public static void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
@@ -333,5 +340,13 @@ public class Balm {
     @Deprecated
     public static Optional<ModResource> lookupModResource(String modId, String path) {
         return resources().lookupModResource(modId, path);
+    }
+
+    /**
+     * @deprecated Use {@link #recipeTypes(String, java.util.function.Consumer)} to register recipe types and serializers.
+     */
+    @Deprecated
+    public static BalmRecipes getRecipes() {
+        return runtime.getRecipes();
     }
 }

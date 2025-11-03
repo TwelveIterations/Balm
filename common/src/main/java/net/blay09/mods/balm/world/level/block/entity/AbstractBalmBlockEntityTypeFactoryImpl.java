@@ -45,7 +45,7 @@ public abstract class AbstractBalmBlockEntityTypeFactoryImpl implements BalmBloc
     public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Supplier<Set<Block>> blocksSupplier) {
         final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, resourceLocation);
-        final var holder = registrar.register(resourceKey, (Supplier<BlockEntityType<?>>) () -> createBlockEntityType(constructor, blocksSupplier.get()));
+        final var holder = registrar.register(resourceKey, () -> createBlockEntityType(constructor, blocksSupplier.get()));
         return new BalmBlockEntityTypeRegistrationImpl<>(holder);
     }
 

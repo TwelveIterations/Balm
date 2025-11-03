@@ -23,6 +23,7 @@ import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.component.DataComponentType;
@@ -51,7 +52,14 @@ public interface BalmModule {
     default void registerMenus(BalmMenus menus) {
     }
 
+    /**
+     * @deprecated Use {@link #registerRecipeTypes(BalmRecipeTypeFactory)} instead.
+     */
+    @Deprecated
     default void registerRecipes(BalmRecipes recipes) {
+    }
+
+    default void registerRecipeTypes(BalmRecipeTypeFactory recipeTypes) {
     }
 
     default void registerCommands(BalmCommands commands) {

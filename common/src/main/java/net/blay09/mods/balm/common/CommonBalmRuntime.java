@@ -12,6 +12,8 @@ import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactoryImpl;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactoryImpl;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactoryImpl;
 
@@ -99,5 +101,10 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public void items(String namespace, Consumer<BalmItemFactory> initializer) {
         initializer.accept(new BalmItemFactoryImpl(registrar(), namespace));
+    }
+
+    @Override
+    public void recipeTypes(String namespace, Consumer<BalmRecipeTypeFactory> initializer) {
+        initializer.accept(new BalmRecipeTypeFactoryImpl(registrar(), namespace));
     }
 }
