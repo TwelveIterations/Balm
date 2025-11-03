@@ -12,8 +12,8 @@ import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
+import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
@@ -30,10 +30,10 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.world.component.BalmDataComponentTypeFactory;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;
-import net.blay09.mods.balm.world.component.BalmDataComponentTypeFactory;
 import net.blay09.mods.balm.world.level.block.BalmBlockFactory;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeFactory;
 import net.minecraft.core.HolderLookup;
@@ -52,10 +52,27 @@ import java.util.function.Function;
 public class Balm {
     private static final BalmRuntime<BalmRuntimeLoadContext> runtime = BalmRuntimeSpi.create();
 
+    /**
+     * Not to be confused with {@link #initializeMod(String, BalmRuntimeLoadContext, BalmModule)}, which should be used
+     * for registering your mod with Balm. This method registers an additional module and should only be called from an
+     * initializer or entrypoint. Some things may not work as expected if you try to register a module before
+     * <code>initializeMod</code> has been called.
+     *
+     * @param module the module to register for an already initialized mod.
+     * @see #initializeMod(String, BalmRuntimeLoadContext, BalmModule)
+     */
     public static void registerModule(BalmModule module) {
         runtime.registerModule(module);
     }
 
+    /**
+     * Register a callback to run when Balm is ready. This is for third party mods that do not use Balm but want to interact with it.
+     * <p>
+     * Mods building on Balm should use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
+     *
+     * @param callback the callback to run when Balm is ready and its methods can be safely accessed.
+     * @see #initializeMod(String, BalmRuntimeLoadContext, Runnable)
+     */
     public static void onRuntimeAvailable(Runnable callback) {
         runtime.onRuntimeAvailable(callback);
     }
@@ -157,32 +174,52 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
      * @see #resources()
      * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
+     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
         resources().addServerReloadListener(identifier, reloadListener);
     }
 
-    public static BalmProxy getProxy() {
+    /**
+     * Provides access to common client-sided functions with no-op implementations for dedicated servers.
+     * <p>
+     * Needing access to client-sided functions outside a client-only context is often a sign of a design issue.
+     * Consider refactoring your code to better separate client-side implementations instead.
+     *
+     * @return a resolved sided proxy that allows access to common client-only functions
+     */
+    public static BalmProxy safeClientAccess() {
         return runtime.getProxy();
     }
 
-    public static BalmEvents getEvents() {
+    public static BalmEvents events() {
         return runtime.getEvents();
     }
 
-    public static BalmConfig getConfig() {
+    /**
+     * Provides access to config-related functions such as registering and retrieving configs.
+     * @return implementation of {@link BalmConfig} for the mod loader Balm is running on.
+     */
+    public static BalmConfig config() {
         return runtime.getConfig();
     }
 
-    public static BalmNetworking getNetworking() {
+    /**
+     * Provides access to networking-related functions such as registering and sending packets.
+     * @return implementation of {@link BalmNetworking} for the mod loader Balm is running on.
+     */
+    public static BalmNetworking networking() {
         return runtime.getNetworking();
     }
 
-    public static BalmWorldGen getWorldGen() {
+    /**
+     * Provides access to registering biome modifiers, allowing you to add features to existing biomes.
+     * @return implementation of {@link BalmWorldGen} for the mod loader Balm is running on.
+     */
+    public static BalmWorldGen biomeModifications() {
         return runtime.getWorldGen();
     }
 
@@ -210,24 +247,36 @@ public class Balm {
         return runtime.getHooks();
     }
 
-    public static BalmEntities getEntities() {
-        return runtime.getEntities();
+    public static BalmStats getStats() {
+        return runtime.getStats();
     }
 
-    public static BalmCapabilities getCapabilities() {
+    public static BalmParticles getParticles() {
+        return runtime.getParticles();
+    }
+
+    /**
+     * Provides access to capabilities, which are logic providers that can be attached to block entities.
+     * @return implementation of {@link BalmCapabilities} for the mod loader Balm is running on.
+     */
+    public static BalmCapabilities capabilities() {
         return runtime.getCapabilities();
     }
 
-    public static BalmCommands getCommands() {
+    /**
+     * Provides access to command registration.
+     * @return implementation of {@link BalmCommands} for the mod loader Balm is running on.
+     */
+    public static BalmCommands commands() {
         return runtime.getCommands();
     }
 
-    public static BalmLootTables getLootTables() {
+    /**
+     * Provides access to registering loot modifiers.
+     * @return implementation of {@link BalmLootTables} for the mod loader Balm is running on.
+     */
+    public static BalmLootTables lootModifiers() {
         return runtime.getLootTables();
-    }
-
-    public static BalmStats getStats() {
-        return runtime.getStats();
     }
 
     /**
@@ -240,10 +289,6 @@ public class Balm {
      */
     public static BalmModSupport modSupport() {
         return runtime.getModSupport();
-    }
-
-    public static BalmParticles getParticles() {
-        return runtime.getParticles();
     }
 
     /**
@@ -359,6 +404,24 @@ public class Balm {
      */
     public static <T> BalmRegistrar.Scoped<T> registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
         return runtime.registrar(registryKey, namespace);
+    }
+
+    /**
+     * Use this to register registry objects that are not covered by the convenient factories.
+     * Creates a scoped registrar for a specific registry and namespace.
+     *
+     * @param registryKey the {@link net.minecraft.core.registries.Registries} registry resource key.
+     * @param namespace   the mod id to register entries under.
+     * @param initializer callback that receives a scoped factory for registering entries to this registry.
+     * @param <T>         the type of the registry entries, e.g. {@link net.minecraft.sounds.SoundEvent}.
+     * @see Balm#blocks(String, Consumer)
+     * @see Balm#blockEntityTypes(String, Consumer)
+     * @see Balm#items(String, Consumer)
+     * @see Balm#creativeModeTabs(String, Consumer)
+     * @see Balm#recipeTypes(String, Consumer)
+     */
+    public static <T> void registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace, Consumer<BalmRegistrar.Scoped<T>> initializer) {
+        initializer.accept(runtime.registrar(registryKey, namespace));
     }
 
     /**
@@ -552,9 +615,9 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
      * @see #resources()
      * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
+     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
@@ -562,12 +625,91 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
      * @see #resources()
      * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
+     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
         resources().addServerReloadListener(identifier, reloadListener);
+    }
+
+    /**
+     * @see Balm#entityTypes(String, java.util.function.Consumer)
+     * @deprecated Use {@link #entityTypes(String, java.util.function.Consumer)} instead.
+     */
+    @Deprecated
+    public static BalmEntities getEntities() {
+        return runtime.getEntities();
+    }
+
+    /**
+     * @see #config()
+     * @deprecated Use {@link #config()} instead.
+     */
+    @Deprecated
+    public static BalmConfig getConfig() {
+        return config();
+    }
+
+    /**
+     * @deprecated Use {@link #networking()} instead.
+     * @see #networking()
+     */
+    @Deprecated
+    public static BalmNetworking getNetworking() {
+        return networking();
+    }
+
+    /**
+     * @deprecated Use {@link #biomeModifications()} or {@link #registrar(ResourceKey, String)} instead.
+     * @see #biomeModifications()
+     * @see #registrar(ResourceKey, String)
+     */
+    @Deprecated
+    public static BalmWorldGen getWorldGen() {
+        return biomeModifications();
+    }
+
+    /**
+     * @deprecated Use {@link #events()} instead.
+     * @see #events()
+     */
+    @Deprecated
+    public static BalmEvents getEvents() {
+        return events();
+    }
+
+    /**
+     * @deprecated Use {@link #safeClientAccess()} instead.
+     * @see #safeClientAccess()
+     */
+    @Deprecated
+    public static BalmProxy getProxy() {
+        return runtime.getProxy();
+    }
+
+    /**
+     * @deprecated Use {@link #lootModifiers()} instead.
+     */
+    @Deprecated
+    public static BalmLootTables getLootTables() {
+        return lootModifiers();
+    }
+
+    /**
+     * @deprecated Use {@link #commands()} instead.
+     */
+    @Deprecated
+    public static BalmCommands getCommands() {
+        return commands();
+    }
+
+    /**
+     * @deprecated Use {@link #capabilities()} instead.
+     */
+    @Deprecated
+    public static BalmCapabilities getCapabilities() {
+        return capabilities();
     }
 }
