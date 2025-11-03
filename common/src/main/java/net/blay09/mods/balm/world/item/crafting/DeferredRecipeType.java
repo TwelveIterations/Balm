@@ -4,8 +4,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public interface DeferredRecipeType<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> {
