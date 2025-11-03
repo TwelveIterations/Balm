@@ -8,14 +8,12 @@ import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenus;
+import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.resources.ModResource;
-import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
@@ -30,14 +28,13 @@ import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.blay09.mods.balm.neoforge.level.block.entity.NeoForgeBalmBlockEntityTypeFactory;
 import net.blay09.mods.balm.neoforge.loader.NeoForgeBalmPlatform;
-import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
+import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenuTypeFactory;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
-import net.blay09.mods.balm.neoforge.resources.NeoForgeModResource;
 import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmStats;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabFactory;
@@ -48,12 +45,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -62,7 +57,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
     private final NeoForgeBalmEvents events = new NeoForgeBalmEvents();
-    private final BalmMenus menus = new NeoForgeBalmMenus();
     private final BalmNetworking networking = new NeoForgeBalmNetworking(legacyNamespaceResolver);
     private final BalmConfig config = new NeoForgeBalmConfig();
     private final BalmHooks hooks = new NeoForgeBalmHooks();
@@ -96,11 +90,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmWorldGen getWorldGen() {
         return worldGen;
-    }
-
-    @Override
-    public BalmMenus getMenus() {
-        return menus;
     }
 
     @Override
@@ -201,17 +190,25 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    public void menuTypes(String namespace, Consumer<BalmMenuTypeFactory> initializer) {
+        initializer.accept(new NeoForgeBalmMenuTypeFactory(registrar(), namespace));
+    }
+
+    @Override
+    @Deprecated
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace);
     }
 
     @Override
+    @Deprecated
     public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
         return new NeoForgeBalmBlockEntityTypeFactory(registrar(), namespace);
     }
 
     @Override
-    public BalmPlatform platform() {
-        return platform;
+    @Deprecated
+    public BalmMenuTypeFactory menuTypes(String namespace) {
+        return new NeoForgeBalmMenuTypeFactory(registrar(), namespace);
     }
 }

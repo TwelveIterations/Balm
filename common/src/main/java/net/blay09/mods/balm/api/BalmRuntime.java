@@ -12,6 +12,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
+import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
@@ -69,7 +70,18 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return BalmItems.LEGACY;
     }
 
-    BalmMenus getMenus();
+    @Deprecated
+    default BalmMenus getMenus() {
+        return BalmMenus.LEGACY;
+    }
+
+    void menuTypes(String namespace, Consumer<BalmMenuTypeFactory> initializer);
+
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#menuTypes(String, Consumer)} instead.
+     */
+    @Deprecated
+    BalmMenuTypeFactory menuTypes(String namespace);
 
     BalmNetworking getNetworking();
 
@@ -95,6 +107,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmStats getStats();
 
+    @Deprecated
     BalmRecipes getRecipes();
 
     BalmModSupport getModSupport();

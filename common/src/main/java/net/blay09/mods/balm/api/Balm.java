@@ -12,6 +12,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenus;
+import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
@@ -186,8 +187,14 @@ public class Balm {
         return runtime.getWorldGen();
     }
 
-    public static BalmMenus getMenus() {
-        return runtime.getMenus();
+    /**
+     * Use this to register menu types using the factory provided in the consumer callback.
+     *
+     * @param namespace   The mod id to register menu types under.
+     * @param initializer Callback that receives a scoped factory for registering menu types.
+     */
+    public static void menuTypes(String namespace, java.util.function.Consumer<BalmMenuTypeFactory> initializer) {
+        runtime.menuTypes(namespace, initializer);
     }
 
     public static BalmHooks getHooks() {
@@ -519,10 +526,20 @@ public class Balm {
 
     /**
      * @see #recipeTypes(String, java.util.function.Consumer)
-     * @deprecated Use {@link #recipeTypes(String, java.util.function.Consumer)} to register recipe types and serializers.
+     * @deprecated Use {@link #recipeTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     public static BalmRecipes getRecipes() {
         return runtime.getRecipes();
     }
+
+    /**
+     * @see #menuTypes(String, Consumer)
+     * @deprecated Use {@link #menuTypes(String, Consumer)} instead.
+     */
+    @Deprecated
+    public static BalmMenus getMenus() {
+        return runtime.getMenus();
+    }
+
 }

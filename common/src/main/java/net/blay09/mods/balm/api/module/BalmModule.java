@@ -11,6 +11,7 @@ import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
+import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
@@ -49,7 +50,14 @@ public interface BalmModule {
     default void registerParticles(BalmParticles particles) {
     }
 
+    /**
+     * @deprecated Use {@link #registerMenuTypes(BalmMenuTypeFactory)} instead.
+     */
+    @Deprecated
     default void registerMenus(BalmMenus menus) {
+    }
+
+    default void registerMenuTypes(BalmMenuTypeFactory menuTypes) {
     }
 
     /**

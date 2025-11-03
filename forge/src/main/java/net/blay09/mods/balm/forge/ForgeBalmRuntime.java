@@ -8,15 +8,12 @@ import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenus;
+import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.resources.ModResource;
-import net.blay09.mods.balm.api.resources.ModResourceVisitor;
-import net.blay09.mods.balm.api.resources.PathModResource;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
@@ -31,7 +28,7 @@ import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.level.block.entity.ForgeBalmBlockEntityTypeFactory;
 import net.blay09.mods.balm.forge.loader.ForgeBalmPlatform;
-import net.blay09.mods.balm.forge.menu.ForgeBalmMenus;
+import net.blay09.mods.balm.forge.menu.ForgeBalmMenuTypeFactory;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
@@ -49,12 +46,8 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -63,7 +56,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
     private final ForgeBalmEvents events = new ForgeBalmEvents();
-    private final BalmMenus menus = new ForgeBalmMenus();
     private final BalmNetworking networking = new ForgeBalmNetworking();
     private final BalmConfig config = new ForgeBalmConfig();
     private final BalmHooks hooks = new ForgeBalmHooks();
@@ -97,11 +89,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmWorldGen getWorldGen() {
         return worldGen;
-    }
-
-    @Override
-    public BalmMenus getMenus() {
-        return menus;
     }
 
     @Override
@@ -201,13 +188,26 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
+    public void menuTypes(String namespace, Consumer<BalmMenuTypeFactory> initializer) {
+        initializer.accept(new ForgeBalmMenuTypeFactory(registrar(), namespace));
+    }
+
+    @Override
+    @Deprecated
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new ForgeBalmCreativeModeTabFactory(registrar(), namespace);
     }
 
     @Override
+    @Deprecated
     public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
         return new ForgeBalmBlockEntityTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    @Deprecated
+    public BalmMenuTypeFactory menuTypes(String namespace) {
+        return new ForgeBalmMenuTypeFactory(registrar(), namespace);
     }
 
     @Override

@@ -9,7 +9,7 @@ import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenus;
+import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
@@ -29,7 +29,7 @@ import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.level.block.entity.FabricBalmBlockEntityTypeFactory;
 import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
-import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
+import net.blay09.mods.balm.fabric.menu.FabricBalmMenuTypeFactory;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
@@ -59,7 +59,6 @@ import java.util.function.Supplier;
 public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
     private final FabricBalmEvents events = new FabricBalmEvents();
-    private final BalmMenus menus = new FabricBalmMenus();
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
     private final BalmHooks hooks = new FabricBalmHooks();
@@ -96,11 +95,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmWorldGen getWorldGen() {
         return worldGen;
-    }
-
-    @Override
-    public BalmMenus getMenus() {
-        return menus;
     }
 
     @Override
@@ -218,6 +212,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    public void menuTypes(String namespace, Consumer<BalmMenuTypeFactory> initializer) {
+        initializer.accept(new FabricBalmMenuTypeFactory(registrar(), namespace));
+    }
+
+    @Override
     public BalmPlatform platform() {
         return platform;
     }
@@ -232,5 +231,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Deprecated
     public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
         return new FabricBalmBlockEntityTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    @Deprecated
+    public BalmMenuTypeFactory menuTypes(String namespace) {
+        return new FabricBalmMenuTypeFactory(registrar(), namespace);
     }
 }
