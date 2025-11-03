@@ -226,20 +226,20 @@ public class Balm {
     }
 
     /**
-     * Use this to register menu types using the factory provided in the consumer callback.
+     * Use this to register menu types using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register menu types under.
-     * @param initializer Callback that receives a scoped factory for registering menu types.
+     * @param initializer Callback that receives a scoped registrar for registering menu types.
      */
     public static void menuTypes(String namespace, java.util.function.Consumer<BalmMenuTypeRegistrar> initializer) {
         runtime.menuTypes(namespace, initializer);
     }
 
     /**
-     * Use this to register entity types using the factory provided in the consumer callback.
+     * Use this to register entity types using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register entity types under.
-     * @param initializer Callback that receives a scoped factory for registering entity types.
+     * @param initializer Callback that receives a scoped registrar for registering entity types.
      */
     public static void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeRegistrar> initializer) {
         runtime.entityTypes(namespace, initializer);
@@ -254,20 +254,20 @@ public class Balm {
     }
 
     /**
-     * Use this to register particle types using the factory provided in the consumer callback.
+     * Use this to register particle types using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register particle types under.
-     * @param initializer Callback that receives a scoped factory for registering particle types.
+     * @param initializer Callback that receives a scoped registrar for registering particle types.
      */
     public static void particleTypes(String namespace, java.util.function.Consumer<BalmParticleTypeRegistrar> initializer) {
         runtime.particleTypes(namespace, initializer);
     }
 
     /**
-     * Use this to register custom stats using the factory provided in the consumer callback.
+     * Use this to register custom stats using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register stats under.
-     * @param initializer Callback that receives a scoped factory for registering custom stats.
+     * @param initializer Callback that receives a scoped registrar for registering custom stats.
      */
     public static void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         runtime.customStats(namespace, initializer);
@@ -337,60 +337,60 @@ public class Balm {
     }
 
     /**
-     * Use this to register blocks using the factory provided in the consumer callback.
+     * Use this to register blocks using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register blocks under.
-     * @param initializer Callback that receives a scoped factory for registering blocks.
+     * @param initializer Callback that receives a scoped registrar for registering blocks.
      */
     public static void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer) {
         runtime.blocks(namespace, initializer);
     }
 
     /**
-     * Use this to register items using the factory provided in the consumer callback.
+     * Use this to register items using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register items under.
-     * @param initializer Callback that receives a scoped factory for registering items.
+     * @param initializer Callback that receives a scoped registrar for registering items.
      */
     public static void items(String namespace, Consumer<BalmItemRegistrar> initializer) {
         runtime.items(namespace, initializer);
     }
 
     /**
-     * Use this to register recipe types and related objects using the factory provided in the consumer callback.
+     * Use this to register recipe types and related objects using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register recipe types under.
-     * @param initializer Callback that receives a scoped factory for registering recipe types.
+     * @param initializer Callback that receives a scoped registrar for registering recipe types.
      */
     public static void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer) {
         runtime.recipeTypes(namespace, initializer);
     }
 
     /**
-     * Use this to register data component types using the factory provided in the consumer callback.
+     * Use this to register data component types using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register data component types under.
-     * @param initializer Callback that receives a scoped factory for registering data component types.
+     * @param initializer Callback that receives a scoped registrar for registering data component types.
      */
     public static void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer) {
         runtime.dataComponentTypes(namespace, initializer);
     }
 
     /**
-     * Use this to register creative mode tabs using the factory provided in the consumer callback.
+     * Use this to register creative mode tabs using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register creative mode tabs under.
-     * @param initializer Callback that receives a scoped factory for registering creative mode tabs.
+     * @param initializer Callback that receives a scoped registrar for registering creative mode tabs.
      */
     public static void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
         runtime.creativeModeTabs(namespace, initializer);
     }
 
     /**
-     * Use this to register block entity types using the factory provided in the consumer callback.
+     * Use this to register block entity types using the registrar provided in the consumer callback.
      *
      * @param namespace   The mod id to register block entity types under.
-     * @param initializer Callback that receives a scoped factory for registering block entity types.
+     * @param initializer Callback that receives a scoped registrar for registering block entity types.
      */
     public static void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
         runtime.blockEntityTypes(namespace, initializer);
@@ -430,7 +430,7 @@ public class Balm {
      *
      * @param registryKey the {@link net.minecraft.core.registries.Registries} registry resource key.
      * @param namespace   the mod id to register entries under.
-     * @param initializer callback that receives a scoped factory for registering entries to this registry.
+     * @param initializer callback that receives a scoped registrar for registering entries to this registry.
      * @param <T>         the type of the registry entries, e.g. {@link net.minecraft.sounds.SoundEvent}.
      * @see Balm#blocks(String, Consumer)
      * @see Balm#blockEntityTypes(String, Consumer)

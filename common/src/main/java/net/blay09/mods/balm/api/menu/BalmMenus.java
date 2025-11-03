@@ -8,12 +8,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
 /**
- * @deprecated Use the scoped factory via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeRegistrar}
+ * @deprecated Use the scoped registrar via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeRegistrar}
  */
 @Deprecated
 public interface BalmMenus {
     /**
-     * @deprecated Use the scoped factory via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeRegistrar}
+     * @deprecated Use the scoped registrar via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeRegistrar}
      */
     @Deprecated
     default <TMenu extends AbstractContainerMenu, TPayload> DeferredObject<MenuType<TMenu>> registerMenu(ResourceLocation identifier, BalmMenuFactory<TMenu, TPayload> factory) {

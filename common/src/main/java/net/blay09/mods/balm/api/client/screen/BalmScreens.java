@@ -23,7 +23,7 @@ public interface BalmScreens {
      */
     @Deprecated
     default <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void registerScreen(ResourceLocation id, Supplier<MenuType<? extends TMenu>> type, BalmScreenFactory<TMenu, TScreen> screenFactory) {
-        BalmClient.menuScreens(id.getNamespace(), factory -> factory.register(id.getPath(), type, screenFactory));
+        BalmClient.menuScreens(id.getNamespace(), registrar -> registrar.register(id.getPath(), type, screenFactory));
     }
 
     /**

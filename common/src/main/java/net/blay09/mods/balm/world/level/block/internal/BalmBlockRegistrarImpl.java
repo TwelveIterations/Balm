@@ -139,20 +139,20 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
 
     private static class BalmDiscriminatedBlockRegistrationImpl<T> implements BalmDiscriminatedBlockRegistration<T> {
         private final Map<T, BalmBlockRegistration> map;
-        private final BalmBlockRegistrar factory;
+        private final BalmBlockRegistrar blockRegistrar;
         private final Function<T, String> nameFunction;
         private final BiFunction<T, BlockBehaviour.Properties, Block> constructor;
         private final BiFunction<T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction;
 
         private BalmDiscriminatedBlockRegistrationImpl(
                 Map<T, BalmBlockRegistration> map,
-                BalmBlockRegistrar factory,
+                BalmBlockRegistrar blockRegistrar,
                 Function<T, String> nameFunction,
                 BiFunction<T, BlockBehaviour.Properties, Block> constructor,
                 BiFunction<T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction
         ) {
             this.map = map;
-            this.factory = factory;
+            this.blockRegistrar = blockRegistrar;
             this.nameFunction = nameFunction;
             this.constructor = constructor;
             this.propertiesFunction = propertiesFunction;
@@ -167,7 +167,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         @Override
         public BalmDiscriminatedBlockRegistration<T> withNullDiscriminator() {
             final var name = nameFunction.apply(null);
-            final var registration = factory.register(name, properties -> constructor.apply(null, properties), properties -> propertiesFunction.apply(null, properties));
+            final var registration = blockRegistrar.register(name, properties -> constructor.apply(null, properties), properties -> propertiesFunction.apply(null, properties));
             map.put(null, registration);
             return this;
         }

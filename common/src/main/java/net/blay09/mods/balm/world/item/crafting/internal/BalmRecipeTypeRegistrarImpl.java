@@ -124,7 +124,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
     }
 
     private static class RecipeTypeRegistrationImpl<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> implements BalmRecipeTypeRegistration<TRecipeInput, TRecipe> {
-        private final BalmRecipeTypeRegistrar factory;
+        private final BalmRecipeTypeRegistrar recipeTypeRegistrar;
         private final Holder<RecipeType<TRecipe>> holder;
         @Nullable
         private BalmRecipeSerializerRegistration<TRecipe> serializerRegistration;
@@ -132,8 +132,8 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         private BalmRecipeBookCategoryRegistration bookCategoryRegistration;
 
         @SuppressWarnings("unchecked")
-        private RecipeTypeRegistrationImpl(BalmRecipeTypeRegistrar factory, Holder<?> holder) {
-            this.factory = factory;
+        private RecipeTypeRegistrationImpl(BalmRecipeTypeRegistrar recipeTypeRegistrar, Holder<?> holder) {
+            this.recipeTypeRegistrar = recipeTypeRegistrar;
             this.holder = (Holder<RecipeType<TRecipe>>) holder;
         }
 
@@ -145,14 +145,14 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         @Override
         public BalmRecipeTypeRegistration<TRecipeInput, TRecipe> withSerializer(Supplier<RecipeSerializer<TRecipe>> constructor) {
             final var name = holder.unwrapKey().orElseThrow().location().getPath();
-            serializerRegistration = factory.registerSerializer(name, (id) -> constructor.get());
+            serializerRegistration = recipeTypeRegistrar.registerSerializer(name, (id) -> constructor.get());
             return this;
         }
 
         @Override
         public BalmRecipeTypeRegistration<TRecipeInput, TRecipe> withRecipeBookCategory() {
             final var name = holder.unwrapKey().orElseThrow().location().getPath();
-            bookCategoryRegistration = factory.registerBookCategory(name, id -> new RecipeBookCategory());
+            bookCategoryRegistration = recipeTypeRegistrar.registerBookCategory(name, id -> new RecipeBookCategory());
             return this;
         }
 
