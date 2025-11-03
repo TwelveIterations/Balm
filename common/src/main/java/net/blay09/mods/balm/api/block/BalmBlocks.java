@@ -40,18 +40,18 @@ public interface BalmBlocks {
     /**
      * Use {@link Balm#blocks(String, Consumer)} instead.
      */
-    default DeferredObject<Block> registerBlock(Function<ResourceLocation, Block> supplier, ResourceLocation identifier) {
+    default DeferredObject<Block> registerBlock(Function<ResourceLocation, Block> constructor, ResourceLocation identifier) {
         final var resourceKey = ResourceKey.create(Registries.BLOCK, identifier);
-        final var holder = Balm.registrar().register(resourceKey, (Supplier<Block>) () -> supplier.apply(identifier));
+        final var holder = Balm.registrar().register(resourceKey, constructor);
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
 
     /**
      * Use {@link Balm#blocks(String, Consumer)} instead.
      */
-    default DeferredObject<Item> registerBlockItem(Function<ResourceLocation, BlockItem> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab){
+    default DeferredObject<Item> registerBlockItem(Function<ResourceLocation, BlockItem> constructor, ResourceLocation identifier, @Nullable ResourceLocation creativeTab){
         final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);
-        final var holder = Balm.registrar().register(resourceKey, (Supplier<Item>) () -> supplier.apply(identifier));
+        final var holder = Balm.registrar().register(resourceKey, constructor::apply);
         BalmItems.legacyCreativeModeTabItems.put(identifier.getNamespace(), resourceKey);
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }

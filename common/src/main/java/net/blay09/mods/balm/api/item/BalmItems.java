@@ -72,9 +72,9 @@ public interface BalmItems {
      * Use {@link Balm#items(String, Consumer)} instead.
      */
     @Deprecated
-    default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
+    default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> constructor, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);
-        final var holder = Balm.registrar().register(resourceKey, (Supplier<Item>) () -> supplier.apply(identifier));
+        final var holder = Balm.registrar().register(resourceKey, constructor);
         BalmItems.legacyCreativeModeTabItems.put(identifier.getNamespace(), resourceKey);
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }

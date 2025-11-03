@@ -6,9 +6,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 public abstract class AbstractBalmCreativeModeTabFactory implements BalmCreativeModeTabFactory {
 
@@ -21,10 +20,10 @@ public abstract class AbstractBalmCreativeModeTabFactory implements BalmCreative
     }
 
     @Override
-    public BalmCreativeModeTabRegistration register(String name, Supplier<CreativeModeTab> creativeModeTab) {
+    public BalmCreativeModeTabRegistration register(String name, BiFunction<ResourceLocation, CreativeModeTab.Builder, CreativeModeTab.Builder> constructor) {
         final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.CREATIVE_MODE_TAB, resourceLocation);
-        final var holder = registrar.register(resourceKey, creativeModeTab);
+        final var holder = registrar.register(resourceKey, (id) -> constructor.apply(id, createBuilder()).build());
         return new BalmCreativeModeTabRegistrationImpl(holder);
     }
 

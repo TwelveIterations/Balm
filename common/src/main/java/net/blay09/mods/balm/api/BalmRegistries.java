@@ -18,8 +18,8 @@ public interface BalmRegistries {
         return Balm.getModSupport().milkFluid().get();
     }
 
-    default <T> DeferredObject<T> register(Registry<T> registryId, Function<ResourceLocation, T> supplier, ResourceLocation identifier) {
-        final var holder = Balm.registrar().register(ResourceKey.create(registryId.key(), identifier), (Supplier<T>) () -> supplier.apply(identifier));
+    default <T> DeferredObject<T> register(Registry<T> registryId, Function<ResourceLocation, T> constructor, ResourceLocation identifier) {
+        final var holder = Balm.registrar().register(ResourceKey.create(registryId.key(), identifier), constructor);
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
 

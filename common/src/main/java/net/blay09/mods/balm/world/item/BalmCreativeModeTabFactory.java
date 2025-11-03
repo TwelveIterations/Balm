@@ -1,9 +1,10 @@
 package net.blay09.mods.balm.world.item;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Provides convenience access to registering creative tabs.
@@ -11,14 +12,10 @@ import java.util.function.Supplier;
 public interface BalmCreativeModeTabFactory {
 
     default BalmCreativeModeTabRegistration register(String name, Function<CreativeModeTab.Builder, CreativeModeTab.Builder> builderConsumer) {
-        return register(name, () -> builderConsumer.apply(createBuilder()).build());
+        return register(name, (id, builder) -> builderConsumer.apply(builder));
     }
 
-    default BalmCreativeModeTabRegistration register(String name, CreativeModeTab creativeModeTab) {
-        return register(name, () -> creativeModeTab);
-    }
-
-    BalmCreativeModeTabRegistration register(String name, Supplier<CreativeModeTab> creativeModeTab);
+    BalmCreativeModeTabRegistration register(String name, BiFunction<ResourceLocation, CreativeModeTab.Builder, CreativeModeTab.Builder> creativeModeTab);
 
     CreativeModeTab.Builder createBuilder();
 }
