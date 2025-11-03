@@ -4,7 +4,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.screen.BalmMenuScreenFactory;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
@@ -16,7 +16,7 @@ import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.NeoForgeBalmBlockEntityRendererFactory;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmRenderers;
-import net.blay09.mods.balm.neoforge.client.screen.NeoForgeBalmScreens;
+import net.blay09.mods.balm.neoforge.client.screen.NeoForgeBalmMenuScreenFactory;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmClientEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,6 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmRenderers renderers = new NeoForgeBalmRenderers(legacyNamespaceResolver);
-    private final BalmScreens screens = new NeoForgeBalmScreens(legacyNamespaceResolver);
     private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings(legacyNamespaceResolver);
     private final BalmModels models = new NeoForgeBalmModels(legacyNamespaceResolver);
 
@@ -46,11 +46,6 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public BalmRenderers getRenderers() {
         return renderers;
-    }
-
-    @Override
-    public BalmScreens getScreens() {
-        return screens;
     }
 
     @Override
@@ -84,6 +79,17 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
                 modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
                     initializer.accept(new NeoForgeBalmBlockEntityRendererFactory(event));
+                });
+            }
+        });
+    }
+
+    @Override
+    public void menuScreens(String namespace, Consumer<BalmMenuScreenFactory> initializer) {
+        BalmLoadContexts.get(namespace).ifPresent(context -> {
+            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+                modBus.addListener((RegisterMenuScreensEvent event) -> {
+                    initializer.accept(new NeoForgeBalmMenuScreenFactory(event));
                 });
             }
         });

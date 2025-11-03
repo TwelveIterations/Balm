@@ -4,7 +4,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.screen.BalmMenuScreenFactory;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
@@ -16,7 +16,7 @@ import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererFactory;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
-import net.blay09.mods.balm.forge.client.screen.ForgeBalmScreens;
+import net.blay09.mods.balm.forge.client.screen.ForgeBalmMenuScreenFactory;
 import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.minecraft.client.Minecraft;
@@ -32,7 +32,6 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmRenderers renderers = new ForgeBalmRenderers(legacyNamespaceResolver);
-    private final BalmScreens screens = new ForgeBalmScreens(legacyNamespaceResolver);
     private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings(legacyNamespaceResolver);
     private final BalmModels models = new ForgeBalmModels(legacyNamespaceResolver);
 
@@ -43,11 +42,6 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     @Override
     public BalmRenderers getRenderers() {
         return renderers;
-    }
-
-    @Override
-    public BalmScreens getScreens() {
-        return screens;
     }
 
     @Override
@@ -83,4 +77,8 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
         });
     }
 
+    @Override
+    public void menuScreens(String namespace, Consumer<BalmMenuScreenFactory> initializer) {
+        initializer.accept(ForgeBalmMenuScreenFactory.INSTANCE);
+    }
 }

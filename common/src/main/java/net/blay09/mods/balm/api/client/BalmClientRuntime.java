@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.screen.BalmMenuScreenFactory;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererFactory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -16,7 +17,10 @@ import java.util.function.Consumer;
 public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmRenderers getRenderers();
 
-    BalmScreens getScreens();
+    @Deprecated
+    default BalmScreens getScreens() {
+        return BalmScreens.LEGACY;
+    }
 
     BalmModels getModels();
 
@@ -26,10 +30,13 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
 
     default void initializeModule(BalmClientModule module) {
         final var modId = module.getId().getNamespace();
-        module.registerEvents(Balm.getEvents());
+        module.registerEvents(Balm.events());
         module.registerRenderers(getRenderers().scoped(modId));
         blockEntityRenderers(modId, module::registerBlockEntityRenderers);
+
         module.registerScreens(getScreens().scoped(modId));
+        menuScreens(modId, module::registerMenuScreens);
+
         module.registerModels(getModels().scoped(modId));
         module.registerKeyMappings(getKeyMappings().scoped(modId));
         module.initialize();
@@ -44,4 +51,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
 
     void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererFactory> initializer);
+
+    void menuScreens(String namespace, Consumer<BalmMenuScreenFactory> initializer);
 }
