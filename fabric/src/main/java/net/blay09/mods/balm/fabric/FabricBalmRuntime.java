@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
@@ -25,6 +26,7 @@ import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
 import net.blay09.mods.balm.fabric.entity.FabricBalmEntities;
+import net.blay09.mods.balm.fabric.entity.FabricBalmEntityTypeFactory;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.level.block.entity.FabricBalmBlockEntityTypeFactory;
@@ -214,6 +216,17 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public void menuTypes(String namespace, Consumer<BalmMenuTypeFactory> initializer) {
         initializer.accept(new FabricBalmMenuTypeFactory(registrar(), namespace));
+    }
+
+    @Override
+    public void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeFactory> initializer) {
+        initializer.accept(new FabricBalmEntityTypeFactory(registrar(), namespace));
+    }
+
+    @Override
+    @Deprecated
+    public BalmEntityTypeFactory entityTypes(String namespace) {
+        return new FabricBalmEntityTypeFactory(registrar(), namespace);
     }
 
     @Override

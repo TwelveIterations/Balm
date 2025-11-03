@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
@@ -24,6 +25,7 @@ import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
 import net.blay09.mods.balm.forge.core.ForgeBalmRegistrar;
 import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
+import net.blay09.mods.balm.forge.entity.ForgeBalmEntityTypeFactory;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.level.block.entity.ForgeBalmBlockEntityTypeFactory;
@@ -183,6 +185,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
+    public void entityTypes(String namespace, Consumer<BalmEntityTypeFactory> initializer) {
+        initializer.accept(new ForgeBalmEntityTypeFactory(registrar(), namespace));
+    }
+
+    @Override
     public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabFactory> initializer) {
         initializer.accept(new ForgeBalmCreativeModeTabFactory(registrar(), namespace));
     }
@@ -202,6 +209,12 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Deprecated
     public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
         return new ForgeBalmBlockEntityTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    @Deprecated
+    public BalmEntityTypeFactory entityTypes(String namespace) {
+        return new ForgeBalmEntityTypeFactory(registrar(), namespace);
     }
 
     @Override

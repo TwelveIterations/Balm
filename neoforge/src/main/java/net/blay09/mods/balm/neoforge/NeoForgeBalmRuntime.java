@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.menu.BalmMenuTypeFactory;
@@ -24,6 +25,7 @@ import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
 import net.blay09.mods.balm.neoforge.config.NeoForgeBalmConfig;
 import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntities;
+import net.blay09.mods.balm.neoforge.entity.NeoForgeBalmEntityTypeFactory;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.blay09.mods.balm.neoforge.level.block.entity.NeoForgeBalmBlockEntityTypeFactory;
@@ -184,9 +186,13 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
         initializer.accept(new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace));
     }
 
-    @Override
     public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeFactory> initializer) {
         initializer.accept(new NeoForgeBalmBlockEntityTypeFactory(registrar(), namespace));
+    }
+
+    @Override
+    public void entityTypes(String namespace, Consumer<BalmEntityTypeFactory> initializer) {
+        initializer.accept(new NeoForgeBalmEntityTypeFactory(registrar(), namespace));
     }
 
     @Override
@@ -195,13 +201,11 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    @Deprecated
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace);
     }
 
     @Override
-    @Deprecated
     public BalmBlockEntityTypeFactory blockEntityTypes(String namespace) {
         return new NeoForgeBalmBlockEntityTypeFactory(registrar(), namespace);
     }
@@ -210,5 +214,16 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Deprecated
     public BalmMenuTypeFactory menuTypes(String namespace) {
         return new NeoForgeBalmMenuTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    @Deprecated
+    public BalmEntityTypeFactory entityTypes(String namespace) {
+        return new NeoForgeBalmEntityTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmPlatform platform() {
+        return platform;
     }
 }

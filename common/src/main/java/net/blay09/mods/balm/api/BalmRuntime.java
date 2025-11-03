@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -97,7 +98,19 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         return BalmSounds.LEGACY;
     }
 
+    /**
+     * @deprecated Use {@link Balm#entityTypes(String, java.util.function.Consumer)} instead.
+     */
+    @Deprecated
     BalmEntities getEntities();
+
+    void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeFactory> initializer);
+
+    /**
+     * @deprecated Use {@link Balm#entityTypes(String, java.util.function.Consumer)} instead.
+     */
+    @Deprecated
+    BalmEntityTypeFactory entityTypes(String namespace);
 
     BalmCapabilities getCapabilities();
 
@@ -172,6 +185,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         creativeModeTabs(modId, module::registerCreativeModeTabs);
 
         module.registerEntities(getEntities());
+        entityTypes(modId, module::registerEntityTypes);
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());
         module.registerMenus(getMenus());

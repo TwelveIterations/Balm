@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -195,6 +196,16 @@ public class Balm {
      */
     public static void menuTypes(String namespace, java.util.function.Consumer<BalmMenuTypeFactory> initializer) {
         runtime.menuTypes(namespace, initializer);
+    }
+
+    /**
+     * Use this to register entity types using the factory provided in the consumer callback.
+     *
+     * @param namespace   The mod id to register entity types under.
+     * @param initializer Callback that receives a scoped factory for registering entity types.
+     */
+    public static void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeFactory> initializer) {
+        runtime.entityTypes(namespace, initializer);
     }
 
     public static BalmHooks getHooks() {
@@ -487,8 +498,8 @@ public class Balm {
     }
 
     /**
-     * @see Balm#registrar(net.minecraft.resources.ResourceKey, String)
-     * @deprecated Use {@link Balm#registrar(net.minecraft.resources.ResourceKey, String)} instead.
+     * @see Balm#dataComponentTypes(String, Consumer)
+     * @deprecated Use {@link Balm#dataComponentTypes(String, Consumer)} instead.
      */
     @Deprecated
     public static BalmComponents getComponents() {

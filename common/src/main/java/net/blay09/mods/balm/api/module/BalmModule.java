@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.api.entity.BalmEntityTypeFactory;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -73,7 +74,14 @@ public interface BalmModule {
     default void registerCommands(BalmCommands commands) {
     }
 
+    /**
+     * @deprecated Use {@link #registerEntityTypes(BalmEntityTypeFactory)} instead.
+     */
+    @Deprecated
     default void registerEntities(BalmEntities entities) {
+    }
+
+    default void registerEntityTypes(BalmEntityTypeFactory entityTypes) {
     }
 
     default void registerLootTables(BalmLootTables lootTables) {
