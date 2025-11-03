@@ -27,6 +27,7 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
+import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
@@ -252,10 +253,6 @@ public class Balm {
         return runtime.getHooks();
     }
 
-    public static BalmStats getStats() {
-        return runtime.getStats();
-    }
-
     /**
      * Use this to register particle types using the factory provided in the consumer callback.
      *
@@ -264,6 +261,16 @@ public class Balm {
      */
     public static void particleTypes(String namespace, java.util.function.Consumer<BalmParticleTypeFactory> initializer) {
         runtime.particleTypes(namespace, initializer);
+    }
+
+    /**
+     * Use this to register custom stats using the factory provided in the consumer callback.
+     *
+     * @param namespace   The mod id to register stats under.
+     * @param initializer Callback that receives a scoped factory for registering custom stats.
+     */
+    public static void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer) {
+        runtime.customStats(namespace, initializer);
     }
 
     /**
@@ -738,5 +745,13 @@ public class Balm {
     @Deprecated
     public static BalmHooks getHooks() {
         return hooks();
+    }
+
+    /**
+     * @deprecated Use {@link #customStats(String, Consumer)} instead.
+     */
+    @Deprecated
+    public static BalmStats getStats() {
+        return runtime.getStats();
     }
 }

@@ -11,8 +11,6 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.module.internal.InternalsModule;
-import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
-import net.blay09.mods.balm.particle.internal.AbstractBalmParticleTypeFactoryImpl;
 import net.blay09.mods.balm.world.item.BalmItemFactory;
 import net.blay09.mods.balm.world.item.internal.BalmItemFactoryImpl;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeFactory;

@@ -1,10 +1,8 @@
 package net.blay09.mods.balm.forge.stats;
 
-import net.blay09.mods.balm.api.stats.BalmStats;
-import net.blay09.mods.balm.forge.DeferredRegisters;
+import net.blay09.mods.balm.api.stats.AbstractBalmCustomStatFactoryImpl;
+import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.forge.ModBusEventRegister;
-import net.minecraft.core.registries.Registries;
-import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
@@ -15,18 +13,17 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ForgeBalmStats(NamespaceResolver namespaceResolver) implements BalmStats {
+public class ForgeBalmCustomStatFactory extends AbstractBalmCustomStatFactoryImpl {
 
-    @Override
-    public void registerCustomStat(ResourceLocation identifier) {
-        final var register = DeferredRegisters.get(Registries.CUSTOM_STAT, identifier.getNamespace());
-        register.register(identifier.getPath(), () -> identifier);
-        getActiveRegistrations().customStats.add(identifier);
+    public ForgeBalmCustomStatFactory(BalmRegistrar registrar, String namespace) {
+        super(registrar, namespace);
     }
 
-
-    private Registrations getActiveRegistrations() {
-        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
+    @Override
+    public ResourceLocation register(String name, StatFormatter formatter) {
+        final var stat = super.register(name, formatter);
+        ModBusEventRegisters.getRegistrations(namespace, Registrations.class).customStats.add(stat);
+        return stat;
     }
 
     public static class Registrations implements ModBusEventRegister {

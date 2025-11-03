@@ -14,7 +14,7 @@ import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.stats.BalmStats;
+import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.core.BalmRegistrar;
@@ -31,11 +31,10 @@ import net.blay09.mods.balm.forge.loader.ForgeBalmPlatform;
 import net.blay09.mods.balm.forge.menu.ForgeBalmMenuTypeFactory;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.particle.ForgeBalmParticleTypeFactory;
-import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
 import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
 import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
-import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
+import net.blay09.mods.balm.forge.stats.ForgeBalmCustomStatFactory;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.loader.BalmPlatform;
@@ -56,7 +55,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     private final BalmCapabilities capabilities = new ForgeBalmCapabilities(legacyNamespaceResolver);
     private final BalmCommands commands = new ForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
-    private final BalmStats stats = new ForgeBalmStats(legacyNamespaceResolver);
     private final BalmRecipes recipes = new ForgeBalmRecipes();
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmPermissions permissions = new ForgeBalmPermissions();
@@ -106,11 +104,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmLootTables getLootTables() {
         return lootTables;
-    }
-
-    @Override
-    public BalmStats getStats() {
-        return stats;
     }
 
     @Override
@@ -175,6 +168,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
+    public void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer) {
+        initializer.accept(new ForgeBalmCustomStatFactory(registrar(), namespace));
+    }
+
+    @Override
     @Deprecated
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new ForgeBalmCreativeModeTabFactory(registrar(), namespace);
@@ -206,5 +204,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmParticleTypeFactory particleTypes(String namespace) {
         return new ForgeBalmParticleTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmCustomStatFactory customStats(String namespace) {
+        return new ForgeBalmCustomStatFactory(registrar(), namespace);
     }
 }

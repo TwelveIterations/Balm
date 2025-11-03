@@ -45,6 +45,7 @@ public interface BalmHooks {
     /**
      * @deprecated No longer implemented by mod loaders. Use {@link LivingEntity#removeAllEffects()} instead.
      */
+    @Deprecated
     default void curePotionEffects(LivingEntity entity, ItemStack curativeItem) {
         entity.removeAllEffects();
     }

@@ -18,6 +18,7 @@ import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
+import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
@@ -36,6 +37,10 @@ import net.minecraft.sounds.SoundEvent;
 public interface BalmModule {
     ResourceLocation getId();
 
+    /**
+     * @deprecated Use {@link #registerCustomStats(BalmCustomStatFactory)} instead.
+     */
+    @Deprecated
     default void registerStats(BalmStats stats) {
     }
 
@@ -57,6 +62,9 @@ public interface BalmModule {
     }
 
     default void registerParticleTypes(BalmParticleTypeFactory particleTypes) {
+    }
+
+    default void registerCustomStats(BalmCustomStatFactory customStats) {
     }
 
     /**

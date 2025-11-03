@@ -14,7 +14,7 @@ import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.stats.BalmStats;
+import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.core.BalmRegistrar;
@@ -35,7 +35,7 @@ import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
-import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmStats;
+import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmCustomStatFactory;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabFactory;
@@ -55,7 +55,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities(legacyNamespaceResolver);
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
-    private final BalmStats stats = new NeoForgeBalmStats(legacyNamespaceResolver);
     private final BalmRecipes recipes = new NeoForgeBalmRecipes();
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
@@ -105,11 +104,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmLootTables getLootTables() {
         return lootTables;
-    }
-
-    @Override
-    public BalmStats getStats() {
-        return stats;
     }
 
     @Override
@@ -173,6 +167,11 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    public void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer) {
+        initializer.accept(new NeoForgeBalmCustomStatFactory(registrar(), namespace));
+    }
+
+    @Override
     public BalmCreativeModeTabFactory creativeModeTabs(String namespace) {
         return new NeoForgeBalmCreativeModeTabFactory(registrar(), namespace);
     }
@@ -202,5 +201,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmParticleTypeFactory particleTypes(String namespace) {
         return new NeoForgeBalmParticleTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmCustomStatFactory customStats(String namespace) {
+        return new NeoForgeBalmCustomStatFactory(registrar(), namespace);
     }
 }

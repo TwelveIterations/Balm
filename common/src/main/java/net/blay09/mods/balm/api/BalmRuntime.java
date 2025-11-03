@@ -28,6 +28,7 @@ import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
+import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
@@ -123,7 +124,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmLootTables getLootTables();
 
-    BalmStats getStats();
+    @Deprecated
+    default BalmStats getStats() {
+        return BalmStats.LEGACY;
+    }
 
     @Deprecated
     BalmRecipes getRecipes();
@@ -136,6 +140,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     }
 
     void particleTypes(String namespace, Consumer<BalmParticleTypeFactory> initializer);
+
+    void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer);
 
     BalmPermissions getPermissions();
 
@@ -212,7 +218,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         recipeTypes(modId, module::registerRecipeTypes);
 
         module.registerLootTables(getLootTables());
+
         module.registerStats(getStats());
+        customStats(modId, module::registerCustomStats);
 
         module.registerSounds(getSounds());
         module.registerSoundEvents(registrar().scoped(Registries.SOUND_EVENT, modId));
@@ -300,4 +308,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
      */
     @Deprecated
     BalmParticleTypeFactory particleTypes(String namespace);
+
+    @Deprecated
+    BalmCustomStatFactory customStats(String namespace);
 }

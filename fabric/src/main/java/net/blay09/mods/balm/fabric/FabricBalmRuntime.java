@@ -15,7 +15,7 @@ import net.blay09.mods.balm.api.particle.BalmParticleTypeFactory;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.stats.BalmStats;
+import net.blay09.mods.balm.api.stats.BalmCustomStatFactory;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
@@ -35,7 +35,7 @@ import net.blay09.mods.balm.fabric.particle.FabricBalmParticleTypeFactory;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.core.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
-import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
+import net.blay09.mods.balm.fabric.stats.FabricBalmCustomStatFactory;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabFactory;
 import net.blay09.mods.balm.loader.BalmPlatform;
@@ -55,7 +55,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmCapabilities capabilities = new FabricBalmCapabilities();
     private final BalmCommands commands = new FabricBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
-    private final BalmStats stats = new FabricBalmStats();
     private final BalmRecipes recipes = new FabricBalmRecipes();
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
     private final BalmPlatform platform = new FabricBalmPlatform();
@@ -107,11 +106,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmLootTables getLootTables() {
         return lootTables;
-    }
-
-    @Override
-    public BalmStats getStats() {
-        return stats;
     }
 
     @Override
@@ -172,6 +166,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    public void customStats(String namespace, Consumer<BalmCustomStatFactory> initializer) {
+        initializer.accept(new FabricBalmCustomStatFactory(registrar(), namespace));
+    }
+
+    @Override
     @Deprecated
     public BalmEntityTypeFactory entityTypes(String namespace) {
         return new FabricBalmEntityTypeFactory(registrar(), namespace);
@@ -203,5 +202,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmParticleTypeFactory particleTypes(String namespace) {
         return new FabricBalmParticleTypeFactory(registrar(), namespace);
+    }
+
+    @Override
+    public BalmCustomStatFactory customStats(String namespace) {
+        return new FabricBalmCustomStatFactory(registrar(), namespace);
     }
 }
