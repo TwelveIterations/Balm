@@ -28,7 +28,7 @@ public class BalmRecipeTypeFactoryImpl implements BalmRecipeTypeFactory {
     }
 
     @Override
-    public <T extends Recipe<?>> BalmRecipeTypeRegistration<T> registerType(String name, Function<ResourceLocation, RecipeType<T>> constructor) {
+    public <T extends Recipe<?>> BalmRecipeTypeRegistration<T> register(String name, Function<ResourceLocation, RecipeType<T>> constructor) {
         final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.RECIPE_TYPE, resourceLocation);
         final var holder = registrar.register(resourceKey, constructor::apply);
