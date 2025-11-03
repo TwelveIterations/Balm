@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class AbstractBalmEntityTypeFactoryImpl implements BalmEntityTypeFactory {
@@ -23,13 +24,13 @@ public abstract class AbstractBalmEntityTypeFactoryImpl implements BalmEntityTyp
         this.namespace = namespace;
     }
 
-    protected abstract <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Supplier<AttributeSupplier.Builder> attributes);
+    protected abstract <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributesFunction);
 
     @Override
-    public <T extends Entity> BalmEntityTypeRegistration<T> register(String name, EntityType.Builder<T> builder) {
+    public <T extends Entity> BalmEntityTypeRegistration<T> register(String name, Supplier<EntityType.Builder<T>> builder) {
         final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.ENTITY_TYPE, resourceLocation);
-        final var holder = registrar.register(resourceKey, id -> builder.build(resourceKey));
+        final var holder = registrar.register(resourceKey, id -> builder.get().build(resourceKey));
         return new BalmEntityTypeRegistrationImpl<>(holder);
     }
 
@@ -47,8 +48,8 @@ public abstract class AbstractBalmEntityTypeFactoryImpl implements BalmEntityTyp
         }
 
         @Override
-        public BalmEntityTypeRegistration<T> withDefaultAttributes(Supplier<AttributeSupplier.Builder> attributes) {
-            registerDefaultAttributes(holder, attributes);
+        public BalmEntityTypeRegistration<T> withDefaultAttributes(Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributesFunction) {
+            registerDefaultAttributes(holder, attributesFunction);
             return this;
         }
     }

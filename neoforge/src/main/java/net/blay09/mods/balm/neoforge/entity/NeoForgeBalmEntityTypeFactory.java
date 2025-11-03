@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class NeoForgeBalmEntityTypeFactory extends AbstractBalmEntityTypeFactoryImpl {
 
@@ -26,9 +26,9 @@ public class NeoForgeBalmEntityTypeFactory extends AbstractBalmEntityTypeFactory
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Supplier<AttributeSupplier.Builder> attributes) {
+    protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributes) {
         final var registrations = getActiveRegistrations();
-        registrations.attributeSuppliers.put((Holder<EntityType<? extends LivingEntity>>) (Holder<?>) entityType, attributes.get().build());
+        registrations.attributeSuppliers.put((Holder<EntityType<? extends LivingEntity>>) (Holder<?>) entityType, attributes.apply(AttributeSupplier.builder()).build());
     }
 
     private Registrations getActiveRegistrations() {
