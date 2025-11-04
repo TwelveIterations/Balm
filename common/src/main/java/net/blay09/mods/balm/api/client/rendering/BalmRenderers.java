@@ -29,6 +29,10 @@ public interface BalmRenderers {
 
     ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition);
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#entityRenderers(String, Consumer)} instead.
+     */
+    @Deprecated
     <T extends Entity> void registerEntityRenderer(ResourceLocation id, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
 
     /**

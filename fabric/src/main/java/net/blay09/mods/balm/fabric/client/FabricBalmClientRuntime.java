@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -14,6 +15,7 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.fabric.client.gui.screens.inventory.FabricBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
 import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.fabric.client.renderer.entity.FabricBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
@@ -81,6 +83,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     @Override
     public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         initializer.accept(FabricBalmBlockEntityRendererRegistrar.INSTANCE);
+    }
+
+    @Override
+    public void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer) {
+        initializer.accept(FabricBalmEntityRendererRegistrar.INSTANCE);
     }
 
     @Override

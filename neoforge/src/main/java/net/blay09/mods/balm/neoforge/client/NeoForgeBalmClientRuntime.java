@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -14,6 +15,7 @@ import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.NeoForgeBalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.neoforge.client.renderer.entity.NeoForgeBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmRenderers;
 import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.NeoForgeBalmMenuScreenRegistrar;
@@ -79,6 +81,17 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
                 modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
                     initializer.accept(new NeoForgeBalmBlockEntityRendererRegistrar(event));
+                });
+            }
+        });
+    }
+
+    @Override
+    public void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer) {
+        BalmLoadContexts.get(namespace).ifPresent(context -> {
+            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+                modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
+                    initializer.accept(new NeoForgeBalmEntityRendererRegistrar(event));
                 });
             }
         });

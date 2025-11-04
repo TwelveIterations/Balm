@@ -4,8 +4,9 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.client.screen.BalmMenuScreenRegistrar;
+import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -14,6 +15,7 @@ import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.forge.client.renderer.entity.ForgeBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
 import net.blay09.mods.balm.forge.client.gui.screens.inventory.ForgeBalmMenuScreenRegistrar;
@@ -74,6 +76,13 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         EntityRenderersEvent.RegisterRenderers.BUS.addListener((event) -> {
            initializer.accept(new ForgeBalmBlockEntityRendererRegistrar(event));
+        });
+    }
+
+    @Override
+    public void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer) {
+        EntityRenderersEvent.RegisterRenderers.BUS.addListener((event) -> {
+            initializer.accept(new ForgeBalmEntityRendererRegistrar(event));
         });
     }
 

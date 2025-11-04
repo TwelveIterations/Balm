@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import org.jetbrains.annotations.ApiStatus;
@@ -119,6 +120,16 @@ public class BalmClient {
      */
     public static void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         runtime.blockEntityRenderers(namespace, initializer);
+    }
+
+    /**
+     * Use this to register entity renderers using the registrar provided in the consumer callback.
+     *
+     * @param namespace   The mod id to register entity types under.
+     * @param initializer Callback that receives a scoped registrar for registering entity types.
+     */
+    public static void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer) {
+        runtime.entityRenderers(namespace, initializer);
     }
 
     public static void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {

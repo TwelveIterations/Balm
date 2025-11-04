@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.minecraft.resources.ResourceLocation;
 
 public interface BalmClientModule {
@@ -22,6 +23,9 @@ public interface BalmClientModule {
     }
 
     default void registerBlockEntityRenderers(BalmBlockEntityRendererRegistrar blockEntityRenderers) {
+    }
+
+    default void registerEntityRenderers(BalmEntityRendererRegistrar entityRenderers) {
     }
 
     default void registerMenuScreens(BalmMenuScreenRegistrar menuScreens) {

@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 
@@ -33,6 +34,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         module.registerEvents(Balm.events());
         module.registerRenderers(getRenderers().scoped(modId));
         blockEntityRenderers(modId, module::registerBlockEntityRenderers);
+        entityRenderers(modId, module::registerEntityRenderers);
 
         module.registerScreens(getScreens().scoped(modId));
         menuScreens(modId, module::registerMenuScreens);
@@ -51,6 +53,8 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
 
     void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer);
+
+    void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer);
 
     void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer);
 }
