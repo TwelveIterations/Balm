@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public record ForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 
     @Override

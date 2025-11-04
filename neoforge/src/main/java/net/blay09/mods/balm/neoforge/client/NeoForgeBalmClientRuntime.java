@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -16,6 +17,7 @@ import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.NeoForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.entity.NeoForgeBalmEntityRendererRegistrar;
+import net.blay09.mods.balm.neoforge.client.renderer.block.model.NeoForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmRenderers;
 import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.NeoForgeBalmMenuScreenRegistrar;
@@ -28,6 +30,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 import java.util.ArrayList;
@@ -79,9 +82,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
-                modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
-                    initializer.accept(new NeoForgeBalmBlockEntityRendererRegistrar(event));
-                });
+                modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> initializer.accept(new NeoForgeBalmBlockEntityRendererRegistrar(event)));
             }
         });
     }
@@ -90,9 +91,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     public void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
-                modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
-                    initializer.accept(new NeoForgeBalmEntityRendererRegistrar(event));
-                });
+                modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> initializer.accept(new NeoForgeBalmEntityRendererRegistrar(event)));
             }
         });
     }
@@ -101,9 +100,16 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     public void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
-                modBus.addListener((RegisterMenuScreensEvent event) -> {
-                    initializer.accept(new NeoForgeBalmMenuScreenRegistrar(event));
-                });
+                modBus.addListener((RegisterMenuScreensEvent event) -> initializer.accept(new NeoForgeBalmMenuScreenRegistrar(event)));
+            }
+        });
+    }
+
+    @Override
+    public void blockStateModels(String namespace, Consumer<BalmBlockStateModelRegistrar> initializer) {
+        BalmLoadContexts.get(namespace).ifPresent(context -> {
+            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+                modBus.addListener((ModelEvent.RegisterStandalone event) -> initializer.accept(new NeoForgeBalmBlockStateModelRegistrar(event)));
             }
         });
     }

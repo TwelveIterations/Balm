@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.minecraft.resources.ResourceLocation;
 
 public interface BalmClientModule {
@@ -16,7 +17,14 @@ public interface BalmClientModule {
     default void registerEvents(BalmEvents events) {
     }
 
+    /**
+     * @deprecated Use {@link #registerModels(BalmBlockStateModelRegistrar)} instead.
+     */
+    @Deprecated
     default void registerModels(BalmModels models) {
+    }
+
+    default void registerModels(BalmBlockStateModelRegistrar models) {
     }
 
     default void registerRenderers(BalmRenderers renderers) {

@@ -23,6 +23,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface BalmRenderers {
+    /**
+     * @deprecated Use {@link #registerModel(ResourceLocation, String, Supplier)} with layer <code>main</code> instead.
+     */
+    @Deprecated
     default ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
         return registerModel(location, "main", layerDefinition);
     }

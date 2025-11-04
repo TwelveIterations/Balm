@@ -17,6 +17,7 @@ import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 
     public static class AdditionalModel implements ModelDebugName {

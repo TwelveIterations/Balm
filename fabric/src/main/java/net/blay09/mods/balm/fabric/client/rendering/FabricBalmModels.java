@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Deprecated
 public final class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
     private record ExtraModelRegistration(ResourceLocation identifier, ExtraModelKey<BlockStateModel> extraModelKey) {
     }
