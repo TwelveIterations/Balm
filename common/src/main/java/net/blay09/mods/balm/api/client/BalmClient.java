@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
+import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
@@ -143,6 +144,16 @@ public class BalmClient {
         runtime.blockStateModels(namespace, initializer);
     }
 
+    /**
+     * Use this to register key mappings using the registrar provided in the consumer callback.
+     *
+     * @param namespace   The mod id under which key mappings should be registered.
+     * @param initializer Callback that receives a scoped registrar for key mappings.
+     */
+    public static void keyMappings(String namespace, Consumer<BalmKeyMappingRegistrar> initializer) {
+        runtime.keyMappings(namespace, initializer);
+    }
+
     public static void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
         runtime.addResourceReloadListener(identifier, reloadListener);
     }
@@ -151,10 +162,18 @@ public class BalmClient {
         return runtime.getRenderers();
     }
 
+    /**
+     * @deprecated Use {@link #keyMappings(String, Consumer)} instead.
+     */
+    @Deprecated
     public static BalmKeyMappings getKeyMappings() {
         return runtime.getKeyMappings();
     }
 
+    /**
+     * @deprecated Use {@link #blockStateModels(String, Consumer)} instead.
+     */
+    @Deprecated
     public static BalmModels getModels() {
         return runtime.getModels();
     }

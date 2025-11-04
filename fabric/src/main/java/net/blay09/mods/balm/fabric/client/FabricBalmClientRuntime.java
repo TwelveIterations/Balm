@@ -6,6 +6,8 @@ import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
+import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
@@ -103,6 +105,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     @Override
     public void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
         initializer.accept(FabricBalmMenuScreenRegistrar.INSTANCE);
+    }
+
+    @Override
+    public void keyMappings(String namespace, Consumer<BalmKeyMappingRegistrar> initializer) {
+        initializer.accept(FabricBalmKeyMappingRegistrar.INSTANCE);
     }
 
 }

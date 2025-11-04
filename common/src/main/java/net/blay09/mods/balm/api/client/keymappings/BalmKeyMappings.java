@@ -5,15 +5,25 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * Barebones implementation of Key Mappings.
- * For features like conflict contexts and key modifiers, use {@link net.blay09.mods.kuma.api.Kuma} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar} instead.
  */
+@Deprecated
 public interface BalmKeyMappings {
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar} instead.
+     */
+    @Deprecated
     default KeyMapping registerKeyMapping(ResourceLocation id, int keyCode, KeyMapping.Category category) {
         return registerKeyMapping(id, InputConstants.Type.KEYSYM, keyCode, category);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar} instead.
+     */
+    @Deprecated
     KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, KeyMapping.Category category);
 
-    BalmKeyMappings scoped(String modId);
+    default BalmKeyMappings scoped(String modId) {
+        return this;
+    }
 }
