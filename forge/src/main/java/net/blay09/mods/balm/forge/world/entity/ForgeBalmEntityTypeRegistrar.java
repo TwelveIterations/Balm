@@ -15,6 +15,7 @@ import net.minecraftforge.eventbus.api.bus.BusGroup;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegistrarImpl {
 
@@ -29,7 +30,7 @@ public class ForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegistra
     @SuppressWarnings("unchecked")
     protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributes) {
         final var registrations = getActiveRegistrations();
-        registrations.attributeSuppliers.put((Holder<EntityType<? extends LivingEntity>>) (Holder<?>) entityType, attributes.apply(AttributeSupplier.builder()).build());
+        registrations.attributeSuppliers.put((Holder<EntityType<? extends LivingEntity>>) (Holder<?>) entityType, () -> attributes.apply(AttributeSupplier.builder()).build());
     }
 
     private Registrations getActiveRegistrations() {
@@ -37,11 +38,11 @@ public class ForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegistra
     }
 
     public static class Registrations implements ModBusEventRegister {
-        public final Map<Holder<EntityType<? extends LivingEntity>>, AttributeSupplier> attributeSuppliers = new HashMap<>();
+        public final Map<Holder<EntityType<? extends LivingEntity>>, Supplier<AttributeSupplier>> attributeSuppliers = new HashMap<>();
 
         private void registerAttributes(EntityAttributeCreationEvent event) {
             for (final var entry : attributeSuppliers.entrySet()) {
-                event.put(entry.getKey().value(), entry.getValue());
+                event.put(entry.getKey().value(), entry.getValue().get());
             }
         }
 

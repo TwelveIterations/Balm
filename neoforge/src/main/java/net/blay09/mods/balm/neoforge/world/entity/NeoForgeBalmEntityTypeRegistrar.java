@@ -14,6 +14,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class NeoForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegistrarImpl {
 
@@ -28,7 +29,7 @@ public class NeoForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegis
     @SuppressWarnings("unchecked")
     protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributes) {
         final var registrations = getActiveRegistrations();
-        registrations.attributeSuppliers.put((Holder<EntityType<? extends LivingEntity>>) (Holder<?>) entityType, attributes.apply(AttributeSupplier.builder()).build());
+        registrations.attributeSuppliers.put((Holder<EntityType<? extends LivingEntity>>) (Holder<?>) entityType, () -> attributes.apply(AttributeSupplier.builder()).build());
     }
 
     private Registrations getActiveRegistrations() {
@@ -36,12 +37,12 @@ public class NeoForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegis
     }
 
     public static class Registrations {
-        public final Map<Holder<EntityType<? extends LivingEntity>>, AttributeSupplier> attributeSuppliers = new HashMap<>();
+        public final Map<Holder<EntityType<? extends LivingEntity>>, Supplier<AttributeSupplier>> attributeSuppliers = new HashMap<>();
 
         @SubscribeEvent
         public void registerAttributes(EntityAttributeCreationEvent event) {
             for (final var entry : attributeSuppliers.entrySet()) {
-                event.put(entry.getKey().value(), entry.getValue());
+                event.put(entry.getKey().value(), entry.getValue().get());
             }
         }
     }
