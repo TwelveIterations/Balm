@@ -12,6 +12,7 @@ import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.minecraft.resources.ResourceLocation;
@@ -42,6 +43,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         blockColors(modId, module::registerBlockColors);
         blockEntityRenderers(modId, module::registerBlockEntityRenderers);
         entityRenderers(modId, module::registerEntityRenderers);
+        particleProviders(modId, module::registerParticleProviders);
 
         module.registerScreens(getScreens().scoped(modId));
         menuScreens(modId, module::registerMenuScreens);
@@ -76,4 +78,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer);
 
     void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer);
+
+    void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer);
 }

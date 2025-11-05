@@ -61,8 +61,16 @@ public interface BalmRenderers {
     @Deprecated
     void setBlockRenderType(Supplier<Block> block, ChunkSectionLayer chunkSectionLayer);
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#particleProviders(String, java.util.function.Consumer)} instead.
+     */
+    @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#particleProviders(String, java.util.function.Consumer)} instead.
+     */
+    @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 
     default BalmRenderers scoped(String modId) {

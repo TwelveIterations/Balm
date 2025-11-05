@@ -11,6 +11,7 @@ import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
@@ -164,6 +165,16 @@ public class BalmClient {
      */
     public static void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer) {
         runtime.blockColors(namespace, initializer);
+    }
+
+    /**
+     * Use this to register particle providers using the registrar provided in the consumer callback.
+     *
+     * @param namespace   The mod id under which particle providers should be registered.
+     * @param initializer Callback that receives a scoped registrar for particle providers.
+     */
+    public static void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer) {
+        runtime.particleProviders(namespace, initializer);
     }
 
     /**
