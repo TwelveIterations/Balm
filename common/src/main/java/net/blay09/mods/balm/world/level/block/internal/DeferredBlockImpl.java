@@ -98,4 +98,9 @@ public record DeferredBlockImpl(Holder<Block> holder) implements DeferredBlock {
     public Block asBlock() {
         return holder.value();
     }
+
+    @Override
+    public Holder<Block> asHolder() {
+        return holder;
+    }
 }
