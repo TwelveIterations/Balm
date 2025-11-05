@@ -11,6 +11,7 @@ import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererR
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.model.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.minecraft.resources.ResourceLocation;
 
 public interface BalmClientModule {
@@ -33,6 +34,9 @@ public interface BalmClientModule {
     }
 
     default void registerModelLayers(BalmModelLayerRegistrar modelLayers) {
+    }
+
+    default void registerBlockColors(BalmBlockColorRegistrar blockColors) {
     }
 
     default void registerBlockEntityRenderers(BalmBlockEntityRendererRegistrar blockEntityRenderers) {

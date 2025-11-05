@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
@@ -22,6 +23,7 @@ import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEn
 import net.blay09.mods.balm.fabric.client.renderer.entity.FabricBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.block.model.FabricBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.model.FabricBalmModelLayerRegistrar;
+import net.blay09.mods.balm.fabric.client.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
@@ -117,6 +119,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     @Override
     public void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer) {
         initializer.accept(FabricBalmModelLayerRegistrar.INSTANCE);
+    }
+
+    @Override
+    public void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer) {
+        initializer.accept(FabricBalmBlockColorRegistrar.INSTANCE);
     }
 
 }

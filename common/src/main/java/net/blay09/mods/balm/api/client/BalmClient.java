@@ -10,6 +10,7 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.model.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
@@ -153,6 +154,16 @@ public class BalmClient {
      */
     public static void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer) {
         runtime.modelLayers(namespace, initializer);
+    }
+
+    /**
+     * Use this to register block color handlers using the registrar provided in the consumer callback.
+     *
+     * @param namespace   The mod id under which block colors should be registered.
+     * @param initializer Callback that receives a scoped registrar for block colors.
+     */
+    public static void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer) {
+        runtime.blockColors(namespace, initializer);
     }
 
     /**

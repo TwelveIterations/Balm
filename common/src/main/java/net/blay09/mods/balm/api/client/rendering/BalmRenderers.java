@@ -49,6 +49,10 @@ public interface BalmRenderers {
     @Deprecated
     <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(ResourceLocation id, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider);
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#blockColors(String, java.util.function.Consumer)} instead.
+     */
+    @Deprecated
     void registerBlockColorHandler(ResourceLocation id, BlockColor color, Supplier<Block[]> blocks);
 
     /**
@@ -61,5 +65,7 @@ public interface BalmRenderers {
 
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 
-    BalmRenderers scoped(String modId);
+    default BalmRenderers scoped(String modId) {
+        return this;
+    }
 }
