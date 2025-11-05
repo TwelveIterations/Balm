@@ -5,7 +5,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
-import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
@@ -30,34 +30,38 @@ import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
 import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmRenderers;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmClientEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
+import net.blay09.mods.balm.neoforge.client.resources.NeoForgeBalmClientResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
 
+    @Deprecated
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
+    @Deprecated
     private final BalmRenderers renderers = new NeoForgeBalmRenderers(legacyNamespaceResolver);
+    @Deprecated
     private final BalmModels models = new NeoForgeBalmModels(legacyNamespaceResolver);
 
     public NeoForgeBalmClientRuntime() {
-        NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.getEvents()));
+        NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.events()));
     }
 
     @Override
+    @Deprecated
     public BalmRenderers getRenderers() {
         return renderers;
     }
 
     @Override
+    @Deprecated
     public BalmModels getModels() {
         return models;
     }
@@ -74,7 +78,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
 
     @Override
     public void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
-        getActiveRegistrations().reloadListeners.add(new ReloadListenerRegistration(identifier, reloadListener));
+        resourceReloadListeners(identifier.getNamespace(), registrar -> registrar.register(identifier.getPath(), reloadListener));
     }
 
     @Override
@@ -158,21 +162,13 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
         });
     }
 
-    private Registrations getActiveRegistrations() {
-        return ModBusEventRegisters.getRegistrations(legacyNamespaceResolver.getDefaultNamespace(), Registrations.class);
-    }
-
-    public record ReloadListenerRegistration(ResourceLocation identifier, PreparableReloadListener listener) {
-    }
-
-    public static class Registrations {
-        public final List<ReloadListenerRegistration> reloadListeners = new ArrayList<>();
-
-        @SubscribeEvent
-        public void addClientReloadListeners(AddClientReloadListenersEvent event) {
-            for (final var reloadListener : reloadListeners) {
-                event.addListener(reloadListener.identifier(), reloadListener.listener());
+    @Override
+    public void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
+        BalmLoadContexts.get(namespace).ifPresent(context -> {
+            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+                modBus.addListener((AddClientReloadListenersEvent event) -> initializer.accept(new NeoForgeBalmClientResourceReloadListenerRegistrar(namespace, event)));
             }
-        }
+        });
     }
+
 }

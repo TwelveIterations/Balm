@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.api.client.module;
 
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
-import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
@@ -10,6 +10,7 @@ import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -23,15 +24,19 @@ public interface BalmClientModule {
     }
 
     /**
-     * @deprecated Use {@link #registerModels(BalmBlockStateModelRegistrar)} instead.
+     * @deprecated Use {@link #registerBlockStateModels(BalmBlockStateModelRegistrar)} instead.
      */
     @Deprecated
     default void registerModels(BalmModels models) {
     }
 
-    default void registerModels(BalmBlockStateModelRegistrar models) {
+    default void registerBlockStateModels(BalmBlockStateModelRegistrar models) {
     }
 
+    /**
+     * @deprecated Use {@link #registerBlockRenderTypes(BalmBlockRenderTypeRegistrar)}, {@link #registerBlockStateModels(BalmBlockStateModelRegistrar)}, {@link #registerModelLayers(BalmModelLayerRegistrar)}, {@link #registerBlockColors(BalmBlockColorRegistrar)}, {@link #registerEntityRenderers(BalmEntityRendererRegistrar)}, {@link #registerBlockEntityRenderers(BalmBlockEntityRendererRegistrar)} or {@link #registerParticleProviders(BalmParticleProviderRegistrar)} instead.
+     */
+    @Deprecated
     default void registerRenderers(BalmRenderers renderers) {
     }
 
@@ -71,6 +76,9 @@ public interface BalmClientModule {
     }
 
     default void registerKeyMappings(BalmKeyMappingRegistrar keyMappings) {
+    }
+
+    default void registerClientReloadListeners(BalmClientResourceReloadListenerRegistrar resourceReloadListeners) {
     }
 
     default void initialize() {

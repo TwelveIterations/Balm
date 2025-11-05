@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.neoforge.client;
 
-import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 

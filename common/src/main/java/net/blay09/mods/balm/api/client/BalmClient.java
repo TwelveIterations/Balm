@@ -8,7 +8,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
-import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -16,6 +16,7 @@ import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import org.jetbrains.annotations.ApiStatus;
@@ -198,6 +199,20 @@ public class BalmClient {
         runtime.keyMappings(namespace, initializer);
     }
 
+    /**
+     * Use this to register resource reload listeners using the registrar provided in the consumer callback.
+     *
+     * @param namespace The mod id under which reload listeners should be registered.
+     * @param initializer Callback that receives a scoped registrar for reload listeners.
+     */
+    public static void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
+        runtime.resourceReloadListeners(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #resourceReloadListeners(String, java.util.function.Consumer)} instead.
+     */
+    @Deprecated
     public static void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
         runtime.addResourceReloadListener(identifier, reloadListener);
     }

@@ -4,7 +4,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
-import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
@@ -30,6 +30,8 @@ import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.client.particle.ForgeBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.chunk.ForgeBalmBlockRenderTypeRegistrar;
+import net.blay09.mods.balm.forge.client.resources.ForgeBalmClientResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -45,20 +47,25 @@ import java.util.function.Consumer;
 
 public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadContext> {
 
+    @Deprecated
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
+    @Deprecated
     private final BalmRenderers renderers = new ForgeBalmRenderers(legacyNamespaceResolver);
+    @Deprecated
     private final BalmModels models = new ForgeBalmModels(legacyNamespaceResolver);
 
     public ForgeBalmClientRuntime() {
-        ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.getEvents()));
+        ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.events()));
     }
 
     @Override
+    @Deprecated
     public BalmRenderers getRenderers() {
         return renderers;
     }
 
     @Override
+    @Deprecated
     public BalmModels getModels() {
         return models;
     }
@@ -122,5 +129,10 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     @Override
     public void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer) {
         initializer.accept(new ForgeBalmBlockRenderTypeRegistrar());
+    }
+
+    @Override
+    public void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
+        initializer.accept(ForgeBalmClientResourceReloadListenerRegistrar.INSTANCE);
     }
 }

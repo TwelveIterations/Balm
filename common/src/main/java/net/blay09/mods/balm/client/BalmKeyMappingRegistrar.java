@@ -1,8 +1,7 @@
-package net.blay09.mods.balm.client.keymappings;
+package net.blay09.mods.balm.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.resources.ResourceLocation;
 
 public interface BalmKeyMappingRegistrar {
 

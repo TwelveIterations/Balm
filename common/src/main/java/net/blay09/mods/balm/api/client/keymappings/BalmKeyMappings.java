@@ -2,17 +2,17 @@ package net.blay09.mods.balm.api.client.keymappings;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.api.client.BalmClient;
-import net.blay09.mods.balm.api.client.BalmClientRuntime;
+import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar} instead.
+ * @deprecated Use {@link BalmKeyMappingRegistrar} instead.
  */
 @Deprecated
 public interface BalmKeyMappings {
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar} instead.
+     * @deprecated Use {@link BalmKeyMappingRegistrar} instead.
      */
     @Deprecated
     default KeyMapping registerKeyMapping(ResourceLocation id, int keyCode, KeyMapping.Category category) {
@@ -20,7 +20,7 @@ public interface BalmKeyMappings {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar} instead.
+     * @deprecated Use {@link BalmKeyMappingRegistrar} instead.
      */
     @Deprecated
     default KeyMapping registerKeyMapping(ResourceLocation id, InputConstants.Type type, int keyCode, KeyMapping.Category category) {
