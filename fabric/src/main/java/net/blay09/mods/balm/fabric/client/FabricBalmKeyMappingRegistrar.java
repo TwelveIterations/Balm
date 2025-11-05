@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.fabric.client.keymappings;
+package net.blay09.mods.balm.fabric.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;

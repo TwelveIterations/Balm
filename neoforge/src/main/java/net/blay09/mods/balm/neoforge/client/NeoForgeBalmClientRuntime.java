@@ -17,7 +17,6 @@ import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
-import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.NeoForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.entity.NeoForgeBalmEntityRendererRegistrar;

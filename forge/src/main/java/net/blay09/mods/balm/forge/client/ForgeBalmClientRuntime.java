@@ -18,7 +18,6 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.gui.screens.inventory.ForgeBalmMenuScreenRegistrar;
-import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.renderer.block.model.ForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.forge.client.model.geom.ForgeBalmModelLayerRegistrar;

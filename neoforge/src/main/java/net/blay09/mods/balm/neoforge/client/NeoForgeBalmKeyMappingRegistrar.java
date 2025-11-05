@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.neoforge.client.keymappings;
+package net.blay09.mods.balm.neoforge.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;

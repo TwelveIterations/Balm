@@ -13,6 +13,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public record NeoForgeBalmKeyMappings(NamespaceResolver namespaceResolver) implements BalmKeyMappings {
 
     @Override

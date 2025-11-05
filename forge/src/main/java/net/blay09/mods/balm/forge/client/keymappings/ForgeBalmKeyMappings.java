@@ -14,6 +14,7 @@ import net.minecraftforge.eventbus.api.bus.BusGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public record ForgeBalmKeyMappings(NamespaceResolver namespaceResolver) implements BalmKeyMappings {
 
     @Override
