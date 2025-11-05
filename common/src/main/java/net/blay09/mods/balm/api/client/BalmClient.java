@@ -202,6 +202,10 @@ public class BalmClient {
         runtime.addResourceReloadListener(identifier, reloadListener);
     }
 
+    /**
+     * @deprecated Use {@link #blockRenderTypes(String, Consumer)}, {@link #blockStateModels(String, Consumer)}, {@link #modelLayers(String, Consumer)}, {@link #blockColors(String, Consumer)}, {@link #entityRenderers(String, Consumer)}, {@link #blockEntityRenderers(String, Consumer)} or {@link #particleProviders(String, Consumer)} instead.
+     */
+    @Deprecated
     public static BalmRenderers getRenderers() {
         return runtime.getRenderers();
     }

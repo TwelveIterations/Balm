@@ -22,6 +22,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import java.util.function.Consumer;
 
 public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> {
+    @Deprecated
     BalmRenderers getRenderers();
 
     @Deprecated
