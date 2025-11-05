@@ -24,7 +24,7 @@ public class BlockEntityUtils {
         return ClientboundBlockEntityDataPacket.create(blockEntity, BlockEntity::getUpdateTag);
     }
 
-    public CompoundTag createUpdateTag(BlockEntity blockEntity, Consumer<ValueOutput> outputConsumer) {
+    public static CompoundTag createUpdateTag(BlockEntity blockEntity, Consumer<ValueOutput> outputConsumer) {
         final var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, blockEntity.getLevel().registryAccess());
         outputConsumer.accept(output);
         return output.buildResult();
