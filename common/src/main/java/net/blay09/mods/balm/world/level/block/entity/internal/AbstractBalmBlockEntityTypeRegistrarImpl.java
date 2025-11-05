@@ -2,7 +2,6 @@ package net.blay09.mods.balm.world.level.block.entity.internal;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.world.level.block.BlockLike;
-import net.blay09.mods.balm.world.level.block.DiscriminatedBlocks;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistration;
 import net.minecraft.core.Holder;
@@ -33,7 +32,7 @@ public abstract class AbstractBalmBlockEntityTypeRegistrarImpl implements BalmBl
     }
 
     @Override
-    public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Iterable<BlockLike> blocks) {
+    public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Iterable<? extends BlockLike> blocks) {
         return register(name, constructor, () -> {
             final var resolvedBlocks = new HashSet<Block>();
             for (final var blockLike : blocks) {
