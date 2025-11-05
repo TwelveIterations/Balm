@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.client.renderer.block.model;
 
 import net.blay09.mods.balm.client.renderer.block.model.DeferredBlockStateModel;
-import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.block.model.AbstractBalmBlockStateModelRegistrar;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.resources.ResourceLocation;
 
-public class FabricBalmBlockStateModelRegistrar implements BalmBlockStateModelRegistrar {
+public class FabricBalmBlockStateModelRegistrar extends AbstractBalmBlockStateModelRegistrar {
     private final ModelLoadingPlugin.Context context;
 
     public FabricBalmBlockStateModelRegistrar(ModelLoadingPlugin.Context context) {

@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.neoforge.client.renderer.block.model;
 
 import net.blay09.mods.balm.client.renderer.block.model.DeferredBlockStateModel;
-import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.block.model.AbstractBalmBlockStateModelRegistrar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.resources.ResourceLocation;
@@ -9,7 +9,7 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 
-public class NeoForgeBalmBlockStateModelRegistrar implements BalmBlockStateModelRegistrar {
+public class NeoForgeBalmBlockStateModelRegistrar extends AbstractBalmBlockStateModelRegistrar {
 
     private final ModelEvent.RegisterStandalone event;
 

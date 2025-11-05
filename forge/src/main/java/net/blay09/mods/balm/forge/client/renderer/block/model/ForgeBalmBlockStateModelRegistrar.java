@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.forge.client.renderer.block.model;
 
 import net.blay09.mods.balm.client.renderer.block.model.DeferredBlockStateModel;
-import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.block.model.AbstractBalmBlockStateModelRegistrar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraftforge.client.event.ModelEvent;
 
-public class ForgeBalmBlockStateModelRegistrar implements BalmBlockStateModelRegistrar {
+public class ForgeBalmBlockStateModelRegistrar extends AbstractBalmBlockStateModelRegistrar {
     private final ModelEvent.RegisterModelStateDefinitions event;
 
     public ForgeBalmBlockStateModelRegistrar(ModelEvent.RegisterModelStateDefinitions event) {
