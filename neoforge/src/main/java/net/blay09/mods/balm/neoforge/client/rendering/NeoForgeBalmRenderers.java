@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated
 public record NeoForgeBalmRenderers(NamespaceResolver namespaceResolver) implements BalmRenderers {
 
     @Override

@@ -22,6 +22,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * @deprecated Use the various methods in {@link net.blay09.mods.balm.api.client.BalmClient} instead.
+ */
 @Deprecated
 public interface BalmRenderers {
     /**

@@ -12,7 +12,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import java.util.function.Supplier;
 
 /**
- * @deprecated Use the scoped registrar via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeRegistrar}
+ * @deprecated Use {@code Balm.entityTypes(namespace, initializer)} instead.
  */
 @Deprecated
 public interface BalmEntities {

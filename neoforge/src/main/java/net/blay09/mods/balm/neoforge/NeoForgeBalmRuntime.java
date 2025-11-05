@@ -12,7 +12,6 @@ import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -32,7 +31,6 @@ import net.blay09.mods.balm.neoforge.world.inventory.NeoForgeBalmMenuTypeRegistr
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.core.particles.NeoForgeBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
-import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
 import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
 import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmCustomStatRegistrar;
@@ -40,22 +38,19 @@ import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
-import net.neoforged.fml.ModLoadingContext;
 
 import java.util.function.Consumer;
 
 public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> {
 
-    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
     private final NeoForgeBalmEvents events = new NeoForgeBalmEvents();
-    private final BalmNetworking networking = new NeoForgeBalmNetworking(legacyNamespaceResolver);
+    private final BalmNetworking networking = new NeoForgeBalmNetworking();
     private final BalmConfig config = new NeoForgeBalmConfig();
     private final BalmHooks hooks = new NeoForgeBalmHooks();
-    private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities(legacyNamespaceResolver);
+    private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities();
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
-    private final BalmRecipes recipes = new NeoForgeBalmRecipes();
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmResources resources = new NeoForgeBalmResources();
@@ -104,11 +99,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmLootTables getLootTables() {
         return lootTables;
-    }
-
-    @Override
-    public BalmRecipes getRecipes() {
-        return recipes;
     }
 
     @Override

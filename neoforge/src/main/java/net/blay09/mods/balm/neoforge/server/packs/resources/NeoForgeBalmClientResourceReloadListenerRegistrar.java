@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.neoforge.client.resources;
+package net.blay09.mods.balm.neoforge.server.packs.resources;
 
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.minecraft.resources.ResourceLocation;

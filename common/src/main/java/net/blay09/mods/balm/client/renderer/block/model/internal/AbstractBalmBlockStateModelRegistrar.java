@@ -1,5 +1,7 @@
-package net.blay09.mods.balm.client.renderer.block.model;
+package net.blay09.mods.balm.client.renderer.block.model.internal;
 
+import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.block.model.DeferredBlockStateModel;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;

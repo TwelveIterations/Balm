@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
 /**
- * @deprecated Use the scoped registrar via {@code Balm.menuTypes(namespace, initializer)} and {@link BalmMenuTypeRegistrar}
+ * @deprecated Use {@code Balm.menuTypes(namespace, initializer)} instead.
  */
 @Deprecated
 public interface BalmMenus {

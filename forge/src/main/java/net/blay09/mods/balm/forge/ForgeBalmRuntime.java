@@ -12,7 +12,6 @@ import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -32,7 +31,6 @@ import net.blay09.mods.balm.forge.world.inventory.ForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.core.particles.ForgeBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
-import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
 import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
 import net.blay09.mods.balm.forge.stats.ForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
@@ -40,22 +38,19 @@ import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
-import net.minecraftforge.fml.ModLoadingContext;
 
 import java.util.function.Consumer;
 
 public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
-    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
     private final ForgeBalmEvents events = new ForgeBalmEvents();
     private final BalmNetworking networking = new ForgeBalmNetworking();
     private final BalmConfig config = new ForgeBalmConfig();
     private final BalmHooks hooks = new ForgeBalmHooks();
-    private final BalmCapabilities capabilities = new ForgeBalmCapabilities(legacyNamespaceResolver);
+    private final BalmCapabilities capabilities = new ForgeBalmCapabilities();
     private final BalmCommands commands = new ForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
-    private final BalmRecipes recipes = new ForgeBalmRecipes();
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmPermissions permissions = new ForgeBalmPermissions();
     private final BalmResources resources = new ForgeBalmResources();
@@ -104,11 +99,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmLootTables getLootTables() {
         return lootTables;
-    }
-
-    @Override
-    public BalmRecipes getRecipes() {
-        return recipes;
     }
 
     @Override

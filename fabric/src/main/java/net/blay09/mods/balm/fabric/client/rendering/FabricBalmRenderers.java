@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated
 public record FabricBalmRenderers(NamespaceResolver namespaceResolver) implements BalmRenderers {
     @Override
     public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {

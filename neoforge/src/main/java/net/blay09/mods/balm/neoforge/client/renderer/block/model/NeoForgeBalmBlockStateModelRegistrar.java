@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.neoforge.client.renderer.block.model;
 
 import net.blay09.mods.balm.client.renderer.block.model.DeferredBlockStateModel;
-import net.blay09.mods.balm.client.renderer.block.model.AbstractBalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.block.model.internal.AbstractBalmBlockStateModelRegistrar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.resources.ResourceLocation;

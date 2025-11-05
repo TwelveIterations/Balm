@@ -11,8 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Function;
 
 /**
- * @deprecated Use {@link BalmParticleTypeRegistrar}
- *             via {@link net.blay09.mods.balm.api.Balm#particleTypes(String, java.util.function.Consumer)} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.api.Balm#particleTypes(String, java.util.function.Consumer)} instead.
  */
 @Deprecated
 public interface BalmParticles {

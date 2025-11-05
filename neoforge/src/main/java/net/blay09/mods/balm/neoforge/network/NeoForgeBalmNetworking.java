@@ -6,8 +6,6 @@ import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.network.ClientboundMessageRegistration;
 import net.blay09.mods.balm.api.network.MessageRegistration;
 import net.blay09.mods.balm.api.network.ServerboundMessageRegistration;
-import net.blay09.mods.balm.common.NamespaceResolver;
-import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -40,7 +38,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
-public record NeoForgeBalmNetworking(NamespaceResolver namespaceResolver) implements BalmNetworking {
+public record NeoForgeBalmNetworking() implements BalmNetworking {
 
     private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmNetworking.class);
     private static IPayloadContext replyContext;
@@ -122,24 +120,19 @@ public record NeoForgeBalmNetworking(NamespaceResolver namespaceResolver) implem
     @Override
     public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {
         final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
-        final var registrations = getActiveRegistrations();
+        final var registrations = getActiveRegistrations(type.id().getNamespace());
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 
     @Override
     public <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<ServerPlayer, T> handler) {
         final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
-        final var registrations = getActiveRegistrations();
+        final var registrations = getActiveRegistrations(type.id().getNamespace());
         registrations.playMessagesByType.put(type, messageRegistration);
     }
 
-    @Override
-    public BalmNetworking scoped(String modId) {
-        return new NeoForgeBalmNetworking(new StaticNamespaceResolver(modId));
-    }
-
-    private Registrations getActiveRegistrations() {
-        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
+    private Registrations getActiveRegistrations(String namespace) {
+        return ModBusEventRegisters.getRegistrations(namespace, Registrations.class);
     }
 
     public static class Registrations {

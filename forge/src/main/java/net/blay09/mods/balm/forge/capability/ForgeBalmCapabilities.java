@@ -4,7 +4,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.capability.CapabilityType;
-import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
@@ -30,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) implements BalmCapabilities {
+public record ForgeBalmCapabilities() implements BalmCapabilities {
     private static final Map<ResourceLocation, Capability<?>> backingTypes = new ConcurrentHashMap<>();
     private static final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
     private static final List<BlockEntityProviderRegistration<?, ?>> blockEntityProviders = new CopyOnWriteArrayList<>();
@@ -65,7 +64,7 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
 
     @Override
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
-        getActiveRegistrations().apiClasses.add(apiClass);
+        getRegistrations(identifier.getNamespace()).apiClasses.add(apiClass);
         final var backingType = backingTypes.get(identifier);
         if (backingType == null) {
             throw new IllegalStateException(
@@ -148,8 +147,8 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
         return type;
     }
 
-    private Registrations getActiveRegistrations() {
-        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
+    private Registrations getRegistrations(String namespace) {
+        return ModBusEventRegisters.getRegistrations(namespace, Registrations.class);
     }
 
     record BlockEntityCapabilityProvider(BlockEntity blockEntity, CapabilityType<Block, ?, ?> type,

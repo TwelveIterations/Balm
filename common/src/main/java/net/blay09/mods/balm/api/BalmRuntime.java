@@ -130,7 +130,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     }
 
     @Deprecated
-    BalmRecipes getRecipes();
+    default BalmRecipes getRecipes() {
+        return BalmRecipes.LEGACY;
+    }
 
     BalmModSupport getModSupport();
 
@@ -280,6 +282,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void items(String namespace, Consumer<BalmItemRegistrar> initializer);
 
     void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer);
+
+    @Deprecated
+    BalmRecipeTypeRegistrar recipeTypes(String namespace);
 
     void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer);
 

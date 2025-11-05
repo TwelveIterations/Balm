@@ -15,7 +15,6 @@ import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
@@ -32,7 +31,6 @@ import net.blay09.mods.balm.fabric.world.level.block.entity.FabricBalmBlockEntit
 import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.world.inventory.FabricBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
-import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.core.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
 import net.blay09.mods.balm.fabric.stats.FabricBalmCustomStatRegistrar;
@@ -40,6 +38,8 @@ import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
+import net.blay09.mods.balm.world.item.crafting.internal.BalmRecipeTypeRegistrarImpl;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 
 import java.util.function.Consumer;
@@ -55,7 +55,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmCapabilities capabilities = new FabricBalmCapabilities();
     private final BalmCommands commands = new FabricBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
-    private final BalmRecipes recipes = new FabricBalmRecipes();
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
     private final BalmPlatform platform = new FabricBalmPlatform();
     private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy()
@@ -106,11 +105,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmLootTables getLootTables() {
         return lootTables;
-    }
-
-    @Override
-    public BalmRecipes getRecipes() {
-        return recipes;
     }
 
     @Override

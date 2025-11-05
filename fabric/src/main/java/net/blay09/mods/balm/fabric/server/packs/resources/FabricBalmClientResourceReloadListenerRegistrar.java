@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.fabric.client.resources;
+package net.blay09.mods.balm.fabric.server.packs.resources;
 
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;

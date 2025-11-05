@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.forge.client.resources;
+package net.blay09.mods.balm.forge.server.packs.resources;
 
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.minecraft.client.Minecraft;

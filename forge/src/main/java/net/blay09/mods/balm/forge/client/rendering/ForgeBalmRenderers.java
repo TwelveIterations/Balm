@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated
 public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements BalmRenderers {
 
     @Override
@@ -84,7 +85,11 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
     }
 
     private Registrations getActiveRegistrations() {
-        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
+        return getRegistrations(namespaceResolver.getDefaultNamespace());
+    }
+
+    private Registrations getRegistrations(String namespace) {
+        return ModBusEventRegisters.getRegistrations(namespace, Registrations.class);
     }
 
     public record BlockRenderTypeRegistration(Supplier<Block> blockSupplier, ChunkSectionLayer renderType) {

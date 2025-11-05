@@ -13,7 +13,7 @@ public class BalmBiomeModifier implements BiomeModifier {
 
     @Override
     public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
-        ForgeBalmWorldGen worldGen = (ForgeBalmWorldGen) Balm.getWorldGen();
+        ForgeBalmWorldGen worldGen = (ForgeBalmWorldGen) Balm.biomeModifications();
         worldGen.modifyBiome(biome, phase, builder);
     }
 

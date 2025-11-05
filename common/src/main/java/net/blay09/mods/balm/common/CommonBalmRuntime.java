@@ -116,4 +116,10 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
         initializer.accept(new BalmDataComponentTypeRegistrarImpl(registrar(), namespace));
     }
 
+    @Override
+    @Deprecated
+    public BalmRecipeTypeRegistrar recipeTypes(String namespace) {
+        return new BalmRecipeTypeRegistrarImpl(registrar(), namespace);
+    }
+
 }

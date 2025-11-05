@@ -30,7 +30,7 @@ import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.client.particle.ForgeBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.chunk.ForgeBalmBlockRenderTypeRegistrar;
-import net.blay09.mods.balm.forge.client.resources.ForgeBalmClientResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -52,7 +52,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     @Deprecated
     private final BalmRenderers renderers = new ForgeBalmRenderers(legacyNamespaceResolver);
     @Deprecated
-    private final BalmModels models = new ForgeBalmModels(legacyNamespaceResolver);
+    private final BalmModels models = new ForgeBalmModels();
 
     public ForgeBalmClientRuntime() {
         ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.events()));

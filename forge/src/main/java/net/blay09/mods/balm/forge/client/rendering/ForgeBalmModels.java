@@ -2,8 +2,6 @@ package net.blay09.mods.balm.forge.client.rendering;
 
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
-import net.blay09.mods.balm.common.NamespaceResolver;
-import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.Minecraft;
@@ -22,11 +20,11 @@ import java.util.List;
 import java.util.Map;
 
 @Deprecated
-public record ForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
+public record ForgeBalmModels() implements BalmModels {
 
     @Override
     public DeferredObject<BlockStateModel> loadModel(ResourceLocation identifier) {
-        final var registrations = getActiveRegistrations();
+        final var registrations = getRegistrations(identifier.getNamespace());
         final var deferredModel = new DeferredObject<BlockStateModel>(identifier) {
             @Override
             public BlockStateModel resolve() {
@@ -44,13 +42,8 @@ public record ForgeBalmModels(NamespaceResolver namespaceResolver) implements Ba
         return deferredModel;
     }
 
-    private Registrations getActiveRegistrations() {
-        return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
-    }
-
-    @Override
-    public BalmModels scoped(String modId) {
-        return new ForgeBalmModels(new StaticNamespaceResolver(modId));
+    private Registrations getRegistrations(String namespace) {
+        return ModBusEventRegisters.getRegistrations(namespace, Registrations.class);
     }
 
     public static class Registrations implements ModBusEventRegister {

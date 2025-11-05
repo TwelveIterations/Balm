@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.client.renderer.block.model;
 
 import net.blay09.mods.balm.client.renderer.block.model.DeferredBlockStateModel;
-import net.blay09.mods.balm.client.renderer.block.model.AbstractBalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.block.model.internal.AbstractBalmBlockStateModelRegistrar;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
