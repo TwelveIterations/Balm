@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated
 public interface BalmRenderers {
     /**
      * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#modelLayers(String, java.util.function.Consumer)} instead.
@@ -56,7 +57,7 @@ public interface BalmRenderers {
     void registerBlockColorHandler(ResourceLocation id, BlockColor color, Supplier<Block[]> blocks);
 
     /**
-     * @deprecated No-op on NeoForge. Specify "render_type" in your model as a workaround.
+     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#blockRenderTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     void setBlockRenderType(Supplier<Block> block, ChunkSectionLayer chunkSectionLayer);
@@ -73,6 +74,7 @@ public interface BalmRenderers {
     @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 
+    @Deprecated
     default BalmRenderers scoped(String modId) {
         return this;
     }

@@ -13,6 +13,7 @@ import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegis
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
+import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +33,9 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     BalmModels getModels();
 
     @Deprecated
-    BalmKeyMappings getKeyMappings();
+    default BalmKeyMappings getKeyMappings() {
+        return BalmKeyMappings.LEGACY;
+    }
 
     void initializeMod(String modId, TLoadContext context, Runnable initializer);
 
@@ -41,6 +44,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         module.registerEvents(Balm.events());
         module.registerRenderers(getRenderers().scoped(modId));
         blockColors(modId, module::registerBlockColors);
+        blockRenderTypes(modId, module::registerBlockRenderTypes);
         blockEntityRenderers(modId, module::registerBlockEntityRenderers);
         entityRenderers(modId, module::registerEntityRenderers);
         particleProviders(modId, module::registerParticleProviders);
@@ -80,4 +84,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer);
 
     void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer);
+
+    void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer);
 }

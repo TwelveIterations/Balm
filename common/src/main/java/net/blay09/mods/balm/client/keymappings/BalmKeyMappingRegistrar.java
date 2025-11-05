@@ -10,5 +10,9 @@ public interface BalmKeyMappingRegistrar {
         return register(name, InputConstants.Type.KEYSYM, keyCode, category);
     }
 
-    KeyMapping register(String name, InputConstants.Type type, int keyCode, KeyMapping.Category category);
+    default KeyMapping register(String name, InputConstants.Type type, int keyCode, KeyMapping.Category category) {
+        return register(new KeyMapping(name, type, keyCode, category));
+    }
+
+    KeyMapping register(KeyMapping keyMapping);
 }

@@ -2,7 +2,6 @@ package net.blay09.mods.balm.fabric.client;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.EmptyLoadContext;
-import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
@@ -10,6 +9,7 @@ import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
@@ -18,13 +18,13 @@ import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.fabric.client.gui.screens.inventory.FabricBalmMenuScreenRegistrar;
-import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
 import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.entity.FabricBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.block.model.FabricBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.fabric.client.model.geom.FabricBalmModelLayerRegistrar;
 import net.blay09.mods.balm.fabric.client.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.particle.FabricBalmParticleProviderRegistrar;
+import net.blay09.mods.balm.fabric.client.renderer.chunk.FabricBalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
@@ -42,11 +42,13 @@ import java.util.function.Consumer;
 
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
 
+    @Deprecated
     private static final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> {
         throw new UnsupportedOperationException("No default namespace available");
     });
+    @Deprecated
     private final BalmRenderers renderers = new FabricBalmRenderers(legacyNamespaceResolver);
-    private final BalmKeyMappings keyMappings = new FabricBalmKeyMappings();
+    @Deprecated
     private final BalmModels models = new FabricBalmModels();
 
     public FabricBalmClientRuntime() {
@@ -54,16 +56,13 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     }
 
     @Override
+    @Deprecated
     public BalmRenderers getRenderers() {
         return renderers;
     }
 
     @Override
-    public BalmKeyMappings getKeyMappings() {
-        return keyMappings;
-    }
-
-    @Override
+    @Deprecated
     public BalmModels getModels() {
         return models;
     }
@@ -130,6 +129,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     @Override
     public void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer) {
         initializer.accept(FabricBalmParticleProviderRegistrar.INSTANCE);
+    }
+
+    @Override
+    public void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer) {
+        initializer.accept(FabricBalmBlockRenderTypeRegistrar.INSTANCE);
     }
 
 }
