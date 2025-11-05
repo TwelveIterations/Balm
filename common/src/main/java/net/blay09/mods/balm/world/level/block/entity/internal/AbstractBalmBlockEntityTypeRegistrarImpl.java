@@ -29,6 +29,11 @@ public abstract class AbstractBalmBlockEntityTypeRegistrarImpl implements BalmBl
 
     @Override
     public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, BlockLike... blocks) {
+        return register(name, constructor, Set.of(blocks));
+    }
+
+    @Override
+    public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Iterable<BlockLike> blocks) {
         return register(name, constructor, () -> {
             final var resolvedBlocks = new HashSet<Block>();
             for (final var blockLike : blocks) {
@@ -36,11 +41,6 @@ public abstract class AbstractBalmBlockEntityTypeRegistrarImpl implements BalmBl
             }
             return resolvedBlocks;
         });
-    }
-
-    @Override
-    public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, DiscriminatedBlocks<?> blocks) {
-        return register(name, constructor, () -> Set.copyOf(blocks.getAll()));
     }
 
     @Override
