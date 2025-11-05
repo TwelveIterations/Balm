@@ -37,9 +37,6 @@ public interface BalmWorldGen {
      */
     @Deprecated
     default void addFeatureToBiomes(BiomePredicate biomePredicate, GenerationStep.Decoration step, ResourceLocation placedFeatureIdentifier) {
-        modifyBiome(placedFeatureIdentifier, biomePredicate, (biome, builder) -> {
-            final var location = biome.unwrapKey().map(ResourceKey::location).orElse(null);
-            builder.addFeature(step, builder.placedFeatures().getOrThrow(ResourceKey.create(Registries.PLACED_FEATURE, placedFeatureIdentifier)));
-        });
+        modifyBiome(placedFeatureIdentifier, biomePredicate, (biome, builder) -> builder.addFeature(step, ResourceKey.create(Registries.PLACED_FEATURE, placedFeatureIdentifier)));
     }
 }

@@ -18,7 +18,6 @@ import net.minecraftforge.common.world.ModifiableBiomeInfo;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,8 +64,7 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
 
     public void modifyBiome(Holder<Biome> biome, net.minecraftforge.common.world.BiomeModifier.Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == net.minecraftforge.common.world.BiomeModifier.Phase.ADD) {
-            final var registryAccess = ServerLifecycleHooks.getCurrentServer().registryAccess();
-            final var modificationBuilder = new ForgeBiomeModificationBuilder(registryAccess, builder);
+            final var modificationBuilder = new ForgeBiomeModificationBuilder(builder);
             for (var biomeModifierPair : biomeModifiers) {
                 if (biomeModifierPair.getFirst().test(biome)) {
                     biomeModifierPair.getSecond().modifyBiome(biome, modificationBuilder);

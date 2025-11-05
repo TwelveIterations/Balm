@@ -64,8 +64,7 @@ public class NeoForgeBalmWorldGen implements BalmWorldGen {
 
     public void modifyBiome(Holder<Biome> biome, net.neoforged.neoforge.common.world.BiomeModifier.Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == net.neoforged.neoforge.common.world.BiomeModifier.Phase.ADD) {
-            final var registryAccess = ServerLifecycleHooks.getCurrentServer().registryAccess();
-            final var modificationBuilder = new NeoForgeBiomeModificationBuilder(registryAccess, builder);
+            final var modificationBuilder = new NeoForgeBiomeModificationBuilder(builder);
             for (var biomeModifierPair : biomeModifiers) {
                 if (biomeModifierPair.getFirst().test(biome)) {
                     biomeModifierPair.getSecond().modifyBiome(biome, modificationBuilder);
