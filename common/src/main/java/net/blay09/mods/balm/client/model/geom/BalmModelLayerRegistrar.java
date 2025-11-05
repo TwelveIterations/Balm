@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.client.renderer.model;
+package net.blay09.mods.balm.client.model.geom;
 
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;

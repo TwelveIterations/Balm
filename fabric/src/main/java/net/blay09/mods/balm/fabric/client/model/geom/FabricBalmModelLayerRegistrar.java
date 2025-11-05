@@ -1,6 +1,6 @@
-package net.blay09.mods.balm.fabric.client.renderer.model;
+package net.blay09.mods.balm.fabric.client.model.geom;
 
-import net.blay09.mods.balm.client.renderer.model.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;

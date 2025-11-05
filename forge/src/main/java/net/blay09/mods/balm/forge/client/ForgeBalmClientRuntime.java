@@ -7,7 +7,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
-import net.blay09.mods.balm.client.renderer.model.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
@@ -21,7 +21,7 @@ import net.blay09.mods.balm.forge.client.gui.screens.inventory.ForgeBalmMenuScre
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.renderer.block.model.ForgeBalmBlockStateModelRegistrar;
-import net.blay09.mods.balm.forge.client.renderer.model.ForgeBalmModelLayerRegistrar;
+import net.blay09.mods.balm.forge.client.model.geom.ForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.client.color.block.ForgeBalmBlockColorRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.entity.ForgeBalmEntityRendererRegistrar;

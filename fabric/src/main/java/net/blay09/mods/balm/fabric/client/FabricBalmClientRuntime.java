@@ -12,7 +12,7 @@ import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappingRegist
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
-import net.blay09.mods.balm.client.renderer.model.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -22,7 +22,7 @@ import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
 import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.entity.FabricBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.block.model.FabricBalmBlockStateModelRegistrar;
-import net.blay09.mods.balm.fabric.client.renderer.model.FabricBalmModelLayerRegistrar;
+import net.blay09.mods.balm.fabric.client.model.geom.FabricBalmModelLayerRegistrar;
 import net.blay09.mods.balm.fabric.client.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
