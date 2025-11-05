@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.model.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
@@ -19,6 +20,7 @@ import net.blay09.mods.balm.forge.client.gui.screens.inventory.ForgeBalmMenuScre
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.renderer.block.model.ForgeBalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.forge.client.renderer.model.ForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.entity.ForgeBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
@@ -101,5 +103,10 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     @Override
     public void keyMappings(String namespace, Consumer<BalmKeyMappingRegistrar> initializer) {
         RegisterKeyMappingsEvent.BUS.addListener(event -> initializer.accept(new ForgeBalmKeyMappingRegistrar(event)));
+    }
+
+    @Override
+    public void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer) {
+        EntityRenderersEvent.RegisterLayerDefinitions.BUS.addListener(event -> initializer.accept(new ForgeBalmModelLayerRegistrar(event)));
     }
 }

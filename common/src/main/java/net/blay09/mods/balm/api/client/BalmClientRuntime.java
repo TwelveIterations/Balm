@@ -10,6 +10,7 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.keymappings.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.model.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +26,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         return BalmScreens.LEGACY;
     }
 
+    @Deprecated
     BalmModels getModels();
 
     @Deprecated
@@ -36,6 +38,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         final var modId = module.getId().getNamespace();
         module.registerEvents(Balm.events());
         module.registerRenderers(getRenderers().scoped(modId));
+        modelLayers(modId, module::registerModelLayers);
         blockEntityRenderers(modId, module::registerBlockEntityRenderers);
         entityRenderers(modId, module::registerEntityRenderers);
 
@@ -68,4 +71,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer);
 
     void keyMappings(String namespace, Consumer<BalmKeyMappingRegistrar> initializer);
+
+    void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer);
 }

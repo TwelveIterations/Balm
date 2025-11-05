@@ -11,6 +11,7 @@ import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappingRegist
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.client.renderer.model.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
@@ -20,6 +21,7 @@ import net.blay09.mods.balm.fabric.client.keymappings.FabricBalmKeyMappings;
 import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.entity.FabricBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.block.model.FabricBalmBlockStateModelRegistrar;
+import net.blay09.mods.balm.fabric.client.renderer.model.FabricBalmModelLayerRegistrar;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
@@ -110,6 +112,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     @Override
     public void keyMappings(String namespace, Consumer<BalmKeyMappingRegistrar> initializer) {
         initializer.accept(FabricBalmKeyMappingRegistrar.INSTANCE);
+    }
+
+    @Override
+    public void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer) {
+        initializer.accept(FabricBalmModelLayerRegistrar.INSTANCE);
     }
 
 }

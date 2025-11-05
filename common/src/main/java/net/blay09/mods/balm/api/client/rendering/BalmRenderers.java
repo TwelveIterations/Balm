@@ -24,13 +24,17 @@ import java.util.function.Supplier;
 
 public interface BalmRenderers {
     /**
-     * @deprecated Use {@link #registerModel(ResourceLocation, String, Supplier)} with layer <code>main</code> instead.
+     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#modelLayers(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     default ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
         return registerModel(location, "main", layerDefinition);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#modelLayers(String, java.util.function.Consumer)} instead.
+     */
+    @Deprecated
     ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition);
 
     /**
