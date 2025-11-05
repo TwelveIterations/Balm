@@ -4,56 +4,59 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
+import java.util.Map;
 import java.util.function.*;
 
-public interface BalmDiscriminatedBlockRegistration<T> {
-    BalmDiscriminatedBlockRegistration<T> withNullDiscriminator();
-
+public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockRegistration> {
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems() {
-        return forEach(it -> it.withDefaultItem());
+        forEach((discriminator, it) -> it.withDefaultItem());
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems(Function<Item.Properties, Item.Properties> propertiesBuilder) {
-        return forEach(it -> it.withItem(BlockItem::new, propertiesBuilder));
+        forEach((discriminator, it) -> it.withItem(BlockItem::new, propertiesBuilder));
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems(BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
-        return forEach((discriminator, it) -> it.withItem(BlockItem::new, propertiesBuilder.apply(discriminator, new Item.Properties())));
+        forEach((discriminator, it) -> it.withItem(BlockItem::new, propertiesBuilder.apply(discriminator, new Item.Properties())));
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems(Supplier<Item.Properties> propertiesSupplier) {
-        return forEach(it -> it.withItem(BlockItem::new, propertiesSupplier));
+        forEach((discriminator, it) -> it.withItem(BlockItem::new, propertiesSupplier));
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems(Item.Properties properties) {
-        return forEach(it -> it.withItem(BlockItem::new, properties));
+        forEach((discriminator, it) -> it.withItem(BlockItem::new, properties));
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor) {
-        return forEach(it -> it.withItem(constructor, Function.identity()));
+        forEach((discriminator, it) -> it.withItem(constructor, Function.identity()));
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
-        return forEach(it -> it.withItem(constructor, propertiesBuilder.apply(new Item.Properties())));
+        forEach((discriminator, it) -> it.withItem(constructor, propertiesBuilder.apply(new Item.Properties())));
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
-        return forEach((discrimination, it) -> it.withItem(constructor, () -> propertiesBuilder.apply(discrimination, new Item.Properties())));
+        forEach((discrimination, it) -> it.withItem(constructor, () -> propertiesBuilder.apply(discrimination, new Item.Properties())));
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, Item.Properties properties) {
-        return forEach(it -> it.withItem(constructor, () -> properties));
+        forEach((discriminator, it) -> it.withItem(constructor, () -> properties));
+        return this;
     }
 
     default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, Supplier<Item.Properties> properties) {
-        return forEach(it -> it.withItem(constructor, properties));
+        forEach((discriminator, it) -> it.withItem(constructor, properties));
+        return this;
     }
-
-    default BalmDiscriminatedBlockRegistration<T> forEach(Consumer<BalmBlockRegistration> consumer) {
-        return forEach((discriminator, it) -> consumer.accept(it));
-    }
-
-    BalmDiscriminatedBlockRegistration<T> forEach(BiConsumer<T, BalmBlockRegistration> consumer);
 
     DiscriminatedBlocks<T> asDiscriminatedBlocks();
 }
