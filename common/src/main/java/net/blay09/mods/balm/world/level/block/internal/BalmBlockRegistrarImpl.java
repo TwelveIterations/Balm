@@ -12,10 +12,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.*;
-import java.util.stream.Collectors;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
@@ -48,20 +48,14 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     }
 
     private static class DiscriminatedBlocksImpl<T> extends HashMap<T, DeferredBlock> implements DiscriminatedBlocks<T> {
-        private final Map<T, DeferredBlock> map;
-
-        private DiscriminatedBlocksImpl(Map<T, DeferredBlock> map) {
-            this.map = map;
-        }
-
         @Override
         public Stream<Entry<T, DeferredBlock>> filterNonNullDiscriminatorEntries() {
-            return map.entrySet().stream().filter(it -> it.getKey() != null);
+            return entrySet().stream().filter(it -> it.getKey() != null);
         }
 
         @Override
         public Stream<DeferredBlock> filterNonNullDiscriminators() {
-            return map.entrySet().stream().filter(it -> it.getKey() != null).map(Entry::getValue);
+            return entrySet().stream().filter(it -> it.getKey() != null).map(Entry::getValue);
         }
     }
 
@@ -69,7 +63,9 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
 
         @Override
         public DiscriminatedBlocks<T> asDiscriminatedBlocks() {
-            return new DiscriminatedBlocksImpl<>(entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, it -> it.getValue().asDeferredBlock())));
+            final var map = new DiscriminatedBlocksImpl<T>();
+            forEach((key, registration) -> map.put(key, registration.asDeferredBlock()));
+            return map;
         }
 
     }
