@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
@@ -186,5 +187,8 @@ public interface BalmModule {
     }
 
     default void registerResourceConditions(BalmResourceConditionRegistrar resourceConditions) {
+    }
+
+    default void registerReloadListeners(BalmResourceReloadListenerRegistrar resourceReloadListeners) {
     }
 }

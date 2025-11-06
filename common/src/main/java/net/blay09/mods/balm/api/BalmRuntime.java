@@ -238,6 +238,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerParticles(getParticles());
         particleTypes(modId, module::registerParticleTypes);
 
+        resourceReloadListeners(modId, module::registerReloadListeners);
+
         module.registerEvents(getEvents());
         module.initialize();
     }
