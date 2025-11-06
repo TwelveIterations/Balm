@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
@@ -32,7 +33,6 @@ import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
@@ -157,13 +157,13 @@ public interface BalmModule {
     }
 
     /**
-     * @deprecated Use {@link #registerDataComponentTypes(BalmRegistrar.Scoped)} instead.
+     * @deprecated Use {@link #registerDataComponentTypes(BalmDataComponentTypeRegistrar)} instead.
      */
     @Deprecated
     default void registerComponents(BalmComponents components) {
     }
 
-    default void registerDataComponentTypes(BalmRegistrar.Scoped<DataComponentType<?>> dataComponentTypes) {
+    default void registerDataComponentTypes(BalmDataComponentTypeRegistrar dataComponentTypes) {
     }
 
     /**

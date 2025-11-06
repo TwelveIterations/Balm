@@ -202,7 +202,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerAdditional(registrar());
 
         module.registerComponents(getComponents());
-        module.registerDataComponentTypes(registrar().scoped(Registries.DATA_COMPONENT_TYPE, modId));
+        Balm.dataComponentTypes(modId, module::registerDataComponentTypes);
 
         module.registerBlocks(getBlocks().scoped(modId));
         blocks(modId, module::registerBlocks);
