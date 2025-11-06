@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.fabric.core.particles.FabricBalmParticleTypeRegistrar;
+import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.fabric.world.entity.FabricBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
@@ -16,7 +17,6 @@ import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
@@ -33,8 +33,7 @@ import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.world.inventory.FabricBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.core.FabricBalmRegistrar;
-import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
-import net.blay09.mods.balm.api.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.fabric.stats.FabricBalmCustomStatRegistrar;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabRegistrar;
@@ -62,7 +61,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
             .buildLazily();
-    private final BalmResources resources = new FabricBalmResources();
 
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
@@ -123,11 +121,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmPermissions getPermissions() {
         return permissions.get();
-    }
-
-    @Override
-    public BalmResources getResources() {
-        return resources;
     }
 
     @Override
@@ -211,6 +204,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
 
     @Override
     public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
-        // TODO
+        initializer.accept(new FabricBalmResourceConditionRegistrar(namespace));
     }
 }

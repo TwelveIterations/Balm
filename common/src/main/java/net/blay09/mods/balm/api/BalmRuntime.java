@@ -24,7 +24,7 @@ import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
@@ -194,7 +194,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     default void initializeModule(BalmModule module) {
         final var modId = module.getId().getNamespace();
         module.registerConfig(getConfig());
+
         module.registerResources(getResources());
+        resourceConditions(modId, module::registerResourceConditions);
 
         module.registerAdditional(getRegistries());
         module.registerAdditional(registrar());
@@ -248,7 +250,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void registerModule(BalmModule module);
 
-    BalmResources getResources();
+    @Deprecated
+    default BalmResources getResources() {
+        return BalmResources.LEGACY;
+    }
 
     @Deprecated
     default BalmEnvironment getEnvironment() {

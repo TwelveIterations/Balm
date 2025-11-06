@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
+import net.blay09.mods.balm.neoforge.server.packs.resources.NeoForgeBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
@@ -13,7 +14,6 @@ import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
@@ -33,12 +33,11 @@ import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.core.particles.NeoForgeBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
 import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
-import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
 import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.neoforge.server.packs.resources.NeoForgeBalmResourceReloadListenerRegistrar;
-import net.blay09.mods.balm.api.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.neoforged.neoforge.common.NeoForge;
@@ -58,7 +57,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
-    private final BalmResources resources = new NeoForgeBalmResources();
     private final BalmRegistrar registrar = new NeoForgeBalmRegistrar();
     private final BalmPlatform platform = new NeoForgeBalmPlatform();
 
@@ -125,11 +123,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmPermissions getPermissions() {
         return permissions;
-    }
-
-    @Override
-    public BalmResources getResources() {
-        return resources;
     }
 
     @Override
@@ -211,6 +204,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     @Override
     public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
-        // TODO
+        initializer.accept(new NeoForgeBalmResourceConditionRegistrar(namespace));
     }
 }
