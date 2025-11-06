@@ -34,6 +34,7 @@ import net.blay09.mods.balm.fabric.world.inventory.FabricBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.core.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
+import net.blay09.mods.balm.api.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.fabric.stats.FabricBalmCustomStatRegistrar;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabRegistrar;
@@ -206,5 +207,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
         initializer.accept(new FabricBalmResourceReloadListenerRegistrar(namespace));
+    }
+
+    @Override
+    public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
+        // TODO
     }
 }

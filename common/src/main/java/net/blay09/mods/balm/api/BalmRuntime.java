@@ -24,6 +24,7 @@ import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
+import net.blay09.mods.balm.api.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
@@ -312,6 +313,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmPlatform platform();
 
     void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer);
+
+    void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer);
 
     /**
      * @deprecated Use {@link Balm#particleTypes(String, Consumer)} instead.

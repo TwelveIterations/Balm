@@ -37,6 +37,7 @@ import net.blay09.mods.balm.forge.stats.ForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.api.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
@@ -207,5 +208,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
         AddReloadListenerEvent.BUS.addListener((AddReloadListenerEvent event) -> initializer.accept(new ForgeBalmResourceReloadListenerRegistrar(event)));
+    }
+
+    @Override
+    public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
+        // TODO
     }
 }

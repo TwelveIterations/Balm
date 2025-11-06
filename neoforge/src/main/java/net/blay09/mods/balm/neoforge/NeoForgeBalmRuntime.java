@@ -38,6 +38,7 @@ import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.neoforge.server.packs.resources.NeoForgeBalmResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.api.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.neoforged.neoforge.common.NeoForge;
@@ -206,5 +207,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
         NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) ->
                 initializer.accept(new NeoForgeBalmResourceReloadListenerRegistrar(namespace, event)));
+    }
+
+    @Override
+    public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
+        // TODO
     }
 }
