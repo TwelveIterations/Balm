@@ -2,6 +2,7 @@ package net.blay09.mods.balm.client;
 
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.client.BalmClientRuntime;
+import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
@@ -125,5 +126,9 @@ public class BalmClientRegistrars {
      */
     public void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
         runtime.resourceReloadListeners(namespace, initializer);
+    }
+
+    public void registerModule(BalmClientModule module) {
+        runtime.registerModule(this, module);
     }
 }

@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
@@ -109,10 +110,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public void initializeMod(String modId, ForgeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, ForgeLoadContext context, Consumer<BalmRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.run();
+        initializer.accept(new BalmRegistrars(this));
 
         final var modEventBus = context.modBusGroup();
         DeferredRegisters.register(modId, modEventBus);

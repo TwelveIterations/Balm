@@ -75,7 +75,12 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
 
     void onRuntimeAvailable(Runnable callback);
 
-    void registerModule(BalmClientModule module);
+    @Deprecated
+    default void registerModule(BalmClientModule module) {
+        registerModule(new BalmClientRegistrars(this), module);
+    }
+
+    void registerModule(BalmClientRegistrars registrars, BalmClientModule module);
 
     @Deprecated
     void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);

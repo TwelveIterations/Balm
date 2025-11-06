@@ -60,9 +60,11 @@ public class Balm {
      * initializer or entrypoint. Some things may not work as expected if you try to register a module before
      * <code>initializeMod</code> has been called.
      *
+     * @deprecated Use {@link BalmRegistrars#registerModule(BalmModule)} instead.
      * @param module the module to register for an already initialized mod.
      * @see #initializeMod(String, BalmRuntimeLoadContext, BalmModule)
      */
+    @Deprecated
     public static void registerModule(BalmModule module) {
         runtime.registerModule(module);
     }
@@ -72,9 +74,11 @@ public class Balm {
      * <p>
      * Mods building on Balm should use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
      *
+     * @deprecated Use {@link net.blay09.mods.balm.Balmstrap#onRuntimeAvailable(Runnable)} instead if you are a third-party mod that doesn't use Balm.
      * @param callback the callback to run when Balm is ready and its methods can be safely accessed.
      * @see #initializeMod(String, BalmRuntimeLoadContext, Runnable)
      */
+    @Deprecated
     public static void onRuntimeAvailable(Runnable callback) {
         runtime.onRuntimeAvailable(callback);
     }
@@ -123,7 +127,7 @@ public class Balm {
      * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule...)
      */
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {
-        runtime.initializeMod(modId, context, (registrars) -> registerModule(module));
+        runtime.initializeMod(modId, context, (registrars) -> registrars.registerModule(module));
     }
 
     /**
@@ -140,7 +144,7 @@ public class Balm {
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule... modules) {
         runtime.initializeMod(modId, context, (registrars) -> {
             for (final var module : modules) {
-                registerModule(module);
+                registrars.registerModule(module);
             }
         });
     }

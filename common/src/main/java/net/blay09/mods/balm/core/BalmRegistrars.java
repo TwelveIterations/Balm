@@ -2,6 +2,7 @@ package net.blay09.mods.balm.core;
 
 import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
@@ -153,7 +154,7 @@ public class BalmRegistrars {
     }
 
     /**
-     * Provides a generic registrar that can be used to register entries to any registry. Consider using a scoped registar instead.
+     * Provides a generic registrar that can be used to register entries to any registry. Consider using a scoped registrar instead.
      *
      * @return a {@link BalmRegistrar} that can be used to register entries to any registry.
      * @see BalmRegistrars#registrar(ResourceKey, String)
@@ -196,5 +197,9 @@ public class BalmRegistrars {
      */
     public <T> void registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace, Consumer<BalmRegistrar.Scoped<T>> initializer) {
         initializer.accept(runtime.registrar(registryKey, namespace));
+    }
+
+    public void registerModule(BalmModule module) {
+        runtime.registerModule(this, module);
     }
 }

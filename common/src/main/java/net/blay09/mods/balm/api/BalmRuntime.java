@@ -252,7 +252,12 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void onRuntimeAvailable(Runnable callback);
 
-    void registerModule(BalmModule module);
+    @Deprecated
+    default void registerModule(BalmModule module) {
+        registerModule(new BalmRegistrars(this), module);
+    }
+
+    void registerModule(BalmRegistrars registrars, BalmModule module);
 
     @Deprecated
     default BalmResources getResources() {
