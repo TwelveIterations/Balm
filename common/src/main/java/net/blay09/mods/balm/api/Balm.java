@@ -463,7 +463,7 @@ public class Balm {
     }
 
     /**
-     * Provides access to mod loader related functions, such as checking if a mod is loaded.
+     * Provides access to mod loader related functions, such as checking if a mod is loaded or accessing jar contents.
      *
      * @return implementation of {@link BalmPlatform} for the mod loader Balm is running on.
      */
