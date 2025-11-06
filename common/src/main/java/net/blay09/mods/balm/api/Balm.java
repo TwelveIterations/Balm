@@ -320,10 +320,9 @@ public class Balm {
     }
 
     /**
-     * Provides access to mod jar file contents, resource load conditions, and resource reload listeners.
-     *
-     * @return implementation of {@link BalmResources} for the mod loader Balm is running on.
+     * @deprecated Use {{@link #resourceConditions(String, Consumer)}} instead.
      */
+    @Deprecated
     public static BalmResources resources() {
         return runtime.getResources();
     }
