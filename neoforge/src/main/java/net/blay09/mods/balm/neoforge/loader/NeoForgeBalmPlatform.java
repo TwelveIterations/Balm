@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.loader.ModInfo;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeModResource;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.MinecraftServer;
@@ -26,6 +27,11 @@ public class NeoForgeBalmPlatform implements BalmPlatform {
     @Override
     public String getModName(String modId) {
         return ModList.get().getModContainerById(modId).map(it -> it.getModInfo().getDisplayName()).orElse(modId);
+    }
+
+    @Override
+    public Optional<ModInfo> getModInfo(String modId) {
+        return ModList.get().getModContainerById(modId).map(NeoForgeModInfo::new);
     }
 
     @Override

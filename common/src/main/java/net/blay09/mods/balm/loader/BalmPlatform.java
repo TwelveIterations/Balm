@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface BalmPlatform {
     boolean isModLoaded(String modId);
 
+    Optional<ModInfo> getModInfo(String modId);
+
     String getModName(String modId);
 
     String name();

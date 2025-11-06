@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.resources.PathModResource;
 import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.loader.ModInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +57,11 @@ public class FabricBalmPlatform implements BalmPlatform {
     @Override
     public String getModName(String modId) {
         return FabricLoader.getInstance().getModContainer(modId).map(it -> it.getMetadata().getName()).orElse(modId);
+    }
+
+    @Override
+    public Optional<ModInfo> getModInfo(String modId) {
+        return FabricLoader.getInstance().getModContainer(modId).map(FabricModInfo::new);
     }
 
     @Override

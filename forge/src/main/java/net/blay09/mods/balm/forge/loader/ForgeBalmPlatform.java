@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.resources.PathModResource;
 import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.loader.ModInfo;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.ModList;
@@ -28,6 +29,11 @@ public class ForgeBalmPlatform implements BalmPlatform {
     @Override
     public String getModName(String modId) {
         return ModList.get().getModContainerById(modId).map(it -> it.getModInfo().getDisplayName()).orElse(modId);
+    }
+
+    @Override
+    public Optional<ModInfo> getModInfo(String modId) {
+        return ModList.get().getModContainerById(modId).map(ForgeModInfo::new);
     }
 
     @Override
