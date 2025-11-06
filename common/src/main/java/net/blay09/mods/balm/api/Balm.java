@@ -8,15 +8,12 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
-import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.ModProxy;
@@ -26,15 +23,18 @@ import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
-import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
-import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.api.sound.BalmSounds;
-import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
+import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
@@ -53,6 +53,17 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Provides access to common registry functions as well as various loader-specific utilities.
+ * <p>
+ * To initialize your mod with Balm, use {@link #initializeMod(String, BalmRuntimeLoadContext, BalmModule)} or its overloads,
+ * passing either an implementation of {@link BalmModule} or a {@link Runnable}.
+ * <p>
+ * If you are using client-side features of Balm, you must also initialize the client-side runtime
+ * using {@link net.blay09.mods.balm.api.client.BalmClient#initializeMod(String, BalmRuntimeLoadContext, net.blay09.mods.balm.api.client.module.BalmClientModule)} or its overloads.
+ *
+ * @see net.blay09.mods.balm.api.client.BalmClient
+ */
 public class Balm {
     private static final BalmRuntime<BalmRuntimeLoadContext> runtime = BalmRuntimeSpi.create();
 
@@ -204,6 +215,7 @@ public class Balm {
 
     /**
      * Provides access to config-related functions such as registering and retrieving configs.
+     *
      * @return implementation of {@link BalmConfig} for the mod loader Balm is running on.
      */
     public static BalmConfig config() {
@@ -212,6 +224,7 @@ public class Balm {
 
     /**
      * Provides access to networking-related functions such as registering and sending packets.
+     *
      * @return implementation of {@link BalmNetworking} for the mod loader Balm is running on.
      */
     public static BalmNetworking networking() {
@@ -220,6 +233,7 @@ public class Balm {
 
     /**
      * Provides access to registering biome modifiers, allowing you to add features to existing biomes.
+     *
      * @return implementation of {@link BalmWorldGen} for the mod loader Balm is running on.
      */
     public static BalmWorldGen biomeModifications() {
@@ -248,6 +262,7 @@ public class Balm {
 
     /**
      * Provides access to mod loader-specific utilities and hooks.
+     *
      * @return implementation of {@link BalmHooks} for the mod loader Balm is running on.
      */
     public static BalmHooks hooks() {
@@ -276,6 +291,7 @@ public class Balm {
 
     /**
      * Provides access to capabilities, which are logic providers that can be attached to block entities.
+     *
      * @return implementation of {@link BalmCapabilities} for the mod loader Balm is running on.
      */
     public static BalmCapabilities capabilities() {
@@ -284,6 +300,7 @@ public class Balm {
 
     /**
      * Provides access to command registration.
+     *
      * @return implementation of {@link BalmCommands} for the mod loader Balm is running on.
      */
     public static BalmCommands commands() {
@@ -292,6 +309,7 @@ public class Balm {
 
     /**
      * Provides access to registering loot modifiers.
+     *
      * @return implementation of {@link BalmLootTables} for the mod loader Balm is running on.
      */
     public static BalmLootTables lootModifiers() {
@@ -688,8 +706,8 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #networking()} instead.
      * @see #networking()
+     * @deprecated Use {@link #networking()} instead.
      */
     @Deprecated
     public static BalmNetworking getNetworking() {
@@ -697,9 +715,9 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #biomeModifications()} or {@link #registrar(ResourceKey, String)} instead.
      * @see #biomeModifications()
      * @see #registrar(ResourceKey, String)
+     * @deprecated Use {@link #biomeModifications()} or {@link #registrar(ResourceKey, String)} instead.
      */
     @Deprecated
     public static BalmWorldGen getWorldGen() {
@@ -707,8 +725,8 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #events()} instead.
      * @see #events()
+     * @deprecated Use {@link #events()} instead.
      */
     @Deprecated
     public static BalmEvents getEvents() {
@@ -716,8 +734,8 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #safeClientAccess()} instead.
      * @see #safeClientAccess()
+     * @deprecated Use {@link #safeClientAccess()} instead.
      */
     @Deprecated
     public static BalmProxy getProxy() {

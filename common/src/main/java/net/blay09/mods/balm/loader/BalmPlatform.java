@@ -32,6 +32,7 @@ public interface BalmPlatform {
     /**
      * @deprecated Use {@link #getModInfo(String)} and {@link ModInfo#name()} instead.
      */
+    @Deprecated
     default String getModName(String modId) {
         return getModInfo(modId).map(ModInfo::name).orElse(modId);
     }

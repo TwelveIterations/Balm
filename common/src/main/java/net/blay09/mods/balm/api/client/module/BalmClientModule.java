@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.api.client.module;
 
+import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
+import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
@@ -17,7 +19,16 @@ import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * This interface provides an easy and structured way of interacting with Balm on the client side.
+ * <p>
+ * Once a module is registered using {@link net.blay09.mods.balm.api.client.BalmClient#initializeMod(String, BalmRuntimeLoadContext, BalmClientModule)}, its <code>register{...}</code> methods will be called automatically.
+ */
 public interface BalmClientModule {
+    /**
+     * Should return a unique identifier for this module, e.g. <code>yourmod:client</code>. The namespace must be your mod id.
+     * @return a unique identifier for this module.
+     */
     ResourceLocation getId();
 
     default void registerEvents(BalmEvents events) {

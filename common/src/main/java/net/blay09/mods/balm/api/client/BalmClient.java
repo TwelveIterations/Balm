@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
@@ -23,6 +24,16 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Consumer;
 
+/**
+ * Provides access to common registry functions as well as various loader-specific utilities.
+ * <p>
+ * To initialize your mod with Balm, use {@link #initializeMod(String, BalmRuntimeLoadContext, BalmClientModule)} or its overloads,
+ * passing either an implementation of {@link BalmClientModule} or a {@link Runnable}.
+ * <p>
+ * You must also initialize the common runtime using {@link net.blay09.mods.balm.api.Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)} or its overloads.
+ *
+ * @see net.blay09.mods.balm.api.Balm
+ */
 public class BalmClient {
     private static final BalmClientRuntime<BalmRuntimeLoadContext> runtime = BalmClientRuntimeSpi.create();
 

@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.module;
 
 import net.blay09.mods.balm.api.BalmRegistries;
+import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
@@ -8,26 +9,26 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
-import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
-import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
-import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
-import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
@@ -36,7 +37,16 @@ import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistra
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
+/**
+ * This interface provides an easy and structured way of interacting with Balm.
+ * <p>
+ * Once a module is registered using {@link net.blay09.mods.balm.api.Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)}, its <code>register{...}</code> methods will be called automatically.
+ */
 public interface BalmModule {
+    /**
+     * Should return a unique identifier for this module, e.g. <code>yourmod:common</code>. The namespace must be your mod id.
+     * @return a unique identifier for this module.
+     */
     ResourceLocation getId();
 
     /**
