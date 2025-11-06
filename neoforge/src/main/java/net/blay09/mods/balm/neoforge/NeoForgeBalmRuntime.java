@@ -192,11 +192,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    public BalmCustomStatRegistrar customStats(String namespace) {
-        return new NeoForgeBalmCustomStatRegistrar(registrar(), namespace);
-    }
-
-    @Override
     public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
         NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) ->
                 initializer.accept(new NeoForgeBalmResourceReloadListenerRegistrar(namespace, event)));

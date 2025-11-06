@@ -13,8 +13,8 @@ public class FabricBalmCustomStatRegistrar extends AbstractBalmCustomStatRegistr
     }
 
     @Override
-    public ResourceLocation register(String name, StatFormatter formatter) {
-        final var stat = super.register(name, formatter);
+    public ResourceLocation register(ResourceLocation statIdentifier, StatFormatter formatter) {
+        final var stat = super.register(statIdentifier, formatter);
         Stats.CUSTOM.get(stat, formatter);
         return stat;
     }

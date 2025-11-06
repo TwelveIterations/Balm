@@ -1,13 +1,11 @@
 package net.blay09.mods.balm.stats.internal;
 
-import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
-
-import java.util.function.Function;
 
 public abstract class AbstractBalmCustomStatRegistrarImpl implements BalmCustomStatRegistrar {
     private final BalmRegistrar registrar;
@@ -19,11 +17,16 @@ public abstract class AbstractBalmCustomStatRegistrarImpl implements BalmCustomS
     }
 
     @Override
-    public ResourceLocation register(String name, StatFormatter formatter) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
-        final var resourceKey = ResourceKey.create(Registries.CUSTOM_STAT, resourceLocation);
-        // Importantly, the ResourceLocation we register must be identical (not just equal) to the one that we return
-        registrar.register(resourceKey, () -> resourceLocation);
-        return resourceLocation;
+    public final ResourceLocation register(String name, StatFormatter formatter) {
+        return register(ResourceLocation.fromNamespaceAndPath(namespace, name), formatter);
     }
+
+    @Override
+    public ResourceLocation register(ResourceLocation statIdentifier, StatFormatter formatter) {
+        final var resourceKey = ResourceKey.create(Registries.CUSTOM_STAT, statIdentifier);
+        // Importantly, the ResourceLocation we register must be identical (not just equal) to the one that we return
+        registrar.register(resourceKey, () -> statIdentifier);
+        return statIdentifier;
+    }
+
 }

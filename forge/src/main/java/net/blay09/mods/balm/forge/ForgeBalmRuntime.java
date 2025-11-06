@@ -194,11 +194,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    public BalmCustomStatRegistrar customStats(String namespace) {
-        return new ForgeBalmCustomStatRegistrar(registrar(), namespace);
-    }
-
-    @Override
     public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
         AddReloadListenerEvent.BUS.addListener((AddReloadListenerEvent event) -> initializer.accept(new ForgeBalmResourceReloadListenerRegistrar(event)));
     }

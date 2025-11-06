@@ -21,8 +21,8 @@ public class ForgeBalmCustomStatRegistrar extends AbstractBalmCustomStatRegistra
     }
 
     @Override
-    public ResourceLocation register(String name, StatFormatter formatter) {
-        final var stat = super.register(name, formatter);
+    public ResourceLocation register(ResourceLocation statIdentifier, StatFormatter formatter) {
+        final var stat = super.register(statIdentifier, formatter);
         ModBusEventRegisters.getRegistrations(namespace, Registrations.class).customStats.add(Pair.of(stat, formatter));
         return stat;
     }

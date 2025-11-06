@@ -193,11 +193,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public BalmCustomStatRegistrar customStats(String namespace) {
-        return new FabricBalmCustomStatRegistrar(registrar(), namespace);
-    }
-
-    @Override
     public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
         initializer.accept(new FabricBalmResourceReloadListenerRegistrar(namespace));
     }

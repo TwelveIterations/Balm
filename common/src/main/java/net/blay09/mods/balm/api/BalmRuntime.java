@@ -329,6 +329,4 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     @Deprecated
     BalmParticleTypeRegistrar particleTypes(String namespace);
 
-    @Deprecated
-    BalmCustomStatRegistrar customStats(String namespace);
 }
