@@ -596,22 +596,22 @@ public class Balm {
 
     /**
      * @see Balm#resources()
-     * @see BalmResources#visitModResources(String, String, ModResourceVisitor)
-     * @deprecated Use {@link Balm#resources()} and {@link BalmResources#visitModResources(String, String, ModResourceVisitor)} instead.
+     * @see BalmPlatform#visitModResources(String, String, ModResourceVisitor)
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#visitModResources(String, String, ModResourceVisitor)} instead.
      */
     @Deprecated
     public static void visitModResources(String modId, String path, ModResourceVisitor visitor) {
-        resources().visitModResources(modId, path, visitor);
+        platform().visitModResources(modId, path, visitor);
     }
 
     /**
      * @see Balm#resources()
-     * @see BalmResources#lookupModResource(String, String)
-     * @deprecated Use {@link Balm#resources()} and {@link BalmResources#lookupModResource(String, String)} instead.
+     * @see BalmPlatform#lookupModResource(String, String)
+     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#lookupModResource(String, String)} instead.
      */
     @Deprecated
     public static Optional<ModResource> lookupModResource(String modId, String path) {
-        return resources().lookupModResource(modId, path);
+        return platform().lookupModResource(modId, path);
     }
 
     /**

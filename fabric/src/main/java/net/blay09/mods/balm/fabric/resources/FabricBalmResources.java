@@ -37,26 +37,6 @@ public class FabricBalmResources implements BalmResources {
     }
 
     @Override
-    public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
-        FabricLoader.getInstance().getModContainer(modId)
-                .flatMap(modContainer -> modContainer.findPath(path))
-                .ifPresent(rootPath -> {
-                    try (final var walker = Files.walk(rootPath)) {
-                        walker.forEach(childPath -> visitor.visit(new PathModResource(childPath)));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-    }
-
-    @Override
-    public Optional<ModResource> lookupModResource(String modId, String path) {
-        return FabricLoader.getInstance().getModContainer(modId)
-                .flatMap(modContainer -> modContainer.findPath(path))
-                .map(PathModResource::new);
-    }
-
-    @Override
     public void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> factory) {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(identifier, providers -> new IdentifiableResourceReloadListener() {
             private final PreparableReloadListener listener = factory.apply(providers);

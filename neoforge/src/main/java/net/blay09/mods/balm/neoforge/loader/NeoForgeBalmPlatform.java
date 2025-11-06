@@ -2,7 +2,10 @@ package net.blay09.mods.balm.neoforge.loader;
 
 import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
+import net.blay09.mods.balm.api.resources.ModResource;
+import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.neoforge.resources.NeoForgeModResource;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.fml.ModList;
@@ -12,6 +15,7 @@ import net.neoforged.neoforgespi.language.IModInfo;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class NeoForgeBalmPlatform implements BalmPlatform {
     @Override
@@ -50,5 +54,20 @@ public class NeoForgeBalmPlatform implements BalmPlatform {
     @Override
     public boolean isDevelopmentEnvironment() {
         return SharedConstants.IS_RUNNING_IN_IDE;
+    }
+
+    @Override
+    public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
+        final var modFile = ModList.get().getModFileById(modId);
+        if (modFile != null) {
+            modFile.getFile().getContents().visitContent(path, (relativePath, resource) -> visitor.visit(new NeoForgeModResource(relativePath, resource.retain())));
+        }
+    }
+
+    @Override
+    public Optional<ModResource> lookupModResource(String modId, String path) {
+        return Optional.ofNullable(ModList.get().getModFileById(modId))
+                .map(it -> it.getFile().getContents().get(path))
+                .map(it -> new NeoForgeModResource(path, it.retain()));
     }
 }

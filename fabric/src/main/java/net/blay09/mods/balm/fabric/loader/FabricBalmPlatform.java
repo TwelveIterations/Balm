@@ -5,12 +5,18 @@ import net.blay09.mods.balm.api.BalmEnvironment;
 import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
+import net.blay09.mods.balm.api.resources.ModResource;
+import net.blay09.mods.balm.api.resources.ModResourceVisitor;
+import net.blay09.mods.balm.api.resources.PathModResource;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FabricBalmPlatform implements BalmPlatform {
@@ -60,5 +66,25 @@ public class FabricBalmPlatform implements BalmPlatform {
     @Override
     public @Nullable MinecraftServer server() {
         return currentServer.get();
+    }
+
+    @Override
+    public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
+        FabricLoader.getInstance().getModContainer(modId)
+                .flatMap(modContainer -> modContainer.findPath(path))
+                .ifPresent(rootPath -> {
+                    try (final var walker = Files.walk(rootPath)) {
+                        walker.forEach(childPath -> visitor.visit(new PathModResource(childPath)));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
+    @Override
+    public Optional<ModResource> lookupModResource(String modId, String path) {
+        return FabricLoader.getInstance().getModContainer(modId)
+                .flatMap(modContainer -> modContainer.findPath(path))
+                .map(PathModResource::new);
     }
 }

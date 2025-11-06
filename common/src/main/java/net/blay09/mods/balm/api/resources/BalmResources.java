@@ -13,10 +13,6 @@ import java.util.function.Function;
 public interface BalmResources {
     <T extends BalmResourceCondition> void registerResourceCondition(ResourceLocation identifier, MapCodec<T> codec);
 
-    void visitModResources(String modId, String path, ModResourceVisitor visitor);
-
-    Optional<ModResource> lookupModResource(String modId, String path);
-
     void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener);
 
     void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener);
