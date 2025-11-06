@@ -111,9 +111,12 @@ public interface BalmItems {
      */
     default void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier) {
         Balm.getEvents().onEvent(BuildCreativeModeTabContentsEvent.class, event -> {
-            final var items = itemsSupplier.get();
-            for (final var item : items) {
-                event.getOutput().accept(item);
+            final var identifier = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(event.getTab());
+            if (tabIdentifier.equals(identifier)) {
+                final var items = itemsSupplier.get();
+                for (final var item : items) {
+                    event.getOutput().accept(item);
+                }
             }
         });
     }
