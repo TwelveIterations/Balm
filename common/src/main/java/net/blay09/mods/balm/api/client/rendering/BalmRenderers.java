@@ -23,12 +23,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * @deprecated Use the various methods in {@link net.blay09.mods.balm.api.client.BalmClient} instead.
+ * @deprecated Use the various methods in {@link net.blay09.mods.balm.client.BalmClientRegistrars} instead.
  */
 @Deprecated
 public interface BalmRenderers {
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#modelLayers(String, java.util.function.Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#modelLayers(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     default ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
@@ -36,43 +36,43 @@ public interface BalmRenderers {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#modelLayers(String, java.util.function.Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#modelLayers(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#entityRenderers(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#entityRenderers(String, Consumer)} instead.
      */
     @Deprecated
     <T extends Entity> void registerEntityRenderer(ResourceLocation id, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#blockEntityRenderers(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockEntityRenderers(String, Consumer)} instead.
      */
     @Deprecated
     <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(ResourceLocation id, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#blockColors(String, java.util.function.Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockColors(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     void registerBlockColorHandler(ResourceLocation id, BlockColor color, Supplier<Block[]> blocks);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#blockRenderTypes(String, java.util.function.Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockRenderTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     void setBlockRenderType(Supplier<Block> block, ChunkSectionLayer chunkSectionLayer);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#particleProviders(String, java.util.function.Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#particleProviders(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#particleProviders(String, java.util.function.Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#particleProviders(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);

@@ -7,12 +7,12 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Consumer;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#blockStateModels(String, Consumer)} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockStateModels(String, Consumer)} instead.
  */
 @Deprecated
 public interface BalmModels {
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.client.BalmClient#blockStateModels(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockStateModels(String, Consumer)} instead.
      */
     @Deprecated
     DeferredObject<BlockStateModel> loadModel(ResourceLocation identifier);

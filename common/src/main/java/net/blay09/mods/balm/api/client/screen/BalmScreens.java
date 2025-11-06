@@ -13,17 +13,17 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * @deprecated Use {@link BalmClient#menuScreens(String, Consumer)} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#menuScreens(String, Consumer)} instead.
  */
 @Deprecated
 public interface BalmScreens {
 
     /**
-     * @deprecated Use {@link BalmClient#menuScreens(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#menuScreens(String, Consumer)} instead.
      */
     @Deprecated
     default <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void registerScreen(ResourceLocation id, Supplier<MenuType<? extends TMenu>> type, BalmScreenFactory<TMenu, TScreen> screenFactory) {
-        BalmClient.menuScreens(id.getNamespace(), registrar -> registrar.register(id.getPath(), type, screenFactory));
+        BalmClient.getRuntime().menuScreens(id.getNamespace(), registrar -> registrar.register(id.getPath(), type, screenFactory));
     }
 
     /**
@@ -39,7 +39,7 @@ public interface BalmScreens {
     }
 
     /**
-     * @deprecated Use {@link BalmClient#menuScreens(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#menuScreens(String, Consumer)} instead.
      */
     @Deprecated
     default BalmScreens scoped(String modId) {

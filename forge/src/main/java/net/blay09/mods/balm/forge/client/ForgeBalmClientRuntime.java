@@ -3,6 +3,7 @@ package net.blay09.mods.balm.forge.client;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
+import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -71,10 +72,10 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     }
 
     @Override
-    public void initializeMod(String modId, ForgeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, ForgeLoadContext context, Consumer<BalmClientRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.run();
+        initializer.accept(new BalmClientRegistrars(this));
 
         ModBusEventRegisters.register(modId, context.modBusGroup());
     }
