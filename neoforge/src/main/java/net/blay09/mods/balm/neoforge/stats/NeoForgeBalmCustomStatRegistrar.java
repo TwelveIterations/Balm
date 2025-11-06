@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.neoforge.stats;
 
+import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.stats.internal.AbstractBalmCustomStatRegistrarImpl;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
@@ -21,16 +22,16 @@ public class NeoForgeBalmCustomStatRegistrar extends AbstractBalmCustomStatRegis
     @Override
     public ResourceLocation register(String name, StatFormatter formatter) {
         final var stat = super.register(name, formatter);
-        ModBusEventRegisters.getRegistrations(namespace, Registrations.class).customStats.add(stat);
+        ModBusEventRegisters.getRegistrations(namespace, Registrations.class).customStats.add(Pair.of(stat, formatter));
         return stat;
     }
 
     public static class Registrations {
-        public final List<ResourceLocation> customStats = new ArrayList<>();
+        public final List<Pair<ResourceLocation, StatFormatter>> customStats = new ArrayList<>();
 
         @SubscribeEvent
         public void commonSetup(FMLCommonSetupEvent event) {
-            event.enqueueWork(() -> customStats.forEach(it -> Stats.CUSTOM.get(it, StatFormatter.DEFAULT)));
+            event.enqueueWork(() -> customStats.forEach(it -> Stats.CUSTOM.get(it.getFirst(), it.getSecond())));
         }
     }
 }

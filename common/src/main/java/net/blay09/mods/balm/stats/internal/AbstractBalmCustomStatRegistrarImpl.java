@@ -22,7 +22,8 @@ public abstract class AbstractBalmCustomStatRegistrarImpl implements BalmCustomS
     public ResourceLocation register(String name, StatFormatter formatter) {
         final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.CUSTOM_STAT, resourceLocation);
-        registrar.register(resourceKey, Function.identity());
+        // Importantly, the ResourceLocation we register must be identical (not just equal) to the one that we return
+        registrar.register(resourceKey, () -> resourceLocation);
         return resourceLocation;
     }
 }
