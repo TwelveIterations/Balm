@@ -26,6 +26,7 @@ import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
@@ -50,8 +51,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import static net.blay09.mods.balm.api.Balm.resources;
 
 public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmConfig getConfig();
@@ -165,12 +164,16 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     @Deprecated
     default void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        resources().addServerReloadListener(identifier, reloadListener);
+        Balm.resourceReloadListeners(identifier.getNamespace(), registrar -> {
+            registrar.register(identifier.getPath(), reloadListener);
+        });
     }
 
     @Deprecated
     default void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        resources().addServerReloadListener(identifier, reloadListener);
+        Balm.resourceReloadListeners(identifier.getNamespace(), registrar -> {
+            registrar.register(identifier.getPath(), reloadListener);
+        });
     }
 
     @Deprecated
@@ -263,12 +266,12 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     @Deprecated
     default void visitModResources(String modId, String path, ModResourceVisitor visitor) {
-        getResources().visitModResources(modId, path, visitor);
+        platform().visitModResources(modId, path, visitor);
     }
 
     @Deprecated
     default Optional<ModResource> lookupModResource(String modId, String path) {
-        return getResources().lookupModResource(modId, path);
+        return platform().lookupModResource(modId, path);
     }
 
     BalmRegistrar registrar();
@@ -307,6 +310,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     }
 
     BalmPlatform platform();
+
+    void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer);
 
     /**
      * @deprecated Use {@link Balm#particleTypes(String, Consumer)} instead.

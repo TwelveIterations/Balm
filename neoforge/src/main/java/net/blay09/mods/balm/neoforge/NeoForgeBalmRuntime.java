@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -36,8 +37,11 @@ import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResources;
 import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.item.NeoForgeBalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.neoforge.server.packs.resources.NeoForgeBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
 import java.util.function.Consumer;
 
@@ -196,5 +200,11 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public BalmCustomStatRegistrar customStats(String namespace) {
         return new NeoForgeBalmCustomStatRegistrar(registrar(), namespace);
+    }
+
+    @Override
+    public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
+        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) ->
+                initializer.accept(new NeoForgeBalmResourceReloadListenerRegistrar(namespace, event)));
     }
 }

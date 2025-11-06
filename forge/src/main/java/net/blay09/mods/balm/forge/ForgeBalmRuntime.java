@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -35,9 +36,11 @@ import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
 import net.blay09.mods.balm.forge.stats.ForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
+import net.minecraftforge.event.AddReloadListenerEvent;
 
 import java.util.function.Consumer;
 
@@ -199,5 +202,10 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmCustomStatRegistrar customStats(String namespace) {
         return new ForgeBalmCustomStatRegistrar(registrar(), namespace);
+    }
+
+    @Override
+    public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
+        AddReloadListenerEvent.BUS.addListener((AddReloadListenerEvent event) -> initializer.accept(new ForgeBalmResourceReloadListenerRegistrar(event)));
     }
 }

@@ -26,6 +26,7 @@ import net.blay09.mods.balm.api.recipe.BalmRecipes;
 import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.stats.BalmStats;
@@ -176,13 +177,12 @@ public class Balm {
     }
 
     /**
-     * @see #resources()
-     * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
-     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
+     * @see #resourceReloadListeners(String, Consumer)
+     * @deprecated Use {@link #resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        resources().addServerReloadListener(identifier, reloadListener);
+        runtime.addServerReloadListener(identifier, reloadListener);
     }
 
     /**
@@ -325,6 +325,16 @@ public class Balm {
      */
     public static BalmResources resources() {
         return runtime.getResources();
+    }
+
+    /**
+     * Provides a scoped registrar to register server resource reload listeners under your mod namespace.
+     *
+     * @param namespace   The mod id under which reload listeners should be registered.
+     * @param initializer Callback that receives a scoped registrar for server reload listeners.
+     */
+    public static void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
+        runtime.resourceReloadListeners(namespace, initializer);
     }
 
     /**
@@ -633,23 +643,21 @@ public class Balm {
     }
 
     /**
-     * @see #resources()
-     * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
-     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
+     * @see #resourceReloadListeners(String, Consumer)
+     * @deprecated Use {@link #resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
-        resources().addServerReloadListener(identifier, it -> reloadListener);
+        runtime.addServerReloadListener(identifier, it -> reloadListener);
     }
 
     /**
-     * @see #resources()
-     * @see BalmResources#addServerReloadListener(ResourceLocation, Function)
-     * @deprecated Use {@link #resources()} and {@link BalmResources#addServerReloadListener(ResourceLocation, Function)} instead.
+     * @see #resourceReloadListeners(String, Consumer)
+     * @deprecated Use {@link #resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        resources().addServerReloadListener(identifier, reloadListener);
+        runtime.addServerReloadListener(identifier, reloadListener);
     }
 
     /**

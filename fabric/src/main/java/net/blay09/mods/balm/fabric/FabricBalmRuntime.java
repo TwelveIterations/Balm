@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.fabric.core.particles.FabricBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.fabric.world.entity.FabricBalmEntityTypeRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -36,10 +37,9 @@ import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
 import net.blay09.mods.balm.fabric.stats.FabricBalmCustomStatRegistrar;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.item.FabricBalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
-import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
-import net.blay09.mods.balm.world.item.crafting.internal.BalmRecipeTypeRegistrarImpl;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 
 import java.util.function.Consumer;
@@ -201,5 +201,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmCustomStatRegistrar customStats(String namespace) {
         return new FabricBalmCustomStatRegistrar(registrar(), namespace);
+    }
+
+    @Override
+    public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
+        initializer.accept(new FabricBalmResourceReloadListenerRegistrar(namespace));
     }
 }
