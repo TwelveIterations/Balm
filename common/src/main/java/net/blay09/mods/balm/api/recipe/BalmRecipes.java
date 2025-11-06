@@ -12,12 +12,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.api.Balm#recipeTypes(String, Consumer)} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, Consumer)} instead.
  */
 @Deprecated
 public interface BalmRecipes {
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#recipeTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, Consumer)} instead.
      */
     @Deprecated
     default <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> DeferredObject<RecipeType<TRecipe>> registerRecipeType(Function<ResourceLocation, ? extends RecipeType<TRecipe>> supplier, ResourceLocation identifier) {
@@ -27,7 +27,7 @@ public interface BalmRecipes {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#recipeTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, Consumer)} instead.
      */
     @Deprecated
     default <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> DeferredObject<RecipeSerializer<TRecipe>> registerRecipeSerializer(Supplier<RecipeSerializer<TRecipe>> supplier, ResourceLocation identifier) {
@@ -37,7 +37,7 @@ public interface BalmRecipes {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#recipeTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, Consumer)} instead.
      */
     @Deprecated
     default <T extends RecipeDisplay.Type<?>> DeferredObject<T> registerRecipeDisplayType(Supplier<T> supplier, ResourceLocation identifier) {
@@ -46,7 +46,7 @@ public interface BalmRecipes {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#recipeTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, Consumer)} instead.
      */
     @Deprecated
     default <T extends SlotDisplay.Type<?>> DeferredObject<T> registerSlotDisplayType(Supplier<T> supplier, ResourceLocation identifier) {
@@ -55,7 +55,7 @@ public interface BalmRecipes {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#recipeTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, Consumer)} instead.
      */
     @Deprecated
     default DeferredObject<RecipeBookCategory> registerRecipeBookCategory(Supplier<RecipeBookCategory> supplier, ResourceLocation identifier) {

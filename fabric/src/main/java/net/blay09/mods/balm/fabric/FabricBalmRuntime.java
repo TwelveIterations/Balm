@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.fabric.core.particles.FabricBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.fabric.world.entity.FabricBalmEntityTypeRegistrar;
@@ -107,10 +108,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, EmptyLoadContext context, Consumer<BalmRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.run();
+        initializer.accept(new BalmRegistrars(this));
     }
 
     @Override

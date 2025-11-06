@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
@@ -83,7 +84,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#menuTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#menuTypes(String, Consumer)} instead.
      */
     @Deprecated
     BalmMenuTypeRegistrar menuTypes(String namespace);
@@ -103,7 +104,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     }
 
     /**
-     * @deprecated Use {@link Balm#entityTypes(String, java.util.function.Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#entityTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     default BalmEntities getEntities() {
@@ -113,7 +114,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void entityTypes(String namespace, Consumer<BalmEntityTypeRegistrar> initializer);
 
     /**
-     * @deprecated Use {@link Balm#entityTypes(String, java.util.function.Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#entityTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     BalmEntityTypeRegistrar entityTypes(String namespace);
@@ -159,22 +160,23 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     <TProxy> SidedProxy<TProxy> sidedProxy(String commonName, String clientName);
 
-    void initializeMod(String modId, TLoadContext context, Runnable initializer);
+    @Deprecated
+    default void initializeMod(String modId, TLoadContext context, Runnable initializer) {
+        initializeMod(modId, context, (registrars) -> initializer.run());
+    }
+
+    void initializeMod(String modId, TLoadContext context, Consumer<BalmRegistrars> initializer);
 
     void initializeIfLoaded(String modId, String className);
 
     @Deprecated
     default void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        Balm.resourceReloadListeners(identifier.getNamespace(), registrar -> {
-            registrar.register(identifier.getPath(), reloadListener);
-        });
+        resourceReloadListeners(identifier.getNamespace(), registrar -> registrar.register(identifier.getPath(), reloadListener));
     }
 
     @Deprecated
     default void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
-        Balm.resourceReloadListeners(identifier.getNamespace(), registrar -> {
-            registrar.register(identifier.getPath(), reloadListener);
-        });
+        resourceReloadListeners(identifier.getNamespace(), registrar -> registrar.register(identifier.getPath(), reloadListener));
     }
 
     @Deprecated
@@ -202,7 +204,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerAdditional(registrar());
 
         module.registerComponents(getComponents());
-        Balm.dataComponentTypes(modId, module::registerDataComponentTypes);
+        dataComponentTypes(modId, module::registerDataComponentTypes);
 
         module.registerBlocks(getBlocks().scoped(modId));
         blocks(modId, module::registerBlocks);
@@ -300,7 +302,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer);
 
     /**
-     * @deprecated Use {@link Balm#creativeModeTabs(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#creativeModeTabs(String, Consumer)} instead.
      */
     @Deprecated
     BalmCreativeModeTabRegistrar creativeModeTabs(String namespace);
@@ -308,7 +310,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer);
 
     /**
-     * @deprecated Use {@link Balm#blockEntityTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(String, Consumer)} instead.
      */
     @Deprecated
     BalmBlockEntityTypeRegistrar blockEntityTypes(String namespace);
@@ -324,7 +326,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer);
 
     /**
-     * @deprecated Use {@link Balm#particleTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#particleTypes(String, Consumer)} instead.
      */
     @Deprecated
     BalmParticleTypeRegistrar particleTypes(String namespace);

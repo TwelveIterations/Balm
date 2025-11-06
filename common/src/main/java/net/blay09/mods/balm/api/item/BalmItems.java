@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * @deprecated Use {@link Balm#items(String, Consumer)} and {@link Balm#creativeModeTabs(String, Consumer)} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} and {@link net.blay09.mods.balm.core.BalmRegistrars#creativeModeTabs(String, Consumer)} instead.
  */
 @Deprecated
 public interface BalmItems {
@@ -38,7 +38,7 @@ public interface BalmItems {
     Map<String, Comparator<ItemLike>> legacyCreativeModeTabSorting = new ConcurrentHashMap<>();
 
     /**
-     * Use {@link Balm#items(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
     static Item.Properties itemProperties(ResourceLocation identifier) {
@@ -46,7 +46,7 @@ public interface BalmItems {
     }
 
     /**
-     * Use {@link Balm#items(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
     static ResourceKey<Item> itemId(ResourceLocation identifier) {
@@ -54,7 +54,7 @@ public interface BalmItems {
     }
 
     /**
-     * Use {@link Balm#items(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
     static BlockItem blockItem(Block block, ResourceLocation identifier) {
@@ -62,7 +62,7 @@ public interface BalmItems {
     }
 
     /**
-     * Use {@link Balm#items(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
     default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier) {
@@ -70,18 +70,18 @@ public interface BalmItems {
     }
 
     /**
-     * Use {@link Balm#items(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
     default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> constructor, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);
-        final var holder = Balm.registrar().register(resourceKey, constructor);
+        final var holder = Balm.getRuntime().registrar().register(resourceKey, constructor);
         BalmItems.legacyCreativeModeTabItems.put(identifier.getNamespace(), resourceKey);
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
 
     /**
-     * Use {@link Balm#creativeModeTabs(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#creativeModeTabs(String, Consumer)} instead.
      */
     @Deprecated
     default DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier) {
@@ -107,7 +107,7 @@ public interface BalmItems {
     }
 
     /**
-     * Use {@link Balm#creativeModeTabs(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#creativeModeTabs(String, Consumer)} instead.
      */
     default void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier) {
         Balm.getEvents().onEvent(BuildCreativeModeTabContentsEvent.class, event -> {
@@ -119,7 +119,7 @@ public interface BalmItems {
     }
 
     /**
-     * Use {@link Balm#creativeModeTabs(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#creativeModeTabs(String, Consumer)} instead.
      */
     default void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator) {
         legacyCreativeModeTabSorting.put(tabIdentifier.getNamespace(), comparator);

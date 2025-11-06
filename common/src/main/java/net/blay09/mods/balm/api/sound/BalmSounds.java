@@ -8,17 +8,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(net.minecraft.resources.ResourceKey, String)} instead with {@link Registries#SOUND_EVENT}.
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(net.minecraft.resources.ResourceKey, String)} instead with {@link Registries#SOUND_EVENT}.
  */
 @Deprecated
 public interface BalmSounds {
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(net.minecraft.resources.ResourceKey, String)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(net.minecraft.resources.ResourceKey, String)} instead.
      */
     @Deprecated
     default DeferredObject<SoundEvent> register(ResourceLocation identifier) {
         final var resourceKey = ResourceKey.create(Registries.SOUND_EVENT, identifier);
-        final var holder = Balm.registrar().register(resourceKey, SoundEvent::createVariableRangeEvent);
+        final var holder = Balm.getRuntime().registrar().register(resourceKey, SoundEvent::createVariableRangeEvent);
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
 

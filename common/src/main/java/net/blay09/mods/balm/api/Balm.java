@@ -26,22 +26,9 @@ import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
-import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.loader.BalmPlatform;
-import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
-import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
-import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
-import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
-import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
-import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
-import net.blay09.mods.balm.world.item.BalmItemRegistrar;
-import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
-import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
-import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -97,13 +84,30 @@ public class Balm {
      * Everything else you do in Balm should happen inside the initializer, which runs at a time that Balm has
      * initialized the runtime for your mod.
      *
+     * @deprecated Use the variant that takes a {@link Consumer} instead, giving you access to {@link BalmRegistrars}.
      * @param modId       The mod id for your mod.
      * @param context     The load context for the mod loader you are using, e.g. NeoForgeLoadContext.
      * @param initializer Callback that runs when Balm is ready, at which point you can use its methods to set up your mod.
      * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)
      * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule...)
      */
+    @Deprecated
     public static void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+        runtime.initializeMod(modId, context, (registrars) -> initializer.run());
+    }
+
+    /**
+     * You must call this or any of its overloads in each of your mod's entry points. Provide a load context specific to each mod loader.
+     * Everything else you do in Balm should happen inside the initializer, which runs at a time that Balm has
+     * initialized the runtime for your mod.
+     *
+     * @param modId       The mod id for your mod.
+     * @param context     The load context for the mod loader you are using, e.g. NeoForgeLoadContext.
+     * @param initializer Callback that runs when Balm is ready, at which point you can use its methods to set up your mod.
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule...)
+     */
+    public static void initializeMod(String modId, BalmRuntimeLoadContext context, Consumer<BalmRegistrars> initializer) {
         runtime.initializeMod(modId, context, initializer);
     }
 
@@ -119,7 +123,7 @@ public class Balm {
      * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule...)
      */
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {
-        runtime.initializeMod(modId, context, () -> registerModule(module));
+        runtime.initializeMod(modId, context, (registrars) -> registerModule(module));
     }
 
     /**
@@ -134,7 +138,7 @@ public class Balm {
      * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)
      */
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule... modules) {
-        runtime.initializeMod(modId, context, () -> {
+        runtime.initializeMod(modId, context, (registrars) -> {
             for (final var module : modules) {
                 registerModule(module);
             }
@@ -189,8 +193,8 @@ public class Balm {
     }
 
     /**
-     * @see #resourceReloadListeners(String, Consumer)
-     * @deprecated Use {@link #resourceReloadListeners(String, Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
@@ -241,52 +245,12 @@ public class Balm {
     }
 
     /**
-     * Use this to register menu types using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register menu types under.
-     * @param initializer Callback that receives a scoped registrar for registering menu types.
-     */
-    public static void menuTypes(String namespace, java.util.function.Consumer<BalmMenuTypeRegistrar> initializer) {
-        runtime.menuTypes(namespace, initializer);
-    }
-
-    /**
-     * Use this to register entity types using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register entity types under.
-     * @param initializer Callback that receives a scoped registrar for registering entity types.
-     */
-    public static void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeRegistrar> initializer) {
-        runtime.entityTypes(namespace, initializer);
-    }
-
-    /**
      * Provides access to mod loader-specific utilities and hooks.
      *
      * @return implementation of {@link BalmHooks} for the mod loader Balm is running on.
      */
     public static BalmHooks hooks() {
         return runtime.getHooks();
-    }
-
-    /**
-     * Use this to register particle types using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register particle types under.
-     * @param initializer Callback that receives a scoped registrar for registering particle types.
-     */
-    public static void particleTypes(String namespace, java.util.function.Consumer<BalmParticleTypeRegistrar> initializer) {
-        runtime.particleTypes(namespace, initializer);
-    }
-
-    /**
-     * Use this to register custom stats using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register stats under.
-     * @param initializer Callback that receives a scoped registrar for registering custom stats.
-     */
-    public static void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
-        runtime.customStats(namespace, initializer);
     }
 
     /**
@@ -338,30 +302,11 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {{@link #resourceConditions(String, Consumer)}} instead.
+     * @deprecated Use {{@link net.blay09.mods.balm.core.BalmRegistrars#resourceConditions(String, Consumer)}} instead.
      */
     @Deprecated
     public static BalmResources resources() {
         return runtime.getResources();
-    }
-
-    /**
-     * Provides a scoped registrar to register server resource reload listeners under your mod namespace.
-     *
-     * @param namespace   The mod id under which reload listeners should be registered.
-     * @param initializer Callback that receives a scoped registrar for server reload listeners.
-     */
-    public static void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
-        runtime.resourceReloadListeners(namespace, initializer);
-    }
-
-    /**
-     * Provides a registrar for registering resource conditions in a platform-agnostic way.
-     *
-     * @param initializer Callback receiving the resource condition registrar.
-     */
-    public static void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
-        runtime.resourceConditions(namespace, initializer);
     }
 
     /**
@@ -371,112 +316,6 @@ public class Balm {
     @ApiStatus.Internal
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
-    }
-
-    /**
-     * Use this to register blocks using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register blocks under.
-     * @param initializer Callback that receives a scoped registrar for registering blocks.
-     */
-    public static void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer) {
-        runtime.blocks(namespace, initializer);
-    }
-
-    /**
-     * Use this to register items using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register items under.
-     * @param initializer Callback that receives a scoped registrar for registering items.
-     */
-    public static void items(String namespace, Consumer<BalmItemRegistrar> initializer) {
-        runtime.items(namespace, initializer);
-    }
-
-    /**
-     * Use this to register recipe types and related objects using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register recipe types under.
-     * @param initializer Callback that receives a scoped registrar for registering recipe types.
-     */
-    public static void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer) {
-        runtime.recipeTypes(namespace, initializer);
-    }
-
-    /**
-     * Use this to register data component types using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register data component types under.
-     * @param initializer Callback that receives a scoped registrar for registering data component types.
-     */
-    public static void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer) {
-        runtime.dataComponentTypes(namespace, initializer);
-    }
-
-    /**
-     * Use this to register creative mode tabs using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register creative mode tabs under.
-     * @param initializer Callback that receives a scoped registrar for registering creative mode tabs.
-     */
-    public static void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
-        runtime.creativeModeTabs(namespace, initializer);
-    }
-
-    /**
-     * Use this to register block entity types using the registrar provided in the consumer callback.
-     *
-     * @param namespace   The mod id to register block entity types under.
-     * @param initializer Callback that receives a scoped registrar for registering block entity types.
-     */
-    public static void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
-        runtime.blockEntityTypes(namespace, initializer);
-    }
-
-    /**
-     * Provides a generic registrar that can be used to register entries to any registry. Consider using a scoped registar instead.
-     *
-     * @return a {@link BalmRegistrar} that can be used to register entries to any registry.
-     * @see Balm#registrar(ResourceKey, String)
-     */
-    public static BalmRegistrar registrar() {
-        return runtime.registrar();
-    }
-
-    /**
-     * Use this to register registry objects that are not covered by the convenient factories.
-     * Creates a scoped registrar for a specific registry and namespace.
-     *
-     * @param registryKey The {@link net.minecraft.core.registries.Registries} registry resource key.
-     * @param namespace   The mod id to register entries under.
-     * @param <T>         The type of the registry entries, e.g. {@link net.minecraft.sounds.SoundEvent}.
-     * @return a scoped {@link BalmRegistrar} that can be used to register entries to this registry.
-     * @see Balm#blocks(String, Consumer)
-     * @see Balm#blockEntityTypes(String, Consumer)
-     * @see Balm#items(String, Consumer)
-     * @see Balm#creativeModeTabs(String, Consumer)
-     * @see Balm#recipeTypes(String, Consumer)
-     */
-    public static <T> BalmRegistrar.Scoped<T> registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-        return runtime.registrar(registryKey, namespace);
-    }
-
-    /**
-     * Use this to register registry objects that are not covered by the convenient factories.
-     * Creates a scoped registrar for a specific registry and namespace.
-     *
-     * @param registryKey the {@link net.minecraft.core.registries.Registries} registry resource key.
-     * @param namespace   the mod id to register entries under.
-     * @param initializer callback that receives a scoped registrar for registering entries to this registry.
-     * @param <T>         the type of the registry entries, e.g. {@link net.minecraft.sounds.SoundEvent}.
-     * @see Balm#blocks(String, Consumer)
-     * @see Balm#blockEntityTypes(String, Consumer)
-     * @see Balm#items(String, Consumer)
-     * @see Balm#creativeModeTabs(String, Consumer)
-     * @see Balm#recipeTypes(String, Consumer)
-     */
-    public static <T> void registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace, Consumer<BalmRegistrar.Scoped<T>> initializer) {
-        initializer.accept(runtime.registrar(registryKey, namespace));
     }
 
     /**
@@ -507,10 +346,10 @@ public class Balm {
     }
 
     /**
-     * @see Balm#registrar()
-     * @see Balm#registrar(ResourceKey, String)
+     * @see net.blay09.mods.balm.core.BalmRegistrars#registrar()
+     * @see net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)
      * @see Balm#getModSupport()
-     * @deprecated Use {@link Balm#registrar()} instead, or {@link Balm#getModSupport()} for the milk fluid.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar()} instead, or {@link Balm#getModSupport()} for the milk fluid.
      */
     @Deprecated
     public static BalmRegistries getRegistries() {
@@ -518,8 +357,8 @@ public class Balm {
     }
 
     /**
-     * @see Balm#blockEntityTypes(String, Consumer)
-     * @deprecated Use {@link Balm#blockEntityTypes(String, Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(String, Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(String, Consumer)} instead.
      */
     @Deprecated
     public static BalmBlockEntities getBlockEntities() {
@@ -527,8 +366,8 @@ public class Balm {
     }
 
     /**
-     * @see Balm#items(String, Consumer)
-     * @deprecated Use {@link Balm#items(String, Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
     public static BalmItems getItems() {
@@ -536,8 +375,8 @@ public class Balm {
     }
 
     /**
-     * @see Balm#blocks(String, Consumer)
-     * @deprecated Use {@link Balm#blocks(String, Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     @Deprecated
     public static BalmBlocks getBlocks() {
@@ -605,8 +444,8 @@ public class Balm {
     }
 
     /**
-     * @see Balm#registrar(net.minecraft.resources.ResourceKey, String)
-     * @deprecated Use {@link Balm#registrar(net.minecraft.resources.ResourceKey, String)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#registrar(net.minecraft.resources.ResourceKey, String)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(net.minecraft.resources.ResourceKey, String)} instead.
      */
     @Deprecated
     public static BalmSounds getSounds() {
@@ -614,8 +453,8 @@ public class Balm {
     }
 
     /**
-     * @see Balm#dataComponentTypes(String, Consumer)
-     * @deprecated Use {@link Balm#dataComponentTypes(String, Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#dataComponentTypes(String, Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#dataComponentTypes(String, Consumer)} instead.
      */
     @Deprecated
     public static BalmComponents getComponents() {
@@ -652,8 +491,8 @@ public class Balm {
     }
 
     /**
-     * @see #recipeTypes(String, java.util.function.Consumer)
-     * @deprecated Use {@link #recipeTypes(String, java.util.function.Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, java.util.function.Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     public static BalmRecipes getRecipes() {
@@ -661,8 +500,8 @@ public class Balm {
     }
 
     /**
-     * @see #menuTypes(String, Consumer)
-     * @deprecated Use {@link #menuTypes(String, Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#menuTypes(String, Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#menuTypes(String, Consumer)} instead.
      */
     @Deprecated
     public static BalmMenus getMenus() {
@@ -670,8 +509,8 @@ public class Balm {
     }
 
     /**
-     * @see #resourceReloadListeners(String, Consumer)
-     * @deprecated Use {@link #resourceReloadListeners(String, Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
@@ -679,8 +518,8 @@ public class Balm {
     }
 
     /**
-     * @see #resourceReloadListeners(String, Consumer)
-     * @deprecated Use {@link #resourceReloadListeners(String, Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
@@ -688,8 +527,8 @@ public class Balm {
     }
 
     /**
-     * @see Balm#entityTypes(String, java.util.function.Consumer)
-     * @deprecated Use {@link #entityTypes(String, java.util.function.Consumer)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#entityTypes(String, java.util.function.Consumer)
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#entityTypes(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
     public static BalmEntities getEntities() {
@@ -716,8 +555,8 @@ public class Balm {
 
     /**
      * @see #biomeModifications()
-     * @see #registrar(ResourceKey, String)
-     * @deprecated Use {@link #biomeModifications()} or {@link #registrar(ResourceKey, String)} instead.
+     * @see net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)
+     * @deprecated Use {@link #biomeModifications()} or {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)} instead.
      */
     @Deprecated
     public static BalmWorldGen getWorldGen() {
@@ -767,7 +606,7 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #particleTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#particleTypes(String, Consumer)} instead.
      */
     @Deprecated
     public static BalmParticles getParticles() {
@@ -783,7 +622,7 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {@link #customStats(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#customStats(String, Consumer)} instead.
      */
     @Deprecated
     public static BalmStats getStats() {

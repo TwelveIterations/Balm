@@ -10,18 +10,18 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Supplier;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(net.minecraft.resources.ResourceKey, String)} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(net.minecraft.resources.ResourceKey, String)} instead.
  */
 @Deprecated
 public interface BalmComponents {
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(net.minecraft.resources.ResourceKey, String)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(net.minecraft.resources.ResourceKey, String)} instead.
      */
     @Deprecated
     @SuppressWarnings("unchecked")
     default <TComponent> DeferredObject<DataComponentType<TComponent>> registerComponent(Supplier<DataComponentType<TComponent>> supplier, ResourceLocation identifier) {
         final var resourceKey = ResourceKey.create(Registries.DATA_COMPONENT_TYPE, identifier);
-        final var holder = Balm.registrar().register(resourceKey, (id) -> supplier.get());
+        final var holder = Balm.getRuntime().registrar().register(resourceKey, (id) -> supplier.get());
         return new DeferredObject<>(identifier, () -> (DataComponentType<TComponent>) holder.value(), holder::isBound);
     }
 

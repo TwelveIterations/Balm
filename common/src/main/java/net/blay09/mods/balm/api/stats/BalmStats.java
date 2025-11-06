@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.api.Balm#customStats(String, java.util.function.Consumer)} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#customStats(String, java.util.function.Consumer)} instead.
  */
 @Deprecated
 public interface BalmStats {

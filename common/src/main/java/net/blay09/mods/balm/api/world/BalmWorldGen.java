@@ -13,19 +13,19 @@ import java.util.function.Supplier;
 
 public interface BalmWorldGen {
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(ResourceKey, String)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)} instead.
      */
     @Deprecated
     <T extends Feature<?>> DeferredObject<T> registerFeature(ResourceLocation identifier, Supplier<T> supplier);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(ResourceKey, String)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)} instead.
      */
     @Deprecated
     <T extends PlacementModifierType<?>> DeferredObject<T> registerPlacementModifier(ResourceLocation identifier, Supplier<T> supplier);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#registrar(ResourceKey, String)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)} instead.
      */
     @Deprecated
     <T extends PoiType> DeferredObject<T> registerPoiType(ResourceLocation identifier, Supplier<T> supplier);

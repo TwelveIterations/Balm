@@ -14,12 +14,12 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.api.Balm#blockEntityTypes(String, Consumer)} instead.
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(String, Consumer)} instead.
  */
 @Deprecated
 public interface BalmBlockEntities {
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#blockEntityTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(String, Consumer)} instead.
      */
     @Deprecated
     default <T extends BlockEntity> DeferredObject<BlockEntityType<T>> registerBlockEntity(ResourceLocation identifier, BalmBlockEntityFactory<T> factory, Supplier<Block[]> blocks) {
@@ -28,7 +28,7 @@ public interface BalmBlockEntities {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.api.Balm#blockEntityTypes(String, Consumer)} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(String, Consumer)} instead.
      */
     @Deprecated
     @SuppressWarnings({"unchecked"})

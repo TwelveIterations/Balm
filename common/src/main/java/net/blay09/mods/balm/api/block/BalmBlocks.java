@@ -17,46 +17,46 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Use {@link Balm#blocks(String, Consumer)} instead.
+ * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
  */
 @Deprecated
 public interface BalmBlocks {
 
     /**
-     * Use {@link Balm#blocks(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     static BlockBehaviour.Properties blockProperties(ResourceLocation identifier) {
         return BlockBehaviour.Properties.of().setId(blockId(identifier));
     }
 
     /**
-     * Use {@link Balm#blocks(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     static ResourceKey<Block> blockId(ResourceLocation identifier) {
         return ResourceKey.create(Registries.BLOCK, identifier);
     }
 
     /**
-     * Use {@link Balm#blocks(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     default DeferredObject<Block> registerBlock(Function<ResourceLocation, Block> constructor, ResourceLocation identifier) {
         final var resourceKey = ResourceKey.create(Registries.BLOCK, identifier);
-        final var holder = Balm.registrar().register(resourceKey, constructor);
+        final var holder = Balm.getRuntime().registrar().register(resourceKey, constructor);
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
 
     /**
-     * Use {@link Balm#blocks(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     default DeferredObject<Item> registerBlockItem(Function<ResourceLocation, BlockItem> constructor, ResourceLocation identifier, @Nullable ResourceLocation creativeTab){
         final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);
-        final var holder = Balm.registrar().register(resourceKey, constructor::apply);
+        final var holder = Balm.getRuntime().registrar().register(resourceKey, constructor::apply);
         BalmItems.legacyCreativeModeTabItems.put(identifier.getNamespace(), resourceKey);
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }
 
     /**
-     * Use {@link Balm#blocks(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     default void register(Function<ResourceLocation, Block> blockSupplier, BiFunction<Block, ResourceLocation, BlockItem> blockItemSupplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
         final var block = registerBlock(blockSupplier, identifier);
@@ -64,21 +64,21 @@ public interface BalmBlocks {
     }
 
     /**
-     * Use {@link Balm#blocks(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     default DeferredObject<Item> registerBlockItem(Function<ResourceLocation, BlockItem> supplier, ResourceLocation identifier) {
         return registerBlockItem(supplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
 
     /**
-     * Use {@link Balm#blocks(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     default void register(Function<ResourceLocation, Block> blockSupplier, BiFunction<Block, ResourceLocation, BlockItem> blockItemSupplier, ResourceLocation identifier) {
         register(blockSupplier, blockItemSupplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
 
     /**
-     * Use {@link Balm#blocks(String, Consumer)} instead.
+     * Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
      */
     default BalmBlocks scoped(String modId) {
         return this;
