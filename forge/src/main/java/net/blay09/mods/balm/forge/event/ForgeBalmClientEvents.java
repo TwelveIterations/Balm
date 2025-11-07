@@ -12,8 +12,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 
+@Deprecated
 public class ForgeBalmClientEvents {
 
+    @Deprecated
     public static void registerEvents(ForgeBalmEvents events) {
         events.registerTickEvent(TickType.Client, TickPhase.Start, (ClientTickHandler handler) -> TickEvent.ClientTickEvent.Pre.BUS.addListener((orig) -> handler.handle(Minecraft.getInstance())));
         events.registerTickEvent(TickType.Client, TickPhase.End, (ClientTickHandler handler) -> TickEvent.ClientTickEvent.Post.BUS.addListener((orig) -> handler.handle(Minecraft.getInstance())));

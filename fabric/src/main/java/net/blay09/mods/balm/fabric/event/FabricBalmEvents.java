@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@Deprecated
 public class FabricBalmEvents implements BalmEvents {
 
     private final Map<Class<?>, Runnable> eventInitializers = new HashMap<>();

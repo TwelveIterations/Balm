@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@Deprecated
 public class NeoForgeBalmEvents implements BalmEvents {
 
     private final Table<Class<?>, EventPriority, Consumer<EventPriority>> eventInitializers = HashBasedTable.create();
