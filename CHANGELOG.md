@@ -1,3 +1,7 @@
+- Fixed crash on startup on Forge
+
+---
+
 ### User Changelog
 
 - Fixed control key modifier not working on OSX
