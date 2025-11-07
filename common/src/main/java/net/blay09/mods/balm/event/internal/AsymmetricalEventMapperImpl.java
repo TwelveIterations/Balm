@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.event.internal;
 
-import net.blay09.mods.balm.event.BidirectionalEventMapper;
+import net.blay09.mods.balm.event.AsymmetricalEventMapper;
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
 import net.minecraft.resources.ResourceLocation;
@@ -8,10 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
-public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, BidirectionalEventMapper<TCallback> {
+public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMapper<TCallback>, AsymmetricalEventMapper<TCallback, TInvoker> {
 
     @Nullable
-    private TCallback invoker;
+    private TInvoker invoker;
 
     @Nullable
     private BiConsumer<ResourceLocation, TCallback> registrar;
@@ -31,7 +31,7 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
     }
 
     @Override
-    public TCallback invoker() {
+    public TInvoker invoker() {
         if (invoker == null) {
             throw new IllegalStateException("Event cannot be invoked.");
         }
@@ -45,7 +45,7 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
     }
 
     @Override
-    public void bind(BiConsumer<ResourceLocation, TCallback> registrar, TCallback invoker) {
+    public void setup(BiConsumer<ResourceLocation, TCallback> registrar, TInvoker invoker) {
         this.registrar = registrar;
         this.invoker = invoker;
     }
