@@ -26,7 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -37,7 +40,9 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmConfig.class);
 
     private static ModConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ModConfigSpec.Builder spec) {
-        spec.comment(property.comment());
+        if (!property.comment().isBlank()) {
+            spec.comment(property.comment());
+        }
         spec.translation(ConfigLocalization.forProperty(property));
 
         return switch (property) {
