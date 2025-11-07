@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.client;
 
 import net.blay09.mods.balm.api.BalmProxy;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -35,5 +36,20 @@ public class BalmClientProxy extends BalmProxy {
     @Override
     public boolean isClient() {
         return true;
+    }
+
+    @Override
+    public boolean isShiftDown() {
+        return Kuma.hasShiftDown();
+    }
+
+    @Override
+    public boolean isControlDown() {
+        return Kuma.hasControlDown();
+    }
+
+    @Override
+    public boolean isAltDown() {
+        return Kuma.hasAltDown();
     }
 }
