@@ -13,6 +13,7 @@
 - Added `CustomMobEffect` with public constructors for convenience
 - Added `SingleItemContainer` class for convenience
 - Added `BlockEntityUtils`, deprecated `BalmBlockEntity`
+- Added `isShiftDown`, `isControlDown` and `isAltDown` to `Balm.safeClientAccess()`, for use e.g. in tooltips 
 - Added new Registrar classes for simpler and more stable registration of things into registries
   - This is backwards-compatible, but the old methods have been deprecated and will be removed in 1.21.11
   - This change will be backported to Minecraft 1.21.1, but probably not 1.20.1 unless there is demand.
