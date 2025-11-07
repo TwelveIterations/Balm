@@ -234,6 +234,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
         final var configType = switch (stringType) {
             case "common" -> ModConfig.Type.COMMON;
             case "client" -> ModConfig.Type.CLIENT;
+            case "server" -> ModConfig.Type.SERVER;
             default -> throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'common' and 'client' are supported.");
         };
         final var mappedConfigSpec = mapToConfigSpec(schema);
