@@ -22,17 +22,17 @@ public class RandomizableContainerBlockEntityForgeMixin {
         extractLootTable();
     }
 
-    @Inject(method = "isEmpty", at = @At(("HEAD")))
+    @Inject(method = "getItem", at = @At(("HEAD")))
     public void getItem(int slot, CallbackInfoReturnable<ItemStack> cir) {
         extractLootTable();
     }
 
-    @Inject(method = "isEmpty", at = @At(("HEAD")))
+    @Inject(method = "removeItem", at = @At(("HEAD")))
     public void removeItem(int slot, int count, CallbackInfoReturnable<ItemStack> cir) {
         extractLootTable();
     }
 
-    @Inject(method = "isEmpty", at = @At(("HEAD")))
+    @Inject(method = "removeItemNoUpdate", at = @At(("HEAD")))
     public void removeItemNoUpdate(int slot, CallbackInfoReturnable<ItemStack> cir) {
         extractLootTable();
     }
