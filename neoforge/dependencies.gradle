@@ -1,4 +1,5 @@
 dependencies {
+    compileOnly "net.blay09.mods:kuma-api-neoforge:$kuma_version"
     jarJar("net.blay09.mods:kuma-api-neoforge") {
         version {
             strictly kuma_version_range
