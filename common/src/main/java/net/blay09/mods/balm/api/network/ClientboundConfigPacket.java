@@ -26,7 +26,7 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
 
     private static ClientboundConfigPacket decode(RegistryFriendlyByteBuf buf) {
         final var identifier = ResourceLocation.STREAM_CODEC.decode(buf);
-        final var schema = Balm.getConfig().getSchema(identifier);
+        final var schema = Balm.config().getSchema(identifier);
         if (schema == null) {
             throw new RuntimeException("Received config packet for unknown schema: " + identifier);
         }
@@ -52,7 +52,7 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
 
     private static void encode(RegistryFriendlyByteBuf buf, ClientboundConfigPacket packet) {
         ResourceLocation.STREAM_CODEC.encode(buf, packet.schema.identifier());
-        final var rootProperties = packet.schema.rootProperties().stream().filter(ConfiguredProperty::synced).toList();
+        final var rootProperties = packet.schema.rootProperties().stream().filter(ConfigSync::isSyncedProperty).toList();
         buf.writeVarInt(rootProperties.size());
         for (final var rootProperty : rootProperties) {
             buf.writeUtf(rootProperty.name());
@@ -62,7 +62,7 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
         buf.writeVarInt(categories.size());
         for (final var category : categories) {
             buf.writeUtf(category.name());
-            final var properties = category.properties().stream().filter(ConfiguredProperty::synced).toList();
+            final var properties = category.properties().stream().filter(ConfigSync::isSyncedProperty).toList();
             buf.writeVarInt(properties.size());
             for (final var property : properties) {
                 buf.writeUtf(property.name());
@@ -82,11 +82,11 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
     }
 
     public static void handle(Player player, ClientboundConfigPacket packet) {
-        final var localConfig = Balm.getConfig().getLocalConfig(packet.schema);
+        final var localConfig = Balm.config().getLocalConfig(packet.schema);
         final var newConfig = localConfig.copy();
         final Predicate<ConfiguredProperty<?>> propertyFilter = packet.config instanceof PropertyAwareConfig propertyAwareConfig ? propertyAwareConfig::hasProperty : (it -> true);
         newConfig.applyFrom(packet.schema, packet.config, propertyFilter);
-        if (Balm.getConfig() instanceof AbstractBalmConfig config) {
+        if (Balm.config() instanceof AbstractBalmConfig config) {
             config.setActiveConfig(packet.schema, newConfig);
         }
     }
