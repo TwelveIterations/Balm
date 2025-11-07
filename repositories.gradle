@@ -1,5 +1,12 @@
 repositories {
     maven {
+        url "https://maven.twelveiterations.com/repository/maven-proxy/"
+        content {
+            includeGroup "dev.emi"
+        }
+    }
+
+    maven {
         url = "https://www.cursemaven.com"
         content {
             includeGroup 'curse.maven'

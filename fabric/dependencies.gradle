@@ -21,8 +21,7 @@ dependencies {
     // runtimeOnly 'com.electronwill.night-config:core:3.8.1'
     // runtimeOnly 'com.electronwill.night-config:toml:3.8.1'
 
-    modCompileOnly "maven.modrinth:cardinal-components-api:6.3.1" // required by Trinkets
-    modCompileOnly "maven.modrinth:trinkets:3.10.0"
+    modCompileOnly "dev.emi:trinkets:3.10.0"
     modCompileOnly "mcp.mobius.waila:wthit:fabric-$wthit_version"
     modCompileOnly "curse.maven:jade-324717:$jade_fabric_version"
     //modImplementation "curse.maven:jade-324717:$jade_fabric_version"
