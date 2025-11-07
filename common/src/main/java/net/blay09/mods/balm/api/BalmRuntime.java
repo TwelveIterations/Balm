@@ -220,7 +220,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         entityTypes(modId, module::registerEntityTypes);
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());
+
         module.registerMenus(getMenus());
+        menuTypes(modId, module::registerMenuTypes);
+
         module.registerCapabilities(getCapabilities());
         module.registerCommands(getCommands());
 
