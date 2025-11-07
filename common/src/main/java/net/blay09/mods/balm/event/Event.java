@@ -82,4 +82,6 @@ public abstract class Event<T> {
      * @param secondPhase The identifier of the phase that should run after the other. It will be created if it didn't exist yet.
      */
     public abstract void addPhaseOrdering(ResourceLocation firstPhase, ResourceLocation secondPhase);
+
+    public abstract boolean hasHandlers();
 }

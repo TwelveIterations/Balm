@@ -121,4 +121,9 @@ class ArrayBackedEvent<T> extends Event<T> {
             rebuildInvoker(handlers.length);
         }
     }
+
+    @Override
+    public boolean hasHandlers() {
+        return handlers != null && handlers.length > 0;
+    }
 }
