@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.world.level.block.entity;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -24,8 +25,16 @@ public class BlockEntityUtils {
         return ClientboundBlockEntityDataPacket.create(blockEntity, BlockEntity::getUpdateTag);
     }
 
+    /**
+     * @deprecated Use {@link #createUpdateTag(HolderLookup.Provider, Consumer)} passing in the registries from {@link BlockEntity#getUpdateTag(HolderLookup.Provider)} instead.
+     */
+    @Deprecated
     public static CompoundTag createUpdateTag(BlockEntity blockEntity, Consumer<ValueOutput> outputConsumer) {
-        final var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, blockEntity.getLevel().registryAccess());
+        return createUpdateTag(blockEntity.getLevel().registryAccess(), outputConsumer);
+    }
+
+    public static CompoundTag createUpdateTag(HolderLookup.Provider registries, Consumer<ValueOutput> outputConsumer) {
+        final var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registries);
         outputConsumer.accept(output);
         return output.buildResult();
     }
