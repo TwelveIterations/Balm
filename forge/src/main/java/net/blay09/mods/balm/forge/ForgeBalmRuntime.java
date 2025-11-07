@@ -5,43 +5,46 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.core.BalmRegistrars;
-import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceConditionRegistrar;
-import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
-import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.common.*;
+import net.blay09.mods.balm.common.BalmLoadContexts;
+import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.BalmRegistrars;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
+import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
 import net.blay09.mods.balm.forge.core.ForgeBalmRegistrar;
-import net.blay09.mods.balm.forge.world.entity.ForgeBalmEntityTypeRegistrar;
-import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
-import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
-import net.blay09.mods.balm.forge.world.block.entity.ForgeBalmBlockEntityTypeRegistrar;
-import net.blay09.mods.balm.forge.loader.ForgeBalmPlatform;
-import net.blay09.mods.balm.forge.world.inventory.ForgeBalmMenuTypeRegistrar;
-import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.core.particles.ForgeBalmParticleTypeRegistrar;
+import net.blay09.mods.balm.forge.event.*;
+import net.blay09.mods.balm.forge.loader.ForgeBalmPlatform;
+import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
+import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceConditionRegistrar;
+import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.forge.stats.ForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
+import net.blay09.mods.balm.forge.world.block.entity.ForgeBalmBlockEntityTypeRegistrar;
+import net.blay09.mods.balm.forge.world.entity.ForgeBalmEntityTypeRegistrar;
+import net.blay09.mods.balm.forge.world.inventory.ForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
-import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceReloadListenerRegistrar;
-import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.bus.EventBus;
 
 import java.util.function.Consumer;
 
@@ -202,5 +205,16 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
         initializer.accept(new ForgeBalmResourceConditionRegistrar(namespace));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <TEvent> EventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
+        final var bus = EventBus.create(ForgifiedEvent.class);
+        final var mapper = new ForgeCustomEventMapper<TEvent>(bus);
+        mapper.setup(
+                (phase, listener) -> bus.addListener(ForgeBalmEventMappings.mapPriority(phase), event -> listener.accept((TEvent) event.data())),
+                () -> (event) -> bus.fire(new ForgifiedEvent<>(event)));
+        return mapper;
     }
 }

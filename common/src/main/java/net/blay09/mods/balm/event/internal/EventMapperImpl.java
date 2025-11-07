@@ -7,11 +7,12 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, BidirectionalEventMapper<TCallback> {
 
     @Nullable
-    private TCallback invoker;
+    private Supplier<TCallback> invoker;
 
     @Nullable
     private BiConsumer<ResourceLocation, TCallback> registrar;
@@ -36,7 +37,7 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
             throw new IllegalStateException("Event cannot be invoked.");
         }
 
-        return invoker;
+        return invoker.get();
     }
 
     @Override
@@ -45,7 +46,7 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
     }
 
     @Override
-    public void bind(BiConsumer<ResourceLocation, TCallback> registrar, TCallback invoker) {
+    public void setup(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TCallback> invoker) {
         this.registrar = registrar;
         this.invoker = invoker;
     }

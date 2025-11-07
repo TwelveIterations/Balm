@@ -1,10 +1,12 @@
 package net.blay09.mods.balm.event;
 
+import net.blay09.mods.balm.Balmstrap;
 import net.blay09.mods.balm.event.internal.EventMapperImpl;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * Provides a uni-directional mapping from common code to a loader specific event.
@@ -17,6 +19,10 @@ public interface EventMapper<TCallback> {
 
     static <TCallback> EventMapper<TCallback> createUnbound() {
         return new EventMapperImpl<>();
+    }
+
+    static <TEvent> EventMapper<Consumer<TEvent>> createBound(Class<TEvent> eventClass) {
+        return Balmstrap.createBoundCustomEvent(eventClass);
     }
 
     /**

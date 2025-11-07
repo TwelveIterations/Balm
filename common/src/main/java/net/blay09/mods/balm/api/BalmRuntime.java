@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.core.BalmRegistrars;
+import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.item.BalmItems;
@@ -336,4 +337,5 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     @Deprecated
     BalmParticleTypeRegistrar particleTypes(String namespace);
 
+    <TEvent> EventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass);
 }

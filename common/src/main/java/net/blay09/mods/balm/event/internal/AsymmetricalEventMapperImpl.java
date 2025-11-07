@@ -7,11 +7,12 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMapper<TCallback>, AsymmetricalEventMapper<TCallback, TInvoker> {
 
     @Nullable
-    private TInvoker invoker;
+    private Supplier<TInvoker> invoker;
 
     @Nullable
     private BiConsumer<ResourceLocation, TCallback> registrar;
@@ -36,7 +37,7 @@ public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMa
             throw new IllegalStateException("Event cannot be invoked.");
         }
 
-        return invoker;
+        return invoker.get();
     }
 
     @Override
@@ -45,7 +46,7 @@ public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMa
     }
 
     @Override
-    public void setup(BiConsumer<ResourceLocation, TCallback> registrar, TInvoker invoker) {
+    public void setup(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TInvoker> invoker) {
         this.registrar = registrar;
         this.invoker = invoker;
     }

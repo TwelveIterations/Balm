@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  * Provides a bidirectional mapping from common code to a loader specific event.
@@ -28,6 +29,6 @@ public interface BidirectionalEventMapper<TCallback> extends EventMapper<TCallba
      * @param invoker   The invoker that takes the incoming parameters and fires them into the mod-loader specific bus.
      */
     @ApiStatus.Internal
-    void bind(BiConsumer<ResourceLocation, TCallback> registrar, TCallback invoker);
+    void setup(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TCallback> invoker);
 
 }
