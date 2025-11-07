@@ -2,15 +2,16 @@ package net.blay09.mods.balm.forge.event;
 
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
-import net.blay09.mods.balm.event.callback.ServerEntityTickCallback;
-import net.blay09.mods.balm.event.callback.ServerLevelTickCallback;
-import net.blay09.mods.balm.event.callback.ServerPlayerTickCallback;
-import net.blay09.mods.balm.event.callback.ServerTickCallback;
+import net.blay09.mods.balm.event.callback.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.bus.EventBus;
 import net.minecraftforge.eventbus.api.listener.Priority;
 import net.minecraftforge.eventbus.internal.Event;
@@ -40,6 +41,11 @@ public class ForgeBalmEventMappings {
         // TODO LivingEvent.LivingTickEvent only ticks for living entities and has no pre/post
         bindSimple(ServerEntityTickCallback.PRE, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
         bindSimple(ServerEntityTickCallback.POST, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
+
+        bindSimple(ServerLifecycleCallback.STARTING, ServerAboutToStartEvent.BUS, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.BUS, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.STOPPING, ServerStoppingEvent.BUS, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.STOPPED, ServerStoppedEvent.BUS, (event, it) -> it.handle(event.getServer()));
     }
 
     public static <TCallback, TEvent extends Event> void bindSimple(EventMapper<TCallback> mapper, EventBus<@NotNull TEvent> bus, BiConsumer<TEvent, TCallback> consumer) {

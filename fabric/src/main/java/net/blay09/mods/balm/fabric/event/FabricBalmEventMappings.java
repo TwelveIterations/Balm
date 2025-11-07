@@ -2,10 +2,8 @@ package net.blay09.mods.balm.fabric.event;
 
 import net.blay09.mods.balm.event.Event;
 import net.blay09.mods.balm.event.EventPhases;
-import net.blay09.mods.balm.event.callback.ServerEntityTickCallback;
-import net.blay09.mods.balm.event.callback.ServerLevelTickCallback;
-import net.blay09.mods.balm.event.callback.ServerPlayerTickCallback;
-import net.blay09.mods.balm.event.callback.ServerTickCallback;
+import net.blay09.mods.balm.event.callback.*;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.resources.ResourceLocation;
 
@@ -37,6 +35,15 @@ public class FabricBalmEventMappings {
                 -> FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_PRE.register(mapPhase(phase), it));
         ServerEntityTickCallback.POST.setup((phase, it)
                 -> FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_POST.register(mapPhase(phase), it));
+
+        ServerLifecycleCallback.STARTING.setup((phase, it)
+            -> ServerLifecycleEvents.SERVER_STARTING.register(mapPhase(phase), it::handle));
+        ServerLifecycleCallback.STARTED.setup((phase, it)
+                -> ServerLifecycleEvents.SERVER_STARTED.register(mapPhase(phase), it::handle));
+        ServerLifecycleCallback.STOPPING.setup((phase, it)
+                -> ServerLifecycleEvents.SERVER_STOPPING.register(mapPhase(phase), it::handle));
+        ServerLifecycleCallback.STOPPED.setup((phase, it)
+                -> ServerLifecycleEvents.SERVER_STOPPED.register(mapPhase(phase), it::handle));
     }
 
     public static ResourceLocation mapPhase(ResourceLocation phase) {

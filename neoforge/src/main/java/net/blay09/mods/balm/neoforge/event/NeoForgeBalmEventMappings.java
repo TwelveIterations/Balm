@@ -2,16 +2,17 @@ package net.blay09.mods.balm.neoforge.event;
 
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
-import net.blay09.mods.balm.event.callback.ServerEntityTickCallback;
-import net.blay09.mods.balm.event.callback.ServerLevelTickCallback;
-import net.blay09.mods.balm.event.callback.ServerPlayerTickCallback;
-import net.blay09.mods.balm.event.callback.ServerTickCallback;
+import net.blay09.mods.balm.event.callback.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -39,6 +40,11 @@ public class NeoForgeBalmEventMappings {
         bindFiltered(ServerPlayerTickCallback.POST, PlayerTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindFiltered(ServerEntityTickCallback.PRE, EntityTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
         bindFiltered(ServerEntityTickCallback.POST, EntityTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+
+        bindSimple(ServerLifecycleCallback.STARTING, ServerAboutToStartEvent.class, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.class, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.STOPPING, ServerStoppingEvent.class, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.STOPPED, ServerStoppedEvent.class, (event, it) -> it.handle(event.getServer()));
     }
 
     public static <TCallback, TEvent extends Event> void bindSimple(EventMapper<TCallback> mapper, Class<TEvent> eventClass, BiConsumer<TEvent, TCallback> consumer) {
