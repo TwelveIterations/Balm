@@ -200,9 +200,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerResources(getResources());
         resourceConditions(modId, module::registerResourceConditions);
 
-        module.registerAdditional(getRegistries());
-        module.registerAdditional(registrar());
-
         module.registerComponents(getComponents());
         dataComponentTypes(modId, module::registerDataComponentTypes);
 
@@ -242,6 +239,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
         module.registerParticles(getParticles());
         particleTypes(modId, module::registerParticleTypes);
+
+        module.registerAdditional(getRegistries());
+        module.registerAdditional(registrar());
 
         resourceReloadListeners(modId, module::registerReloadListeners);
 
