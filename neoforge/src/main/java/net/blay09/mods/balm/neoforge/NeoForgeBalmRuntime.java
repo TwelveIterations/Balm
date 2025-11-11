@@ -109,7 +109,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     public void initializeMod(String modId, NeoForgeLoadContext context, Consumer<BalmRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.accept(new BalmRegistrars(this));
+        initializer.accept(new BalmRegistrars(this, modId));
 
         final var modBus = context.modBus();
         DeferredRegisters.register(modId, modBus);

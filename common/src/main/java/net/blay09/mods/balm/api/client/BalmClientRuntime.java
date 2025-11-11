@@ -77,7 +77,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
 
     @Deprecated
     default void registerModule(BalmClientModule module) {
-        registerModule(new BalmClientRegistrars(this), module);
+        registerModule(new BalmClientRegistrars(this, module.getId().getNamespace()), module);
     }
 
     void registerModule(BalmClientRegistrars registrars, BalmClientModule module);

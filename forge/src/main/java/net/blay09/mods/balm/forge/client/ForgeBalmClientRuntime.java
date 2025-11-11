@@ -75,7 +75,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     public void initializeMod(String modId, ForgeLoadContext context, Consumer<BalmClientRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.accept(new BalmClientRegistrars(this));
+        initializer.accept(new BalmClientRegistrars(this, modId));
 
         ModBusEventRegisters.register(modId, context.modBusGroup());
     }

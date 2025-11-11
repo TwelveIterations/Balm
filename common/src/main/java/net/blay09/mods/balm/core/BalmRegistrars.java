@@ -28,17 +28,26 @@ import java.util.function.Consumer;
 public class BalmRegistrars {
 
     private final BalmRuntime<?> runtime;
+    private final String namespace;
 
-    public BalmRegistrars(BalmRuntime<?> runtime) {
+    public BalmRegistrars(BalmRuntime<?> runtime, String namespace) {
+        this.namespace = namespace;
         this.runtime = runtime;
     }
 
     /**
      * Use this to register menu types using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register menu types under.
      * @param initializer Callback that receives a scoped registrar for registering menu types.
      */
+    public void menuTypes(Consumer<BalmMenuTypeRegistrar> initializer) {
+        runtime.menuTypes(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #menuTypes(Consumer)} instead.
+     */
+    @Deprecated
     public void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer) {
         runtime.menuTypes(namespace, initializer);
     }
@@ -46,20 +55,33 @@ public class BalmRegistrars {
     /**
      * Use this to register entity types using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register entity types under.
      * @param initializer Callback that receives a scoped registrar for registering entity types.
      */
+    public void entityTypes(Consumer<BalmEntityTypeRegistrar> initializer) {
+        runtime.entityTypes(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #entityTypes(Consumer)} instead.
+     */
+    @Deprecated
     public void entityTypes(String namespace, Consumer<BalmEntityTypeRegistrar> initializer) {
         runtime.entityTypes(namespace, initializer);
     }
 
-
     /**
      * Use this to register particle types using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register particle types under.
      * @param initializer Callback that receives a scoped registrar for registering particle types.
      */
+    public void particleTypes(Consumer<BalmParticleTypeRegistrar> initializer) {
+        runtime.particleTypes(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #particleTypes(Consumer)} instead.
+     */
+    @Deprecated
     public void particleTypes(String namespace, Consumer<BalmParticleTypeRegistrar> initializer) {
         runtime.particleTypes(namespace, initializer);
     }
@@ -67,9 +89,16 @@ public class BalmRegistrars {
     /**
      * Use this to register custom stats using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register stats under.
      * @param initializer Callback that receives a scoped registrar for registering custom stats.
      */
+    public void customStats(Consumer<BalmCustomStatRegistrar> initializer) {
+        runtime.customStats(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #customStats(Consumer)} instead.
+     */
+    @Deprecated
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         runtime.customStats(namespace, initializer);
     }
@@ -77,9 +106,16 @@ public class BalmRegistrars {
     /**
      * Provides a scoped registrar to register server resource reload listeners under your mod namespace.
      *
-     * @param namespace   The mod id under which reload listeners should be registered.
      * @param initializer Callback that receives a scoped registrar for server reload listeners.
      */
+    public void resourceReloadListeners(Consumer<BalmResourceReloadListenerRegistrar> initializer) {
+        runtime.resourceReloadListeners(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #resourceReloadListeners(Consumer)} instead.
+     */
+    @Deprecated
     public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
         runtime.resourceReloadListeners(namespace, initializer);
     }
@@ -89,6 +125,14 @@ public class BalmRegistrars {
      *
      * @param initializer Callback receiving the resource condition registrar.
      */
+    public void resourceConditions(Consumer<BalmResourceConditionRegistrar> initializer) {
+        runtime.resourceConditions(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #resourceConditions(Consumer)} instead.
+     */
+    @Deprecated
     public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
         runtime.resourceConditions(namespace, initializer);
     }
@@ -96,9 +140,16 @@ public class BalmRegistrars {
     /**
      * Use this to register items using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register items under.
      * @param initializer Callback that receives a scoped registrar for registering items.
      */
+    public void items(Consumer<BalmItemRegistrar> initializer) {
+        runtime.items(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #items(Consumer)} instead.
+     */
+    @Deprecated
     public void items(String namespace, Consumer<BalmItemRegistrar> initializer) {
         runtime.items(namespace, initializer);
     }
@@ -106,9 +157,16 @@ public class BalmRegistrars {
     /**
      * Use this to register recipe types and related objects using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register recipe types under.
      * @param initializer Callback that receives a scoped registrar for registering recipe types.
      */
+    public void recipeTypes(Consumer<BalmRecipeTypeRegistrar> initializer) {
+        runtime.recipeTypes(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #recipeTypes(Consumer)} instead.
+     */
+    @Deprecated
     public void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer) {
         runtime.recipeTypes(namespace, initializer);
     }
@@ -116,9 +174,16 @@ public class BalmRegistrars {
     /**
      * Use this to register data component types using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register data component types under.
      * @param initializer Callback that receives a scoped registrar for registering data component types.
      */
+    public void dataComponentTypes(Consumer<BalmDataComponentTypeRegistrar> initializer) {
+        runtime.dataComponentTypes(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #dataComponentTypes(Consumer)} instead.
+     */
+    @Deprecated
     public void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer) {
         runtime.dataComponentTypes(namespace, initializer);
     }
@@ -126,9 +191,16 @@ public class BalmRegistrars {
     /**
      * Use this to register creative mode tabs using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register creative mode tabs under.
      * @param initializer Callback that receives a scoped registrar for registering creative mode tabs.
      */
+    public void creativeModeTabs(Consumer<BalmCreativeModeTabRegistrar> initializer) {
+        runtime.creativeModeTabs(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #creativeModeTabs(Consumer)} instead.
+     */
+    @Deprecated
     public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
         runtime.creativeModeTabs(namespace, initializer);
     }
@@ -136,8 +208,14 @@ public class BalmRegistrars {
     /**
      * Use this to register blocks using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register blocks under.
      * @param initializer Callback that receives a scoped registrar for registering blocks.
+     */
+    public void blocks(Consumer<BalmBlockRegistrar> initializer) {
+        runtime.blocks(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #blocks(Consumer)} instead.
      */
     public void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer) {
         runtime.blocks(namespace, initializer);
@@ -146,9 +224,16 @@ public class BalmRegistrars {
     /**
      * Use this to register block entity types using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register block entity types under.
      * @param initializer Callback that receives a scoped registrar for registering block entity types.
      */
+    public void blockEntityTypes(Consumer<BalmBlockEntityTypeRegistrar> initializer) {
+        runtime.blockEntityTypes(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #blockEntityTypes(Consumer)} instead.
+     */
+    @Deprecated
     public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
         runtime.blockEntityTypes(namespace, initializer);
     }
@@ -168,7 +253,6 @@ public class BalmRegistrars {
      * Creates a scoped registrar for a specific registry and namespace.
      *
      * @param registryKey The {@link net.minecraft.core.registries.Registries} registry resource key.
-     * @param namespace   The mod id to register entries under.
      * @param <T>         The type of the registry entries, e.g. {@link net.minecraft.sounds.SoundEvent}.
      * @return a scoped {@link BalmRegistrar} that can be used to register entries to this registry.
      * @see BalmRegistrars#blocks(String, Consumer)
@@ -177,6 +261,14 @@ public class BalmRegistrars {
      * @see BalmRegistrars#creativeModeTabs(String, Consumer)
      * @see BalmRegistrars#recipeTypes(String, Consumer)
      */
+    public <T> BalmRegistrar.Scoped<T> registrar(ResourceKey<? extends Registry<T>> registryKey) {
+        return runtime.registrar(registryKey, namespace);
+    }
+
+    /**
+     * @deprecated Use {@link #registrar(ResourceKey)} instead.
+     */
+    @Deprecated
     public <T> BalmRegistrar.Scoped<T> registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
         return runtime.registrar(registryKey, namespace);
     }
@@ -186,7 +278,6 @@ public class BalmRegistrars {
      * Creates a scoped registrar for a specific registry and namespace.
      *
      * @param registryKey the {@link net.minecraft.core.registries.Registries} registry resource key.
-     * @param namespace   the mod id to register entries under.
      * @param initializer callback that receives a scoped registrar for registering entries to this registry.
      * @param <T>         the type of the registry entries, e.g. {@link net.minecraft.sounds.SoundEvent}.
      * @see BalmRegistrars#blocks(String, Consumer)
@@ -195,6 +286,14 @@ public class BalmRegistrars {
      * @see BalmRegistrars#creativeModeTabs(String, Consumer)
      * @see BalmRegistrars#recipeTypes(String, Consumer)
      */
+    public <T> void registrar(ResourceKey<? extends Registry<T>> registryKey, Consumer<BalmRegistrar.Scoped<T>> initializer) {
+        initializer.accept(runtime.registrar(registryKey, namespace));
+    }
+
+    /**
+     * @deprecated Use {@link #registrar(ResourceKey, Consumer)} instead.
+     */
+    @Deprecated
     public <T> void registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace, Consumer<BalmRegistrar.Scoped<T>> initializer) {
         initializer.accept(runtime.registrar(registryKey, namespace));
     }

@@ -23,107 +23,179 @@ import java.util.function.Consumer;
 public class BalmClientRegistrars {
 
     private final BalmClientRuntime<?> runtime;
+    private final String namespace;
 
-    public BalmClientRegistrars(BalmClientRuntime<?> runtime) {
+    public BalmClientRegistrars(BalmClientRuntime<?> runtime, String namespace) {
         this.runtime = runtime;
+        this.namespace = namespace;
     }
 
     /**
      * Use this to register menu screens using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register menu types under.
      * @param initializer Callback that receives a scoped registrar for registering menu types.
      */
-    public void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
+    public void menuScreens(Consumer<BalmMenuScreenRegistrar> initializer) {
         runtime.menuScreens(namespace, initializer);
     }
 
     /**
      * Use this to register block entity renderers using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register block entity types under.
      * @param initializer Callback that receives a scoped registrar for registering block entity types.
      */
-    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
+    public void blockEntityRenderers(Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         runtime.blockEntityRenderers(namespace, initializer);
     }
 
     /**
      * Use this to register entity renderers using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id to register entity types under.
      * @param initializer Callback that receives a scoped registrar for registering entity types.
      */
-    public void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer) {
+    public void entityRenderers(Consumer<BalmEntityRendererRegistrar> initializer) {
         runtime.entityRenderers(namespace, initializer);
     }
 
     /**
      * Use this to register models using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id under which models should be registered.
      * @param initializer Callback that receives a scoped registrar for models.
      */
-    public void blockStateModels(String namespace, Consumer<BalmBlockStateModelRegistrar> initializer) {
+    public void blockStateModels(Consumer<BalmBlockStateModelRegistrar> initializer) {
         runtime.blockStateModels(namespace, initializer);
     }
 
     /**
      * Use this to register model layers using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id under which model layers should be registered.
      * @param initializer Callback that receives a scoped registrar for model layers.
      */
-    public void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer) {
+    public void modelLayers(Consumer<BalmModelLayerRegistrar> initializer) {
         runtime.modelLayers(namespace, initializer);
     }
 
     /**
      * Use this to register block color handlers using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id under which block colors should be registered.
      * @param initializer Callback that receives a scoped registrar for block colors.
      */
-    public void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer) {
+    public void blockColors(Consumer<BalmBlockColorRegistrar> initializer) {
         runtime.blockColors(namespace, initializer);
     }
 
     /**
      * Use this to register particle providers using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id under which particle providers should be registered.
      * @param initializer Callback that receives a scoped registrar for particle providers.
      */
-    public void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer) {
+    public void particleProviders(Consumer<BalmParticleProviderRegistrar> initializer) {
         runtime.particleProviders(namespace, initializer);
     }
 
     /**
      * Use this to register block render types using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id under which block render types should be registered.
      * @param initializer Callback that receives a scoped registrar for block render types.
      */
-    public void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer) {
+    public void blockRenderTypes(Consumer<BalmBlockRenderTypeRegistrar> initializer) {
         runtime.blockRenderTypes(namespace, initializer);
     }
 
     /**
      * Use this to register key mappings using the registrar provided in the consumer callback.
      *
-     * @param namespace   The mod id under which key mappings should be registered.
      * @param initializer Callback that receives a scoped registrar for key mappings.
      */
-    public void keyMappings(String namespace, Consumer<BalmKeyMappingRegistrar> initializer) {
+    public void keyMappings(Consumer<BalmKeyMappingRegistrar> initializer) {
         runtime.keyMappings(namespace, initializer);
     }
 
     /**
      * Use this to register resource reload listeners using the registrar provided in the consumer callback.
      *
-     * @param namespace The mod id under which reload listeners should be registered.
      * @param initializer Callback that receives a scoped registrar for reload listeners.
      */
+    public void resourceReloadListeners(Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
+        runtime.resourceReloadListeners(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #menuScreens(Consumer)} instead.
+     */
+    @Deprecated
+    public void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
+        runtime.menuScreens(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #blockEntityRenderers(Consumer)} instead.
+     */
+    @Deprecated
+    public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
+        runtime.blockEntityRenderers(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #entityRenderers(Consumer)} instead.
+     */
+    @Deprecated
+    public void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer) {
+        runtime.entityRenderers(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #blockStateModels(Consumer)} instead.
+     */
+    @Deprecated
+    public void blockStateModels(String namespace, Consumer<BalmBlockStateModelRegistrar> initializer) {
+        runtime.blockStateModels(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #modelLayers(Consumer)} instead.
+     */
+    @Deprecated
+    public void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer) {
+        runtime.modelLayers(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #blockColors(Consumer)} instead.
+     */
+    @Deprecated
+    public void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer) {
+        runtime.blockColors(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #particleProviders(Consumer)} instead.
+     */
+    @Deprecated
+    public void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer) {
+        runtime.particleProviders(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #blockRenderTypes(Consumer)} instead.
+     */
+    @Deprecated
+    public void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer) {
+        runtime.blockRenderTypes(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #keyMappings(Consumer)} instead.
+     */
+    @Deprecated
+    public void keyMappings(String namespace, Consumer<BalmKeyMappingRegistrar> initializer) {
+        runtime.keyMappings(namespace, initializer);
+    }
+
+    /**
+     * @deprecated Use {@link #resourceReloadListeners(Consumer)} instead.
+     */
+    @Deprecated
     public void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
         runtime.resourceReloadListeners(namespace, initializer);
     }
