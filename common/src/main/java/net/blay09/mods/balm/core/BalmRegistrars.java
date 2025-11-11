@@ -217,6 +217,7 @@ public class BalmRegistrars {
     /**
      * @deprecated Use {@link #blocks(Consumer)} instead.
      */
+    @Deprecated
     public void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer) {
         runtime.blocks(namespace, initializer);
     }
