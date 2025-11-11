@@ -31,7 +31,9 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
         final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.location().getNamespace());
         final var earlyConstruct = constructEarly ? resourceFunction.apply(resourceKey.location()) : null;
         if (earlyConstruct != null) {
-            return new DeferredHolder<>(resourceKey, earlyConstruct);
+            deferredRegister.register(resourceKey.location().getPath(), () -> earlyConstruct);
+            final var registry = RegistryManager.ACTIVE.getRegistry(resourceKey.registryKey());
+            return new DeferredHolder<>(resourceKey, registry != null ? registry.getDelegateOrThrow(earlyConstruct) : null);
         } else {
             deferredRegister.register(resourceKey.location().getPath(), () -> resourceFunction.apply(resourceKey.location()));
             return new DeferredHolder<>(resourceKey);
