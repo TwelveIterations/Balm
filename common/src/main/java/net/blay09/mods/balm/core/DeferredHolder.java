@@ -8,6 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -16,19 +17,27 @@ import java.util.stream.Stream;
 public class DeferredHolder<T> implements Holder<T> {
 
     private final ResourceKey<T> resourceKey;
+    @Nullable
     private Holder<T> delegate;
+
+    @Nullable
+    private T earlyConstructedInstance;
 
     public DeferredHolder(ResourceKey<T> resourceKey) {
         this.resourceKey = resourceKey;
     }
 
-    public DeferredHolder(ResourceKey<T> resourceKey, Holder<T> delegate) {
+    public DeferredHolder(ResourceKey<T> resourceKey, @Nullable T earlyConstructedInstance) {
         this.resourceKey = resourceKey;
-        this.delegate = delegate;
+        this.earlyConstructedInstance = earlyConstructedInstance;
     }
 
     @Override
     public T value() {
+        if (earlyConstructedInstance != null) {
+            return earlyConstructedInstance;
+        }
+
         tryBind();
         if (delegate == null) {
             throw new IllegalStateException("Tried to access " + resourceKey + " before it was bound");
