@@ -22,6 +22,11 @@ public class DeferredHolder<T> implements Holder<T> {
         this.resourceKey = resourceKey;
     }
 
+    public DeferredHolder(ResourceKey<T> resourceKey, Holder<T> delegate) {
+        this.resourceKey = resourceKey;
+        this.delegate = delegate;
+    }
+
     @Override
     public T value() {
         tryBind();
