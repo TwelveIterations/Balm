@@ -7,8 +7,16 @@ import net.minecraft.util.RandomSource;
 
 import java.util.Map;
 
+/**
+ * @deprecated Use {@link net.minecraft.util.valueproviders.IntProvider} or {@link net.minecraft.util.valueproviders.FloatProvider} instead.
+ */
+@Deprecated
 public interface NumberProvider {
 
+    /**
+     * @deprecated Use {@link net.minecraft.util.valueproviders.IntProvider} or {@link net.minecraft.util.valueproviders.FloatProvider} instead.
+     */
+    @Deprecated
     record Constant(float value) implements NumberProvider {
         public static MapCodec<Constant> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.FLOAT.fieldOf("value").forGetter(Constant::value)
@@ -34,6 +42,10 @@ public interface NumberProvider {
         }
     }
 
+    /**
+     * @deprecated Use {@link net.minecraft.util.valueproviders.IntProvider} or {@link net.minecraft.util.valueproviders.FloatProvider} instead.
+     */
+    @Deprecated
     record Uniform(float min, float max) implements NumberProvider {
         public static MapCodec<Uniform> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.FLOAT.fieldOf("min").forGetter(Uniform::min),
