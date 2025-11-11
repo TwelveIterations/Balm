@@ -112,7 +112,7 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
         fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(identifier, type, provider));
     }
 
-    private void attachBlockEntityCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
+    private void attachBlockEntityCapabilities(AttachCapabilitiesEvent.BlockEntities event) {
         if (flattenedBlockEntityProviders == null) {
             flattenedBlockEntityProviders = ArrayListMultimap.create();
             for (final var blockEntityProvider : blockEntityProviders) {
