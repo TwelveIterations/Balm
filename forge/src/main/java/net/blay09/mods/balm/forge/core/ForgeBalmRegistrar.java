@@ -39,7 +39,7 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
         public Holder<T> register(String name, Function<ResourceLocation, T> resourceFunction) {
             final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
             final var registryObject = deferredRegister.register(name, () -> resourceFunction.apply(ResourceLocation.fromNamespaceAndPath(namespace, name)));
-            return registryObject.getHolder().orElseThrow();
+            return new DeferredHolder<>(registryObject.getKey());
         }
     }
 }
