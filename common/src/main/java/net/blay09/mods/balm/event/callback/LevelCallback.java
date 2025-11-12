@@ -1,0 +1,23 @@
+package net.blay09.mods.balm.event.callback;
+
+import net.blay09.mods.balm.event.EventMapper;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.chunk.ChunkAccess;
+
+@FunctionalInterface
+public interface LevelCallback {
+    void handle(LevelAccessor level);
+
+    EventMapper<LevelCallback> LOAD = EventMapper.createUnbound();
+    EventMapper<LevelCallback> UNLOAD = EventMapper.createUnbound();
+
+    @FunctionalInterface
+    interface Chunk {
+        void handle(LevelAccessor level, ChunkAccess chunk, ChunkPos chunkPos);
+
+        EventMapper<Chunk> LOAD = EventMapper.createUnbound();
+        EventMapper<Chunk> UNLOAD = EventMapper.createUnbound();
+    }
+
+}

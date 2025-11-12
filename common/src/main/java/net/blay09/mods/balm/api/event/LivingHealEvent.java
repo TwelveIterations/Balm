@@ -2,6 +2,10 @@ package net.blay09.mods.balm.api.event;
 
 import net.minecraft.world.entity.LivingEntity;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.LivingEntityCallback.Heal} instead.
+ */
+@Deprecated
 public class LivingHealEvent extends BalmEvent {
     private final LivingEntity entity;
     private final float amount;

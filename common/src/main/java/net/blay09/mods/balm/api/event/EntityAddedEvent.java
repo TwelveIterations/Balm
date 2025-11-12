@@ -3,6 +3,10 @@ package net.blay09.mods.balm.api.event;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.EntityCallback#ADD} instead.
+ */
+@Deprecated
 public class EntityAddedEvent extends BalmEvent {
     private final Entity entity;
     private final Level level;

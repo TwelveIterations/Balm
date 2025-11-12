@@ -4,6 +4,10 @@ import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render} instead.
+ */
+@Deprecated
 public abstract class ScreenDrawEvent extends BalmEvent {
     private final Screen screen;
     private final GuiGraphics guiGraphics;
@@ -39,12 +43,20 @@ public abstract class ScreenDrawEvent extends BalmEvent {
         return tickDelta;
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render#PRE} instead.
+     */
+    @Deprecated
     public static class Pre extends ScreenDrawEvent {
         public Pre(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
             super(screen, guiGraphics, mouseX, mouseY, tickDelta);
         }
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render#POST} instead.
+     */
+    @Deprecated
     public static class Post extends ScreenDrawEvent {
         public Post(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
             super(screen, guiGraphics, mouseX, mouseY, tickDelta);

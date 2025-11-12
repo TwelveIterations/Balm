@@ -2,6 +2,10 @@ package net.blay09.mods.balm.api.event;
 
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ServerPlayerCallback.Respawn} instead.
+ */
+@Deprecated
 public class PlayerRespawnEvent extends BalmEvent {
     private final ServerPlayer oldPlayer;
     private final ServerPlayer newPlayer;

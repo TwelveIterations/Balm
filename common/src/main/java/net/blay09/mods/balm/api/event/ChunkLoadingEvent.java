@@ -4,6 +4,10 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.LevelCallback.Chunk} instead.
+ */
+@Deprecated
 public abstract class ChunkLoadingEvent {
     private final LevelAccessor level;
     private final ChunkAccess chunk;
@@ -27,12 +31,20 @@ public abstract class ChunkLoadingEvent {
         return chunkPos;
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.event.callback.LevelCallback.Chunk#LOAD} instead.
+     */
+    @Deprecated
     public static class Load extends ChunkLoadingEvent {
         public Load(LevelAccessor level, ChunkAccess chunk) {
             super(level, chunk);
         }
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.event.callback.LevelCallback.Chunk#UNLOAD} instead.
+     */
+    @Deprecated
     public static class Unload extends ChunkLoadingEvent {
         public Unload(LevelAccessor level, ChunkAccess chunk) {
             super(level, chunk);

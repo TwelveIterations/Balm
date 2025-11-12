@@ -11,4 +11,5 @@ public interface ServerLifecycleCallback {
     EventMapper<ServerLifecycleCallback> STARTED = EventMapper.createUnbound();
     EventMapper<ServerLifecycleCallback> STOPPING = EventMapper.createUnbound();
     EventMapper<ServerLifecycleCallback> STOPPED = EventMapper.createUnbound();
+    EventMapper<ServerLifecycleCallback> RELOADED = EventMapper.createUnbound();
 }

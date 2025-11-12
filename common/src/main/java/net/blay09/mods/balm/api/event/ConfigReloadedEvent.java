@@ -2,6 +2,10 @@ package net.blay09.mods.balm.api.event;
 
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ConfigCallback#LOADED} instead.
+ */
+@Deprecated
 public class ConfigReloadedEvent extends BalmEvent {
 
     private final BalmConfigSchema schema;

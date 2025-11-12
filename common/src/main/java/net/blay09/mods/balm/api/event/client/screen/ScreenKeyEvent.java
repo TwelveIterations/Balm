@@ -3,6 +3,10 @@ package net.blay09.mods.balm.api.event.client.screen;
 import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.client.gui.screens.Screen;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyPress} and {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyRelease} instead.
+ */
+@Deprecated
 public abstract class ScreenKeyEvent extends BalmEvent {
     private final Screen screen;
     private final int key;
@@ -32,11 +36,19 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         return modifiers;
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyPress} instead.
+     */
+    @Deprecated
     public static class Press extends ScreenKeyEvent {
         public Press(Screen screen, int key, int scanCode, int modifiers) {
             super(screen, key, scanCode, modifiers);
         }
 
+        /**
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyPress#PRE} instead.
+         */
+        @Deprecated
         public static class Pre extends Press {
             public Pre(Screen screen, int key, int scanCode, int modifiers) {
                 super(screen, key, scanCode, modifiers);
@@ -44,7 +56,7 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated On Forge, Post events only fire if Vanilla didn't handle the press. Consider listening to Pre instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyPress#POST} instead.
          */
         @Deprecated
         public static class Post extends Press {
@@ -54,11 +66,19 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         }
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyRelease} instead.
+     */
+    @Deprecated
     public static class Release extends ScreenKeyEvent {
         public Release(Screen screen, int key, int scanCode, int modifiers) {
             super(screen, key, scanCode, modifiers);
         }
 
+        /**
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyRelease#PRE} instead.
+         */
+        @Deprecated
         public static class Pre extends Release {
             public Pre(Screen screen, int key, int scanCode, int modifiers) {
                 super(screen, key, scanCode, modifiers);
@@ -66,7 +86,7 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated On Forge, Post events only fire if Vanilla didn't handle the press. Consider listening to Pre instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyRelease#POST} instead.
          */
         @Deprecated
         public static class Post extends Release {

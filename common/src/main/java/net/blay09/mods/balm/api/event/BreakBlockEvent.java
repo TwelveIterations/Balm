@@ -6,6 +6,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.BlockCallback.Break} instead.
+ */
+@Deprecated
 public class BreakBlockEvent extends BalmEvent {
     private final Level level;
     private final Player player;

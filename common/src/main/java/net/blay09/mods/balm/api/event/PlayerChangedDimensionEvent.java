@@ -4,6 +4,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ServerPlayerCallback.DimensionChange} instead.
+ */
+@Deprecated
 public class PlayerChangedDimensionEvent extends BalmEvent {
     private final ServerPlayer player;
     private final ResourceKey<Level> fromDim;

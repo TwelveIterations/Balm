@@ -3,6 +3,10 @@ package net.blay09.mods.balm.api.event.client;
 import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.world.entity.LivingEntity;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.RenderCallback.UpdateFov} instead.
+ */
+@Deprecated
 public class FovUpdateEvent extends BalmEvent {
     private final LivingEntity entity;
     private final float originalFov;

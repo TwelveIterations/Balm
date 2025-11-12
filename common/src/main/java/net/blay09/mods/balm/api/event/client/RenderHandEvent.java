@@ -4,6 +4,10 @@ import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.RenderCallback.Hand} instead.
+ */
+@Deprecated
 public class RenderHandEvent extends BalmEvent {
 
     private final InteractionHand hand;

@@ -3,6 +3,10 @@ package net.blay09.mods.balm.api.event;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.LivingEntityCallback.Death} instead.
+ */
+@Deprecated
 public class LivingDeathEvent extends BalmEvent {
     private final LivingEntity entity;
     private final DamageSource damageSource;
