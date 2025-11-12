@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric.event;
 
 import net.blay09.mods.balm.event.Event;
+import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
 import net.blay09.mods.balm.event.callback.*;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -23,17 +24,17 @@ public class FabricBalmEventMappings {
                 -> ServerTickEvents.START_SERVER_TICK.register(mapPhase(phase), it::handle));
         ServerTickCallback.POST.setup((phase, it)
                 -> ServerTickEvents.END_SERVER_TICK.register(mapPhase(phase), it::handle));
-        ServerLevelTickCallback.PRE.setup((phase, it)
+        ServerTickCallback.Level.PRE.setup((phase, it)
                 -> ServerTickEvents.START_WORLD_TICK.register(mapPhase(phase), it::handle));
-        ServerLevelTickCallback.POST.setup((phase, it)
+        ServerTickCallback.Level.POST.setup((phase, it)
                 -> ServerTickEvents.END_WORLD_TICK.register(mapPhase(phase), it::handle));
-        ServerPlayerTickCallback.PRE.setup((phase, it)
+        ServerTickCallback.Player.PRE.setup((phase, it)
                 -> FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_PRE.register(mapPhase(phase), it));
-        ServerPlayerTickCallback.POST.setup((phase, it)
+        ServerTickCallback.Player.POST.setup((phase, it)
                 -> FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_POST.register(mapPhase(phase), it));
-        ServerEntityTickCallback.PRE.setup((phase, it)
+        ServerTickCallback.Entity.PRE.setup((phase, it)
                 -> FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_PRE.register(mapPhase(phase), it));
-        ServerEntityTickCallback.POST.setup((phase, it)
+        ServerTickCallback.Entity.POST.setup((phase, it)
                 -> FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_POST.register(mapPhase(phase), it));
 
         ServerLifecycleCallback.STARTING.setup((phase, it)

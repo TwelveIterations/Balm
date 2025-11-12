@@ -9,15 +9,15 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 public interface LevelCallback {
     void handle(LevelAccessor level);
 
-    EventMapper<LevelCallback> LOAD = EventMapper.createUnbound();
-    EventMapper<LevelCallback> UNLOAD = EventMapper.createUnbound();
+    EventMapper<LevelCallback> LOAD = EventMapper.createUnbound("LevelCallback.LOAD");
+    EventMapper<LevelCallback> UNLOAD = EventMapper.createUnbound("LevelCallback.UNLOAD");
 
     @FunctionalInterface
     interface Chunk {
         void handle(LevelAccessor level, ChunkAccess chunk, ChunkPos chunkPos);
 
-        EventMapper<Chunk> LOAD = EventMapper.createUnbound();
-        EventMapper<Chunk> UNLOAD = EventMapper.createUnbound();
+        EventMapper<Chunk> LOAD = EventMapper.createUnbound("LevelCallback.Chunk.UNLOAD");
+        EventMapper<Chunk> UNLOAD = EventMapper.createUnbound("LevelCallback.Chunk.UNLOAD");
     }
 
 }

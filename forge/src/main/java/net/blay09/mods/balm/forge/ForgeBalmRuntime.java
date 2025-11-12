@@ -211,7 +211,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @SuppressWarnings("unchecked")
     public <TEvent> EventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
         final var bus = EventBus.create(ForgifiedEvent.class);
-        final var mapper = new ForgeCustomEventMapper<TEvent>(bus);
+        final var mapper = new ForgeCustomEventMapper<TEvent>(eventClass.getName(), bus);
         mapper.setup(
                 (phase, listener) -> bus.addListener(ForgeBalmEventMappings.mapPriority(phase), event -> listener.accept((TEvent) event.data())),
                 () -> (event) -> bus.fire(new ForgifiedEvent<>(event)));

@@ -16,21 +16,21 @@ public interface BlockCallback {
     interface DigSpeed {
         float handle(BlockGetter blockGetter, BlockPos pos, BlockState state, Player player, float speed);
 
-        EventMapper<DigSpeed> EVENT = EventMapper.createUnbound();
+        EventMapper<DigSpeed> EVENT = EventMapper.createUnbound("BlockCallback.DigSpeed");
     }
 
     @FunctionalInterface
     interface Break {
         void handle(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Player player);
 
-        EventMapper<Break> BREAK = EventMapper.createUnbound();
+        EventMapper<Break> BREAK = EventMapper.createUnbound("BlockCallback.Break");
     }
 
     @FunctionalInterface
     interface Use {
         void handle(Player player, Level level, InteractionHand hand, BlockHitResult hitResult);
 
-        EventMapper<Use> USE = EventMapper.createUnbound();
+        EventMapper<Use> USE = EventMapper.createUnbound("BlockCallback.Use");
     }
 
 }

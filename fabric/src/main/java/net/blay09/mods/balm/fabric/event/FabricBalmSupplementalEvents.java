@@ -2,28 +2,29 @@ package net.blay09.mods.balm.fabric.event;
 
 import net.blay09.mods.balm.event.Event;
 import net.blay09.mods.balm.event.EventFactory;
+import net.blay09.mods.balm.event.callback.ServerTickCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 public class FabricBalmSupplementalEvents {
-    public static final Event<ServerPlayerTickCallback> SERVER_PLAYER_TICK_PRE = EventFactory.createArrayBacked(ServerPlayerTickCallback.class, (listeners) -> (player) -> {
+    public static final Event<ServerTickCallback.Player> SERVER_PLAYER_TICK_PRE = EventFactory.createArrayBacked(ServerTickCallback.Player.class, (listeners) -> (player) -> {
         for (final var listener : listeners) {
             listener.handle(player);
         }
     });
 
-    public static final Event<ServerPlayerTickCallback> SERVER_PLAYER_TICK_POST = EventFactory.createArrayBacked(ServerPlayerTickCallback.class, (listeners) -> (player) -> {
+    public static final Event<ServerTickCallback.Player> SERVER_PLAYER_TICK_POST = EventFactory.createArrayBacked(ServerTickCallback.Player.class, (listeners) -> (player) -> {
         for (final var listener : listeners) {
             listener.handle(player);
         }
     });
 
-    public static final Event<ServerEntityTickCallback> SERVER_ENTITY_TICK_PRE = EventFactory.createArrayBacked(ServerEntityTickCallback.class, (listeners) -> (entity) -> {
+    public static final Event<ServerTickCallback.Entity> SERVER_ENTITY_TICK_PRE = EventFactory.createArrayBacked(ServerTickCallback.Entity.class, (listeners) -> (entity) -> {
         for (final var listener : listeners) {
             listener.handle(entity);
         }
     });
 
-    public static final Event<ServerEntityTickCallback> SERVER_ENTITY_TICK_POST = EventFactory.createArrayBacked(ServerEntityTickCallback.class, (listeners) -> (entity) -> {
+    public static final Event<ServerTickCallback.Entity> SERVER_ENTITY_TICK_POST = EventFactory.createArrayBacked(ServerTickCallback.Entity.class, (listeners) -> (entity) -> {
         for (final var listener : listeners) {
             listener.handle(entity);
         }

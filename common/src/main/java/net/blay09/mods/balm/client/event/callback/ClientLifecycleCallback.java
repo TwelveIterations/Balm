@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 public interface ClientLifecycleCallback {
     void handle(Minecraft client);
 
-    EventMapper<ClientLifecycleCallback> STARTED = EventMapper.createUnbound();
-    EventMapper<ClientLifecycleCallback> CONNECTED_TO_SERVER = EventMapper.createUnbound();
-    EventMapper<ClientLifecycleCallback> DISCONNECTED_FROM_SERVER = EventMapper.createUnbound();
+    EventMapper<ClientLifecycleCallback> STARTED = EventMapper.createUnbound("ClientLifecycleCallback.STARTED");
+    EventMapper<ClientLifecycleCallback> CONNECTED_TO_SERVER = EventMapper.createUnbound("ClientLifecycleCallback.CONNECTED_TO_SERVER");
+    EventMapper<ClientLifecycleCallback> DISCONNECTED_FROM_SERVER = EventMapper.createUnbound("ClientLifecycleCallback.DISCONNECTED_FROM_SERVER");
 }

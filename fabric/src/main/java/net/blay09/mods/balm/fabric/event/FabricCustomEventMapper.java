@@ -10,7 +10,8 @@ public class FabricCustomEventMapper<T> extends AsymmetricalEventMapperImpl<Cons
     private final Event<Consumer<T>> event;
 
     @SuppressWarnings("unchecked")
-    public FabricCustomEventMapper(Event<?> event) {
+    public FabricCustomEventMapper(String name, Event<?> event) {
+        super(name);
         this.event = (Event<Consumer<T>>) event;
     }
 

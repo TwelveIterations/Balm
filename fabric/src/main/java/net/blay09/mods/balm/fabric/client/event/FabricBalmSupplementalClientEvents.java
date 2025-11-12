@@ -1,32 +1,31 @@
 package net.blay09.mods.balm.fabric.client.event;
 
-import net.blay09.mods.balm.client.event.callback.ClientEntityTickCallback;
-import net.blay09.mods.balm.client.event.callback.ClientPlayerTickCallback;
+import net.blay09.mods.balm.client.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.event.Event;
 import net.blay09.mods.balm.event.EventFactory;
 import net.blay09.mods.balm.mixin.ClientLevelAccessor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
 public class FabricBalmSupplementalClientEvents {
-    public static final Event<ClientPlayerTickCallback> CLIENT_PLAYER_TICK_PRE = EventFactory.createArrayBacked(ClientPlayerTickCallback.class, (listeners) -> (player) -> {
+    public static final Event<ClientTickCallback.Player> CLIENT_PLAYER_TICK_PRE = EventFactory.createArrayBacked(ClientTickCallback.Player.class, (listeners) -> (player) -> {
         for (final var listener : listeners) {
             listener.handle(player);
         }
     });
 
-    public static final Event<ClientPlayerTickCallback> CLIENT_PLAYER_TICK_POST = EventFactory.createArrayBacked(ClientPlayerTickCallback.class, (listeners) -> (player) -> {
+    public static final Event<ClientTickCallback.Player> CLIENT_PLAYER_TICK_POST = EventFactory.createArrayBacked(ClientTickCallback.Player.class, (listeners) -> (player) -> {
         for (final var listener : listeners) {
             listener.handle(player);
         }
     });
 
-    public static final Event<ClientEntityTickCallback> CLIENT_ENTITY_TICK_PRE = EventFactory.createArrayBacked(ClientEntityTickCallback.class, (listeners) -> (entity) -> {
+    public static final Event<ClientTickCallback.Entity> CLIENT_ENTITY_TICK_PRE = EventFactory.createArrayBacked(ClientTickCallback.Entity.class, (listeners) -> (entity) -> {
         for (final var listener : listeners) {
             listener.handle(entity);
         }
     });
 
-    public static final Event<ClientEntityTickCallback> CLIENT_ENTITY_TICK_POST = EventFactory.createArrayBacked(ClientEntityTickCallback.class, (listeners) -> (entity) -> {
+    public static final Event<ClientTickCallback.Entity> CLIENT_ENTITY_TICK_POST = EventFactory.createArrayBacked(ClientTickCallback.Entity.class, (listeners) -> (entity) -> {
         for (final var listener : listeners) {
             listener.handle(entity);
         }

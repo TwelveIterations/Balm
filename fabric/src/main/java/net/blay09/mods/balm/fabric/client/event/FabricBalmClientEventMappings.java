@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.fabric.client.event;
 
-import net.blay09.mods.balm.client.event.callback.ClientLevelTickCallback;
 import net.blay09.mods.balm.client.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.fabric.event.FabricBalmEventMappings;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -12,9 +11,9 @@ public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
                 -> ClientTickEvents.START_CLIENT_TICK.register(mapPhase(phase), it::handle));
         ClientTickCallback.POST.setup((phase, it)
                 -> ClientTickEvents.END_CLIENT_TICK.register(mapPhase(phase), it::handle));
-        ClientLevelTickCallback.PRE.setup((phase, it)
+        ClientTickCallback.Level.PRE.setup((phase, it)
                 -> ClientTickEvents.START_WORLD_TICK.register(mapPhase(phase), it::handle));
-        ClientLevelTickCallback.POST.setup((phase, it)
+        ClientTickCallback.Level.POST.setup((phase, it)
                 -> ClientTickEvents.END_WORLD_TICK.register(mapPhase(phase), it::handle));
 
         // TODO ServerPlayerTickCallback.PRE.bind((phase, it) -> ServerTickEvents.register(mapPhase(phase), it::handle));

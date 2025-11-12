@@ -16,21 +16,21 @@ public interface RenderCallback {
     interface UpdateFov {
         float handle(LivingEntity entity, float fov);
 
-        EventMapper<UpdateFov> EVENT = EventMapper.createUnbound();
+        EventMapper<UpdateFov> EVENT = EventMapper.createUnbound("RenderCallback.UpdateFov");
     }
 
     @FunctionalInterface
     interface BlockHighlight {
         void handle(BlockHitResult hitResult, PoseStack poseStack, MultiBufferSource multiBufferSource, Camera camera);
 
-        EventMapper<BlockHighlight> EVENT = EventMapper.createUnbound();
+        EventMapper<BlockHighlight> EVENT = EventMapper.createUnbound("RenderCallback.BlockHighlight");
     }
 
     @FunctionalInterface
     interface Hand {
         void handle(InteractionHand hand, ItemStack itemStack, float swingProgress);
 
-        EventMapper<Hand> EVENT = EventMapper.createUnbound();
+        EventMapper<Hand> EVENT = EventMapper.createUnbound("RenderCallback.Hand");
     }
 
     @FunctionalInterface
@@ -39,35 +39,35 @@ public interface RenderCallback {
 
         @FunctionalInterface
         interface Health extends Gui {
-            EventMapper<Health> PRE = EventMapper.createUnbound();
-            EventMapper<Health> POST = EventMapper.createUnbound();
+            EventMapper<Health> PRE = EventMapper.createUnbound("RenderCallback.Gui.Health.PRE");
+            EventMapper<Health> POST = EventMapper.createUnbound("RenderCallback.Gui.Health.POST");
         }
 
         @FunctionalInterface
         interface Chat extends Gui {
-            EventMapper<Chat> PRE = EventMapper.createUnbound();
-            EventMapper<Chat> POST = EventMapper.createUnbound();
+            EventMapper<Chat> PRE = EventMapper.createUnbound("RenderCallback.Gui.Chat.PRE");
+            EventMapper<Chat> POST = EventMapper.createUnbound("RenderCallback.Gui.Chat.POST");
         }
 
         @FunctionalInterface
         interface Debug extends Gui {
-            EventMapper<Debug> PRE = EventMapper.createUnbound();
-            EventMapper<Debug> POST = EventMapper.createUnbound();
+            EventMapper<Debug> PRE = EventMapper.createUnbound("RenderCallback.Gui.Debug.PRE");
+            EventMapper<Debug> POST = EventMapper.createUnbound("RenderCallback.Gui.Debug.POST");
         }
 
         @FunctionalInterface
         interface BossInfo extends Gui {
-            EventMapper<BossInfo> PRE = EventMapper.createUnbound();
-            EventMapper<BossInfo> POST = EventMapper.createUnbound();
+            EventMapper<BossInfo> PRE = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.PRE");
+            EventMapper<BossInfo> POST = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.POST");
         }
 
         @FunctionalInterface
         interface PlayerList extends Gui {
-            EventMapper<PlayerList> PRE = EventMapper.createUnbound();
-            EventMapper<PlayerList> POST = EventMapper.createUnbound();
+            EventMapper<PlayerList> PRE = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.PRE");
+            EventMapper<PlayerList> POST = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.POST");
         }
 
-        EventMapper<Gui> PRE = EventMapper.createUnbound();
-        EventMapper<Gui> POST = EventMapper.createUnbound();
+        EventMapper<Gui> PRE = EventMapper.createUnbound("RenderCallback.Gui.PRE");
+        EventMapper<Gui> POST = EventMapper.createUnbound("RenderCallback.Gui.POST");
     }
 }

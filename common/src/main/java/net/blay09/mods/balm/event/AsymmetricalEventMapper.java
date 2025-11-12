@@ -17,8 +17,8 @@ import java.util.function.Supplier;
  */
 public interface AsymmetricalEventMapper<TCallback, TInvoker> {
 
-    static <TCallback, TInvoker> AsymmetricalEventMapper<TCallback, TInvoker> createUnbound() {
-        return new AsymmetricalEventMapperImpl<>();
+    static <TCallback, TInvoker> AsymmetricalEventMapper<TCallback, TInvoker> createUnbound(String name) {
+        return new AsymmetricalEventMapperImpl<>(name);
     }
 
     /**

@@ -18,7 +18,7 @@ public interface ClientInputCallback {
     interface Keyboard {
         void handle(int key, int scanCode, int action, int modifiers);
 
-        EventMapper<Keyboard> EVENT = EventMapper.createUnbound();
+        EventMapper<Keyboard> EVENT = EventMapper.createUnbound("ClientInputCallback.Keyboard");
     }
 
 }

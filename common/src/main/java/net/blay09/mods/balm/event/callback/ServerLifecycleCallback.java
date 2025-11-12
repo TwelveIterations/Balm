@@ -7,9 +7,9 @@ import net.minecraft.server.MinecraftServer;
 public interface ServerLifecycleCallback {
     void handle(MinecraftServer server);
 
-    EventMapper<ServerLifecycleCallback> STARTING = EventMapper.createUnbound();
-    EventMapper<ServerLifecycleCallback> STARTED = EventMapper.createUnbound();
-    EventMapper<ServerLifecycleCallback> STOPPING = EventMapper.createUnbound();
-    EventMapper<ServerLifecycleCallback> STOPPED = EventMapper.createUnbound();
-    EventMapper<ServerLifecycleCallback> RELOADED = EventMapper.createUnbound();
+    EventMapper<ServerLifecycleCallback> STARTING = EventMapper.createUnbound("ServerLifecycleCallback.STARTING");
+    EventMapper<ServerLifecycleCallback> STARTED = EventMapper.createUnbound("ServerLifecycleCallback.STARTED");
+    EventMapper<ServerLifecycleCallback> STOPPING = EventMapper.createUnbound("ServerLifecycleCallback.STOPPING");
+    EventMapper<ServerLifecycleCallback> STOPPED = EventMapper.createUnbound("ServerLifecycleCallback.STOPPED");
+    EventMapper<ServerLifecycleCallback> RELOADED = EventMapper.createUnbound("ServerLifecycleCallback.RELOADED");
 }

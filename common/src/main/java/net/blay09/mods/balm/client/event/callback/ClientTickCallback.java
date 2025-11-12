@@ -9,31 +9,31 @@ import net.minecraft.client.player.AbstractClientPlayer;
 public interface ClientTickCallback {
     void handle(Minecraft client);
 
-    EventMapper<ClientTickCallback> PRE = EventMapper.createUnbound();
-    EventMapper<ClientTickCallback> POST = EventMapper.createUnbound();
+    EventMapper<ClientTickCallback> PRE = EventMapper.createUnbound("ClientTickCallback.PRE");
+    EventMapper<ClientTickCallback> POST = EventMapper.createUnbound("ClientTickCallback.POST");
 
     @FunctionalInterface
     interface Player {
         void handle(AbstractClientPlayer player);
 
-        EventMapper<Player> PRE = EventMapper.createUnbound();
-        EventMapper<Player> POST = EventMapper.createUnbound();
+        EventMapper<Player> PRE = EventMapper.createUnbound("ClientTickCallback.Player.PRE");
+        EventMapper<Player> POST = EventMapper.createUnbound("ClientTickCallback.Player.POST");
     }
 
     @FunctionalInterface
     interface Level {
         void handle(ClientLevel level);
 
-        EventMapper<Level> PRE = EventMapper.createUnbound();
-        EventMapper<Level> POST = EventMapper.createUnbound();
+        EventMapper<Level> PRE = EventMapper.createUnbound("ClientTickCallback.Level.PRE");
+        EventMapper<Level> POST = EventMapper.createUnbound("ClientTickCallback.Level.POST");
     }
 
     @FunctionalInterface
     interface Entity {
-        void handle(Entity entity);
+        void handle(net.minecraft.world.entity.Entity entity);
 
-        EventMapper<Entity> PRE = EventMapper.createUnbound();
-        EventMapper<Entity> POST = EventMapper.createUnbound();
+        EventMapper<Entity> PRE = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
+        EventMapper<Entity> POST = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
     }
 
 }

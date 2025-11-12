@@ -11,11 +11,17 @@ import java.util.function.Supplier;
 
 public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMapper<TCallback>, AsymmetricalEventMapper<TCallback, TInvoker> {
 
+    private final String name;
+
     @Nullable
     private Supplier<TInvoker> invoker;
 
     @Nullable
     private BiConsumer<ResourceLocation, TCallback> registrar;
+
+    public AsymmetricalEventMapperImpl(String name) {
+        this.name = name;
+    }
 
     @Override
     public void register(TCallback listener) {
@@ -51,4 +57,13 @@ public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMa
         this.invoker = invoker;
     }
 
+    @Override
+    public boolean hasBeenSetup() {
+        return registrar != null;
+    }
+
+    @Override
+    public String name() {
+        return name;
+    }
 }

@@ -8,5 +8,5 @@ import net.minecraft.commands.CommandSourceStack;
 public interface CommandCallback {
     void handle(ParseResults<CommandSourceStack> parseResults);
 
-    EventMapper<CommandCallback> EVENT = EventMapper.createUnbound();
+    EventMapper<CommandCallback> EVENT = EventMapper.createUnbound("CommandCallback");
 }

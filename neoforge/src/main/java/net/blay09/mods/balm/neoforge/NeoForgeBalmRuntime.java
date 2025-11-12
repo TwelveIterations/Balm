@@ -213,7 +213,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     @SuppressWarnings("unchecked")
     public <TEvent> EventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
-        final var mapper = new EventMapperImpl<Consumer<TEvent>>();
+        final var mapper = new EventMapperImpl<Consumer<TEvent>>(eventClass.getName());
         mapper.setup(
                 (phase, listener) -> NeoForge.EVENT_BUS.addListener(NeoForgeBalmEventMappings.mapPriority(phase), (NeoForgifiedEvent<?> event) -> {
                     if (eventClass.isInstance(event.data())) {

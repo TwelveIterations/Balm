@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.fabric.core.particles.FabricBalmParticleTypeRegistrar;
+import net.blay09.mods.balm.fabric.event.FabricBalmEventMappings;
 import net.blay09.mods.balm.fabric.event.FabricCustomEventMapper;
 import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.fabric.world.entity.FabricBalmEntityTypeRegistrar;
@@ -69,6 +70,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
 
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
+        FabricBalmEventMappings.bind();
     }
 
     @Override
@@ -215,7 +217,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
                 consumer.accept(rec);
             }
         });
-        final var mapper = new FabricCustomEventMapper<TEvent>(nativeEventFactory);
+        final var mapper = new FabricCustomEventMapper<TEvent>(eventClass.getName(), nativeEventFactory);
         mapper.setup(nativeEventFactory::register, nativeEventFactory::invoker);
         return mapper;
     }

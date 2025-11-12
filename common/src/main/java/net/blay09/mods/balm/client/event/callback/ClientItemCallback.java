@@ -18,7 +18,7 @@ public interface ClientItemCallback {
     interface Use {
         void handle(InteractionHand hand);
 
-        EventMapper<Use> EVENT = EventMapper.createUnbound();
+        EventMapper<Use> EVENT = EventMapper.createUnbound("ClientItemCallback.Use");
     }
 
 }

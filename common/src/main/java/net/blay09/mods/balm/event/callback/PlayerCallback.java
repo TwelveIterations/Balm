@@ -9,6 +9,6 @@ public interface PlayerCallback {
     interface Attack {
         void handle(Player player, Entity target);
 
-        EventMapper<Attack> EVENT = EventMapper.createUnbound();
+        EventMapper<Attack> EVENT = EventMapper.createUnbound("PlayerCallback.Attack");
     }
 }

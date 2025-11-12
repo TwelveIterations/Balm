@@ -18,28 +18,28 @@ public interface ItemCallback {
     interface Use {
         InteractionResult handle(Player player, Level level, InteractionHand hand);
 
-        EventMapper<Use> EVENT = EventMapper.createUnbound();
+        EventMapper<Use> EVENT = EventMapper.createUnbound("ItemCallback.Use");
     }
 
     @FunctionalInterface
     interface Tooltip {
         void handle(ItemStack itemStack, Player player, List<Component> tooltip, TooltipFlag flags);
 
-        EventMapper<Tooltip> EVENT = EventMapper.createUnbound();
+        EventMapper<Tooltip> EVENT = EventMapper.createUnbound("ItemCallback.Tooltip");
     }
 
     @FunctionalInterface
     interface Craft {
         void handle(Player player, ItemStack itemStack, Container craftMatrix);
 
-        EventMapper<Craft> EVENT = EventMapper.createUnbound();
+        EventMapper<Craft> EVENT = EventMapper.createUnbound("ItemCallback.Craft");
     }
 
     @FunctionalInterface
     interface Toss {
         void handle(Player player, ItemStack itemStack);
 
-        EventMapper<Toss> EVENT = EventMapper.createUnbound();
+        EventMapper<Toss> EVENT = EventMapper.createUnbound("ItemCallback.Toss");
     }
 
 }

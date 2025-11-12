@@ -9,28 +9,28 @@ public interface LivingEntityCallback {
     interface Heal {
         void handle(LivingEntity entity, float amount);
 
-        EventMapper<Heal> EVENT = EventMapper.createUnbound();
+        EventMapper<Heal> EVENT = EventMapper.createUnbound("LivingEntityCallback.Heal");
     }
 
     @FunctionalInterface
     interface Fall {
         float handle(LivingEntity entity, float fallDamage);
 
-        EventMapper<Fall> EVENT = EventMapper.createUnbound();
+        EventMapper<Fall> EVENT = EventMapper.createUnbound("LivingEntityCallback.Fall");
     }
 
     @FunctionalInterface
     interface Death {
         void handle(LivingEntity entity, DamageSource damageSource);
 
-        EventMapper<Death> EVENT = EventMapper.createUnbound();
+        EventMapper<Death> EVENT = EventMapper.createUnbound("LivingEntityCallback.Death");
     }
 
     @FunctionalInterface
     interface Damage {
         float handle(LivingEntity entity, DamageSource damageSource, float damageAmount);
 
-        EventMapper<Damage> EVENT = EventMapper.createUnbound();
+        EventMapper<Damage> EVENT = EventMapper.createUnbound("LivingEntityCallback.Damage");
     }
 
 }

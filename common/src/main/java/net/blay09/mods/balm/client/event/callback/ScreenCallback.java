@@ -13,70 +13,70 @@ public interface ScreenCallback {
     interface Render {
         void handle(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta);
 
-        EventMapper<Render> PRE = EventMapper.createUnbound();
-        EventMapper<Render> POST = EventMapper.createUnbound();
+        EventMapper<Render> PRE = EventMapper.createUnbound("ScreenCallback.Render.PRE");
+        EventMapper<Render> POST = EventMapper.createUnbound("ScreenCallback.Render.POST");
     }
 
     @FunctionalInterface
     interface Open {
         Screen handle(Screen screen);
 
-        EventMapper<Open> EVENT = EventMapper.createUnbound();
+        EventMapper<Open> EVENT = EventMapper.createUnbound("ScreenCallback.Open");
     }
 
     @FunctionalInterface
     interface Init {
         void handle(Screen screen);
 
-        EventMapper<Init> PRE = EventMapper.createUnbound();
-        EventMapper<Init> POST = EventMapper.createUnbound();
+        EventMapper<Init> PRE = EventMapper.createUnbound("ScreenCallback.Init.PRE");
+        EventMapper<Init> POST = EventMapper.createUnbound("ScreenCallback.Init.POST");
     }
 
     @FunctionalInterface
     interface KeyRelease {
         boolean handle(Screen screen, KeyEvent event);
 
-        EventMapper<KeyRelease> PRE = EventMapper.createUnbound();
-        EventMapper<KeyRelease> POST = EventMapper.createUnbound();
+        EventMapper<KeyRelease> PRE = EventMapper.createUnbound("ScreenCallback.KeyRelease.PRE");
+        EventMapper<KeyRelease> POST = EventMapper.createUnbound("ScreenCallback.KeyRelease.POST");
     }
 
     @FunctionalInterface
     interface KeyPress {
         boolean handle(Screen screen, KeyEvent event);
 
-        EventMapper<KeyPress> PRE = EventMapper.createUnbound();
-        EventMapper<KeyPress> POST = EventMapper.createUnbound();
+        EventMapper<KeyPress> PRE = EventMapper.createUnbound("ScreenCallback.KeyPress.PRE");
+        EventMapper<KeyPress> POST = EventMapper.createUnbound("ScreenCallback.KeyPress.POST");
     }
 
     @FunctionalInterface
     interface MousePress {
         boolean handle(Screen screen, MouseButtonEvent event);
 
-        EventMapper<MousePress> PRE = EventMapper.createUnbound();
-        EventMapper<MousePress> POST = EventMapper.createUnbound();
+        EventMapper<MousePress> PRE = EventMapper.createUnbound("ScreenCallback.MousePress.PRE");
+        EventMapper<MousePress> POST = EventMapper.createUnbound("ScreenCallback.MousePress.POST");
     }
 
     @FunctionalInterface
     interface MouseRelease {
         boolean handle(Screen screen, MouseButtonEvent event);
 
-        EventMapper<MouseRelease> PRE = EventMapper.createUnbound();
-        EventMapper<MouseRelease> POST = EventMapper.createUnbound();
+        EventMapper<MouseRelease> PRE = EventMapper.createUnbound("ScreenCallback.MouseRelease.PRE");
+        EventMapper<MouseRelease> POST = EventMapper.createUnbound("ScreenCallback.MouseRelease.POST");
     }
 
     @FunctionalInterface
     interface MouseDrag {
         boolean handle(Screen screen, MouseButtonEvent event);
 
-        EventMapper<MouseDrag> PRE = EventMapper.createUnbound();
-        EventMapper<MouseDrag> POST = EventMapper.createUnbound();
+        EventMapper<MouseDrag> PRE = EventMapper.createUnbound("ScreenCallback.MouseDrag.PRE");
+        EventMapper<MouseDrag> POST = EventMapper.createUnbound("ScreenCallback.MouseDrag.POST");
     }
 
     @FunctionalInterface
     interface MouseScroll {
         boolean handle(Screen screen, MouseWheelEvent event);
 
-        EventMapper<MouseScroll> PRE = EventMapper.createUnbound();
-        EventMapper<MouseScroll> POST = EventMapper.createUnbound();
+        EventMapper<MouseScroll> PRE = EventMapper.createUnbound("ScreenCallback.MouseScroll.PRE");
+        EventMapper<MouseScroll> POST = EventMapper.createUnbound("ScreenCallback.MouseScroll.POST");
     }
 }

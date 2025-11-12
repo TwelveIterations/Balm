@@ -11,11 +11,17 @@ import java.util.function.Supplier;
 
 public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, BidirectionalEventMapper<TCallback> {
 
+    private final String name;
+
     @Nullable
     private Supplier<TCallback> invoker;
 
     @Nullable
     private BiConsumer<ResourceLocation, TCallback> registrar;
+
+    public EventMapperImpl(String name) {
+        this.name = name;
+    }
 
     @Override
     public void register(TCallback listener) {
@@ -51,4 +57,13 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
         this.invoker = invoker;
     }
 
+    @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public boolean hasBeenSetup() {
+        return registrar != null;
+    }
 }

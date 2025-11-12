@@ -7,5 +7,5 @@ import net.minecraft.world.item.CreativeModeTab;
 public interface CreativeModeTabCallback {
     void handle(CreativeModeTab tab, CreativeModeTab.Output output);
 
-    EventMapper<CreativeModeTabCallback> BUILD_CONTENTS = EventMapper.createUnbound();
+    EventMapper<CreativeModeTabCallback> BUILD_CONTENTS = EventMapper.createUnbound("CreativeModeTabCallback.BUILD_CONTENTS");
 }

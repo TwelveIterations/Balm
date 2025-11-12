@@ -7,5 +7,5 @@ import net.minecraft.world.entity.Entity;
 public interface EntityCallback {
     void handle(Entity entity);
 
-    EventMapper<EntityCallback> ADD = EventMapper.createUnbound();
+    EventMapper<EntityCallback> ADD = EventMapper.createUnbound("EntityCallback.ADD");
 }

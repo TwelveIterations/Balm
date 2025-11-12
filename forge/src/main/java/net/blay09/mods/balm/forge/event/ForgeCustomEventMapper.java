@@ -11,7 +11,8 @@ public class ForgeCustomEventMapper<T> extends AsymmetricalEventMapperImpl<Consu
     private final EventBus<@NotNull ForgifiedEvent<T>> bus;
 
     @SuppressWarnings("unchecked")
-    public ForgeCustomEventMapper(EventBus<?> bus) {
+    public ForgeCustomEventMapper(String name, EventBus<?> bus) {
+        super(name);
         this.bus = (EventBus<@NotNull ForgifiedEvent<T>>) bus;
     }
 

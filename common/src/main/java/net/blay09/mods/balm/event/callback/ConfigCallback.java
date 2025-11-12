@@ -8,5 +8,5 @@ import net.minecraft.server.MinecraftServer;
 public interface ConfigCallback {
     void handle(BalmConfigSchema schema);
 
-    EventMapper<ConfigCallback> LOADED = EventMapper.createUnbound();
+    EventMapper<ConfigCallback> LOADED = EventMapper.createUnbound("ConfigCallback.LOADED");
 }

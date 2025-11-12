@@ -17,8 +17,8 @@ import java.util.function.Consumer;
  */
 public interface EventMapper<TCallback> {
 
-    static <TCallback> EventMapper<TCallback> createUnbound() {
-        return new EventMapperImpl<>();
+    static <TCallback> EventMapper<TCallback> createUnbound(String name) {
+        return new EventMapperImpl<>(name);
     }
 
     static <TEvent> EventMapper<Consumer<TEvent>> createBound(Class<TEvent> eventClass) {
@@ -49,4 +49,17 @@ public interface EventMapper<TCallback> {
     @ApiStatus.Internal
     void setup(BiConsumer<ResourceLocation, TCallback> registrar);
 
+    /**
+     * For internal use by Balm. Returns true if this event mapper has been set up.
+     *
+     * @return true if this event mapper has been set up.
+     */
+    boolean hasBeenSetup();
+
+    /**
+     * For internal use by Balm. Returns the name of this event mapper.
+     *
+     * @return the name of this event mapper.
+     */
+    String name();
 }

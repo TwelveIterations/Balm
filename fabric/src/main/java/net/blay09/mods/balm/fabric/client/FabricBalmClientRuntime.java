@@ -18,6 +18,7 @@ import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmClientEventMappings;
 import net.blay09.mods.balm.fabric.client.gui.screens.inventory.FabricBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.entity.FabricBalmEntityRendererRegistrar;
@@ -28,6 +29,7 @@ import net.blay09.mods.balm.fabric.client.particle.FabricBalmParticleProviderReg
 import net.blay09.mods.balm.fabric.client.renderer.chunk.FabricBalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmModels;
 import net.blay09.mods.balm.fabric.client.rendering.FabricBalmRenderers;
+import net.blay09.mods.balm.fabric.event.FabricBalmEventMappings;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.event.client.FabricBalmClientEvents;
 import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmClientResourceReloadListenerRegistrar;
@@ -56,6 +58,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
+        FabricBalmClientEventMappings.bind();
     }
 
     @Override

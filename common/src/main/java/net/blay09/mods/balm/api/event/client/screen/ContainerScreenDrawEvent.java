@@ -40,6 +40,7 @@ public abstract class ContainerScreenDrawEvent extends BalmEvent {
     /**
      * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render} instead.
      */
+    @Deprecated
     public static class Background extends ContainerScreenDrawEvent {
         public Background(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY) {
             super(screen, guiGraphics, mouseX, mouseY);
@@ -49,6 +50,7 @@ public abstract class ContainerScreenDrawEvent extends BalmEvent {
     /**
      * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render} instead.
      */
+    @Deprecated
     public static class Foreground extends ContainerScreenDrawEvent {
         public Foreground(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY) {
             super(screen, guiGraphics, mouseX, mouseY);

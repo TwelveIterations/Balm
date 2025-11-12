@@ -34,13 +34,13 @@ public class ForgeBalmEventMappings {
     public static void bind() {
         bindSimple(ServerTickCallback.PRE, TickEvent.ServerTickEvent.Pre.BUS, (event, it) -> it.handle(event.server()));
         bindSimple(ServerTickCallback.POST, TickEvent.ServerTickEvent.Post.BUS, (event, it) -> it.handle(event.server()));
-        bindFiltered(ServerLevelTickCallback.PRE, TickEvent.LevelTickEvent.Pre.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerLevel) event.level()));
-        bindFiltered(ServerLevelTickCallback.POST, TickEvent.LevelTickEvent.Post.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerLevel) event.level()));
-        bindFiltered(ServerPlayerTickCallback.PRE, TickEvent.PlayerTickEvent.Pre.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerPlayer) event.player()));
-        bindFiltered(ServerPlayerTickCallback.POST, TickEvent.PlayerTickEvent.Post.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerPlayer) event.player()));
+        bindFiltered(ServerTickCallback.Level.PRE, TickEvent.LevelTickEvent.Pre.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerLevel) event.level()));
+        bindFiltered(ServerTickCallback.Level.POST, TickEvent.LevelTickEvent.Post.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerLevel) event.level()));
+        bindFiltered(ServerTickCallback.Player.PRE, TickEvent.PlayerTickEvent.Pre.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerPlayer) event.player()));
+        bindFiltered(ServerTickCallback.Player.POST, TickEvent.PlayerTickEvent.Post.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerPlayer) event.player()));
         // TODO LivingEvent.LivingTickEvent only ticks for living entities and has no pre/post
-        bindSimple(ServerEntityTickCallback.PRE, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
-        bindSimple(ServerEntityTickCallback.POST, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
+        bindSimple(ServerTickCallback.Entity.PRE, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
+        bindSimple(ServerTickCallback.Entity.POST, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
 
         bindSimple(ServerLifecycleCallback.STARTING, ServerAboutToStartEvent.BUS, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.BUS, (event, it) -> it.handle(event.getServer()));

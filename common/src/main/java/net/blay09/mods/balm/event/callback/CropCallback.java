@@ -11,8 +11,8 @@ public interface CropCallback {
     interface Grow {
         void handle(Level level, BlockPos pos, BlockState state);
 
-        EventMapper<CropCallback> PRE = EventMapper.createUnbound();
-        EventMapper<CropCallback> POST = EventMapper.createUnbound();
+        EventMapper<CropCallback> PRE = EventMapper.createUnbound("CropCallback.Grow.PRE");
+        EventMapper<CropCallback> POST = EventMapper.createUnbound("CropCallback.Grow.POST");
     }
 
 }
