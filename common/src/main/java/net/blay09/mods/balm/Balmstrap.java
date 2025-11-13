@@ -2,7 +2,7 @@ package net.blay09.mods.balm;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
-import net.blay09.mods.balm.event.EventMapper;
+import net.blay09.mods.balm.event.BidirectionalEventMapper;
 
 import java.util.function.Consumer;
 
@@ -20,7 +20,7 @@ public class Balmstrap {
         Balm.getRuntime().onRuntimeAvailable(callback);
     }
 
-    public static <TEvent> EventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
+    public static <TEvent> BidirectionalEventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
         return Balm.getRuntime().createBoundCustomEvent(eventClass);
     }
 }
