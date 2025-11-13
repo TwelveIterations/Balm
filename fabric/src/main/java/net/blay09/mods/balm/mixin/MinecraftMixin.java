@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.blay09.mods.balm.api.Balm;
@@ -10,7 +12,14 @@ import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEven
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,6 +42,33 @@ public class MinecraftMixin {
         var effectiveScreen = event.getNewScreen() != null ? event.getNewScreen() : screen;
         effectiveScreen = FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().handle(effectiveScreen);
         return effectiveScreen;
+    }
+
+    @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;interactAt(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"))
+    public InteractionResult startUseItemInteractAt(MultiPlayerGameMode instance, Player player, Entity entity, EntityHitResult entityHitResult, InteractionHand hand, Operation<InteractionResult> operation) {
+        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().handle(player, hand);
+        if (result == InteractionResult.PASS) {
+            return operation.call(instance, player, entity, entityHitResult, hand);
+        }
+        return result;
+    }
+
+    @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"))
+    public InteractionResult startUseItemOn(MultiPlayerGameMode instance, LocalPlayer player, InteractionHand hand, BlockHitResult blockHitResult, Operation<InteractionResult> operation) {
+        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().handle(player, hand);
+        if (result == InteractionResult.PASS) {
+            return operation.call(instance, player, hand, blockHitResult);
+        }
+        return result;
+    }
+
+    @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItem(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"))
+    public InteractionResult startUseItem(MultiPlayerGameMode instance, Player player, InteractionHand hand, Operation<InteractionResult> operation) {
+        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().handle(player, hand);
+        if (result == InteractionResult.PASS) {
+            return operation.call(instance, player, hand);
+        }
+        return result;
     }
 
     @Inject(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), cancellable = true)

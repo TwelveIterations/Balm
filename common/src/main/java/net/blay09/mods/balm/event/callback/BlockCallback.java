@@ -3,6 +3,7 @@ package net.blay09.mods.balm.event.callback;
 import net.blay09.mods.balm.event.EventMapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -28,7 +29,7 @@ public interface BlockCallback {
 
     @FunctionalInterface
     interface Use {
-        void handle(Player player, Level level, InteractionHand hand, BlockHitResult hitResult);
+        InteractionResult handle(Player player, Level level, InteractionHand hand, BlockHitResult hitResult);
 
         EventMapper<Use> EVENT = EventMapper.createUnbound("BlockCallback.Use");
     }

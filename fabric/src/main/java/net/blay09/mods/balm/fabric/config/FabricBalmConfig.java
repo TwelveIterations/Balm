@@ -44,6 +44,7 @@ public class FabricBalmConfig extends AbstractBalmConfig {
         } catch (IOException e) {
             logger.error("Failed to save config file {}", configFile, e);
         }
+        FabricBalmSupplementalEvents.CONFIG_RELOADED.invoker().handle(schema);
     }
 
     private LoadedConfig loadConfigFromConfigFile(BalmConfigSchema schema) {

@@ -37,6 +37,12 @@ public class FabricBalmSupplementalEvents {
         }
     });
 
+    public static final Event<ConfigCallback> CONFIG_RELOADED = EventFactory.createArrayBacked(ConfigCallback.class, (listeners) -> (schema) -> {
+        for (final var listener : listeners) {
+            listener.handle(schema);
+        }
+    });
+
     public static final Event<ServerPlayerCallback.OpenMenu> SERVER_PLAYER_OPEN_MENU = EventFactory.createArrayBacked(ServerPlayerCallback.OpenMenu.class, (listeners) -> (player, menu) -> {
         for (final var listener : listeners) {
             listener.handle(player, menu);
@@ -112,9 +118,11 @@ public class FabricBalmSupplementalEvents {
     });
 
     public static final Event<LivingEntityCallback.Heal> LIVING_HEAL = EventFactory.createArrayBacked(LivingEntityCallback.Heal.class, (listeners) -> (entity, amount) -> {
+        float newAmount = amount;
         for (final var listener : listeners) {
-            listener.handle(entity, amount);
+            newAmount = listener.handle(entity, amount);
         }
+        return newAmount;
     });
 
     public static final Event<PlayerCallback.Attack> PLAYER_ATTACK = EventFactory.createArrayBacked(PlayerCallback.Attack.class, (listeners) -> (player, target) -> {

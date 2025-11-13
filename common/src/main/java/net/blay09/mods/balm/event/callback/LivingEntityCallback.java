@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.event.callback;
 
+import net.blay09.mods.balm.event.EventHandling;
 import net.blay09.mods.balm.event.EventMapper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -7,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 public interface LivingEntityCallback {
     @FunctionalInterface
     interface Heal {
-        void handle(LivingEntity entity, float amount);
+        float handle(LivingEntity entity, float amount);
 
         EventMapper<Heal> EVENT = EventMapper.createUnbound("LivingEntityCallback.Heal");
     }
@@ -21,9 +22,10 @@ public interface LivingEntityCallback {
 
     @FunctionalInterface
     interface Death {
-        void handle(LivingEntity entity, DamageSource damageSource);
+        EventHandling handle(LivingEntity entity, DamageSource damageSource);
 
-        EventMapper<Death> EVENT = EventMapper.createUnbound("LivingEntityCallback.Death");
+        EventMapper<Death> PRE = EventMapper.createUnbound("LivingEntityCallback.Death.PRE");
+        EventMapper<Death> POST = EventMapper.createUnbound("LivingEntityCallback.Death.POST");
     }
 
     @FunctionalInterface

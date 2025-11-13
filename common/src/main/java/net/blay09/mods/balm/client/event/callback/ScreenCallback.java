@@ -6,8 +6,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 
-import java.awt.event.MouseWheelEvent;
-
 public interface ScreenCallback {
     @FunctionalInterface
     interface Render {
@@ -50,7 +48,7 @@ public interface ScreenCallback {
 
     @FunctionalInterface
     interface MousePress {
-        boolean handle(Screen screen, MouseButtonEvent event);
+        boolean handle(Screen screen, MouseButtonEvent event, boolean consumed);
 
         EventMapper<MousePress> PRE = EventMapper.createUnbound("ScreenCallback.MousePress.PRE");
         EventMapper<MousePress> POST = EventMapper.createUnbound("ScreenCallback.MousePress.POST");
@@ -58,7 +56,7 @@ public interface ScreenCallback {
 
     @FunctionalInterface
     interface MouseRelease {
-        boolean handle(Screen screen, MouseButtonEvent event);
+        boolean handle(Screen screen, MouseButtonEvent event, boolean consumed);
 
         EventMapper<MouseRelease> PRE = EventMapper.createUnbound("ScreenCallback.MouseRelease.PRE");
         EventMapper<MouseRelease> POST = EventMapper.createUnbound("ScreenCallback.MouseRelease.POST");
@@ -66,7 +64,7 @@ public interface ScreenCallback {
 
     @FunctionalInterface
     interface MouseDrag {
-        boolean handle(Screen screen, MouseButtonEvent event);
+        boolean handle(Screen screen, MouseButtonEvent event, double horizontalAmount, double verticalAmount, boolean consumed);
 
         EventMapper<MouseDrag> PRE = EventMapper.createUnbound("ScreenCallback.MouseDrag.PRE");
         EventMapper<MouseDrag> POST = EventMapper.createUnbound("ScreenCallback.MouseDrag.POST");
@@ -74,7 +72,7 @@ public interface ScreenCallback {
 
     @FunctionalInterface
     interface MouseScroll {
-        boolean handle(Screen screen, MouseWheelEvent event);
+        boolean handle(Screen screen, double mouseX, double mouseY, double horizontalAmount, double verticalAmount, boolean consumed);
 
         EventMapper<MouseScroll> PRE = EventMapper.createUnbound("ScreenCallback.MouseScroll.PRE");
         EventMapper<MouseScroll> POST = EventMapper.createUnbound("ScreenCallback.MouseScroll.POST");

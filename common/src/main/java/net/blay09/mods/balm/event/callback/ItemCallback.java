@@ -24,7 +24,7 @@ public interface ItemCallback {
 
     @FunctionalInterface
     interface Tooltip {
-        void handle(ItemStack itemStack, Player player, List<Component> tooltip, TooltipFlag flags);
+        void handle(ItemStack itemStack, List<Component> tooltip, TooltipFlag flags);
 
         EventMapper<Tooltip> EVENT = EventMapper.createUnbound("ItemCallback.Tooltip");
     }

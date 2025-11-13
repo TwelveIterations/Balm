@@ -60,7 +60,13 @@ public abstract class LivingEntityMixin {
     private float modifyHealing(float heal) {
         LivingEntity entity = (LivingEntity) (Object) this;
         LivingHealEvent event = new LivingHealEvent(entity, heal);
-        return event.isCanceled() ? 0f : heal;
+        if (event.isCanceled()) {
+            return 0f;
+        }
+
+        float effectiveHeal = heal;
+        effectiveHeal = FabricBalmSupplementalEvents.LIVING_HEAL.invoker().handle(entity, effectiveHeal);
+        return effectiveHeal;
     }
 
 }
