@@ -9,4 +9,5 @@ public interface ConfigCallback {
     void handle(BalmConfigSchema schema);
 
     EventMapper<ConfigCallback> LOADED = EventMapper.createUnbound("ConfigCallback.LOADED");
+    EventMapper<ConfigCallback> RELOADED = EventMapper.createUnbound("ConfigCallback.RELOADED");
 }
