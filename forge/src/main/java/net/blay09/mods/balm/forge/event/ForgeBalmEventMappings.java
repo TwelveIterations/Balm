@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.forge.event;
 
-import net.blay09.mods.balm.api.event.ChunkTrackingEvent;
-import net.blay09.mods.balm.api.event.PlayerOpenMenuEvent;
 import net.blay09.mods.balm.event.BalmSupplementalEvents;
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
@@ -62,8 +60,8 @@ public class ForgeBalmEventMappings {
         bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.BUS, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerLifecycleCallback.STOPPING, ServerStoppingEvent.BUS, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerLifecycleCallback.STOPPED, ServerStoppedEvent.BUS, (event, it) -> it.handle(event.getServer()));
-        ServerLifecycleCallback.RELOADING.setup(BalmSupplementalEvents.SERVER_RELOADING::register);
-        ServerLifecycleCallback.RELOADED.setup(BalmSupplementalEvents.SERVER_RELOADED::register);
+        ServerLifecycleCallback.RELOADING.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
+        ServerLifecycleCallback.RELOADED.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
 
         bindCancelable(BlockCallback.DigSpeed.EVENT, PlayerEvent.BreakSpeed.BUS, (event, it) -> event.getPosition().map(pos -> {
             final var level = event.getEntity().level();
@@ -86,8 +84,8 @@ public class ForgeBalmEventMappings {
 
         bindCancelable(CommandCallback.EVENT, CommandEvent.BUS, (event, it) -> it.handle(event.getParseResults()).shouldSkipDefault());
 
-        ConfigCallback.LOADED.setup(ForgeBalmSupplementalEvents.CONFIG_LOADED::register);
-        ConfigCallback.RELOADED.setup(ForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
+        ConfigCallback.LOADED.configureMapping(ForgeBalmSupplementalEvents.CONFIG_LOADED::register);
+        ConfigCallback.RELOADED.configureMapping(ForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
 
         bindSimple(CropCallback.Grow.PRE, BlockEvent.CropGrowEvent.Pre.BUS, (event, it) -> {
             if (it.handle(event.getLevel(), event.getPos(), event.getState()).shouldSkipDefault()) {
@@ -122,7 +120,7 @@ public class ForgeBalmEventMappings {
 
         bindSimple(PlayerCallback.Attack.EVENT, AttackEntityEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getTarget()));
 
-        ServerPlayerCallback.CONNECTED.setup(ForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
+        ServerPlayerCallback.CONNECTED.configureMapping(ForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
         bindSimple(ServerPlayerCallback.LOGIN, PlayerEvent.PlayerLoggedInEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.LOGOUT, PlayerEvent.PlayerLoggedOutEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.OpenMenu.EVENT, PlayerContainerEvent.Open.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity(), event.getContainer()));
@@ -134,15 +132,15 @@ public class ForgeBalmEventMappings {
     }
 
     public static <TCallback, TEvent extends Event> void bindSimple(EventMapper<TCallback> mapper, EventBus<@NotNull TEvent> bus, BiConsumer<TEvent, TCallback> consumer) {
-        mapper.setup((phase, listener) -> bus.addListener(mapPriority(phase), event -> consumer.accept(event, listener)));
+        mapper.configureMapping((phase, listener) -> bus.addListener(mapPriority(phase), event -> consumer.accept(event, listener)));
     }
 
     public static <TCallback, TEvent extends Event & Cancellable> void bindCancelable(EventMapper<TCallback> mapper, EventBus<@NotNull TEvent> bus, BiFunction<TEvent, TCallback, Boolean> consumer) {
-        mapper.setup((phase, listener) -> bus.addListener(mapPriority(phase), event -> consumer.apply(event, listener)));
+        mapper.configureMapping((phase, listener) -> bus.addListener(mapPriority(phase), event -> consumer.apply(event, listener)));
     }
 
     public static <TCallback, TEvent extends Event> void bindFiltered(EventMapper<TCallback> mapper, EventBus<@NotNull TEvent> bus, Predicate<TEvent> filter, BiConsumer<TEvent, TCallback> consumer) {
-        mapper.setup((phase, listener) -> bus.addListener(mapPriority(phase), event -> {
+        mapper.configureMapping((phase, listener) -> bus.addListener(mapPriority(phase), event -> {
             if (filter.test(event)) {
                 consumer.accept(event, listener);
             }

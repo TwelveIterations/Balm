@@ -135,7 +135,7 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
             }
         });
         final var mapper = new EventMapperImpl<Consumer<TEvent>>(eventClass.getName());
-        mapper.setup(nativeEventFactory::register, nativeEventFactory::invoker);
+        mapper.configureMapping(nativeEventFactory::register, nativeEventFactory::invoker);
         return mapper;
     }
 }

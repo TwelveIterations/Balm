@@ -47,19 +47,14 @@ public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMa
     }
 
     @Override
-    public void setup(BiConsumer<ResourceLocation, TCallback> registrar) {
+    public void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar) {
         this.registrar = registrar;
     }
 
     @Override
-    public void setup(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TInvoker> invoker) {
+    public void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TInvoker> invoker) {
         this.registrar = registrar;
         this.invoker = invoker;
-    }
-
-    @Override
-    public boolean hasBeenSetup() {
-        return registrar != null;
     }
 
     @Override

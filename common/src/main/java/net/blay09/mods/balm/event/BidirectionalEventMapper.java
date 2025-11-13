@@ -29,6 +29,6 @@ public interface BidirectionalEventMapper<TCallback> extends EventMapper<TCallba
      * @param invoker   The invoker that takes the incoming parameters and fires them into the mod-loader specific bus.
      */
     @ApiStatus.Internal
-    void setup(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TCallback> invoker);
+    void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TCallback> invoker);
 
 }

@@ -47,14 +47,7 @@ public interface EventMapper<TCallback> {
      * @param registrar The consumer that takes the priority phase and listener and registers it to the mod-loader specific bus.
      */
     @ApiStatus.Internal
-    void setup(BiConsumer<ResourceLocation, TCallback> registrar);
-
-    /**
-     * For internal use by Balm. Returns true if this event mapper has been set up.
-     *
-     * @return true if this event mapper has been set up.
-     */
-    boolean hasBeenSetup();
+    void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar);
 
     /**
      * For internal use by Balm. Returns the name of this event mapper.

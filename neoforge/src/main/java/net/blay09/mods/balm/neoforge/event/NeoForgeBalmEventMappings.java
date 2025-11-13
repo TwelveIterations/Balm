@@ -63,8 +63,8 @@ public class NeoForgeBalmEventMappings {
         bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.class, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerLifecycleCallback.STOPPING, ServerStoppingEvent.class, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerLifecycleCallback.STOPPED, ServerStoppedEvent.class, (event, it) -> it.handle(event.getServer()));
-        ServerLifecycleCallback.RELOADING.setup(BalmSupplementalEvents.SERVER_RELOADING::register);
-        ServerLifecycleCallback.RELOADED.setup(BalmSupplementalEvents.SERVER_RELOADED::register);
+        ServerLifecycleCallback.RELOADING.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
+        ServerLifecycleCallback.RELOADED.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
 
         bindCancelable(BlockCallback.DigSpeed.EVENT, PlayerEvent.BreakSpeed.class, (PlayerEvent.BreakSpeed event, BlockCallback.DigSpeed it) -> event.getPosition().map(pos -> {
             final var level = event.getEntity().level();
@@ -87,8 +87,8 @@ public class NeoForgeBalmEventMappings {
 
         bindCancelable(CommandCallback.EVENT, CommandEvent.class, (event, it) -> it.handle(event.getParseResults()).shouldSkipDefault());
 
-        ConfigCallback.LOADED.setup(NeoForgeBalmSupplementalEvents.CONFIG_LOADED::register);
-        ConfigCallback.RELOADED.setup(NeoForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
+        ConfigCallback.LOADED.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_LOADED::register);
+        ConfigCallback.RELOADED.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
 
         bindSimple(CropCallback.Grow.PRE, CropGrowEvent.Pre.class, (event, it) -> {
             if (it.handle(event.getLevel(), event.getPos(), event.getState()).shouldSkipDefault()) {
@@ -123,7 +123,7 @@ public class NeoForgeBalmEventMappings {
 
         bindSimple(PlayerCallback.Attack.EVENT, AttackEntityEvent.class, (event, it) -> it.handle(event.getEntity(), event.getTarget()));
 
-        ServerPlayerCallback.CONNECTED.setup(NeoForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
+        ServerPlayerCallback.CONNECTED.configureMapping(NeoForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
         bindSimple(ServerPlayerCallback.LOGIN, PlayerEvent.PlayerLoggedInEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.LOGOUT, PlayerEvent.PlayerLoggedOutEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.OpenMenu.EVENT, PlayerContainerEvent.Open.class, (event, it) -> it.handle((ServerPlayer) event.getEntity(), event.getContainer()));
@@ -135,11 +135,11 @@ public class NeoForgeBalmEventMappings {
     }
 
     public static <TCallback, TEvent extends Event> void bindSimple(EventMapper<TCallback> mapper, Class<TEvent> eventClass, BiConsumer<TEvent, TCallback> consumer) {
-        mapper.setup((phase, listener) -> NeoForge.EVENT_BUS.addListener(mapPriority(phase), eventClass, event -> consumer.accept(event, listener)));
+        mapper.configureMapping((phase, listener) -> NeoForge.EVENT_BUS.addListener(mapPriority(phase), eventClass, event -> consumer.accept(event, listener)));
     }
 
     public static <TCallback, TEvent extends Event & ICancellableEvent> void bindCancelable(EventMapper<TCallback> mapper, Class<TEvent> eventClass, BiFunction<TEvent, TCallback, Boolean> consumer) {
-        mapper.setup((phase, listener) -> NeoForge.EVENT_BUS.addListener(mapPriority(phase), eventClass, event -> {
+        mapper.configureMapping((phase, listener) -> NeoForge.EVENT_BUS.addListener(mapPriority(phase), eventClass, event -> {
             if (consumer.apply(event, listener)) {
                 event.setCanceled(true);
             }
@@ -147,7 +147,7 @@ public class NeoForgeBalmEventMappings {
     }
 
     public static <TCallback, TEvent extends Event> void bindFiltered(EventMapper<TCallback> mapper, Class<TEvent> eventClass, Predicate<TEvent> filter, BiConsumer<TEvent, TCallback> consumer) {
-        mapper.setup((phase, listener) -> NeoForge.EVENT_BUS.addListener(mapPriority(phase), eventClass, event -> {
+        mapper.configureMapping((phase, listener) -> NeoForge.EVENT_BUS.addListener(mapPriority(phase), eventClass, event -> {
             if (filter.test(event)) {
                 consumer.accept(event, listener);
             }

@@ -47,12 +47,12 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
     }
 
     @Override
-    public void setup(BiConsumer<ResourceLocation, TCallback> registrar) {
+    public void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar) {
         this.registrar = registrar;
     }
 
     @Override
-    public void setup(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TCallback> invoker) {
+    public void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TCallback> invoker) {
         this.registrar = registrar;
         this.invoker = invoker;
     }
@@ -62,8 +62,4 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
         return name;
     }
 
-    @Override
-    public boolean hasBeenSetup() {
-        return registrar != null;
-    }
 }
