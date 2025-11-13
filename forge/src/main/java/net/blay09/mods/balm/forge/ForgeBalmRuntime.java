@@ -16,7 +16,6 @@ import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
-import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
@@ -44,7 +43,6 @@ import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.bus.EventBus;
 
 import java.util.function.Consumer;
 
@@ -207,14 +205,4 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
         initializer.accept(new ForgeBalmResourceConditionRegistrar(namespace));
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <TEvent> EventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
-        final var bus = EventBus.create(ForgifiedEvent.class);
-        final var mapper = new ForgeCustomEventMapper<TEvent>(eventClass.getName(), bus);
-        mapper.setup(
-                (phase, listener) -> bus.addListener(ForgeBalmEventMappings.mapPriority(phase), event -> listener.accept((TEvent) event.data())),
-                () -> (event) -> bus.fire(new ForgifiedEvent<>(event)));
-        return mapper;
-    }
 }

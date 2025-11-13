@@ -16,9 +16,6 @@ import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
-import net.blay09.mods.balm.event.EventMapper;
-import net.blay09.mods.balm.event.internal.AsymmetricalEventMapperImpl;
-import net.blay09.mods.balm.event.internal.EventMapperImpl;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
@@ -27,9 +24,7 @@ import net.blay09.mods.balm.neoforge.config.NeoForgeBalmConfig;
 import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
 import net.blay09.mods.balm.neoforge.core.particles.NeoForgeBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
-import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEventMappings;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
-import net.blay09.mods.balm.neoforge.event.NeoForgifiedEvent;
 import net.blay09.mods.balm.neoforge.loader.NeoForgeBalmPlatform;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
@@ -210,17 +205,4 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
         initializer.accept(new NeoForgeBalmResourceConditionRegistrar(namespace));
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <TEvent> EventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
-        final var mapper = new EventMapperImpl<Consumer<TEvent>>(eventClass.getName());
-        mapper.setup(
-                (phase, listener) -> NeoForge.EVENT_BUS.addListener(NeoForgeBalmEventMappings.mapPriority(phase), (NeoForgifiedEvent<?> event) -> {
-                    if (eventClass.isInstance(event.data())) {
-                        listener.accept((TEvent) event.data());
-                    }
-                }),
-                () -> (event) -> NeoForge.EVENT_BUS.post(new NeoForgifiedEvent<>(event)));
-        return mapper;
-    }
 }
