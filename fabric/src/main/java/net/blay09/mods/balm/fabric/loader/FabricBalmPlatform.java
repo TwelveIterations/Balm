@@ -2,7 +2,7 @@ package net.blay09.mods.balm.fabric.loader;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.event.server.ServerStartedEvent;
+import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.resources.ModResource;
@@ -25,7 +25,7 @@ public class FabricBalmPlatform implements BalmPlatform {
     private final AtomicReference<MinecraftServer> currentServer = new AtomicReference<>();
 
     public void initialize() {
-        Balm.events().onEvent(ServerStartedEvent.class, event -> currentServer.set(event.getServer()));
+        Balm.events().onEvent(ServerStartingEvent.class, event -> currentServer.set(event.getServer()));
         Balm.events().onEvent(ServerStoppedEvent.class, event -> currentServer.set(null));
     }
 

@@ -2,7 +2,6 @@ package net.blay09.mods.balm.api.client.module;
 
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
-import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;

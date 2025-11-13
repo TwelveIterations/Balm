@@ -35,7 +35,9 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     private static final Logger logger = LoggerFactory.getLogger(ForgeBalmConfig.class);
 
     private static ForgeConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ForgeConfigSpec.Builder spec) {
-        spec.comment(property.comment());
+        if (!property.comment().isBlank()) {
+            spec.comment(property.comment());
+        }
         spec.translation(ConfigLocalization.forProperty(property));
 
         return switch (property) {
@@ -237,6 +239,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
         final var configType = switch (stringType) {
             case "common" -> ModConfig.Type.COMMON;
             case "client" -> ModConfig.Type.CLIENT;
+            case "server" -> ModConfig.Type.SERVER;
             default -> throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'common' and 'client' are supported.");
         };
         final var mappedConfigSpec = mapToConfigSpec(schema);

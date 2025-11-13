@@ -1,8 +1,23 @@
 repositories {
     maven {
+        url "https://maven.twelveiterations.com/repository/maven-proxy/"
+        content {
+            includeGroup "dev.emi"
+        }
+    }
+
+    maven {
         url = "https://www.cursemaven.com"
         content {
             includeGroup 'curse.maven'
+        }
+    }
+
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
         }
     }
 
@@ -27,14 +42,6 @@ repositories {
         content {
             includeGroup "lol.bai"
             includeGroup "mcp.mobius.waila"
-        }
-    }
-
-    maven {
-        url = "https://maven.terraformersmc.com/releases"
-        content {
-            includeGroup "com.terraformersmc"
-            includeGroup "dev.emi"
         }
     }
 

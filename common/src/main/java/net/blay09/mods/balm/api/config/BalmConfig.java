@@ -19,9 +19,13 @@ public interface BalmConfig {
 
     File getConfigDir();
 
+    default File getConfigDir(BalmConfigSchema schema) {
+        return getConfigDir();
+    }
+
     default File getConfigFile(BalmConfigSchema schema) {
         final var identifier = schema.identifier();
-        return new File(getConfigDir(), identifier.getNamespace() + "-" + identifier.getPath() + ".toml");
+        return new File(getConfigDir(schema), identifier.getNamespace() + "-" + identifier.getPath() + ".toml");
     }
 
     default MutableLoadedConfig getLocalConfig(BalmConfigSchema schema) {

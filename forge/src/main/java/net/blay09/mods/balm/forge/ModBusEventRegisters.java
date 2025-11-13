@@ -19,6 +19,10 @@ public class ModBusEventRegisters {
     private static final Table<String, Class<?>, Object> registrations = Tables.synchronizedTable(HashBasedTable.create());
     private static final Set<Object> registeredRegistrations = Sets.newConcurrentHashSet();
 
+    public static BusGroup getBusGroup(String namespace) {
+        return modEventBuses.get(namespace);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> T getRegistrations(String namespace, Class<T> clazz) {
         final var existing = registrations.get(namespace, clazz);

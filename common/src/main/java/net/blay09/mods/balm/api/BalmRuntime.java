@@ -201,9 +201,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerResources(getResources());
         resourceConditions(modId, module::registerResourceConditions);
 
-        module.registerAdditional(getRegistries());
-        module.registerAdditional(registrar());
-
         module.registerComponents(getComponents());
         dataComponentTypes(modId, module::registerDataComponentTypes);
 
@@ -221,7 +218,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         entityTypes(modId, module::registerEntityTypes);
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());
+
         module.registerMenus(getMenus());
+        menuTypes(modId, module::registerMenuTypes);
+
         module.registerCapabilities(getCapabilities());
         module.registerCommands(getCommands());
 
@@ -241,6 +241,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerParticles(getParticles());
         particleTypes(modId, module::registerParticleTypes);
 
+        module.registerAdditional(getRegistries());
+        module.registerAdditional(registrar());
+
         resourceReloadListeners(modId, module::registerReloadListeners);
 
         module.registerEvents(getEvents());
@@ -255,7 +258,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     @Deprecated
     default void registerModule(BalmModule module) {
-        registerModule(new BalmRegistrars(this), module);
+        registerModule(new BalmRegistrars(this, module.getId().getNamespace()), module);
     }
 
     void registerModule(BalmRegistrars registrars, BalmModule module);

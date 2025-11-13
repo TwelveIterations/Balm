@@ -77,7 +77,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     public void initializeMod(String modId, EmptyLoadContext context, Consumer<BalmClientRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.accept(new BalmClientRegistrars(this));
+        initializer.accept(new BalmClientRegistrars(this, modId));
     }
 
     @Override

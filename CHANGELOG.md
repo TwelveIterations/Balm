@@ -1,18 +1,12 @@
 ### User Changelog
 
-- Fixed control key modifier not working on OSX
+- Fixed crashes on Forge
+- Bumped network version (meaning client and server version must match) due to an unexpected protocol-breaking change in custom stats
 
 ### Developer Changelog
 
-- Added a `QuickMove` utility for declarative `quickMoveStack` implementations
-- Added progress bar rendering utilities
-- Added more flexible `modifyBiome` method not limited to adding one specific placed feature
-- Added `UnpackedLootTableHolder` for accessing the loot table on a block entity during loot modifiers
-- Added `NumberProvider` utility that works without a loot context for custom use cases
-- Added `CustomChestMaterials` for easily adding chest material overrides on custom chest blocks
-- Added `CustomMobEffect` with public constructors for convenience
-- Added `SingleItemContainer` class for convenience
-- Added `BlockEntityUtils`, deprecated `BalmBlockEntity`
-- Added new Registrar classes for simpler and more stable registration of things into registries
-  - This is backwards-compatible, but the old methods have been deprecated and will be removed in 1.21.11
-  - This change will be backported to Minecraft 1.21.1, but probably not 1.20.1 unless there is demand.
+- Added support for `server`-type configurations
+  - On Forge, uses type `ModConfig.Type.SERVER` and will be located in the `world/serverconfig/` folder. All properties are synced.
+  - On NeoForge, uses type `ModConfig.Type.SERVER` and will be located in the `config` folder. May be overridden by placing a config file in `world/serverconfig/`. All properties are synced.
+  - On Fabric, will be located in the `world/serverconfig/` folder. All properties are synced.
+  - `@Synced` and `.synced()` are unaffected, they will continue to work on other types too as before

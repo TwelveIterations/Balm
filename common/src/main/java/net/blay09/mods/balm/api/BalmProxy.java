@@ -24,4 +24,16 @@ public class BalmProxy {
     public boolean isClient() {
         return false;
     }
+
+    public boolean isShiftDown() {
+        return false;
+    }
+
+    public boolean isControlDown() {
+        return false;
+    }
+
+    public boolean isAltDown() {
+        return false;
+    }
 }

@@ -19,7 +19,7 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockR
     }
 
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems(BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
-        forEach((discriminator, it) -> it.withItem(BlockItem::new, propertiesBuilder.apply(discriminator, new Item.Properties())));
+        forEach((discriminator, it) -> it.withItem(BlockItem::new, () -> propertiesBuilder.apply(discriminator, new Item.Properties())));
         return this;
     }
 
@@ -39,7 +39,7 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockR
     }
 
     default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
-        forEach((discriminator, it) -> it.withItem(constructor, propertiesBuilder.apply(new Item.Properties())));
+        forEach((discriminator, it) -> it.withItem(constructor, () -> propertiesBuilder.apply(new Item.Properties())));
         return this;
     }
 

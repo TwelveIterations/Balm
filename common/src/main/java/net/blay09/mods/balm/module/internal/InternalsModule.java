@@ -34,7 +34,7 @@ public final class InternalsModule implements BalmModule {
     @Override
     public void registerNetworking(BalmNetworking networking) {
         networking.allowClientAndServerOnly("balm");
-        networking.defineNetworkVersion(MOD_ID, "3");
+        networking.defineNetworkVersion(MOD_ID, "4");
     }
 
     @Override

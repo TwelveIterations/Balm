@@ -6,12 +6,16 @@ import net.blay09.mods.balm.api.config.LoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class FabricConfigSaver {
+
+    private static final Logger logger = LoggerFactory.getLogger(FabricConfigSaver.class);
 
     public static Notoml toNotoml(BalmConfigSchema schema, LoadedConfig config) {
         Table<String, String, Object> properties = HashBasedTable.create();
@@ -33,9 +37,13 @@ public class FabricConfigSaver {
     }
 
     public static void save(File configFile, BalmConfigSchema schema, LoadedConfig config) throws IOException {
-        var notoml = toNotoml(schema, config);
-        try (FileWriter writer = new FileWriter(configFile)) {
-            NotomlSerializer.serialize(writer, notoml);
+        if (configFile.getParentFile().exists() || configFile.getParentFile().mkdirs()) {
+            var notoml = toNotoml(schema, config);
+            try (FileWriter writer = new FileWriter(configFile)) {
+                NotomlSerializer.serialize(writer, notoml);
+            }
+        } else {
+            logger.error("Failed to save config file {} - could not create config directory", configFile);
         }
     }
 }
