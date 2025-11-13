@@ -24,6 +24,7 @@ import net.blay09.mods.balm.neoforge.config.NeoForgeBalmConfig;
 import net.blay09.mods.balm.neoforge.core.NeoForgeBalmRegistrar;
 import net.blay09.mods.balm.neoforge.core.particles.NeoForgeBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmCommonEvents;
+import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEventMappings;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.blay09.mods.balm.neoforge.loader.NeoForgeBalmPlatform;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
@@ -65,6 +66,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     public NeoForgeBalmRuntime() {
         NeoForgeBalmCommonEvents.registerEvents(events);
+        NeoForgeBalmEventMappings.bind();
     }
 
     @Override

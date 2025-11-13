@@ -20,6 +20,7 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.color.block.ForgeBalmBlockColorRegistrar;
+import net.blay09.mods.balm.forge.client.event.ForgeBalmClientEventMappings;
 import net.blay09.mods.balm.forge.client.gui.screens.inventory.ForgeBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.forge.client.model.geom.ForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.forge.client.particle.ForgeBalmParticleProviderRegistrar;
@@ -30,6 +31,7 @@ import net.blay09.mods.balm.forge.client.renderer.entity.ForgeBalmEntityRenderer
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
 import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
+import net.blay09.mods.balm.forge.event.ForgeBalmEventMappings;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
@@ -54,6 +56,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
 
     public ForgeBalmClientRuntime() {
         ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.events()));
+        ForgeBalmClientEventMappings.bind();
     }
 
     @Override

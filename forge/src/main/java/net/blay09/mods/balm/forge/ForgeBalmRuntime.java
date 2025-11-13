@@ -63,6 +63,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
     public ForgeBalmRuntime() {
         ForgeBalmCommonEvents.registerEvents(events);
+        ForgeBalmEventMappings.bind();
     }
 
     @Override
