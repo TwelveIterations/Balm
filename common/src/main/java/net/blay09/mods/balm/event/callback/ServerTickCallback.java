@@ -4,6 +4,7 @@ import net.blay09.mods.balm.event.EventMapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 @FunctionalInterface
 public interface ServerTickCallback {
@@ -14,27 +15,27 @@ public interface ServerTickCallback {
     EventMapper<ServerTickCallback> POST = EventMapper.createUnbound("ServerTickCallback.POST");
 
     @FunctionalInterface
-    interface Entity {
-        void handle(net.minecraft.world.entity.Entity entity);
+    interface ServerEntityTick {
+        void handle(Entity entity);
 
-        EventMapper<Entity> PRE = EventMapper.createUnbound("ServerTickCallback.Entity.PRE");
-        EventMapper<Entity> POST = EventMapper.createUnbound("ServerTickCallback.Entity.POST");
+        EventMapper<ServerEntityTick> PRE = EventMapper.createUnbound("ServerTickCallback.Entity.PRE");
+        EventMapper<ServerEntityTick> POST = EventMapper.createUnbound("ServerTickCallback.Entity.POST");
     }
 
     @FunctionalInterface
-    interface Level {
+    interface ServerLevelTick {
         void handle(ServerLevel level);
 
-        EventMapper<Level> PRE = EventMapper.createUnbound("ServerTickCallback.Level.PRE");
-        EventMapper<Level> POST = EventMapper.createUnbound("ServerTickCallback.Level.POST");
+        EventMapper<ServerLevelTick> PRE = EventMapper.createUnbound("ServerTickCallback.Level.PRE");
+        EventMapper<ServerLevelTick> POST = EventMapper.createUnbound("ServerTickCallback.Level.POST");
     }
 
     @FunctionalInterface
-    interface Player {
+    interface ServerPlayerTick {
         void handle(ServerPlayer player);
 
-        EventMapper<Player> PRE = EventMapper.createUnbound("ServerTickCallback.Player.PRE");
-        EventMapper<Player> POST = EventMapper.createUnbound("ServerTickCallback.Player.POST");
+        EventMapper<ServerPlayerTick> PRE = EventMapper.createUnbound("ServerTickCallback.Player.PRE");
+        EventMapper<ServerPlayerTick> POST = EventMapper.createUnbound("ServerTickCallback.Player.POST");
     }
 
 }

@@ -13,25 +13,25 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.world.InteractionResult;
 
 public class FabricBalmSupplementalClientEvents {
-    public static final Event<ClientTickCallback.Player> CLIENT_PLAYER_TICK_PRE = EventFactory.createArrayBacked(ClientTickCallback.Player.class, (listeners) -> (player) -> {
+    public static final Event<ClientTickCallback.ClientPlayerTick> CLIENT_PLAYER_TICK_PRE = EventFactory.createArrayBacked(ClientTickCallback.ClientPlayerTick.class, (listeners) -> (player) -> {
         for (final var listener : listeners) {
             listener.handle(player);
         }
     });
 
-    public static final Event<ClientTickCallback.Player> CLIENT_PLAYER_TICK_POST = EventFactory.createArrayBacked(ClientTickCallback.Player.class, (listeners) -> (player) -> {
+    public static final Event<ClientTickCallback.ClientPlayerTick> CLIENT_PLAYER_TICK_POST = EventFactory.createArrayBacked(ClientTickCallback.ClientPlayerTick.class, (listeners) -> (player) -> {
         for (final var listener : listeners) {
             listener.handle(player);
         }
     });
 
-    public static final Event<ClientTickCallback.Entity> CLIENT_ENTITY_TICK_PRE = EventFactory.createArrayBacked(ClientTickCallback.Entity.class, (listeners) -> (entity) -> {
+    public static final Event<ClientTickCallback.ClientEntityTick> CLIENT_ENTITY_TICK_PRE = EventFactory.createArrayBacked(ClientTickCallback.ClientEntityTick.class, (listeners) -> (entity) -> {
         for (final var listener : listeners) {
             listener.handle(entity);
         }
     });
 
-    public static final Event<ClientTickCallback.Entity> CLIENT_ENTITY_TICK_POST = EventFactory.createArrayBacked(ClientTickCallback.Entity.class, (listeners) -> (entity) -> {
+    public static final Event<ClientTickCallback.ClientEntityTick> CLIENT_ENTITY_TICK_POST = EventFactory.createArrayBacked(ClientTickCallback.ClientEntityTick.class, (listeners) -> (entity) -> {
         for (final var listener : listeners) {
             listener.handle(entity);
         }

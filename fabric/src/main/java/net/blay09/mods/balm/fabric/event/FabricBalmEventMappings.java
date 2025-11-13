@@ -31,14 +31,14 @@ public class FabricBalmEventMappings {
                 -> ServerTickEvents.START_SERVER_TICK.register(mapPhase(phase), it::handle));
         ServerTickCallback.POST.configureMapping((phase, it)
                 -> ServerTickEvents.END_SERVER_TICK.register(mapPhase(phase), it::handle));
-        ServerTickCallback.Level.PRE.configureMapping((phase, it)
+        ServerTickCallback.ServerLevelTick.PRE.configureMapping((phase, it)
                 -> ServerTickEvents.START_WORLD_TICK.register(mapPhase(phase), it::handle));
-        ServerTickCallback.Level.POST.configureMapping((phase, it)
+        ServerTickCallback.ServerLevelTick.POST.configureMapping((phase, it)
                 -> ServerTickEvents.END_WORLD_TICK.register(mapPhase(phase), it::handle));
-        ServerTickCallback.Player.PRE.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_PRE::register);
-        ServerTickCallback.Player.POST.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_POST::register);
-        ServerTickCallback.Entity.PRE.configureMapping(FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_PRE::register);
-        ServerTickCallback.Entity.POST.configureMapping(FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_POST::register);
+        ServerTickCallback.ServerPlayerTick.PRE.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_PRE::register);
+        ServerTickCallback.ServerPlayerTick.POST.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_POST::register);
+        ServerTickCallback.ServerEntityTick.PRE.configureMapping(FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_PRE::register);
+        ServerTickCallback.ServerEntityTick.POST.configureMapping(FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_POST::register);
 
         ServerLifecycleCallback.STARTING.configureMapping((phase, it)
                 -> ServerLifecycleEvents.SERVER_STARTING.register(mapPhase(phase), it::handle));

@@ -15,12 +15,12 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
     public static void bind() {
         bindSimple(ClientTickCallback.PRE, ClientTickEvent.Pre.class, (event, it) -> it.handle(Minecraft.getInstance()));
         bindSimple(ClientTickCallback.POST, ClientTickEvent.Post.class, (event, it) -> it.handle(Minecraft.getInstance()));
-        bindFiltered(ClientTickCallback.Level.PRE, LevelTickEvent.Pre.class, event -> event.getLevel().isClientSide(), (event, it) -> it.handle((ClientLevel) event.getLevel()));
-        bindFiltered(ClientTickCallback.Level.POST, LevelTickEvent.Post.class, event -> event.getLevel().isClientSide(), (event, it) -> it.handle((ClientLevel) event.getLevel()));
-        bindFiltered(ClientTickCallback.Player.PRE, PlayerTickEvent.Pre.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle((AbstractClientPlayer) event.getEntity()));
-        bindFiltered(ClientTickCallback.Player.POST, PlayerTickEvent.Post.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle((AbstractClientPlayer) event.getEntity()));
-        bindFiltered(ClientTickCallback.Entity.PRE, EntityTickEvent.Pre.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
-        bindFiltered(ClientTickCallback.Entity.POST, EntityTickEvent.Post.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+        bindFiltered(ClientTickCallback.ClientLevelTick.PRE, LevelTickEvent.Pre.class, event -> event.getLevel().isClientSide(), (event, it) -> it.handle((ClientLevel) event.getLevel()));
+        bindFiltered(ClientTickCallback.ClientLevelTick.POST, LevelTickEvent.Post.class, event -> event.getLevel().isClientSide(), (event, it) -> it.handle((ClientLevel) event.getLevel()));
+        bindFiltered(ClientTickCallback.ClientPlayerTick.PRE, PlayerTickEvent.Pre.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle((AbstractClientPlayer) event.getEntity()));
+        bindFiltered(ClientTickCallback.ClientPlayerTick.POST, PlayerTickEvent.Post.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle((AbstractClientPlayer) event.getEntity()));
+        bindFiltered(ClientTickCallback.ClientEntityTick.PRE, EntityTickEvent.Pre.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+        bindFiltered(ClientTickCallback.ClientEntityTick.POST, EntityTickEvent.Post.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
     }
 
 }

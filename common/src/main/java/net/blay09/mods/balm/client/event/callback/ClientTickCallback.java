@@ -4,6 +4,7 @@ import net.blay09.mods.balm.event.EventMapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.world.entity.Entity;
 
 @FunctionalInterface
 public interface ClientTickCallback {
@@ -13,27 +14,27 @@ public interface ClientTickCallback {
     EventMapper<ClientTickCallback> POST = EventMapper.createUnbound("ClientTickCallback.POST");
 
     @FunctionalInterface
-    interface Player {
+    interface ClientPlayerTick {
         void handle(AbstractClientPlayer player);
 
-        EventMapper<Player> PRE = EventMapper.createUnbound("ClientTickCallback.Player.PRE");
-        EventMapper<Player> POST = EventMapper.createUnbound("ClientTickCallback.Player.POST");
+        EventMapper<ClientPlayerTick> PRE = EventMapper.createUnbound("ClientTickCallback.Player.PRE");
+        EventMapper<ClientPlayerTick> POST = EventMapper.createUnbound("ClientTickCallback.Player.POST");
     }
 
     @FunctionalInterface
-    interface Level {
+    interface ClientLevelTick {
         void handle(ClientLevel level);
 
-        EventMapper<Level> PRE = EventMapper.createUnbound("ClientTickCallback.Level.PRE");
-        EventMapper<Level> POST = EventMapper.createUnbound("ClientTickCallback.Level.POST");
+        EventMapper<ClientLevelTick> PRE = EventMapper.createUnbound("ClientTickCallback.Level.PRE");
+        EventMapper<ClientLevelTick> POST = EventMapper.createUnbound("ClientTickCallback.Level.POST");
     }
 
     @FunctionalInterface
-    interface Entity {
-        void handle(net.minecraft.world.entity.Entity entity);
+    interface ClientEntityTick {
+        void handle(Entity entity);
 
-        EventMapper<Entity> PRE = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
-        EventMapper<Entity> POST = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
+        EventMapper<ClientEntityTick> PRE = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
+        EventMapper<ClientEntityTick> POST = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
     }
 
 }

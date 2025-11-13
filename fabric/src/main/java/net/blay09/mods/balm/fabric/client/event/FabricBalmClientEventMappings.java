@@ -15,15 +15,15 @@ public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
                 -> ClientTickEvents.START_CLIENT_TICK.register(mapPhase(phase), it::handle));
         ClientTickCallback.POST.configureMapping((phase, it)
                 -> ClientTickEvents.END_CLIENT_TICK.register(mapPhase(phase), it::handle));
-        ClientTickCallback.Level.PRE.configureMapping((phase, it)
+        ClientTickCallback.ClientLevelTick.PRE.configureMapping((phase, it)
                 -> ClientTickEvents.START_WORLD_TICK.register(mapPhase(phase), it::handle));
-        ClientTickCallback.Level.POST.configureMapping((phase, it)
+        ClientTickCallback.ClientLevelTick.POST.configureMapping((phase, it)
                 -> ClientTickEvents.END_WORLD_TICK.register(mapPhase(phase), it::handle));
 
-        ClientTickCallback.Player.PRE.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_PLAYER_TICK_PRE::register);
-        ClientTickCallback.Player.POST.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_PLAYER_TICK_POST::register);
-        ClientTickCallback.Entity.PRE.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_ENTITY_TICK_PRE::register);
-        ClientTickCallback.Entity.POST.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_ENTITY_TICK_POST::register);
+        ClientTickCallback.ClientPlayerTick.PRE.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_PLAYER_TICK_PRE::register);
+        ClientTickCallback.ClientPlayerTick.POST.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_PLAYER_TICK_POST::register);
+        ClientTickCallback.ClientEntityTick.PRE.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_ENTITY_TICK_PRE::register);
+        ClientTickCallback.ClientEntityTick.POST.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_ENTITY_TICK_POST::register);
 
         ClientLifecycleCallback.STARTED.configureMapping((phase, it)
                 -> ClientLifecycleEvents.CLIENT_STARTED.register(mapPhase(phase), it::handle));

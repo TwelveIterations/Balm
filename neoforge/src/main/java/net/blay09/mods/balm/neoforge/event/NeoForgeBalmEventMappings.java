@@ -52,12 +52,12 @@ public class NeoForgeBalmEventMappings {
     public static void bind() {
         bindSimple(ServerTickCallback.PRE, ServerTickEvent.Pre.class, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerTickCallback.POST, ServerTickEvent.Post.class, (event, it) -> it.handle(event.getServer()));
-        bindFiltered(ServerTickCallback.Level.PRE, LevelTickEvent.Pre.class, event -> !event.getLevel().isClientSide(), (event, it) -> it.handle((ServerLevel) event.getLevel()));
-        bindFiltered(ServerTickCallback.Level.POST, LevelTickEvent.Post.class, event -> !event.getLevel().isClientSide(), (event, it) -> it.handle((ServerLevel) event.getLevel()));
-        bindFiltered(ServerTickCallback.Player.PRE, PlayerTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
-        bindFiltered(ServerTickCallback.Player.POST, PlayerTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
-        bindFiltered(ServerTickCallback.Entity.PRE, EntityTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
-        bindFiltered(ServerTickCallback.Entity.POST, EntityTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+        bindFiltered(ServerTickCallback.ServerLevelTick.PRE, LevelTickEvent.Pre.class, event -> !event.getLevel().isClientSide(), (event, it) -> it.handle((ServerLevel) event.getLevel()));
+        bindFiltered(ServerTickCallback.ServerLevelTick.POST, LevelTickEvent.Post.class, event -> !event.getLevel().isClientSide(), (event, it) -> it.handle((ServerLevel) event.getLevel()));
+        bindFiltered(ServerTickCallback.ServerPlayerTick.PRE, PlayerTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        bindFiltered(ServerTickCallback.ServerPlayerTick.POST, PlayerTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        bindFiltered(ServerTickCallback.ServerEntityTick.PRE, EntityTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+        bindFiltered(ServerTickCallback.ServerEntityTick.POST, EntityTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
 
         bindSimple(ServerLifecycleCallback.STARTING, ServerAboutToStartEvent.class, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.class, (event, it) -> it.handle(event.getServer()));

@@ -1,9 +1,10 @@
 package net.blay09.mods.balm.api.event;
 
+import net.blay09.mods.balm.event.callback.ServerTickCallback;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
- * @deprecated Use {@link net.blay09.mods.balm.event.callback.ServerTickCallback.Player} instead.
+ * @deprecated Use {@link ServerTickCallback.ServerPlayerTick} instead.
  */
 @Deprecated
 public interface ServerPlayerTickHandler {
