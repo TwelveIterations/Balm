@@ -124,6 +124,6 @@ class ArrayBackedEvent<T> extends Event<T> {
 
     @Override
     public boolean hasHandlers() {
-        return handlers != null && handlers.length > 0;
+        return handlers.length > 0;
     }
 }
