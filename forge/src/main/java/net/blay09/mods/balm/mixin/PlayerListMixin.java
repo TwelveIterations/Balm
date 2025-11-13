@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.PlayerConnectedEvent;
+import net.blay09.mods.balm.forge.event.ForgeBalmSupplementalEvents;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
@@ -17,5 +18,6 @@ public class PlayerListMixin {
     private void handlePlayerConnection(Connection connection, ServerPlayer player, CommonListenerCookie commonListenerCookie, CallbackInfo callbackInfo) {
         final PlayerConnectedEvent event = new PlayerConnectedEvent(player);
         Balm.getEvents().fireEvent(event);
+        ForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED.invoker().handle(player);
     }
 }

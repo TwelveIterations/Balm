@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.GuiDrawEvent;
+import net.blay09.mods.balm.forge.client.event.ForgeBalmSupplementalClientEvents;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -26,12 +27,19 @@ public class GuiMixin {
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
+        } else {
+            if (ForgeBalmSupplementalClientEvents.RENDER_GUI_PRE.invoker()
+                    .handle(guiGraphics, minecraft.getWindow())
+                    .shouldSkipDefault()) {
+                callbackInfo.cancel();
+            }
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V", at = @At("TAIL"))
     public void renderAllPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo callbackInfo) {
         Balm.getEvents().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.ALL));
+        ForgeBalmSupplementalClientEvents.RENDER_GUI_POST.invoker().handle(guiGraphics, minecraft.getWindow());
     }
 
     @Inject(method = "renderPlayerHealth(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
@@ -40,11 +48,18 @@ public class GuiMixin {
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
+        } else {
+            if (ForgeBalmSupplementalClientEvents.RENDER_GUI_HEALTH_PRE.invoker()
+                    .handle(guiGraphics, minecraft.getWindow())
+                    .shouldSkipDefault()) {
+                callbackInfo.cancel();
+            }
         }
     }
 
     @Inject(method = "renderPlayerHealth(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPlayerHealthPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
         Balm.getEvents().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.HEALTH));
+        ForgeBalmSupplementalClientEvents.RENDER_GUI_HEALTH_POST.invoker().handle(guiGraphics, minecraft.getWindow());
     }
 }
