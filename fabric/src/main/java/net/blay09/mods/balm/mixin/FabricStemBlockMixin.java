@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.CropGrowEvent;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -20,6 +21,12 @@ public class FabricStemBlockMixin {
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
+        } else {
+            if (FabricBalmSupplementalEvents.CROP_GROW_PRE.invoker()
+                    .handle(level, pos, state)
+                    .shouldSkipDefault()) {
+                callbackInfo.cancel();
+            }
         }
     }
 
@@ -27,12 +34,14 @@ public class FabricStemBlockMixin {
     public void randomTickPostGrow(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo callbackInfo) {
         CropGrowEvent.Post event = new CropGrowEvent.Post(level, pos, state);
         Balm.getEvents().fireEvent(event);
+        FabricBalmSupplementalEvents.CROP_GROW_POST.invoker().handle(level, pos, state);
     }
 
     @Inject(method = "randomTick(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", shift = At.Shift.AFTER, ordinal = 1))
     public void randomTickPostGrow2(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo callbackInfo) {
         CropGrowEvent.Post event = new CropGrowEvent.Post(level, pos, state);
         Balm.getEvents().fireEvent(event);
+        FabricBalmSupplementalEvents.CROP_GROW_POST.invoker().handle(level, pos, state);
     }
 
 }

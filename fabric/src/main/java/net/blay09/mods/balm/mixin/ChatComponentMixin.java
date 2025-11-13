@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.GuiDrawEvent;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
@@ -25,11 +26,18 @@ public class ChatComponentMixin {
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
+        } else {
+            if (FabricBalmSupplementalClientEvents.RENDER_GUI_CHAT_PRE.invoker()
+                    .handle(guiGraphics, minecraft.getWindow())
+                    .shouldSkipDefault()) {
+                callbackInfo.cancel();
+            }
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, int tickCount, int x, int y, boolean bl, CallbackInfo callbackInfo) {
         Balm.getEvents().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.CHAT));
+        FabricBalmSupplementalClientEvents.RENDER_GUI_CHAT_POST.invoker().handle(guiGraphics, minecraft.getWindow());
     }
 }

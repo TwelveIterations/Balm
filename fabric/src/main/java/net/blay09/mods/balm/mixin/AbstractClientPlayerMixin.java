@@ -3,6 +3,7 @@ package net.blay09.mods.balm.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.FovUpdateEvent;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,9 +19,10 @@ public class AbstractClientPlayerMixin {
                                         @Local(ordinal = 1) float originalFov) {
         FovUpdateEvent event = new FovUpdateEvent((LivingEntity) (Object) this, originalFov);
         Balm.getEvents().fireEvent(event);
-        Float override = event.getFov();
-        if (override != null) {
-            callbackInfo.setReturnValue(override);
+        float effectiveFov = event.getFov() != null ? event.getFov() : originalFov;
+        effectiveFov = FabricBalmSupplementalClientEvents.UPDATE_FOV.invoker().handle((LivingEntity) (Object) this, effectiveFov);
+        if (effectiveFov != originalFov) {
+            callbackInfo.setReturnValue(effectiveFov);
         }
     }
 

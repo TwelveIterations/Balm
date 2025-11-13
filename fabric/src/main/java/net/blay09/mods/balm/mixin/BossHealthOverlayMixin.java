@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.GuiDrawEvent;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.BossHealthOverlay;
@@ -25,12 +26,19 @@ public class BossHealthOverlayMixin {
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
+        } else {
+            if (FabricBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_PRE.invoker()
+                    .handle(guiGraphics, minecraft.getWindow())
+                    .shouldSkipDefault()) {
+                callbackInfo.cancel();
+            }
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
         Balm.getEvents().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.BOSS_INFO));
+        FabricBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_POST.invoker().handle(guiGraphics, minecraft.getWindow());
     }
 
 }

@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.event.callback;
 
 import net.blay09.mods.balm.event.EventMapper;
+import net.blay09.mods.balm.event.EventHandling;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -37,7 +38,7 @@ public interface ItemCallback {
 
     @FunctionalInterface
     interface Toss {
-        void handle(Player player, ItemStack itemStack);
+        EventHandling handle(Player player, ItemStack itemStack);
 
         EventMapper<Toss> EVENT = EventMapper.createUnbound("ItemCallback.Toss");
     }

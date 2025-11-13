@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 
@@ -26,6 +27,7 @@ public class FabricBalmConfig extends AbstractBalmConfig {
         setActiveConfig(schema, config);
         fireConfigLoadHandlers(schema, mutableConfig);
         Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
+        FabricBalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
     }
 
     @Override

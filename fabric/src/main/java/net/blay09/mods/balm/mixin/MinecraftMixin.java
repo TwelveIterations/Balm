@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.LevelLoadingEvent;
 import net.blay09.mods.balm.api.event.client.OpenScreenEvent;
 import net.blay09.mods.balm.api.event.client.UseItemInputEvent;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -29,7 +30,9 @@ public class MinecraftMixin {
     public Screen modifyScreen(Screen screen) {
         OpenScreenEvent event = new OpenScreenEvent(screen);
         Balm.getEvents().fireEvent(event);
-        return event.getNewScreen() != null ? event.getNewScreen() : screen;
+        var effectiveScreen = event.getNewScreen() != null ? event.getNewScreen() : screen;
+        effectiveScreen = FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().handle(effectiveScreen);
+        return effectiveScreen;
     }
 
     @Inject(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), cancellable = true)
@@ -52,6 +55,7 @@ public class MinecraftMixin {
     public void clearClientLevel(Screen p_91321_, CallbackInfo ci) {
         if (this.level != null) {
             Balm.getEvents().fireEvent(new LevelLoadingEvent.Unload(this.level));
+            FabricBalmSupplementalClientEvents.CLIENT_LEVEL_UNLOAD.invoker().handle(this.level);
         }
     }
 
@@ -59,6 +63,7 @@ public class MinecraftMixin {
     public void setLevel(ClientLevel clientLevel, CallbackInfo ci) {
         if (this.level != null) {
             Balm.getEvents().fireEvent(new LevelLoadingEvent.Unload(this.level));
+            FabricBalmSupplementalClientEvents.CLIENT_LEVEL_UNLOAD.invoker().handle(this.level);
         }
     }
 

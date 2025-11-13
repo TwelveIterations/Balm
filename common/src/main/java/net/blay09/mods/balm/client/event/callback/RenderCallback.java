@@ -29,7 +29,7 @@ public interface RenderCallback {
 
     @FunctionalInterface
     interface Hand {
-        void handle(InteractionHand hand, ItemStack itemStack, float swingProgress);
+        EventHandling handle(InteractionHand hand, ItemStack itemStack, float swingProgress);
 
         EventMapper<Hand> EVENT = EventMapper.createUnbound("RenderCallback.Hand");
     }

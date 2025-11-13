@@ -9,8 +9,7 @@ import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.fabric.core.particles.FabricBalmParticleTypeRegistrar;
-import net.blay09.mods.balm.fabric.event.FabricBalmEventMappings;
-import net.blay09.mods.balm.fabric.event.FabricCustomEventMapper;
+import net.blay09.mods.balm.fabric.event.*;
 import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.fabric.world.entity.FabricBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
@@ -30,8 +29,6 @@ import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
 import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
-import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
-import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.world.level.block.entity.FabricBalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.world.inventory.FabricBalmMenuTypeRegistrar;
@@ -70,6 +67,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
 
     public FabricBalmRuntime() {
         FabricBalmCommonEvents.registerEvents(events);
+        FabricBalmSupplementalEvents.initialize();
         FabricBalmEventMappings.bind();
     }
 

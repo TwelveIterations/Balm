@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.screen.ScreenMouseEvent;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -20,10 +21,14 @@ public class MouseHandlerMixin {
         if (preEvent.isCanceled()) {
             return true;
         }
+        if (FabricBalmSupplementalClientEvents.SCREEN_MOUSE_DRAG_PRE.invoker().handle(screen, event)) {
+            return true;
+        }
 
         final var result = operation.call(screen, event, dragX, dragY);
         ScreenMouseEvent.Drag.Post postEvent = new ScreenMouseEvent.Drag.Post(screen, event.x(), event.y(), event.button(), dragX, dragY);
         Balm.getEvents().fireEvent(postEvent);
+        FabricBalmSupplementalClientEvents.SCREEN_MOUSE_DRAG_POST.invoker().handle(screen, event);
         return result;
     }
 

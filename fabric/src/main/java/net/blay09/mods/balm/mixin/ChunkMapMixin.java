@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.ChunkTrackingEvent;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,11 +18,13 @@ public class ChunkMapMixin {
 
     @Inject(method = "markChunkPendingToSend(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/chunk/LevelChunk;)V", at = @At(value = "HEAD"))
     private static void markChunkPendingToSend(ServerPlayer player, LevelChunk chunk, CallbackInfo callbackInfo) {
-        Balm.getEvents().fireEvent(new ChunkTrackingEvent.Stop((ServerLevel) chunk.getLevel(), player, chunk.getPos()));
+        Balm.getEvents().fireEvent(new ChunkTrackingEvent.Start((ServerLevel) chunk.getLevel(), player, chunk.getPos()));
+        FabricBalmSupplementalEvents.SERVER_PLAYER_CHUNK_TRACKING_START.invoker().handle((ServerLevel) chunk.getLevel(), player, chunk.getPos());
     }
 
     @Inject(method = "dropChunk(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/ChunkPos;)V", at = @At(value = "HEAD"))
     private static void dropChunk(ServerPlayer player, ChunkPos chunkPos, CallbackInfo callbackInfo) {
         Balm.getEvents().fireEvent(new ChunkTrackingEvent.Stop(player.level(), player, chunkPos));
+        FabricBalmSupplementalEvents.SERVER_PLAYER_CHUNK_TRACKING_STOP.invoker().handle((ServerLevel) player.level(), player, chunkPos);
     }
 }

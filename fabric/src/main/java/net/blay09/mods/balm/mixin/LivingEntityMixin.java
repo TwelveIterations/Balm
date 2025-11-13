@@ -8,7 +8,9 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.LivingDamageEvent;
 import net.blay09.mods.balm.api.event.LivingFallEvent;
 import net.blay09.mods.balm.api.event.LivingHealEvent;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +29,9 @@ public abstract class LivingEntityMixin {
         if (event.isCanceled()) {
             return 0f;
         } else {
-            return event.getDamageAmount();
+            float effectiveDamage = event.getDamageAmount();
+            effectiveDamage = FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().handle((LivingEntity) (Object) this, damageSource, effectiveDamage);
+            return effectiveDamage;
         }
     }
 
@@ -47,7 +51,9 @@ public abstract class LivingEntityMixin {
         if (event != null && event.getFallDamageOverride() != null) {
             return event.getFallDamageOverride().intValue();
         }
-        return operation.call(self, fallDistance, multiplier);
+        float effectiveDamage = operation.call(self, fallDistance, multiplier);
+        effectiveDamage = FabricBalmSupplementalEvents.LIVING_FALL.invoker().handle(self, effectiveDamage);
+        return Mth.floor(effectiveDamage);
     }
 
     @ModifyVariable(method = "heal(F)V", at = @At("HEAD"), argsOnly = true)
