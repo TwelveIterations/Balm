@@ -84,8 +84,8 @@ public class FabricBalmEventMappings {
 
         CommandCallback.EVENT.setup(FabricBalmSupplementalEvents.COMMAND::register);
 
-        EntityCallback.ADD.setup((phase, it)
-                -> ServerEntityEvents.ENTITY_LOAD.register(mapPhase(phase), (entity, level) -> it.handle(entity)));
+        EntityCallback.Add.EVENT.setup((phase, it)
+                -> ServerEntityEvents.ENTITY_LOAD.register(mapPhase(phase), (entity, level) -> it.handle(level, entity)));
 
         LivingEntityCallback.Damage.EVENT.setup(FabricBalmSupplementalEvents.LIVING_DAMAGE::register);
         LivingEntityCallback.Fall.EVENT.setup(FabricBalmSupplementalEvents.LIVING_FALL::register);
@@ -104,7 +104,7 @@ public class FabricBalmEventMappings {
                 -> UseBlockCallback.EVENT.register(mapPhase(phase), it::handle));
         BlockCallback.DigSpeed.EVENT.setup(BalmSupplementalEvents.BLOCK_DIG_SPEED::register);
         BlockCallback.Break.EVENT.setup((phase, it)
-                -> PlayerBlockBreakEvents.AFTER.register(mapPhase(phase), (world, player, pos, state, blockEntity) -> it.handle(world, pos, state, blockEntity, player)));
+                -> PlayerBlockBreakEvents.BEFORE.register(mapPhase(phase), (world, player, pos, state, blockEntity) -> !it.handle(world, pos, state, blockEntity, player).shouldSkipDefault()));
 
         CreativeModeTabCallback.BUILD_CONTENTS.setup((phase, it)
                 -> ItemGroupEvents.MODIFY_ENTRIES_ALL.register(mapPhase(phase), it::handle));

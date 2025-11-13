@@ -2,10 +2,13 @@ package net.blay09.mods.balm.event.callback;
 
 import net.blay09.mods.balm.event.EventMapper;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 
-@FunctionalInterface
 public interface EntityCallback {
-    void handle(Entity entity);
+    @FunctionalInterface
+    interface Add {
+        void handle(Level level, Entity entity);
 
-    EventMapper<EntityCallback> ADD = EventMapper.createUnbound("EntityCallback.ADD");
+        EventMapper<Add> EVENT = EventMapper.createUnbound("EntityCallback.Add");
+    }
 }
