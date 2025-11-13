@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.forge.event;
 
+import net.blay09.mods.balm.event.CommonBalmSupplementalEvents;
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
 import net.blay09.mods.balm.event.callback.*;
@@ -46,6 +47,8 @@ public class ForgeBalmEventMappings {
         bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.BUS, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerLifecycleCallback.STOPPING, ServerStoppingEvent.BUS, (event, it) -> it.handle(event.getServer()));
         bindSimple(ServerLifecycleCallback.STOPPED, ServerStoppedEvent.BUS, (event, it) -> it.handle(event.getServer()));
+        ServerLifecycleCallback.RELOADING.setup(CommonBalmSupplementalEvents.SERVER_RELOADING::register);
+        ServerLifecycleCallback.RELOADED.setup(CommonBalmSupplementalEvents.SERVER_RELOADED::register);
     }
 
     public static <TCallback, TEvent extends Event> void bindSimple(EventMapper<TCallback> mapper, EventBus<@NotNull TEvent> bus, BiConsumer<TEvent, TCallback> consumer) {

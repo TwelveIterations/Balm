@@ -23,14 +23,14 @@ public interface BlockCallback {
     interface Break {
         void handle(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Player player);
 
-        EventMapper<Break> BREAK = EventMapper.createUnbound("BlockCallback.Break");
+        EventMapper<Break> EVENT = EventMapper.createUnbound("BlockCallback.Break");
     }
 
     @FunctionalInterface
     interface Use {
         void handle(Player player, Level level, InteractionHand hand, BlockHitResult hitResult);
 
-        EventMapper<Use> USE = EventMapper.createUnbound("BlockCallback.Use");
+        EventMapper<Use> EVENT = EventMapper.createUnbound("BlockCallback.Use");
     }
 
 }

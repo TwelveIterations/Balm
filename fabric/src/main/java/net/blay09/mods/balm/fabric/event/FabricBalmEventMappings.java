@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.fabric.event;
 
+import net.blay09.mods.balm.event.CommonBalmSupplementalEvents;
 import net.blay09.mods.balm.event.Event;
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
@@ -45,6 +46,10 @@ public class FabricBalmEventMappings {
                 -> ServerLifecycleEvents.SERVER_STOPPING.register(mapPhase(phase), it::handle));
         ServerLifecycleCallback.STOPPED.setup((phase, it)
                 -> ServerLifecycleEvents.SERVER_STOPPED.register(mapPhase(phase), it::handle));
+        ServerLifecycleCallback.RELOADING.setup((phase, listener)
+                -> CommonBalmSupplementalEvents.SERVER_RELOADING.register(mapPhase(phase), listener));
+        ServerLifecycleCallback.RELOADED.setup((phase, listener)
+                -> CommonBalmSupplementalEvents.SERVER_RELOADED.register(mapPhase(phase), listener));
     }
 
     public static ResourceLocation mapPhase(ResourceLocation phase) {
