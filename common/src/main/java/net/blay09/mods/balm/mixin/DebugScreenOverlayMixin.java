@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.GuiDrawEvent;
+import net.blay09.mods.balm.client.event.BalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
@@ -21,15 +22,24 @@ public class DebugScreenOverlayMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
     public void renderPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.DEBUG);
+        final var window = minecraft.getWindow();
+        GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(window, guiGraphics, GuiDrawEvent.Element.DEBUG);
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
+        } else {
+            if (BalmSupplementalClientEvents.RENDER_GUI_DEBUG_PRE.invoker()
+                    .handle(guiGraphics, window)
+                    .shouldSkipDefault()) {
+                callbackInfo.cancel();
+            }
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        Balm.getEvents().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.DEBUG));
+        final var window = minecraft.getWindow();
+        Balm.getEvents().fireEvent(new GuiDrawEvent.Post(window, guiGraphics, GuiDrawEvent.Element.DEBUG));
+        BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST.invoker().handle(guiGraphics, window);
     }
 }

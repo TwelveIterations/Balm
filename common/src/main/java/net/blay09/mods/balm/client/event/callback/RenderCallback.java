@@ -2,6 +2,7 @@ package net.blay09.mods.balm.client.event.callback;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.blay09.mods.balm.event.EventHandling;
 import net.blay09.mods.balm.event.EventMapper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,7 +22,7 @@ public interface RenderCallback {
 
     @FunctionalInterface
     interface BlockHighlight {
-        void handle(BlockHitResult hitResult, PoseStack poseStack, MultiBufferSource multiBufferSource, Camera camera);
+        EventHandling handle(BlockHitResult hitResult, PoseStack poseStack, MultiBufferSource multiBufferSource, Camera camera);
 
         EventMapper<BlockHighlight> EVENT = EventMapper.createUnbound("RenderCallback.BlockHighlight");
     }
@@ -35,7 +36,7 @@ public interface RenderCallback {
 
     @FunctionalInterface
     interface Gui {
-        void handle(GuiGraphics guiGraphics, Window window);
+        EventHandling handle(GuiGraphics guiGraphics, Window window);
 
         @FunctionalInterface
         interface Health extends Gui {
