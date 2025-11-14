@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.client.event.callback;
 
-import net.blay09.mods.balm.event.EventHandling;
 import net.blay09.mods.balm.event.EventMapper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

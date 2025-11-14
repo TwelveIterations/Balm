@@ -203,19 +203,19 @@ public class FabricBalmSupplementalClientEvents {
         return newScreen;
     });
 
-    public static final Event<ScreenCallback.MouseDrag> SCREEN_MOUSE_DRAG_PRE = EventFactory.createArrayBacked(ScreenCallback.MouseDrag.class, (listeners) -> (screen, event, horizontalAmount, verticalAmount, consumed) -> {
+    public static final Event<ScreenCallback.MouseDrag> SCREEN_MOUSE_DRAG_PRE = EventFactory.createArrayBacked(ScreenCallback.MouseDrag.class, (listeners) -> (screen, mouseX, mouseY, button, horizontalAmount, verticalAmount, consumed) -> {
         for (final var listener : listeners) {
-            if (listener.handle(screen, event, horizontalAmount, verticalAmount, consumed)) {
+            if (listener.handle(screen, mouseX, mouseY, button, horizontalAmount, verticalAmount, consumed)) {
                 return true;
             }
         }
         return false;
     });
 
-    public static final Event<ScreenCallback.MouseDrag> SCREEN_MOUSE_DRAG_POST = EventFactory.createArrayBacked(ScreenCallback.MouseDrag.class, (listeners) -> (screen, event, horizontalAmount, verticalAmount, consumed) -> {
+    public static final Event<ScreenCallback.MouseDrag> SCREEN_MOUSE_DRAG_POST = EventFactory.createArrayBacked(ScreenCallback.MouseDrag.class, (listeners) -> (screen, mouseX, mouseY, button, horizontalAmount, verticalAmount, consumed) -> {
         boolean cancel = false;
         for (final var listener : listeners) {
-            cancel |= listener.handle(screen, event, horizontalAmount, verticalAmount, cancel | consumed);
+            cancel |= listener.handle(screen, mouseX, mouseY, button, horizontalAmount, verticalAmount, cancel | consumed);
         }
         return cancel;
     });
@@ -281,19 +281,19 @@ public class FabricBalmSupplementalClientEvents {
         return cancel;
     });
 
-    public static final Event<ScreenCallback.MouseRelease> SCREEN_MOUSE_RELEASE_PRE = EventFactory.createArrayBacked(ScreenCallback.MouseRelease.class, (listeners) -> (screen, event, consumed) -> {
+    public static final Event<ScreenCallback.MouseRelease> SCREEN_MOUSE_RELEASE_PRE = EventFactory.createArrayBacked(ScreenCallback.MouseRelease.class, (listeners) -> (screen, mouseX, mouseY, button, consumed) -> {
         for (final var listener : listeners) {
-            if (listener.handle(screen, event, consumed)) {
+            if (listener.handle(screen, mouseX, mouseY, button, consumed)) {
                 return true;
             }
         }
         return false;
     });
 
-    public static final Event<ScreenCallback.MouseRelease> SCREEN_MOUSE_RELEASE_POST = EventFactory.createArrayBacked(ScreenCallback.MouseRelease.class, (listeners) -> (screen, event, consumed) -> {
+    public static final Event<ScreenCallback.MouseRelease> SCREEN_MOUSE_RELEASE_POST = EventFactory.createArrayBacked(ScreenCallback.MouseRelease.class, (listeners) -> (screen, mouseX, mouseY, button, consumed) -> {
         boolean cancel = false;
         for (final var listener : listeners) {
-            cancel |= listener.handle(screen, event, cancel | consumed);
+            cancel |= listener.handle(screen, mouseX, mouseY, button, cancel | consumed);
         }
         return cancel;
     });
@@ -343,13 +343,8 @@ public class FabricBalmSupplementalClientEvents {
         });
 
         ScreenEvents.BEFORE_INIT.register((client, initScreen, scaledWidth, scaledHeight) -> {
-            ScreenEvents.beforeRender(initScreen).register((screen, guiGraphics, mouseX, mouseY, tickDelta) -> {
-                SCREEN_RENDER_PRE.invoker().handle(screen, guiGraphics, mouseX, mouseY, tickDelta);
-            });
-
-            ScreenEvents.afterRender(initScreen).register((screen, guiGraphics, mouseX, mouseY, tickDelta) -> {
-                SCREEN_RENDER_POST.invoker().handle(screen, guiGraphics, mouseX, mouseY, tickDelta);
-            });
+            ScreenEvents.beforeRender(initScreen).register((screen, guiGraphics, mouseX, mouseY, tickDelta) -> SCREEN_RENDER_PRE.invoker().handle(screen, guiGraphics, mouseX, mouseY, tickDelta));
+            ScreenEvents.afterRender(initScreen).register((screen, guiGraphics, mouseX, mouseY, tickDelta) -> SCREEN_RENDER_POST.invoker().handle(screen, guiGraphics, mouseX, mouseY, tickDelta));
 
             ScreenKeyboardEvents.allowKeyPress(initScreen).register((screen, keyEvent) -> !SCREEN_KEY_PRESS_PRE.invoker().handle(screen, keyEvent));
             ScreenKeyboardEvents.afterKeyPress(initScreen).register((screen, keyEvent) -> SCREEN_KEY_PRESS_POST.invoker().handle(screen, keyEvent));
@@ -360,14 +355,14 @@ public class FabricBalmSupplementalClientEvents {
             ScreenMouseEvents.allowMouseClick(initScreen).register((screen, mouseEvent) -> !SCREEN_MOUSE_PRESS_PRE.invoker().handle(screen, mouseEvent, false));
             ScreenMouseEvents.afterMouseClick(initScreen).register((screen, mouseEvent, consumed) -> SCREEN_MOUSE_PRESS_POST.invoker().handle(screen, mouseEvent, consumed));
 
-            ScreenMouseEvents.allowMouseRelease(initScreen).register((screen, mouseEvent) -> !SCREEN_MOUSE_RELEASE_PRE.invoker().handle(screen, mouseEvent, false));
-            ScreenMouseEvents.afterMouseRelease(initScreen).register((screen, mouseEvent, consumed) -> SCREEN_MOUSE_RELEASE_POST.invoker().handle(screen, mouseEvent, consumed));
+            ScreenMouseEvents.allowMouseRelease(initScreen).register((screen, mouseEvent) -> !SCREEN_MOUSE_RELEASE_PRE.invoker().handle(screen, mouseEvent.x(), mouseEvent.y(), mouseEvent.button(), false));
+            ScreenMouseEvents.afterMouseRelease(initScreen).register((screen, mouseEvent, consumed) -> SCREEN_MOUSE_RELEASE_POST.invoker().handle(screen, mouseEvent.x(), mouseEvent.y(), mouseEvent.button(), consumed));
 
             ScreenMouseEvents.allowMouseScroll(initScreen).register((screen, mouseX, mouseY, horizontalAmount, verticalAmount) -> !SCREEN_MOUSE_SCROLL_PRE.invoker().handle(screen, mouseX, mouseY, horizontalAmount, verticalAmount, false));
             ScreenMouseEvents.afterMouseScroll(initScreen).register((screen, mouseX, mouseY, horizontalAmount, verticalAmount, consumed) -> SCREEN_MOUSE_SCROLL_POST.invoker().handle(screen, mouseX, mouseY, horizontalAmount, verticalAmount, consumed));
 
-            ScreenMouseEvents.beforeMouseDrag(initScreen).register((screen, mouseButtonEvent, horizontalAmount, verticalAmount) -> SCREEN_MOUSE_DRAG_PRE.invoker().handle(screen, mouseButtonEvent, horizontalAmount, verticalAmount, false));
-            ScreenMouseEvents.afterMouseDrag(initScreen).register((screen, mouseButtonEvent, horizontalAmount, verticalAmount, consumed) -> SCREEN_MOUSE_DRAG_POST.invoker().handle(screen, mouseButtonEvent, horizontalAmount, verticalAmount, consumed));
+            ScreenMouseEvents.beforeMouseDrag(initScreen).register((screen, mouseButtonEvent, horizontalAmount, verticalAmount) -> SCREEN_MOUSE_DRAG_PRE.invoker().handle(screen, mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button(), horizontalAmount, verticalAmount, false));
+            ScreenMouseEvents.afterMouseDrag(initScreen).register((screen, mouseButtonEvent, horizontalAmount, verticalAmount, consumed) -> SCREEN_MOUSE_DRAG_POST.invoker().handle(screen, mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button(), horizontalAmount, verticalAmount, consumed));
         });
     }
 }

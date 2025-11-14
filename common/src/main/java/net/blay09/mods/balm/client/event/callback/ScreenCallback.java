@@ -56,7 +56,7 @@ public interface ScreenCallback {
 
     @FunctionalInterface
     interface MouseRelease {
-        boolean handle(Screen screen, MouseButtonEvent event, boolean consumed);
+        boolean handle(Screen screen, double mouseX, double mouseY, int button, boolean consumed);
 
         EventMapper<MouseRelease> PRE = EventMapper.createUnbound("ScreenCallback.MouseRelease.PRE");
         EventMapper<MouseRelease> POST = EventMapper.createUnbound("ScreenCallback.MouseRelease.POST");
@@ -64,7 +64,7 @@ public interface ScreenCallback {
 
     @FunctionalInterface
     interface MouseDrag {
-        boolean handle(Screen screen, MouseButtonEvent event, double horizontalAmount, double verticalAmount, boolean consumed);
+        boolean handle(Screen screen, double mouseX, double mouseY, int button, double horizontalAmount, double verticalAmount, boolean consumed);
 
         EventMapper<MouseDrag> PRE = EventMapper.createUnbound("ScreenCallback.MouseDrag.PRE");
         EventMapper<MouseDrag> POST = EventMapper.createUnbound("ScreenCallback.MouseDrag.POST");
