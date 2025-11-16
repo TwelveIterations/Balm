@@ -16,7 +16,7 @@ public interface LevelCallback {
     interface Chunk {
         void handle(LevelAccessor level, ChunkAccess chunk, ChunkPos chunkPos);
 
-        EventMapper<Chunk> LOAD = EventMapper.createUnbound("LevelCallback.Chunk.UNLOAD");
+        EventMapper<Chunk> LOAD = EventMapper.createUnbound("LevelCallback.Chunk.LOAD");
         EventMapper<Chunk> UNLOAD = EventMapper.createUnbound("LevelCallback.Chunk.UNLOAD");
     }
 
