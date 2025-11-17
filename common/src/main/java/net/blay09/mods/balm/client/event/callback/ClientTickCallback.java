@@ -34,7 +34,7 @@ public interface ClientTickCallback {
         void handle(Entity entity);
 
         EventMapper<ClientEntityTick> PRE = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
-        EventMapper<ClientEntityTick> POST = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
+        EventMapper<ClientEntityTick> POST = EventMapper.createUnbound("ClientTickCallback.Entity.POST");
     }
 
 }
