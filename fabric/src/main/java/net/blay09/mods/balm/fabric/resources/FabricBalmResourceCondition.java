@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.resources;
 
-import net.blay09.mods.balm.api.resources.BalmResourceCondition;
-import net.blay09.mods.balm.common.resources.ResourceConditionContextImpl;
+import net.blay09.mods.balm.resources.BalmResourceCondition;
+import net.blay09.mods.balm.resources.internal.ResourceConditionContextImpl;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditionType;
 import net.minecraft.resources.RegistryOps;

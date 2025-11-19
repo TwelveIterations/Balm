@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.fabric.fluid;
 
 import com.google.common.primitives.Ints;
-import net.blay09.mods.balm.api.fluid.DefaultFluidTank;
-import net.blay09.mods.balm.api.fluid.FluidTank;
+import net.blay09.mods.balm.platform.fluid.DefaultFluidTank;
+import net.blay09.mods.balm.platform.fluid.FluidTank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;

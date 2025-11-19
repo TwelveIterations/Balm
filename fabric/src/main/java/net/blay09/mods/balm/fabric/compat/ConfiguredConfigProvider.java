@@ -2,12 +2,12 @@ package net.blay09.mods.balm.fabric.compat;
 
 import com.mrcrayfish.configured.api.*;
 import com.mrcrayfish.configured.api.util.ConfigScreenHelper;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
-import net.blay09.mods.balm.api.config.schema.builder.ConfigCategory;
-import net.blay09.mods.balm.common.config.ConfigLocalization;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
+import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ClassUtils;

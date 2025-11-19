@@ -2,10 +2,10 @@ package net.blay09.mods.balm.fabric.config;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import net.blay09.mods.balm.api.config.LoadedConfig;
-import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.notoml.Notoml;
-import net.blay09.mods.balm.notoml.NotomlSerializer;
+import net.blay09.mods.balm.platform.config.LoadedConfig;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.notoml.Notoml;
+import net.blay09.mods.balm.platform.config.notoml.NotomlSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

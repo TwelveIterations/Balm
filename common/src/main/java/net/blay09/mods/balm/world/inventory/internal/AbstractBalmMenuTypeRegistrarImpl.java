@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.world.inventory.internal;
 
-import net.blay09.mods.balm.api.menu.BalmMenuFactory;
+import net.blay09.mods.balm.world.BalmMenuFactory;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistration;
 import net.blay09.mods.balm.core.BalmRegistrar;

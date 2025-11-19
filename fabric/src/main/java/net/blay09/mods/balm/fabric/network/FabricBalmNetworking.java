@@ -1,9 +1,13 @@
 package net.blay09.mods.balm.fabric.network;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.menu.BalmMenuProvider;
-import net.blay09.mods.balm.api.network.*;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.network.BalmNetworking;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.NetworkVersions;
+import net.blay09.mods.balm.network.protocol.common.custom.ClientboundMessageRegistration;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.MessageRegistration;
+import net.blay09.mods.balm.network.protocol.common.custom.ServerboundMessageRegistration;
+import net.blay09.mods.balm.platform.BalmEnvironment;
+import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;

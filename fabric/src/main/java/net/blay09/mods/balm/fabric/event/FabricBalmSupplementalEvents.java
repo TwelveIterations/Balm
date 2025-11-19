@@ -1,9 +1,10 @@
 package net.blay09.mods.balm.fabric.event;
 
-import net.blay09.mods.balm.event.Event;
-import net.blay09.mods.balm.event.EventFactory;
-import net.blay09.mods.balm.event.EventHandling;
+import net.blay09.mods.balm.platform.event.Event;
+import net.blay09.mods.balm.platform.event.EventFactory;
+import net.blay09.mods.balm.platform.event.EventHandling;
 import net.blay09.mods.balm.event.callback.*;
+import net.blay09.mods.balm.platform.event.callback.*;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 public class FabricBalmSupplementalEvents {

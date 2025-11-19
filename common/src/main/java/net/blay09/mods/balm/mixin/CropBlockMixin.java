@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.block.CustomFarmBlock;
+import net.blay09.mods.balm.world.level.block.CustomFarmBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;

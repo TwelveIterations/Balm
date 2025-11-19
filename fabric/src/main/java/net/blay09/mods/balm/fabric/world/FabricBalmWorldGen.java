@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.fabric.world;
 
-import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.api.world.BiomeModificationBuilder;
-import net.blay09.mods.balm.api.world.BiomeModifier;
-import net.blay09.mods.balm.api.world.BiomePredicate;
+import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
+import net.blay09.mods.balm.world.level.biome.BiomeModificationBuilder;
+import net.blay09.mods.balm.world.level.biome.BiomeModifier;
+import net.blay09.mods.balm.world.level.biome.BiomePredicate;
 import net.fabricmc.fabric.api.biome.v1.BiomeModificationContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;

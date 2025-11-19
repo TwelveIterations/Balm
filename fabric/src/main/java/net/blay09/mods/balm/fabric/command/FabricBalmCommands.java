@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.blay09.mods.balm.api.command.BalmCommands;
+import net.blay09.mods.balm.commands.BalmCommands;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 

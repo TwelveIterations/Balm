@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.entity.BalmPlayer;
+import net.blay09.mods.balm.world.entity.BalmForcedPoseHolder;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
-public class PlayerMixin implements BalmPlayer {
+public class PlayerMixin implements BalmForcedPoseHolder {
 
     @Unique
     private Pose forcedPose;

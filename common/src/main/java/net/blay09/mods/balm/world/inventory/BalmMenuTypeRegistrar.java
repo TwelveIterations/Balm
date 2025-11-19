@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.world.inventory;
 
-import net.blay09.mods.balm.api.menu.BalmMenuFactory;
+import net.blay09.mods.balm.world.BalmMenuFactory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 

@@ -1,9 +1,10 @@
 package net.blay09.mods.balm.fabric.event;
 
-import net.blay09.mods.balm.event.BalmSupplementalEvents;
-import net.blay09.mods.balm.event.Event;
-import net.blay09.mods.balm.event.EventPhases;
+import net.blay09.mods.balm.platform.event.BalmSupplementalEvents;
+import net.blay09.mods.balm.platform.event.Event;
+import net.blay09.mods.balm.platform.event.EventPhases;
 import net.blay09.mods.balm.event.callback.*;
+import net.blay09.mods.balm.platform.event.callback.*;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;

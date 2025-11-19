@@ -34,7 +34,7 @@ import net.blay09.mods.balm.forge.world.block.entity.ForgeBalmBlockEntityTypeReg
 import net.blay09.mods.balm.forge.world.entity.ForgeBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.forge.world.inventory.ForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
-import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.platform.BalmPlatform;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;

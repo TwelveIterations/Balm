@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.fabric.compat.energy;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
-import net.blay09.mods.balm.common.CommonCapabilities;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.energy.BalmEnergyStorageProvider;
+import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

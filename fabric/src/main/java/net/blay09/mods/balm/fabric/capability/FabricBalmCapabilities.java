@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.capability;
 
-import net.blay09.mods.balm.api.capability.BalmCapabilities;
-import net.blay09.mods.balm.api.capability.CapabilityType;
+import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
+import net.blay09.mods.balm.platform.capabilities.CapabilityType;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;

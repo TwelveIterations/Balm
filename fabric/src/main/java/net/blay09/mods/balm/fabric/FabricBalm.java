@@ -1,15 +1,14 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.EmptyLoadContext;
-import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.entity.BalmEntity;
-import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
-import net.blay09.mods.balm.api.network.NetworkVersions;
-import net.blay09.mods.balm.api.network.ServerboundModListMessage;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.CommonCapabilities;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.BalmEnvironment;
+import net.blay09.mods.balm.world.BalmContainerProvider;
+import net.blay09.mods.balm.nbt.BalmDataHolder;
+import net.blay09.mods.balm.platform.fluid.BalmFluidTankProvider;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.NetworkVersions;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.ServerboundModListMessage;
+import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
+import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
 import net.blay09.mods.balm.fabric.fluid.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.loader.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
@@ -55,8 +54,8 @@ public class FabricBalm implements ModInitializer {
         ((FabricBalmPlatform) Balm.platform()).initialize();
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
-            CompoundTag data = ((BalmEntity) oldPlayer).getFabricBalmData();
-            ((BalmEntity) newPlayer).setFabricBalmData(data);
+            CompoundTag data = ((BalmDataHolder) oldPlayer).getFabricBalmData();
+            ((BalmDataHolder) newPlayer).setFabricBalmData(data);
         });
 
         ItemStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {

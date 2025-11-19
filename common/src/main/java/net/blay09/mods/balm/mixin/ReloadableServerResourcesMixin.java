@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.event.BalmSupplementalEvents;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.event.BalmSupplementalEvents;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.Registry;

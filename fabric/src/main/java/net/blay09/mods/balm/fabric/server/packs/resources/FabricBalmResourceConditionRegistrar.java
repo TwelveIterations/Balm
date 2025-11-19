@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.server.packs.resources;
 
 import com.mojang.serialization.MapCodec;
-import net.blay09.mods.balm.api.resources.BalmResourceCondition;
+import net.blay09.mods.balm.resources.BalmResourceCondition;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResourceCondition;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditionType;

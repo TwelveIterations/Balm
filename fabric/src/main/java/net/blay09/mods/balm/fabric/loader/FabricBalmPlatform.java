@@ -1,13 +1,13 @@
 package net.blay09.mods.balm.fabric.loader;
 
-import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
-import net.blay09.mods.balm.api.resources.ModResource;
-import net.blay09.mods.balm.api.resources.ModResourceVisitor;
-import net.blay09.mods.balm.api.resources.PathModResource;
-import net.blay09.mods.balm.event.callback.ServerLifecycleCallback;
-import net.blay09.mods.balm.loader.BalmPlatform;
-import net.blay09.mods.balm.loader.ModInfo;
+import net.blay09.mods.balm.platform.BalmEnvironment;
+import net.blay09.mods.balm.platform.LoaderPlatforms;
+import net.blay09.mods.balm.platform.resources.ModResource;
+import net.blay09.mods.balm.platform.resources.ModResourceVisitor;
+import net.blay09.mods.balm.platform.resources.internal.PathModResource;
+import net.blay09.mods.balm.platform.event.callback.ServerLifecycleCallback;
+import net.blay09.mods.balm.platform.BalmPlatform;
+import net.blay09.mods.balm.platform.ModInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;

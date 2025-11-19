@@ -1,10 +1,11 @@
 package net.blay09.mods.balm.fabric.client.event;
 
 import net.blay09.mods.balm.client.event.callback.*;
-import net.blay09.mods.balm.event.Event;
-import net.blay09.mods.balm.event.EventFactory;
-import net.blay09.mods.balm.event.EventHandling;
-import net.blay09.mods.balm.event.callback.LevelCallback;
+import net.blay09.mods.balm.client.platform.event.callback.*;
+import net.blay09.mods.balm.platform.event.Event;
+import net.blay09.mods.balm.platform.event.EventFactory;
+import net.blay09.mods.balm.platform.event.EventHandling;
+import net.blay09.mods.balm.platform.event.callback.LevelCallback;
 import net.blay09.mods.balm.mixin.ClientLevelAccessor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;

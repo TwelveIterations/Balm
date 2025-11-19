@@ -7,9 +7,9 @@ import team.reborn.energy.api.EnergyStorage;
 
 public class RebornEnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage {
 
-    private final net.blay09.mods.balm.api.energy.EnergyStorage energyStorage;
+    private final net.blay09.mods.balm.platform.energy.EnergyStorage energyStorage;
 
-    public RebornEnergyStorage(net.blay09.mods.balm.api.energy.EnergyStorage energyStorage) {
+    public RebornEnergyStorage(net.blay09.mods.balm.platform.energy.EnergyStorage energyStorage) {
         this.energyStorage = energyStorage;
     }
 

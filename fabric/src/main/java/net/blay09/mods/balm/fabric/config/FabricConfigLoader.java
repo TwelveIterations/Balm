@@ -1,12 +1,12 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.config.LoadedConfig;
-import net.blay09.mods.balm.api.config.LoadedTableConfig;
-import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.notoml.Notoml;
-import net.blay09.mods.balm.notoml.NotomlError;
-import net.blay09.mods.balm.notoml.NotomlParser;
+import net.blay09.mods.balm.platform.config.LoadedConfig;
+import net.blay09.mods.balm.platform.config.internal.LoadedTableConfig;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.notoml.Notoml;
+import net.blay09.mods.balm.platform.config.notoml.NotomlError;
+import net.blay09.mods.balm.platform.config.notoml.NotomlParser;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 

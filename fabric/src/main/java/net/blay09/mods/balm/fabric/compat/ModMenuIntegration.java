@@ -2,7 +2,7 @@ package net.blay09.mods.balm.fabric.compat;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.Balm;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

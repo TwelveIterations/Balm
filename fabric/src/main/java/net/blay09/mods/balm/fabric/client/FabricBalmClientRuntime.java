@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.fabric.client;
 
-import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -11,8 +10,8 @@ import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
+import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
+import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
 import net.blay09.mods.balm.fabric.client.event.FabricBalmClientEventMappings;
 import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.blay09.mods.balm.fabric.client.gui.screens.inventory.FabricBalmMenuScreenRegistrar;

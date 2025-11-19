@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.compat;
 
 import me.lucko.fabric.api.permissions.v0.Permissions;
-import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
+import net.blay09.mods.balm.platform.permissions.internal.CommonBalmPermissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;

@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.client;
 
-import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
-import net.blay09.mods.balm.api.client.BalmClientRuntime;
-import net.blay09.mods.balm.api.client.module.BalmClientModule;
+import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.client.platform.runtime.internal.BalmClientRuntime;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
@@ -16,9 +16,9 @@ import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListe
 import java.util.function.Consumer;
 
 /**
- * An instance of this class is passed to your initializer when using {@link net.blay09.mods.balm.api.client.BalmClient#initializeMod(String, BalmRuntimeLoadContext, Consumer)}.
+ * An instance of this class is passed to your initializer when using {@link BalmClient#initializeMod(String, BalmRuntimeLoadContext, Consumer)}.
  * <p>
- * If you are using {@link net.blay09.mods.balm.api.client.module.BalmClientModule}, you do not need to use this class as BalmClientModule comes with <code>register{...}</code> methods that are called with each registrar automatically.
+ * If you are using {@link BalmClientModule}, you do not need to use this class as BalmClientModule comes with <code>register{...}</code> methods that are called with each registrar automatically.
  */
 public class BalmClientRegistrars {
 

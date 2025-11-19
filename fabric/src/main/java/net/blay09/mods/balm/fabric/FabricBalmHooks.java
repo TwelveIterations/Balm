@@ -1,10 +1,10 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.entity.BalmEntity;
-import net.blay09.mods.balm.api.entity.BalmPlayer;
-import net.blay09.mods.balm.common.CommonCapabilities;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.BalmHooks;
+import net.blay09.mods.balm.nbt.BalmDataHolder;
+import net.blay09.mods.balm.world.entity.BalmForcedPoseHolder;
+import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
 import net.minecraft.core.BlockPos;
@@ -42,19 +42,19 @@ public class FabricBalmHooks implements BalmHooks {
 
     @Override
     public CompoundTag getPersistentData(Entity entity) {
-        var balmData = ((BalmEntity) entity).getFabricBalmData();
+        var balmData = ((BalmDataHolder) entity).getFabricBalmData();
         if (balmData.isEmpty()) {
             // If we have no data, try to import from NeoForge in case the world was migrated
-            balmData = ((BalmEntity) entity).getNeoForgeBalmData();
+            balmData = ((BalmDataHolder) entity).getNeoForgeBalmData();
             if (!balmData.isEmpty()) {
-                ((BalmEntity) entity).setFabricBalmData(balmData);
+                ((BalmDataHolder) entity).setFabricBalmData(balmData);
             }
         }
         if (balmData.isEmpty()) {
             // If we still have no data, try to import from Forge in case the world was migrated
-            balmData = ((BalmEntity) entity).getForgeBalmData();
+            balmData = ((BalmDataHolder) entity).getForgeBalmData();
             if (!balmData.isEmpty()) {
-                ((BalmEntity) entity).setFabricBalmData(balmData);
+                ((BalmDataHolder) entity).setFabricBalmData(balmData);
             }
         }
         return balmData;
@@ -144,7 +144,7 @@ public class FabricBalmHooks implements BalmHooks {
 
     @Override
     public void setForcedPose(Player player, Pose pose) {
-        ((BalmPlayer) player).balm$setForcedPose(pose);
+        ((BalmForcedPoseHolder) player).balm$setForcedPose(pose);
     }
 
 }

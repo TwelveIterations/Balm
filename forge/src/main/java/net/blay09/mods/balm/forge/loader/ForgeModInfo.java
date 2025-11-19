@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.forge.loader;
 
-import net.blay09.mods.balm.loader.ModInfo;
+import net.blay09.mods.balm.platform.ModInfo;
 import net.minecraftforge.fml.ModContainer;
 
 public class ForgeModInfo implements ModInfo {

@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.fabric.compat.milk;
 
-import net.blay09.mods.balm.api.compat.milk.BalmModSupportMilkFluid;
+import net.blay09.mods.balm.platform.compatibility.milk.BalmModSupportMilkFluid;
 import net.blay09.mods.balm.fabric.FabricBalm;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;

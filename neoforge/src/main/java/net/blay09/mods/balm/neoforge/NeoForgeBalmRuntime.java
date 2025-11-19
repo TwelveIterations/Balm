@@ -16,7 +16,7 @@ import net.blay09.mods.balm.common.CommonBalmRuntime;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
-import net.blay09.mods.balm.loader.BalmPlatform;
+import net.blay09.mods.balm.platform.BalmPlatform;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;

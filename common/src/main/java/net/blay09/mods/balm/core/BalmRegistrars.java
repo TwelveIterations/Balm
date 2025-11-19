@@ -1,8 +1,9 @@
 package net.blay09.mods.balm.core;
 
-import net.blay09.mods.balm.api.BalmRuntime;
-import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
-import net.blay09.mods.balm.api.module.BalmModule;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
+import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.platform.module.BalmModule;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
@@ -21,9 +22,9 @@ import net.minecraft.resources.ResourceKey;
 import java.util.function.Consumer;
 
 /**
- * An instance of this class is passed to your initializer when using {@link net.blay09.mods.balm.api.Balm#initializeMod(String, BalmRuntimeLoadContext, Consumer)}.
+ * An instance of this class is passed to your initializer when using {@link Balm#initializeMod(String, BalmRuntimeLoadContext, Consumer)}.
  * <p>
- * If you are using {@link net.blay09.mods.balm.api.module.BalmModule}, you do not need to use this class as BalmModule comes with <code>register{...}</code> methods that are called with each registrar automatically.
+ * If you are using {@link BalmModule}, you do not need to use this class as BalmModule comes with <code>register{...}</code> methods that are called with each registrar automatically.
  */
 public class BalmRegistrars {
 

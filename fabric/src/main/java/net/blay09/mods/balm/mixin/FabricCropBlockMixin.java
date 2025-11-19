@@ -2,7 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.blay09.mods.balm.api.block.CustomFarmBlock;
+import net.blay09.mods.balm.world.level.block.CustomFarmBlock;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

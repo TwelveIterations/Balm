@@ -1,13 +1,13 @@
 package net.blay09.mods.balm.fabric.compat;
 
-import net.blay09.mods.balm.api.BalmRuntime;
-import net.blay09.mods.balm.api.compat.BalmModSupport;
-import net.blay09.mods.balm.api.compat.hudinfo.BalmModSupportHudInfo;
-import net.blay09.mods.balm.api.compat.milk.BalmModSupportMilkFluid;
-import net.blay09.mods.balm.api.compat.trinkets.BalmModSupportTrinkets;
-import net.blay09.mods.balm.common.compat.NoopTrinkets;
-import net.blay09.mods.balm.common.compat.TrinketsMultiplexer;
-import net.blay09.mods.balm.common.compat.hudinfo.CommonBalmModSupportHudInfo;
+import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
+import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
+import net.blay09.mods.balm.platform.compatibility.hudinfo.BalmModSupportHudInfo;
+import net.blay09.mods.balm.platform.compatibility.milk.BalmModSupportMilkFluid;
+import net.blay09.mods.balm.platform.compatibility.trinkets.BalmModSupportTrinkets;
+import net.blay09.mods.balm.platform.compatibility.trinkets.internal.NoopTrinkets;
+import net.blay09.mods.balm.platform.compatibility.trinkets.internal.TrinketsMultiplexer;
+import net.blay09.mods.balm.platform.compatibility.hudinfo.internal.CommonBalmModSupportHudInfo;
 import net.blay09.mods.balm.fabric.compat.milk.FabricModSupportMilkFluid;
 
 import java.util.function.Supplier;

@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.neoforge.loader;
 
-import net.blay09.mods.balm.loader.ModInfo;
+import net.blay09.mods.balm.platform.ModInfo;
 import net.neoforged.fml.ModContainer;
 
 public class NeoForgeModInfo implements ModInfo {

@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.fabric.compat.hudinfo;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.compat.hudinfo.BlockInfoContext;
-import net.blay09.mods.balm.api.compat.hudinfo.HudInfoOutput;
-import net.blay09.mods.balm.common.compat.hudinfo.CommonBalmModSupportHudInfo;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.compatibility.hudinfo.BlockInfoContext;
+import net.blay09.mods.balm.platform.compatibility.hudinfo.HudInfoOutput;
+import net.blay09.mods.balm.platform.compatibility.hudinfo.internal.CommonBalmModSupportHudInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;

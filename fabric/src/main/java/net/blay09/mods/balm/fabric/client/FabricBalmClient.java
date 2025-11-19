@@ -1,11 +1,11 @@
 package net.blay09.mods.balm.fabric.client;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.client.BalmClient;
-import net.blay09.mods.balm.api.network.NetworkVersions;
-import net.blay09.mods.balm.api.network.ServerboundModListMessage;
-import net.blay09.mods.balm.client.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.BalmEnvironment;
+import net.blay09.mods.balm.client.BalmClient;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.NetworkVersions;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.ServerboundModListMessage;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;

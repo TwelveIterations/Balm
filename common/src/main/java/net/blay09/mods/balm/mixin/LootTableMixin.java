@@ -1,8 +1,8 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.loot.BalmLootModifier;
-import net.blay09.mods.balm.common.CommonBalmLootTables;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.world.level.storage.loot.BalmLootModifier;
+import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;

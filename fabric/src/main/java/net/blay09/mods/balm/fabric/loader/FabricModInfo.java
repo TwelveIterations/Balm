@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.fabric.loader;
 
-import net.blay09.mods.balm.loader.ModInfo;
+import net.blay09.mods.balm.platform.ModInfo;
 import net.fabricmc.loader.api.ModContainer;
 
 public class FabricModInfo implements ModInfo {

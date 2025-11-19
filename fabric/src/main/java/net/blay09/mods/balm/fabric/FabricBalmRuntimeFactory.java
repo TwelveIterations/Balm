@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric;
 
-import net.blay09.mods.balm.api.BalmRuntime;
-import net.blay09.mods.balm.api.BalmRuntimeFactory;
+import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
+import net.blay09.mods.balm.platform.runtime.internal.BalmRuntimeFactory;
 
 public class FabricBalmRuntimeFactory implements BalmRuntimeFactory {
     @Override

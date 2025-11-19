@@ -1,11 +1,11 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.config.LoadedConfig;
-import net.blay09.mods.balm.api.config.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.common.config.AbstractBalmConfig;
-import net.blay09.mods.balm.event.callback.ServerLifecycleCallback;
+import net.blay09.mods.balm.platform.config.LoadedConfig;
+import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.internal.AbstractBalmConfig;
+import net.blay09.mods.balm.platform.event.callback.ServerLifecycleCallback;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;

@@ -1,7 +1,8 @@
 package net.blay09.mods.balm.fabric.client.event;
 
-import net.blay09.mods.balm.client.event.BalmSupplementalClientEvents;
+import net.blay09.mods.balm.client.platform.event.BalmSupplementalClientEvents;
 import net.blay09.mods.balm.client.event.callback.*;
+import net.blay09.mods.balm.client.platform.event.callback.*;
 import net.blay09.mods.balm.fabric.event.FabricBalmEventMappings;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
