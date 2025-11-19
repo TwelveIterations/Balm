@@ -29,5 +29,5 @@ public interface AbstractContainerScreenAccessor {
     boolean callIsHovering(Slot slot, double mouseX, double mouseY);
 
     @Invoker
-    void callRenderSlot(GuiGraphics guiGraphics, Slot slot);
+    void callRenderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY);
 }

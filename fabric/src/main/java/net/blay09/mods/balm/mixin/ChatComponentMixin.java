@@ -3,6 +3,7 @@ package net.blay09.mods.balm.mixin;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.GuiDrawEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
 import org.spongepowered.asm.mixin.Final;
@@ -17,10 +18,10 @@ public class ChatComponentMixin {
 
     @Final
     @Shadow
-    private Minecraft minecraft;
+    Minecraft minecraft;
 
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V", at = @At("HEAD"), cancellable = true)
-    public void renderPre(GuiGraphics guiGraphics, int tickCount, int x, int y, boolean bl, CallbackInfo callbackInfo) {
+    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;IIIZZ)V", at = @At("HEAD"), cancellable = true)
+    public void renderPre(GuiGraphics guiGraphics, Font font, int tickCount, int x, int y, boolean bl, boolean ble, CallbackInfo callbackInfo) {
         GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.CHAT);
         Balm.events().fireEvent(event);
         if (event.isCanceled()) {
@@ -28,8 +29,8 @@ public class ChatComponentMixin {
         }
     }
 
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V", at = @At("TAIL"))
-    public void renderPost(GuiGraphics guiGraphics, int tickCount, int x, int y, boolean bl, CallbackInfo callbackInfo) {
+    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;IIIZZ)V", at = @At("TAIL"))
+    public void renderPost(GuiGraphics guiGraphics, Font font, int tickCount, int x, int y, boolean bl, boolean ble, CallbackInfo callbackInfo) {
         Balm.events().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.CHAT));
     }
 }

@@ -4,8 +4,8 @@ import net.minecraft.world.entity.Pose;
 
 public interface BalmPlayer {
 
-    Pose getForcedPose();
+    Pose balm$getForcedPose();
 
-    void setForcedPose(Pose pose);
+    void balm$setForcedPose(Pose pose);
 
 }

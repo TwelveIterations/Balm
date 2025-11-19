@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.OptionalInt;
@@ -46,15 +47,15 @@ public class ServerPlayerMixin {
         }
     }
 
-    @Inject(method = "drop(Z)Z", at = @At("HEAD"), cancellable = true)
-    public void drop(boolean flag, CallbackInfoReturnable<Boolean> callbackInfo) {
+    @Inject(method = "drop(Z)V", at = @At("HEAD"), cancellable = true)
+    public void drop(boolean flag, CallbackInfo callbackInfo) {
         ServerPlayer player = (ServerPlayer) (Object) this;
         Inventory inventory = player.getInventory();
         ItemStack selected = inventory.getSelectedItem();
         TossItemEvent event = new TossItemEvent(player, selected);
         Balm.events().fireEvent(event);
         if (event.isCanceled()) {
-            callbackInfo.setReturnValue(false);
+            callbackInfo.cancel();
         }
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Player.class)
 public class PlayerMixin implements BalmPlayer {
 
+    @Unique
     private Pose forcedPose;
 
     @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setAbsorptionAmount(F)V"), argsOnly = true)
@@ -50,12 +52,12 @@ public class PlayerMixin implements BalmPlayer {
     }
 
     @Override
-    public Pose getForcedPose() {
+    public Pose balm$getForcedPose() {
         return forcedPose;
     }
 
     @Override
-    public void setForcedPose(Pose pose) {
+    public void balm$setForcedPose(Pose pose) {
         forcedPose = pose;
     }
 }

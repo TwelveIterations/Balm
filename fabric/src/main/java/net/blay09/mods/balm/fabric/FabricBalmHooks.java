@@ -144,7 +144,7 @@ public class FabricBalmHooks implements BalmHooks {
 
     @Override
     public void setForcedPose(Player player, Pose pose) {
-        ((BalmPlayer) player).setForcedPose(pose);
+        ((BalmPlayer) player).balm$setForcedPose(pose);
     }
 
 }

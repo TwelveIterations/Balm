@@ -5,6 +5,7 @@ import net.blay09.mods.balm.fabric.block.entity.BlockEntityOnLoadCallback;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,8 +20,9 @@ public class LevelChunkMixin {
     @Shadow
     private boolean loaded;
 
+    @Final
     @Shadow
-    private Level level;
+    Level level;
 
     @Inject(method = "registerAllBlockEntitiesAfterLevelLoad", at = @At("HEAD"))
     private void registerAllBlockEntitiesAfterLevelLoad(CallbackInfo callbackInfo) {
@@ -29,7 +31,7 @@ public class LevelChunkMixin {
 
     @Inject(method = "addAndRegisterBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V", at = @At("RETURN"))
     private void addAndRegisterBlockEntity(BlockEntity blockEntity, CallbackInfo callbackInfo) {
-        if ((this.loaded || this.level.isClientSide()) && blockEntity instanceof OnLoadHandler handler) {
+        if ((this.loaded || this.level.isClientSide()) && blockEntity instanceof OnLoadHandler) {
             BlockEntityOnLoadCallback.scheduleOnLoad(level, List.of(blockEntity));
         }
     }
