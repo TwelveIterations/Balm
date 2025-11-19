@@ -1,11 +1,7 @@
 package net.blay09.mods.balm.api.client.module;
 
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
-import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
-import net.blay09.mods.balm.api.client.rendering.BalmModels;
-import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
-import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
@@ -33,21 +29,7 @@ public interface BalmClientModule {
     default void registerEvents(BalmEvents events) {
     }
 
-    /**
-     * @deprecated Use {@link #registerBlockStateModels(BalmBlockStateModelRegistrar)} instead.
-     */
-    @Deprecated
-    default void registerModels(BalmModels models) {
-    }
-
     default void registerBlockStateModels(BalmBlockStateModelRegistrar models) {
-    }
-
-    /**
-     * @deprecated Use {@link #registerBlockRenderTypes(BalmBlockRenderTypeRegistrar)}, {@link #registerBlockStateModels(BalmBlockStateModelRegistrar)}, {@link #registerModelLayers(BalmModelLayerRegistrar)}, {@link #registerBlockColors(BalmBlockColorRegistrar)}, {@link #registerEntityRenderers(BalmEntityRendererRegistrar)}, {@link #registerBlockEntityRenderers(BalmBlockEntityRendererRegistrar)} or {@link #registerParticleProviders(BalmParticleProviderRegistrar)} instead.
-     */
-    @Deprecated
-    default void registerRenderers(BalmRenderers renderers) {
     }
 
     default void registerModelLayers(BalmModelLayerRegistrar modelLayers) {
@@ -69,20 +51,6 @@ public interface BalmClientModule {
     }
 
     default void registerMenuScreens(BalmMenuScreenRegistrar menuScreens) {
-    }
-
-    /**
-     * @deprecated Use {@link #registerMenuScreens(BalmMenuScreenRegistrar)} instead.
-     */
-    @Deprecated
-    default void registerScreens(BalmScreens screens) {
-    }
-
-    /**
-     * @deprecated Use {@link #registerKeyMappings(BalmKeyMappingRegistrar)} instead.
-     */
-    @Deprecated
-    default void registerKeyMappings(BalmKeyMappings keyMappings) {
     }
 
     default void registerKeyMappings(BalmKeyMappingRegistrar keyMappings) {

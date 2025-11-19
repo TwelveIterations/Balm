@@ -171,18 +171,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    @Deprecated
-    public BalmMenuTypeRegistrar menuTypes(String namespace) {
-        return new NeoForgeBalmMenuTypeRegistrar(registrar(), namespace);
-    }
-
-    @Override
-    @Deprecated
-    public BalmEntityTypeRegistrar entityTypes(String namespace) {
-        return new NeoForgeBalmEntityTypeRegistrar(registrar(), namespace);
-    }
-
-    @Override
     public BalmPlatform platform() {
         return platform;
     }

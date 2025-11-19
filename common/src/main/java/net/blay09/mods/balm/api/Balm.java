@@ -1,44 +1,23 @@
 package net.blay09.mods.balm.api;
 
-import net.blay09.mods.balm.api.block.BalmBlockEntities;
-import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
-import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.entity.BalmEntities;
 import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.item.BalmItems;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.menu.BalmMenus;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.particle.BalmParticles;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
 import net.blay09.mods.balm.api.proxy.ModProxy;
 import net.blay09.mods.balm.api.proxy.PlatformProxy;
 import net.blay09.mods.balm.api.proxy.SidedProxy;
-import net.blay09.mods.balm.api.recipe.BalmRecipes;
-import net.blay09.mods.balm.api.resources.BalmResources;
-import net.blay09.mods.balm.api.resources.ModResource;
-import net.blay09.mods.balm.api.resources.ModResourceVisitor;
-import net.blay09.mods.balm.api.sound.BalmSounds;
-import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.loader.BalmPlatform;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Provides access to common registry functions as well as various loader-specific utilities.
@@ -53,52 +32,6 @@ import java.util.function.Function;
  */
 public class Balm {
     private static final BalmRuntime<BalmRuntimeLoadContext> runtime = BalmRuntimeSpi.create();
-
-    /**
-     * Not to be confused with {@link #initializeMod(String, BalmRuntimeLoadContext, BalmModule)}, which should be used
-     * for registering your mod with Balm. This method registers an additional module and should only be called from an
-     * initializer or entrypoint. Some things may not work as expected if you try to register a module before
-     * <code>initializeMod</code> has been called.
-     *
-     * @deprecated Use {@link BalmRegistrars#registerModule(BalmModule)} instead.
-     * @param module the module to register for an already initialized mod.
-     * @see #initializeMod(String, BalmRuntimeLoadContext, BalmModule)
-     */
-    @Deprecated
-    public static void registerModule(BalmModule module) {
-        runtime.registerModule(module);
-    }
-
-    /**
-     * Register a callback to run when Balm is ready. This is for third party mods that do not use Balm but want to interact with it.
-     * <p>
-     * Mods building on Balm should use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
-     *
-     * @deprecated Use {@link net.blay09.mods.balm.Balmstrap#onRuntimeAvailable(Runnable)} instead if you are a third-party mod that doesn't use Balm.
-     * @param callback the callback to run when Balm is ready and its methods can be safely accessed.
-     * @see #initializeMod(String, BalmRuntimeLoadContext, Runnable)
-     */
-    @Deprecated
-    public static void onRuntimeAvailable(Runnable callback) {
-        runtime.onRuntimeAvailable(callback);
-    }
-
-    /**
-     * You must call this or any of its overloads in each of your mod's entry points. Provide a load context specific to each mod loader.
-     * Everything else you do in Balm should happen inside the initializer, which runs at a time that Balm has
-     * initialized the runtime for your mod.
-     *
-     * @deprecated Use the variant that takes a {@link Consumer} instead, giving you access to {@link BalmRegistrars}.
-     * @param modId       The mod id for your mod.
-     * @param context     The load context for the mod loader you are using, e.g. NeoForgeLoadContext.
-     * @param initializer Callback that runs when Balm is ready, at which point you can use its methods to set up your mod.
-     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)
-     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule...)
-     */
-    @Deprecated
-    public static void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
-        runtime.initializeMod(modId, context, (registrars) -> initializer.run());
-    }
 
     /**
      * You must call this or any of its overloads in each of your mod's entry points. Provide a load context specific to each mod loader.
@@ -123,7 +56,7 @@ public class Balm {
      * @param modId   the mod id for your mod.
      * @param context the load context for the mod loader you are using, e.g. NeoForgeLoadContext.
      * @param module  an implementation of {@link BalmModule} within which you can set up your mod.
-     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, Runnable)
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, Consumer)
      * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule...)
      */
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {
@@ -138,7 +71,7 @@ public class Balm {
      * @param modId   the mod id for your mod.
      * @param context the load context for the mod loader you are using, e.g. NeoForgeLoadContext.
      * @param modules one or more implementations of {@link BalmModule} within which you can set up your mod.
-     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, Runnable)
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, Consumer)
      * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)
      */
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule... modules) {
@@ -194,15 +127,6 @@ public class Balm {
      */
     public static void initializeIfLoaded(String modId, String className) {
         runtime.initializeIfLoaded(modId, className);
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static void addServerReloadListener(Identifier identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
-        runtime.addServerReloadListener(identifier, reloadListener);
     }
 
     /**
@@ -306,14 +230,6 @@ public class Balm {
     }
 
     /**
-     * @deprecated Use {{@link net.blay09.mods.balm.core.BalmRegistrars#resourceConditions(String, Consumer)}} instead.
-     */
-    @Deprecated
-    public static BalmResources resources() {
-        return runtime.getResources();
-    }
-
-    /**
      * For internal use. Provides access to the runtime powering mod-loader specific functions.
      * Generally, you should not need to access the runtime directly, as all its methods are exposed on {@link Balm}.
      */
@@ -331,305 +247,4 @@ public class Balm {
         return runtime.platform();
     }
 
-    /**
-     * @see Balm#permissions()
-     * @deprecated Use {@link Balm#permissions()} instead.
-     */
-    @Deprecated
-    public static BalmPermissions getPermissions() {
-        return permissions();
-    }
-
-    /**
-     * @see Balm#modSupport()
-     * @deprecated Use {@link Balm#modSupport()} instead.
-     */
-    @Deprecated
-    public static BalmModSupport getModSupport() {
-        return modSupport();
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#registrar()
-     * @see net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)
-     * @see Balm#getModSupport()
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar()} instead, or {@link Balm#getModSupport()} for the milk fluid.
-     */
-    @Deprecated
-    public static BalmRegistries getRegistries() {
-        return runtime.getRegistries();
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(String, Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmBlockEntities getBlockEntities() {
-        return runtime.getBlockEntities();
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmItems getItems() {
-        return runtime.getItems();
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmBlocks getBlocks() {
-        return runtime.getBlocks();
-    }
-
-    /**
-     * @see Balm#platform()
-     * @see BalmPlatform#name()
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#name()} instead.
-     */
-    @Deprecated
-    public static String getPlatform() {
-        return platform().name();
-    }
-
-    /**
-     * @see Balm#platform()
-     * @see BalmPlatform#physicalSide()
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#physicalSide()} instead.
-     */
-    @Deprecated
-    public static BalmEnvironment getEnvironment() {
-        return platform().physicalSide();
-    }
-
-    /**
-     * @see Balm#platform()
-     * @see BalmPlatform#loadedPrimaryModIds()
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#loadedPrimaryModIds()} instead.
-     */
-    @Deprecated
-    public static List<String> getLoadedPrimaryModIds() {
-        return platform().loadedPrimaryModIds();
-    }
-
-    /**
-     * @see Balm#platform()
-     * @see BalmPlatform#isModLoaded(String)
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#isModLoaded(String)} instead.
-     */
-    @Deprecated
-    public static boolean isModLoaded(String modId) {
-        return platform().isModLoaded(modId);
-    }
-
-    /**
-     * @see Balm#platform()
-     * @see BalmPlatform#getModName(String)
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#getModName(String)} instead.
-     */
-    @Deprecated
-    public static String getModName(String modId) {
-        return platform().getModName(modId);
-    }
-
-    /**
-     * @see Balm#platform()
-     * @see BalmPlatform#isDevelopmentEnvironment()
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#isDevelopmentEnvironment()} instead.
-     */
-    @Deprecated
-    public static boolean isDevelopmentEnvironment() {
-        return platform().isDevelopmentEnvironment();
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#registrar(net.minecraft.resources.ResourceKey, String)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(net.minecraft.resources.ResourceKey, String)} instead.
-     */
-    @Deprecated
-    public static BalmSounds getSounds() {
-        return runtime.getSounds();
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#dataComponentTypes(String, Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#dataComponentTypes(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmComponents getComponents() {
-        return runtime.getComponents();
-    }
-
-    /**
-     * @see Balm#resources()
-     * @deprecated Use {@link Balm#resources()} instead.
-     */
-    @Deprecated
-    public static BalmResources getResources() {
-        return resources();
-    }
-
-    /**
-     * @see Balm#resources()
-     * @see BalmPlatform#visitModResources(String, String, ModResourceVisitor)
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#visitModResources(String, String, ModResourceVisitor)} instead.
-     */
-    @Deprecated
-    public static void visitModResources(String modId, String path, ModResourceVisitor visitor) {
-        platform().visitModResources(modId, path, visitor);
-    }
-
-    /**
-     * @see Balm#resources()
-     * @see BalmPlatform#lookupModResource(String, String)
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#lookupModResource(String, String)} instead.
-     */
-    @Deprecated
-    public static Optional<ModResource> lookupModResource(String modId, String path) {
-        return platform().lookupModResource(modId, path);
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, java.util.function.Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#recipeTypes(String, java.util.function.Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmRecipes getRecipes() {
-        return runtime.getRecipes();
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#menuTypes(String, Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#menuTypes(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmMenus getMenus() {
-        return runtime.getMenus();
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static void addServerReloadListener(Identifier identifier, PreparableReloadListener reloadListener) {
-        runtime.addServerReloadListener(identifier, it -> reloadListener);
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static void addServerReloadListener(Identifier identifier, Consumer<ResourceManager> reloadListener) {
-        runtime.addServerReloadListener(identifier, reloadListener);
-    }
-
-    /**
-     * @see net.blay09.mods.balm.core.BalmRegistrars#entityTypes(String, java.util.function.Consumer)
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#entityTypes(String, java.util.function.Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmEntities getEntities() {
-        return runtime.getEntities();
-    }
-
-    /**
-     * @see #config()
-     * @deprecated Use {@link #config()} instead.
-     */
-    @Deprecated
-    public static BalmConfig getConfig() {
-        return config();
-    }
-
-    /**
-     * @see #networking()
-     * @deprecated Use {@link #networking()} instead.
-     */
-    @Deprecated
-    public static BalmNetworking getNetworking() {
-        return networking();
-    }
-
-    /**
-     * @see #biomeModifications()
-     * @see net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)
-     * @deprecated Use {@link #biomeModifications()} or {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey, String)} instead.
-     */
-    @Deprecated
-    public static BalmWorldGen getWorldGen() {
-        return biomeModifications();
-    }
-
-    /**
-     * @see #events()
-     * @deprecated Use {@link #events()} instead.
-     */
-    @Deprecated
-    public static BalmEvents getEvents() {
-        return events();
-    }
-
-    /**
-     * @see #safeClientAccess()
-     * @deprecated Use {@link #safeClientAccess()} instead.
-     */
-    @Deprecated
-    public static BalmProxy getProxy() {
-        return runtime.getProxy();
-    }
-
-    /**
-     * @deprecated Use {@link #lootModifiers()} instead.
-     */
-    @Deprecated
-    public static BalmLootTables getLootTables() {
-        return lootModifiers();
-    }
-
-    /**
-     * @deprecated Use {@link #commands()} instead.
-     */
-    @Deprecated
-    public static BalmCommands getCommands() {
-        return commands();
-    }
-
-    /**
-     * @deprecated Use {@link #capabilities()} instead.
-     */
-    @Deprecated
-    public static BalmCapabilities getCapabilities() {
-        return capabilities();
-    }
-
-    /**
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#particleTypes(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmParticles getParticles() {
-        return runtime.getParticles();
-    }
-
-    /**
-     * @deprecated Use {@link #hooks()} instead.
-     */
-    @Deprecated
-    public static BalmHooks getHooks() {
-        return hooks();
-    }
-
-    /**
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#customStats(String, Consumer)} instead.
-     */
-    @Deprecated
-    public static BalmStats getStats() {
-        return runtime.getStats();
-    }
 }

@@ -8,15 +8,6 @@ import net.minecraft.world.level.biome.Biome;
 
 public interface BiomePredicate {
 
-    default boolean test(Holder<Biome> biomeHolder) {
-        return test(biomeHolder.unwrapKey().map(ResourceKey::identifier).orElse(null), biomeHolder);
-    }
+    boolean test(Holder<Biome> biomeHolder);
 
-    /**
-     * @deprecated Use {@link BiomePredicate#test(Holder<Biome>)} instead.
-     */
-    @Deprecated
-    default boolean test(Identifier key, Holder<Biome> biomeHolder) {
-        throw new UnsupportedOperationException("You must implement BiomePredicate.test(Holder<Biome>) if you omit BiomePredicate.test(Identifier, Holder<Biome>)");
-    }
 }

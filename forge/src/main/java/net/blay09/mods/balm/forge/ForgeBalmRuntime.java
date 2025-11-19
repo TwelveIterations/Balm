@@ -161,30 +161,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
-    @Deprecated
-    public BalmCreativeModeTabRegistrar creativeModeTabs(String namespace) {
-        return new ForgeBalmCreativeModeTabRegistrar(registrar(), namespace);
-    }
-
-    @Override
-    @Deprecated
-    public BalmBlockEntityTypeRegistrar blockEntityTypes(String namespace) {
-        return new ForgeBalmBlockEntityTypeRegistrar(registrar(), namespace);
-    }
-
-    @Override
-    @Deprecated
-    public BalmEntityTypeRegistrar entityTypes(String namespace) {
-        return new ForgeBalmEntityTypeRegistrar(registrar(), namespace);
-    }
-
-    @Override
-    @Deprecated
-    public BalmMenuTypeRegistrar menuTypes(String namespace) {
-        return new ForgeBalmMenuTypeRegistrar(registrar(), namespace);
-    }
-
-    @Override
     public BalmPlatform platform() {
         return platform;
     }

@@ -82,8 +82,8 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
             callback.run();
         }
 
-        registerModule(new InternalsModule());
-        registerModule(new ConfigSync());
+        registerModule(new BalmRegistrars(this, "balm"), new InternalsModule());
+        registerModule(new BalmRegistrars(this, "balm"), new ConfigSync());
     }
 
     @Override
@@ -115,12 +115,6 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer) {
         initializer.accept(new BalmDataComponentTypeRegistrarImpl(registrar(), namespace));
-    }
-
-    @Override
-    @Deprecated
-    public BalmRecipeTypeRegistrar recipeTypes(String namespace) {
-        return new BalmRecipeTypeRegistrarImpl(registrar(), namespace);
     }
 
 }

@@ -160,37 +160,8 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    @Deprecated
-    public BalmEntityTypeRegistrar entityTypes(String namespace) {
-        return new FabricBalmEntityTypeRegistrar(registrar(), namespace);
-    }
-
-    @Override
     public BalmPlatform platform() {
         return platform;
-    }
-
-    @Override
-    @Deprecated
-    public BalmCreativeModeTabRegistrar creativeModeTabs(String namespace) {
-        return new FabricBalmCreativeModeTabRegistrar(registrar(), namespace);
-    }
-
-    @Override
-    @Deprecated
-    public BalmBlockEntityTypeRegistrar blockEntityTypes(String namespace) {
-        return new FabricBalmBlockEntityTypeRegistrar(registrar(), namespace);
-    }
-
-    @Override
-    @Deprecated
-    public BalmMenuTypeRegistrar menuTypes(String namespace) {
-        return new FabricBalmMenuTypeRegistrar(registrar(), namespace);
-    }
-
-    @Override
-    public BalmParticleTypeRegistrar particleTypes(String namespace) {
-        return new FabricBalmParticleTypeRegistrar(registrar(), namespace);
     }
 
     @Override

@@ -9,7 +9,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -43,14 +42,6 @@ public interface BalmHooks {
     CompoundTag getPersistentData(Entity entity);
 
     /**
-     * @deprecated No longer implemented by mod loaders. Use {@link LivingEntity#removeAllEffects()} instead.
-     */
-    @Deprecated
-    default void curePotionEffects(LivingEntity entity, ItemStack curativeItem) {
-        entity.removeAllEffects();
-    }
-
-    /**
      * Checks whether the given player is a fake player.
      *
      * <li>On Fabric and NeoForge, returns true if the player is an instance of their respective FakePlayer class</li>
@@ -70,14 +61,6 @@ public interface BalmHooks {
      */
     DyeColor getColor(ItemStack itemStack);
 
-    /**
-     * @deprecated Use {@link ItemStack#isSameItemSameComponents(ItemStack, ItemStack)} instead.
-     */
-    @Deprecated
-    default boolean canItemsStack(ItemStack first, ItemStack second) {
-        return ItemStack.isSameItemSameComponents(first, second);
-    }
-
     void setBurnTime(Item item, int burnTime);
 
     void firePlayerCraftingEvent(Player player, ItemStack crafted, Container craftMatrix);
@@ -86,11 +69,4 @@ public interface BalmHooks {
 
     void setForcedPose(Player player, @Nullable Pose pose);
 
-    /**
-     * @deprecated Use {@link Balm#platform()} and {@link BalmPlatform#server()} instead.
-     */
-    @Deprecated
-    default MinecraftServer getServer() {
-        return Balm.platform().server();
-    }
 }

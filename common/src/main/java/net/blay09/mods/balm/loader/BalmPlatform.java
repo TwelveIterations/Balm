@@ -30,14 +30,6 @@ public interface BalmPlatform {
     Optional<ModInfo> getModInfo(String modId);
 
     /**
-     * @deprecated Use {@link #getModInfo(String)} and {@link ModInfo#name()} instead.
-     */
-    @Deprecated
-    default String getModName(String modId) {
-        return getModInfo(modId).map(ModInfo::name).orElse(modId);
-    }
-
-    /**
      * Returns the name of the platform Balm is currently running on.
      *
      * @return the name of the platform Balm is running on.

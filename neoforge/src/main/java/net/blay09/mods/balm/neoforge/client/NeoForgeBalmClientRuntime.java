@@ -27,8 +27,6 @@ import net.blay09.mods.balm.neoforge.client.renderer.chunk.NeoForgeBalmBlockRend
 import net.blay09.mods.balm.neoforge.client.renderer.block.model.NeoForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.NeoForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.entity.NeoForgeBalmEntityRendererRegistrar;
-import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmModels;
-import net.blay09.mods.balm.neoforge.client.rendering.NeoForgeBalmRenderers;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmClientEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.blay09.mods.balm.neoforge.server.packs.resources.NeoForgeBalmClientResourceReloadListenerRegistrar;
@@ -44,27 +42,8 @@ import java.util.function.Consumer;
 
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
 
-    @Deprecated
-    private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
-    @Deprecated
-    private final BalmRenderers renderers = new NeoForgeBalmRenderers(legacyNamespaceResolver);
-    @Deprecated
-    private final BalmModels models = new NeoForgeBalmModels(legacyNamespaceResolver);
-
     public NeoForgeBalmClientRuntime() {
         NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.events()));
-    }
-
-    @Override
-    @Deprecated
-    public BalmRenderers getRenderers() {
-        return renderers;
-    }
-
-    @Override
-    @Deprecated
-    public BalmModels getModels() {
-        return models;
     }
 
     @Override

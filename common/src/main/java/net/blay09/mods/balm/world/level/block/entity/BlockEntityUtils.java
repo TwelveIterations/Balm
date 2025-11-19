@@ -25,14 +25,6 @@ public class BlockEntityUtils {
         return ClientboundBlockEntityDataPacket.create(blockEntity, BlockEntity::getUpdateTag);
     }
 
-    /**
-     * @deprecated Use {@link #createUpdateTag(HolderLookup.Provider, Consumer)} passing in the registries from {@link BlockEntity#getUpdateTag(HolderLookup.Provider)} instead.
-     */
-    @Deprecated
-    public static CompoundTag createUpdateTag(BlockEntity blockEntity, Consumer<ValueOutput> outputConsumer) {
-        return createUpdateTag(blockEntity.getLevel().registryAccess(), outputConsumer);
-    }
-
     public static CompoundTag createUpdateTag(HolderLookup.Provider registries, Consumer<ValueOutput> outputConsumer) {
         final var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registries);
         outputConsumer.accept(output);
