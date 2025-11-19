@@ -1,1 +1,1 @@
-net.blay09.mods.balm.fabric.client.FabricBalmClientRuntimeFactory
+net.blay09.mods.balm.fabric.client.internal.platform.runtime.internal.FabricBalmClientRuntimeFactory

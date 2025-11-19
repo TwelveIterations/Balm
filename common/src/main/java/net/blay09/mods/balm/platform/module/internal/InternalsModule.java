@@ -8,7 +8,7 @@ import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.platform.module.BalmModule;
 import net.blay09.mods.balm.network.BalmNetworking;
 import net.blay09.mods.balm.commands.internal.InternalsCommand;
-import net.blay09.mods.balm.resources.internal.ConfigResourceCondition;
+import net.blay09.mods.balm.server.packs.resources.internal.ConfigResourceCondition;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.minecraft.resources.Identifier;
 

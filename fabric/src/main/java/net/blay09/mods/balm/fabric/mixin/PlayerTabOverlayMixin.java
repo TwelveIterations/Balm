@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.fabric.mixin;
 
-import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
+import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerTabOverlay;

@@ -20,16 +20,16 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.blay09.mods.balm.fabric.FabricBalm"
+      "net.blay09.mods.balm.fabric.internal.FabricBalm"
     ],
     "client": [
-      "net.blay09.mods.balm.fabric.client.FabricBalmClient"
+      "net.blay09.mods.balm.fabric.client.internal.FabricBalmClient"
     ],
     "modmenu": [
-      "net.blay09.mods.balm.fabric.compat.ModMenuIntegration"
+      "net.blay09.mods.balm.fabric.platform.compatibility.modmenu.internal.ModMenuIntegration"
     ],
     "jade": [
-      "net.blay09.mods.balm.fabric.compat.hudinfo.FabricJadeModCompat"
+      "net.blay09.mods.balm.fabric.platform.compatibility.hudinfo.internal.FabricJadeModCompat"
     ]
   },
   "mixins": [

@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.mixin;
 
 import com.mojang.brigadier.ParseResults;
-import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
+import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.spongepowered.asm.mixin.Mixin;

@@ -3,7 +3,7 @@ package net.blay09.mods.balm.fabric.mixin;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.blay09.mods.balm.world.level.block.CustomFarmBlock;
-import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
+import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.fabric.mixin;
 
-import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
+import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;

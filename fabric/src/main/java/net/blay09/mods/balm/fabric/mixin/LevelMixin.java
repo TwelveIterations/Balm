@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.fabric.mixin;
 
-import net.blay09.mods.balm.fabric.block.entity.BlockEntityOnLoadCallback;
+import net.blay09.mods.balm.fabric.world.level.block.entity.internal.BlockEntityOnLoadCallback;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

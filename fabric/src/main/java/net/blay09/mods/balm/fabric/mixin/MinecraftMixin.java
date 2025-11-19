@@ -2,7 +2,7 @@ package net.blay09.mods.balm.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
+import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;

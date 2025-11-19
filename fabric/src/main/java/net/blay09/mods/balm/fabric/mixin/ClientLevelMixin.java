@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.fabric.mixin;
 
-import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
+import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.LevelRenderer;

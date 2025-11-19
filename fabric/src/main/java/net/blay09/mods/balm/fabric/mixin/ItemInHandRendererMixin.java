@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
+import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
