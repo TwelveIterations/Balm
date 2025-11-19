@@ -4,7 +4,7 @@ import net.blay09.mods.balm.platform.BalmSafeClientAccess;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class BalmClientSafeClientAccess extends BalmSafeClientAccess {
     @Override

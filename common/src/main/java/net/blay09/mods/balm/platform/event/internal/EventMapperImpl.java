@@ -4,7 +4,7 @@ import net.blay09.mods.balm.platform.event.BidirectionalEventMapper;
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.blay09.mods.balm.platform.event.EventPhases;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

@@ -6,7 +6,6 @@ import net.blay09.mods.balm.client.platform.runtime.internal.BalmClientRuntimeSp
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.platform.module.BalmModule;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Consumer;
 

@@ -10,7 +10,7 @@ import net.blay09.mods.balm.platform.BalmPlatform;
 import net.blay09.mods.balm.platform.ModInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;

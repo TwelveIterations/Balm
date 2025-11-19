@@ -3,7 +3,7 @@ package net.blay09.mods.balm.platform;
 import net.blay09.mods.balm.platform.resources.ModResource;
 import net.blay09.mods.balm.platform.resources.ModResourceVisitor;
 import net.minecraft.server.MinecraftServer;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;

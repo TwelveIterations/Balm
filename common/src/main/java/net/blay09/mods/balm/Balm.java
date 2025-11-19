@@ -21,7 +21,6 @@ import net.blay09.mods.balm.platform.BalmSafeClientAccess;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntimeSpi;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Consumer;
 

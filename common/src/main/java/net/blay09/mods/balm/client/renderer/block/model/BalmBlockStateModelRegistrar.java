@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.client.renderer.block.model;
 
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
