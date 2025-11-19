@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.client.gui.screens;
 
-import net.blay09.mods.balm.mixin.ScreenAccessor;
+import net.blay09.mods.balm.internal.mixin.ScreenAccessor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;

@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.client.internal.event;
 
 import net.blay09.mods.balm.client.platform.event.callback.*;
-import net.blay09.mods.balm.fabric.mixin.ClientLevelAccessor;
+import net.blay09.mods.balm.fabric.internal.mixin.ClientLevelAccessor;
 import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventFactory;
 import net.blay09.mods.balm.platform.event.EventHandling;
