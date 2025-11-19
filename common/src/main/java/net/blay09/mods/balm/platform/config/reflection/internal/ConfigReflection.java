@@ -8,6 +8,7 @@ import net.blay09.mods.balm.platform.config.schema.builder.ConfigPropertyBuilder
 import net.blay09.mods.balm.platform.config.schema.builder.PropertyHolderBuilder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -95,7 +96,7 @@ public class ConfigReflection {
         }
     }
 
-    private static <T extends Enum<T> & StringRepresentable> void propertyOfEnum(ConfigPropertyBuilder property, Object obj) {
+    private static <T extends Enum<T> & StringRepresentable> void propertyOfEnum(ConfigPropertyBuilder property, @Nullable Object obj) {
         if (obj == null) {
             throw new IllegalArgumentException("Object cannot be null");
         }
@@ -150,6 +151,10 @@ public class ConfigReflection {
     public static <T> LoadedReflectionConfig<T> of(Class<T> configDataClass, LoadedConfig loadedConfig) {
         final var instance = createInstance(configDataClass);
         final var schema = Balm.config().getSchema(configDataClass);
+        if (schema == null) {
+            throw new IllegalArgumentException("No schema found for " + configDataClass.getName());
+        }
+
         final var config = new LoadedReflectionConfig<>(instance);
         config.applyFrom(schema, loadedConfig);
         return config;

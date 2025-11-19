@@ -24,11 +24,18 @@ public class ClothConfigUtils {
             final var schemas = Balm.config().getSchemasByNamespace(modId);
             builder.setSavingRunnable(() -> {
                 for (final var schema : schemas) {
-                    Balm.config().saveLocalConfig(schema, Balm.config().getLocalConfig(schema));
+                    final var config = Balm.config().getLocalConfig(schema);
+                    if (config == null) {
+                        throw new RuntimeException("No local config loaded for schema " + schema.identifier());
+                    }
+                    Balm.config().saveLocalConfig(schema, config);
                 }
             });
             for (final var schema : schemas) {
                 final var config = Balm.config().getLocalConfig(schema);
+                if (config == null) {
+                    throw new RuntimeException("No local config loaded for schema " + schema.identifier());
+                }
                 final var categories = schema.categories();
                 ConfigCategory rootCategory = null;
                 for (final var rootProperty : schema.rootProperties()) {

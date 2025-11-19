@@ -67,7 +67,7 @@ public interface ImplementedContainer extends Container {
      * Removes items from an inventory slot.
      *
      * @param slot  The slot to remove from.
-     * @param count How many items to remove. If there are less items in the slot than what are requested,
+     * @param count How many items to remove. If there are fewer items in the slot than what are requested,
      *              takes all items in that slot.
      */
     @Override

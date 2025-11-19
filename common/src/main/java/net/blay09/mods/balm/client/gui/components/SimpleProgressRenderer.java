@@ -2,7 +2,6 @@ package net.blay09.mods.balm.client.gui.components;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
-import org.jspecify.annotations.Nullable;
 
 public class SimpleProgressRenderer implements ProgressRenderer {
 

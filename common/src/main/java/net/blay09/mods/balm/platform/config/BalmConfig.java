@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.platform.config;
 
-import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.reflection.internal.ConfigReflection;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
@@ -16,8 +16,10 @@ public interface BalmConfig {
     @Nullable
     BalmConfigSchema getSchema(Identifier identifier);
 
+    @Nullable
     MutableLoadedConfig getLocalConfig(Identifier identifier);
 
+    @Nullable
     LoadedConfig getActiveConfig(Identifier identifier);
 
     File getConfigDir();
@@ -31,12 +33,14 @@ public interface BalmConfig {
         return new File(getConfigDir(schema), identifier.getNamespace() + "-" + identifier.getPath() + ".toml");
     }
 
+    @Nullable
     default MutableLoadedConfig getLocalConfig(BalmConfigSchema schema) {
         return getLocalConfig(schema.identifier());
     }
 
     <T> void updateLocalConfig(Class<T> configDataClass, Consumer<T> updater);
 
+    @Nullable
     default LoadedConfig getActiveConfig(BalmConfigSchema schema) {
         return getActiveConfig(schema.identifier());
     }
@@ -52,10 +56,16 @@ public interface BalmConfig {
         return getSchema(ConfigReflection.getIdentifier(configDataClass));
     }
 
+    @Nullable
     default <T> T getActiveConfig(Class<T> configDataClass) {
         final var schema = getSchema(configDataClass);
-        final var loadedConfig = getActiveConfig(Objects.requireNonNull(schema));
-        return ConfigReflection.of(configDataClass, loadedConfig).data();
+        if (schema != null) {
+            final var loadedConfig = getActiveConfig(schema);
+            if (loadedConfig != null) {
+                return ConfigReflection.of(configDataClass, loadedConfig).data();
+            }
+        }
+        return null;
     }
 
     Collection<BalmConfigSchema> getSchemasByNamespace(String namespace);
@@ -63,7 +73,10 @@ public interface BalmConfig {
     Collection<BalmConfigSchema> getSchemas();
 
     default void saveLocalConfig(BalmConfigSchema schema) {
-        saveLocalConfig(schema, getLocalConfig(schema));
+        final var config = getLocalConfig(schema);
+        if (config != null) {
+            saveLocalConfig(schema, config);
+        }
     }
 
     void saveLocalConfig(BalmConfigSchema schema, MutableLoadedConfig config);
@@ -73,7 +86,7 @@ public interface BalmConfig {
     default <T> void onConfigAvailable(Class<T> configDataClass, Consumer<T> handler) {
         final var schema = getSchema(configDataClass);
         if (schema != null) {
-            onConfigAvailable(schema, (config) -> handler.accept(getActiveConfig(configDataClass)));
+            onConfigAvailable(schema, (config) -> handler.accept(Objects.requireNonNull(getActiveConfig(configDataClass))));
         }
     }
 }

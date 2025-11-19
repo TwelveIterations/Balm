@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.platform;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
@@ -7,7 +9,6 @@ public class SidedProxy<T> {
     private final Supplier<BalmEnvironment> environmentResolver;
     private final String commonName;
     private final String clientName;
-    private T proxy;
 
     public SidedProxy(Supplier<BalmEnvironment> environmentResolver, String commonName, String clientName) {
         this.environmentResolver = environmentResolver;
@@ -17,6 +18,7 @@ public class SidedProxy<T> {
 
     public Supplier<T> buildLazily() {
         return new Supplier<>() {
+            @Nullable
             private T instance;
 
             @Override
@@ -35,6 +37,7 @@ public class SidedProxy<T> {
             case CLIENT -> clientName;
             case DEDICATED_SERVER -> commonName;
         };
+        T proxy;
         try {
             proxy = (T) Class.forName(classNameForEnvironment).getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {

@@ -9,7 +9,8 @@ import net.blay09.mods.balm.server.packs.resources.ResourceConditionContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
-public record ConfigResourceCondition(Identifier configId, String category, String key, String value) implements BalmResourceCondition {
+public record ConfigResourceCondition(Identifier configId, String category, String key,
+                                      String value) implements BalmResourceCondition {
 
     public static final MapCodec<ConfigResourceCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Identifier.CODEC.fieldOf("config").forGetter(ConfigResourceCondition::configId),
@@ -21,7 +22,15 @@ public record ConfigResourceCondition(Identifier configId, String category, Stri
     @Override
     public boolean test(ResourceConditionContext context) {
         final var schema = Balm.config().getSchema(configId);
+        if (schema == null) {
+            return false;
+        }
+
         final var config = Balm.config().getActiveConfig(schema);
+        if (config == null) {
+            return false;
+        }
+
         final var property = schema.findProperty(category, key);
         if (property != null) {
             final var rawValue = config.getRaw(property);

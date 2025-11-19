@@ -37,15 +37,16 @@ public class ConfigJsonExport {
         Files.writeString(file.toPath(), new Gson().toJson(mapToExportData(schemas)));
     }
 
-    @Nullable
-    private static String[] getValidValues(ConfiguredProperty<?> property) {
+    private static String@Nullable[] getValidValues(ConfiguredProperty<?> property) {
         Class<?> enumType = null;
-        if (property instanceof ConfiguredEnum<?> enumProperty) {
-            enumType = enumProperty.type();
-        } else if (property instanceof ConfiguredList<?> listProperty && listProperty.nestedType().isEnum()) {
-            enumType = listProperty.nestedType();
-        } else if (property instanceof ConfiguredSet<?> setProperty && setProperty.nestedType().isEnum()) {
-            enumType = setProperty.nestedType();
+        switch (property) {
+            case ConfiguredEnum<?> enumProperty -> enumType = enumProperty.type();
+            case ConfiguredList<?> listProperty when listProperty.nestedType().isEnum() ->
+                    enumType = listProperty.nestedType();
+            case ConfiguredSet<?> setProperty when setProperty.nestedType().isEnum() ->
+                    enumType = setProperty.nestedType();
+            default -> {
+            }
         }
 
         if (enumType != null) {
@@ -60,7 +61,7 @@ public class ConfigJsonExport {
     public record ExportedConfig(List<ConfigProperty> properties) {}
 
     public record ConfigProperty(String configType, String category, String name, String type, String description, String defaultValue,
-                                 @Nullable String[] validValues) {
+                                 String@Nullable[] validValues) {
 
         public ConfigProperty(ConfiguredProperty<?> property) {
             this(property.parentSchema().identifier().getPath(), property.category(),

@@ -3,22 +3,26 @@ package net.blay09.mods.balm.network.protocol.common.custom.internal;
 import io.netty.buffer.ByteBuf;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
-import net.blay09.mods.balm.platform.config.internal.LoadedTableConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.PropertyAwareConfig;
-import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.internal.AbstractBalmConfig;
 import net.blay09.mods.balm.platform.config.internal.ConfigSync;
+import net.blay09.mods.balm.platform.config.internal.LoadedTableConfig;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Predicate;
 
 public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig config) implements CustomPacketPayload {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClientboundConfigPacket.class);
 
     public static final Type<ClientboundConfigPacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath("balm", "config"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundConfigPacket> STREAM_CODEC = StreamCodec.of(ClientboundConfigPacket::encode,
@@ -89,11 +93,15 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
 
     public static void handle(Player player, ClientboundConfigPacket packet) {
         final var localConfig = Balm.config().getLocalConfig(packet.schema);
-        final var newConfig = localConfig.copy();
-        final Predicate<ConfiguredProperty<?>> propertyFilter = packet.config instanceof PropertyAwareConfig propertyAwareConfig ? propertyAwareConfig::hasProperty : (it -> true);
-        newConfig.applyFrom(packet.schema, packet.config, propertyFilter);
-        if (Balm.config() instanceof AbstractBalmConfig config) {
-            config.setActiveConfig(packet.schema, newConfig);
+        if (localConfig != null) {
+            final var newConfig = localConfig.copy();
+            final Predicate<ConfiguredProperty<?>> propertyFilter = packet.config instanceof PropertyAwareConfig propertyAwareConfig ? propertyAwareConfig::hasProperty : (it -> true);
+            newConfig.applyFrom(packet.schema, packet.config, propertyFilter);
+            if (Balm.config() instanceof AbstractBalmConfig config) {
+                config.setActiveConfig(packet.schema, newConfig);
+            }
+        } else {
+            logger.error("Received config packet for unknown schema: {}", packet.schema.identifier());
         }
     }
 

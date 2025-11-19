@@ -22,6 +22,8 @@ import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.core.component.internal.BalmDataComponentTypeRegistrarImpl;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.internal.BalmBlockRegistrarImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadContext> implements BalmRuntime<TLoadContext> {
+
+    private static final Logger logger = LoggerFactory.getLogger(CommonBalmRuntime.class);
 
     private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
@@ -94,7 +98,7 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
             try {
                 Class.forName(className).getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
+                logger.error("Error initializing class {}", className, e);
             }
         }
     }

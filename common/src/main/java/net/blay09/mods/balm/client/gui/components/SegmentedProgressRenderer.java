@@ -75,7 +75,7 @@ public class SegmentedProgressRenderer implements ProgressRenderer {
         var currentProgress = 0f;
         for (int i = 0; i < segments.size(); i++) {
             final var segment = segments.get(i);
-            final var segmentWeight = segmentWeights.get(i);
+            final float segmentWeight = segmentWeights.get(i);
             final var segmentStartProgress = currentProgress;
 
             if (progress > segmentStartProgress) {

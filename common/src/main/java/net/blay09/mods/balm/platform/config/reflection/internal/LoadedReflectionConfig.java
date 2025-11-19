@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.platform.config.reflection.internal;
 
 import net.blay09.mods.balm.Balm;
-import net.blay09.mods.balm.platform.config.internal.LoadedTableConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.PropertyAwareConfig;
+import net.blay09.mods.balm.platform.config.internal.LoadedTableConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 
@@ -40,7 +40,11 @@ public record LoadedReflectionConfig<ConfigData>(ConfigData data) implements Mut
     @Override
     public MutableLoadedConfig copy() {
         final var newConfig = new LoadedTableConfig();
-        newConfig.applyFrom(Balm.config().getSchema(data.getClass()), this);
+        final var schema = Balm.config().getSchema(data.getClass());
+        if (schema == null) {
+            throw new RuntimeException("No config schema found for " + data.getClass().getName());
+        }
+        newConfig.applyFrom(schema, this);
         return newConfig;
     }
 
@@ -51,7 +55,7 @@ public record LoadedReflectionConfig<ConfigData>(ConfigData data) implements Mut
 
     private Object locatePropertyHolder(ConfiguredProperty<?> property) throws NoSuchFieldException, IllegalAccessException {
         final var category = property.category();
-        if (category != null && !category.isEmpty()) {
+        if (!category.isEmpty()) {
             final var categoryField = data.getClass().getField(category);
             return categoryField.get(data);
         } else {

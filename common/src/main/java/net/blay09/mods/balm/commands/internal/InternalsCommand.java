@@ -14,6 +14,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.gamerules.GameRules;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -23,6 +25,8 @@ import java.io.File;
  * @see Balm#commands()
  */
 public final class InternalsCommand {
+
+    private static final Logger logger = LoggerFactory.getLogger(InternalsCommand.class);
 
     private static final Identifier PERMISSION_BALM_DEV = Identifier.fromNamespaceAndPath("balm", "command.balm.dev");
     private static final Identifier PERMISSION_BALM_EXPORT_CONFIG = Identifier.fromNamespaceAndPath("balm", "command.balm.export.config");
@@ -80,7 +84,7 @@ public final class InternalsCommand {
                                             try {
                                                 ConfigJsonExport.exportToFile(schemas, new File("exports/config/" + mod + ".json"));
                                             } catch (Exception e) {
-                                                e.printStackTrace();
+                                                logger.error("Error exporting config data class", e);
                                                 throw new RuntimeException("Error exporting config data class: " + mod, e);
                                             }
 
@@ -95,7 +99,7 @@ public final class InternalsCommand {
                                         try {
                                             IconExport.export(filter);
                                         } catch (Exception e) {
-                                            e.printStackTrace();
+                                            logger.error("Error exporting icons", e);
                                             throw new RuntimeException("Error exporting icons for " + filter, e);
                                         }
                                         context.getSource().sendSuccess(() -> Component.literal("Exported icons for " + filter), false);

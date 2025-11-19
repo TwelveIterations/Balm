@@ -39,5 +39,5 @@ public interface BalmCapabilities {
      * On Fabric and Forge, this registers as a fallback provider.
      * NeoForge does not support fallback providers, so there, this method will register the provider at lowest priority for each block entity individually (sigh).
      */
-    <TApi, TContext> void registerFallbackBlockEntityProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider);
+    <TApi, TContext> void registerFallbackBlockEntityProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, @Nullable TContext, @Nullable TApi> provider);
 }

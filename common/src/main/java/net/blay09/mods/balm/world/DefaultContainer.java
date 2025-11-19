@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 
 public class DefaultContainer implements ImplementedContainer, WorldlyContainer {
 
-    private NonNullList<ItemStack> items;
+    private final NonNullList<ItemStack> items;
 
     public DefaultContainer(int size) {
         this.items = NonNullList.withSize(size, ItemStack.EMPTY);

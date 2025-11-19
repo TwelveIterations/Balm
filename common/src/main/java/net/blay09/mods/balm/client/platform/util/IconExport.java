@@ -20,9 +20,13 @@ public class IconExport {
             try {
                 renderTarget = new TextureTarget("balm_icon_export", 64, 64, true);
 
-                CreativeModeTabs.tryRebuildTabContents(minecraft.player.connection.enabledFeatures(),
-                        minecraft.options.operatorItemsTab().get(),
-                        minecraft.level.registryAccess());
+                final var player = minecraft.player;
+                final var level = minecraft.level;
+                if (player != null && level != null) {
+                    CreativeModeTabs.tryRebuildTabContents(player.connection.enabledFeatures(),
+                            minecraft.options.operatorItemsTab().get(),
+                            level.registryAccess());
+                }
                 final var colonIndex = filter.indexOf(':');
                 final var filterModId = colonIndex != -1 ? filter.substring(0, colonIndex) : filter;
                 final var filterItemId = colonIndex != -1 ? filter.substring(colonIndex + 1) : null;

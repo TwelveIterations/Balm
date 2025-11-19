@@ -6,9 +6,9 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.config.BalmConfig;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
+import net.blay09.mods.balm.platform.config.reflection.internal.ConfigReflection;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
-import net.blay09.mods.balm.platform.config.reflection.internal.ConfigReflection;
 import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
@@ -43,7 +43,13 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     @Override
     public <T> void updateLocalConfig(Class<T> configDataClass, Consumer<T> updater) {
         final var schema = getSchema(configDataClass);
+        if (schema == null) {
+            throw new IllegalArgumentException("No config schema found for " + configDataClass.getName());
+        }
         final var localConfig = getLocalConfig(schema);
+        if (localConfig == null) {
+            throw new IllegalArgumentException("No local config loaded for " + schema.identifier());
+        }
         final var reflectionConfig = ConfigReflection.of(configDataClass, localConfig);
         updater.accept(reflectionConfig.data());
         saveLocalConfig(schema, reflectionConfig);

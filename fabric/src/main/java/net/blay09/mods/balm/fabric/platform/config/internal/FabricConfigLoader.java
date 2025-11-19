@@ -3,10 +3,10 @@ package net.blay09.mods.balm.fabric.platform.config.internal;
 import com.mojang.logging.LogUtils;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.internal.LoadedTableConfig;
-import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.notoml.Notoml;
 import net.blay09.mods.balm.platform.config.notoml.NotomlError;
 import net.blay09.mods.balm.platform.config.notoml.NotomlParser;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -46,7 +46,9 @@ public class FabricConfigLoader {
                 }
             }
             File backupFile = getBackupConfigFile(configFile);
-            configFile.renameTo(backupFile);
+            if (!configFile.renameTo(backupFile)) {
+                logger.error("Failed to create backup of corrupted config file {}", configFile.getName());
+            }
             FabricConfigSaver.save(configFile, schema, config);
             logger.error("The affected properties have been reset to their defaults and a backup of the corrupted version was created under {}",
                     backupFile.getName());
@@ -55,7 +57,9 @@ public class FabricConfigLoader {
             if (!notoml.containsProperties(updated)) {
                 logger.info("The config file {} is missing some properties.", configFile.getName());
                 File backupFile = getBackupConfigFile(configFile);
-                configFile.renameTo(backupFile);
+                if (!configFile.renameTo(backupFile)) {
+                    logger.error("Failed to create backup of previous config file {}", configFile.getName());
+                }
                 FabricConfigSaver.save(configFile, schema, config);
                 logger.info("The missing properties have been added and a backup of the previous version was created under {}", backupFile.getName());
             }
@@ -154,18 +158,24 @@ public class FabricConfigLoader {
                 return Identifier.parse(value.toString());
             }
         } else if (type == Boolean.class || type == Boolean.TYPE) {
-            if (value instanceof Number) {
-                return ((Number) value).intValue() != 0;
-            } else if (value instanceof String stringValue) {
-                if (stringValue.equalsIgnoreCase("true")) {
-                    return true;
-                } else if (stringValue.equalsIgnoreCase("false")) {
-                    return false;
-                } else {
-                    throw new IllegalArgumentException("Invalid boolean value: '" + value + "'");
+            switch (value) {
+                case Number number -> {
+                    return number.intValue() != 0;
                 }
-            } else if (value instanceof Boolean) {
-                return value;
+                case String stringValue -> {
+                    if (stringValue.equalsIgnoreCase("true")) {
+                        return true;
+                    } else if (stringValue.equalsIgnoreCase("false")) {
+                        return false;
+                    } else {
+                        throw new IllegalArgumentException("Invalid boolean value: '" + value + "'");
+                    }
+                }
+                case Boolean booleanValue -> {
+                    return booleanValue;
+                }
+                default -> {
+                }
             }
         } else if (type == List.class) {
             if (value instanceof List<?> list) {

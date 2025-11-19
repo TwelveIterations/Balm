@@ -11,7 +11,11 @@ public interface ConfiguredIdentifier extends ConfiguredProperty<Identifier> {
     }
 
     default Identifier get() {
-        return get(Balm.config().getActiveConfig(parentSchema()));
+        final var config = Balm.config().getActiveConfig(parentSchema());
+        if (config == null) {
+            throw new RuntimeException("No active config found for schema " + parentSchema().identifier());
+        }
+        return get(config);
     }
 
     default void set(MutableLoadedConfig config, Identifier value) {
@@ -19,6 +23,10 @@ public interface ConfiguredIdentifier extends ConfiguredProperty<Identifier> {
     }
 
     default void set(Identifier value) {
-        set(Balm.config().getLocalConfig(parentSchema()), value);
+        final var config = Balm.config().getLocalConfig(parentSchema());
+        if (config == null) {
+            throw new RuntimeException("No local config loaded for schema " + parentSchema().identifier());
+        }
+        set(config, value);
     }
 }

@@ -41,22 +41,20 @@ public class NotomlSerializer {
                 sb.append(property).append(" = ");
 
                 Object value = categoryProperties.get(property);
-                if (value instanceof String stringValue) {
-                    if (stringValue.contains("\n")) {
-                        sb.append("\"\"\"\n").append(value).append("\n\"\"\"");
-                    } else {
-                        sb.append("\"").append(stringValue.replace("\"", "\\\"")).append("\"");
+                switch (value) {
+                    case String stringValue -> {
+                        if (stringValue.contains("\n")) {
+                            sb.append("\"\"\"\n").append(value).append("\n\"\"\"");
+                        } else {
+                            sb.append("\"").append(stringValue.replace("\"", "\\\"")).append("\"");
+                        }
                     }
-                } else if (value instanceof Identifier identifierValue) {
-                    sb.append("\"").append(identifierValue).append("\"");
-                } else if (value instanceof Collection<?> listValue) {
-                    serializeList(listValue, sb);
-                } else if (value instanceof StringRepresentable stringRepresentable) {
-                    sb.append("\"").append(stringRepresentable.getSerializedName()).append("\"");
-                } else if (value instanceof Enum<?> enumValue) {
-                    sb.append("\"").append(enumValue.name()).append("\"");
-                } else {
-                    sb.append(value);
+                    case Identifier identifierValue -> sb.append("\"").append(identifierValue).append("\"");
+                    case Collection<?> listValue -> serializeList(listValue, sb);
+                    case StringRepresentable stringRepresentable ->
+                            sb.append("\"").append(stringRepresentable.getSerializedName()).append("\"");
+                    case Enum<?> enumValue -> sb.append("\"").append(enumValue.name()).append("\"");
+                    case null, default -> sb.append(value);
                 }
 
                 sb.append("\n");
@@ -66,7 +64,7 @@ public class NotomlSerializer {
         return sb.toString();
     }
 
-    private static String serializeList(Collection<?> list, StringBuilder sb) {
+    private static void serializeList(Collection<?> list, StringBuilder sb) {
         sb.append("[ ");
         boolean newLines = list.size() > 3;
         var first = true;
@@ -82,16 +80,13 @@ public class NotomlSerializer {
             if (newLines) {
                 sb.append("    ");
             }
-            if (value instanceof String stringValue) {
-                sb.append("\"").append(stringValue.replace("\"", "\\\"")).append("\"");
-            } else if (value instanceof Identifier identifierValue) {
-                sb.append("\"").append(identifierValue).append("\"");
-            } else if (value instanceof StringRepresentable stringRepresentable) {
-                sb.append("\"").append(stringRepresentable.getSerializedName()).append("\"");
-            } else if (value instanceof Enum<?> enumValue) {
-                sb.append("\"").append(enumValue.name()).append("\"");
-            } else {
-                sb.append(value);
+            switch (value) {
+                case String stringValue -> sb.append("\"").append(stringValue.replace("\"", "\\\"")).append("\"");
+                case Identifier identifierValue -> sb.append("\"").append(identifierValue).append("\"");
+                case StringRepresentable stringRepresentable ->
+                        sb.append("\"").append(stringRepresentable.getSerializedName()).append("\"");
+                case Enum<?> enumValue -> sb.append("\"").append(enumValue.name()).append("\"");
+                case null, default -> sb.append(value);
             }
         }
         if (newLines) {
@@ -99,7 +94,6 @@ public class NotomlSerializer {
         } else {
             sb.append(" ]");
         }
-        return sb.toString();
     }
 
 }

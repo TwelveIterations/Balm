@@ -17,7 +17,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfiguredConfigProvider implements IModConfigProvider {
-    private static IModConfig mapConfig(BalmConfigSchema schema, MutableLoadedConfig config) {
+    @Nullable
+    private static IModConfig mapConfig(BalmConfigSchema schema, @Nullable MutableLoadedConfig config) {
+        if(config == null) {
+            return null;
+        }
+
         return new IModConfig() {
             @Override
             public ActionResult update(IConfigEntry entry) {
@@ -246,12 +251,16 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
     public static Screen createConfigScreen(String modId, Screen parent) {
         final var configs = Balm.config().getSchemasByNamespace(modId);
         final var configsByType = new HashMap<ConfigType, Set<IModConfig>>();
-        final var universalConfigs = configs.stream()
+        final Set<IModConfig> universalConfigs = configs.stream()
                 .filter(it -> !it.identifier().getPath().equals("client"))
-                .map(schema -> mapConfig(schema, Balm.config().getLocalConfig(schema))).collect(Collectors.toSet());
-        final var clientConfigs = configs.stream()
+                .map(schema -> mapConfig(schema, Balm.config().getLocalConfig(schema)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        final Set<IModConfig> clientConfigs = configs.stream()
                 .filter(it -> it.identifier().getPath().equals("client"))
-                .map(schema -> mapConfig(schema, Balm.config().getLocalConfig(schema))).collect(Collectors.toSet());
+                .map(schema -> mapConfig(schema, Balm.config().getLocalConfig(schema)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
         configsByType.put(ConfigType.UNIVERSAL, universalConfigs);
         configsByType.put(ConfigType.CLIENT, clientConfigs);
         return ConfigScreenHelper.createSelectionScreen(parent,
@@ -265,6 +274,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         final var configs = Balm.config().getSchemasByNamespace(modContext.modId());
         return configs.stream()
                 .map(schema -> mapConfig(schema, Balm.config().getLocalConfig(schema)))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 }

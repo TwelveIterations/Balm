@@ -88,7 +88,7 @@ class ArrayBackedEvent<T> extends Event<T> {
         // Rebuild handlers.
         if (sortedPhases.size() == 1) {
             // Special case with a single phase: use the array of the phase directly.
-            handlers = sortedPhases.get(0).listeners;
+            handlers = sortedPhases.getFirst().listeners;
         } else {
             @SuppressWarnings("unchecked")
             T[] newHandlers = (T[]) Array.newInstance(handlers.getClass().getComponentType(), newLength);
