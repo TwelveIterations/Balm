@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 import net.blay09.mods.balm.api.config.schema.builder.*;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 
@@ -24,8 +24,8 @@ public class PrimitiveConfigCodecs {
             return (Codec<T>) DoubleConfigProperty.CODEC;
         } else if (type == Boolean.class || type == boolean.class) {
             return (Codec<T>) BooleanConfigProperty.CODEC;
-        } else if (type == ResourceLocation.class) {
-            return (Codec<T>) ResourceLocation.CODEC;
+        } else if (type == Identifier.class) {
+            return (Codec<T>) Identifier.CODEC;
         } else if (type.isEnum() && StringRepresentable.class.isAssignableFrom(type)) {
             return enumCodec((Class) type);
         } else {
@@ -51,8 +51,8 @@ public class PrimitiveConfigCodecs {
             return (StreamCodec<ByteBuf, T>) ByteBufCodecs.DOUBLE;
         } else if (type == Boolean.class || type == boolean.class) {
             return (StreamCodec<ByteBuf, T>) ByteBufCodecs.BOOL;
-        } else if (type == ResourceLocation.class) {
-            return (StreamCodec<ByteBuf, T>) ResourceLocation.STREAM_CODEC;
+        } else if (type == Identifier.class) {
+            return (StreamCodec<ByteBuf, T>) Identifier.STREAM_CODEC;
         } else if (type.isEnum() && StringRepresentable.class.isAssignableFrom(type)) {
             return enumStreamCodec((Class) type);
         } else {

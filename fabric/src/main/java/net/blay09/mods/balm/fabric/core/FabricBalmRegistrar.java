@@ -5,20 +5,19 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class FabricBalmRegistrar implements BalmRegistrar {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<ResourceLocation, T> resourceFunction) {
+    public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
         final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(resourceKey.registry());
         Objects.requireNonNull(registry);
-        return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.location())));
+        return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));
     }
 
     @Override
@@ -38,11 +37,11 @@ public class FabricBalmRegistrar implements BalmRegistrar {
 
         @Override
         @SuppressWarnings("unchecked")
-        public Holder<T> register(String name, Function<ResourceLocation, T> resourceFunction) {
-            final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(registryKey.location());
+        public Holder<T> register(String name, Function<Identifier, T> resourceFunction) {
+            final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(registryKey.identifier());
             Objects.requireNonNull(registry);
-            final var resourceKey = ResourceKey.create(registryKey, ResourceLocation.fromNamespaceAndPath(namespace, name));
-            return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.location())));
+            final var resourceKey = ResourceKey.create(registryKey, Identifier.fromNamespaceAndPath(namespace, name));
+            return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));
         }
     }
 

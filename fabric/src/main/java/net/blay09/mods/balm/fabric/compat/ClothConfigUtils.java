@@ -9,7 +9,7 @@ import net.blay09.mods.balm.api.config.schema.*;
 import net.blay09.mods.balm.common.config.ConfigLocalization;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -117,11 +117,11 @@ public class ClothConfigUtils {
                             .setSaveConsumer(value -> ((ConfiguredList<Double>) listProperty).set(config, value))
                             .build()
             );
-            case ConfiguredList<?> listProperty when listProperty.nestedType() == ResourceLocation.class -> categoryInstance.addEntry(
+            case ConfiguredList<?> listProperty when listProperty.nestedType() == Identifier.class -> categoryInstance.addEntry(
                     builder.entryBuilder().startStrList(displayName, listProperty.get(config).stream().map(Objects::toString).toList())
                             .setDefaultValue(listProperty.defaultValue().stream().map(Objects::toString).toList())
                             .setTooltip(tooltip)
-                            .setSaveConsumer(value -> ((ConfiguredList<ResourceLocation>) listProperty).set(config, value.stream().map(ResourceLocation::tryParse).collect(Collectors.toList())))
+                            .setSaveConsumer(value -> ((ConfiguredList<Identifier>) listProperty).set(config, value.stream().map(Identifier::tryParse).collect(Collectors.toList())))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == String.class -> categoryInstance.addEntry(
@@ -159,11 +159,11 @@ public class ClothConfigUtils {
                             .setSaveConsumer(value -> ((ConfiguredSet<Double>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
-            case ConfiguredSet<?> setProperty when setProperty.nestedType() == ResourceLocation.class -> categoryInstance.addEntry(
+            case ConfiguredSet<?> setProperty when setProperty.nestedType() == Identifier.class -> categoryInstance.addEntry(
                     builder.entryBuilder().startStrList(displayName, setProperty.get(config).stream().map(Objects::toString).toList())
                             .setDefaultValue(setProperty.defaultValue().stream().map(Objects::toString).toList())
                             .setTooltip(tooltip)
-                            .setSaveConsumer(value -> ((ConfiguredSet<ResourceLocation>) setProperty).set(config, value.stream().map(ResourceLocation::tryParse).collect(Collectors.toSet())))
+                            .setSaveConsumer(value -> ((ConfiguredSet<Identifier>) setProperty).set(config, value.stream().map(Identifier::tryParse).collect(Collectors.toSet())))
                             .build()
             );
             default -> {

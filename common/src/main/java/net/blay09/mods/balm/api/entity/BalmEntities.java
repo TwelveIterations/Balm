@@ -3,7 +3,7 @@ package net.blay09.mods.balm.api.entity;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +20,7 @@ public interface BalmEntities {
      * @deprecated Use the scoped registrar via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeRegistrar}
      */
     @Deprecated
-    default <T extends Entity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder) {
+    default <T extends Entity> DeferredObject<EntityType<T>> registerEntity(Identifier identifier, EntityType.Builder<T> typeBuilder) {
         final var holder = Balm.getRuntime().entityTypes(identifier.getNamespace())
                 .register(identifier.getPath(), () -> typeBuilder)
                 .asHolder();
@@ -31,7 +31,7 @@ public interface BalmEntities {
      * @deprecated Use the scoped registrar via {@code Balm.entityTypes(namespace, initializer)} and {@link BalmEntityTypeRegistrar}
      */
     @Deprecated
-    default <T extends LivingEntity> DeferredObject<EntityType<T>> registerEntity(ResourceLocation identifier, EntityType.Builder<T> typeBuilder, Supplier<AttributeSupplier.Builder> attributeBuilder) {
+    default <T extends LivingEntity> DeferredObject<EntityType<T>> registerEntity(Identifier identifier, EntityType.Builder<T> typeBuilder, Supplier<AttributeSupplier.Builder> attributeBuilder) {
         final var holder = Balm.getRuntime().entityTypes(identifier.getNamespace())
                 .register(identifier.getPath(), () -> typeBuilder)
                 .withDefaultAttributes((it) -> attributeBuilder.get())

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
@@ -31,7 +31,7 @@ public interface BalmRenderers {
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#modelLayers(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
-    default ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
+    default ModelLayerLocation registerModel(Identifier location, Supplier<LayerDefinition> layerDefinition) {
         return registerModel(location, "main", layerDefinition);
     }
 
@@ -39,25 +39,25 @@ public interface BalmRenderers {
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#modelLayers(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
-    ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition);
+    ModelLayerLocation registerModel(Identifier location, String layer, Supplier<LayerDefinition> layerDefinition);
 
     /**
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#entityRenderers(String, Consumer)} instead.
      */
     @Deprecated
-    <T extends Entity> void registerEntityRenderer(ResourceLocation id, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
+    <T extends Entity> void registerEntityRenderer(Identifier id, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
 
     /**
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockEntityRenderers(String, Consumer)} instead.
      */
     @Deprecated
-    <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(ResourceLocation id, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider);
+    <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(Identifier id, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider);
 
     /**
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockColors(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
-    void registerBlockColorHandler(ResourceLocation id, BlockColor color, Supplier<Block[]> blocks);
+    void registerBlockColorHandler(Identifier id, BlockColor color, Supplier<Block[]> blocks);
 
     /**
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockRenderTypes(String, java.util.function.Consumer)} instead.
@@ -69,13 +69,13 @@ public interface BalmRenderers {
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#particleProviders(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
-    <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
+    <T extends ParticleOptions> void registerParticleProvider(Identifier id, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
     /**
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#particleProviders(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
-    <T extends ParticleOptions> void registerParticleProvider(ResourceLocation id, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
+    <T extends ParticleOptions> void registerParticleProvider(Identifier id, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 
     @Deprecated
     default BalmRenderers scoped(String modId) {

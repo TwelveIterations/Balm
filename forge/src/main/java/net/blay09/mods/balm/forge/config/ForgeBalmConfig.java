@@ -13,7 +13,7 @@ import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.blay09.mods.balm.common.config.ConfigLocalization;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 
 public class ForgeBalmConfig extends AbstractBalmConfig {
 
-    private static final Map<ResourceLocation, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new ConcurrentHashMap<>();
-    private static final Map<ResourceLocation, ModConfig> modConfigs = new ConcurrentHashMap<>();
+    private static final Map<Identifier, Table<String, String, ForgeConfigSpec.ConfigValue<?>>> properties = new ConcurrentHashMap<>();
+    private static final Map<Identifier, ModConfig> modConfigs = new ConcurrentHashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(ForgeBalmConfig.class);
 
     private static ForgeConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ForgeConfigSpec.Builder spec) {
@@ -49,8 +49,8 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                     mapConfigCollectionToNeoForge(configuredList.defaultValue()),
                     (it) -> validateListElement(configuredList, it));
             case ConfiguredLong configuredLong -> spec.define(configuredLong.name(), configuredLong.defaultValue());
-            case ConfiguredResourceLocation configuredResourceLocation ->
-                    spec.define(configuredResourceLocation.name(), configuredResourceLocation.defaultValue().toString());
+            case ConfiguredIdentifier configuredIdentifier ->
+                    spec.define(configuredIdentifier.name(), configuredIdentifier.defaultValue().toString());
             case ConfiguredSet<?> configuredSet -> spec.defineListAllowEmpty(configuredSet.name(),
                     mapConfigCollectionToNeoForge(configuredSet.defaultValue()),
                     (it) -> validateSetElement(configuredSet, it));
@@ -65,7 +65,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
     public static Object mapConfigValueToNeoForge(Object value) {
         return switch (value) {
-            case ResourceLocation resourceLocation -> resourceLocation.toString();
+            case identifier identifier -> identifier.toString();
             case Float floatValue -> floatValue.doubleValue();
             case Set<?> setValue -> mapConfigCollectionToNeoForge(setValue);
             case List<?> listValue -> mapConfigCollectionToNeoForge(listValue);
@@ -83,7 +83,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
     public static Object mapConfigValueFromNeoForge(ConfiguredProperty<?> property, Object value) {
         return switch (property) {
-            case ConfiguredResourceLocation ignored -> ResourceLocation.parse((String) value);
+            case ConfiguredIdentifier ignored -> Identifier.parse((String) value);
             case ConfiguredFloat ignored -> ((Double) value).floatValue();
             case ConfiguredList<?> configuredList -> mapConfigListFromNeoForge(configuredList, (List<?>) value);
             case ConfiguredSet<?> configuredSet -> mapConfigSetFromNeoForge(configuredSet, (List<?>) value);
@@ -92,8 +92,8 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     }
 
     private static Object mapConfigValueFromNeoForge(Class<?> nestedType, Object value) {
-        if (nestedType == ResourceLocation.class) {
-            return ResourceLocation.parse((String) value);
+        if (nestedType == Identifier.class) {
+            return Identifier.parse((String) value);
         } else if (nestedType == Float.class) {
             return ((Double) value).floatValue();
         } else if (nestedType.isEnum() && value instanceof String) {
@@ -148,8 +148,8 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
             } catch (NumberFormatException e) {
                 return false;
             }
-        } else if (nestedType == ResourceLocation.class) {
-            return value instanceof String && ResourceLocation.tryParse(value.toString()) != null;
+        } else if (nestedType == Identifier.class) {
+            return value instanceof String && Identifier.tryParse(value.toString()) != null;
         } else if (nestedType == String.class) {
             return value instanceof String;
         } else if (nestedType.isEnum()) {
@@ -200,7 +200,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
         ModConfigEvent.Loading.getBus(modBusGroup).addListener((event) -> {
             final var modConfig = event.getConfig();
-            final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+            final var identifier = Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
                 final var modConfigProperties = properties.get(schema.identifier());
@@ -217,7 +217,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
         });
         ModConfigEvent.Reloading.getBus(modBusGroup).addListener((event) -> {
             final var modConfig = event.getConfig();
-            final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+            final var identifier = Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
                 final var modConfigProperties = properties.get(schema.identifier());

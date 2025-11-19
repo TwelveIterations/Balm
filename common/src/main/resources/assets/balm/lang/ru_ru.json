@@ -36,7 +36,7 @@
   "balm.configuration.exampleMultilineString": "Пример многострочной строки",
   "balm.configuration.exampleEnum": "Пример перечислимого типа",
   "balm.configuration.exampleStringList": "Пример списка строк",
-  "balm.configuration.exampleResourceLocationSet": "Пример местоположения набора ресурсов",
+  "balm.configuration.exampleIdentifierSet": "Пример местоположения набора ресурсов",
   "balm.configuration.exampleIntList": "Пример списка целого числа",
   "balm.configuration.exampleEnumList": "Пример списка перечислимого типа",
   "balm.configuration.exampleCategory.innerField": "Пример внутреннего поля",

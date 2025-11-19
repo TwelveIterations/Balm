@@ -12,7 +12,7 @@ import net.blay09.mods.balm.neoforge.energy.NeoForgeEnergyStorage;
 import net.blay09.mods.balm.neoforge.fluid.NeoForgeFluidTank;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.IEventBus;
@@ -44,14 +44,14 @@ public class NeoForgeBalm {
         modBus.addListener(this::enqueueIMC);
 
         NeoForgeBalmCapabilities capabilities = (NeoForgeBalmCapabilities) Balm.getCapabilities();
-        final var nativeItemHandler = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "item_handler"),
+        final var nativeItemHandler = capabilities.addExistingType(Identifier.fromNamespaceAndPath("neoforge", "item_handler"),
                 Capabilities.Item.BLOCK);
-        final var nativeFluidHandler = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "fluid_handler"),
+        final var nativeFluidHandler = capabilities.addExistingType(Identifier.fromNamespaceAndPath("neoforge", "fluid_handler"),
                 Capabilities.Fluid.BLOCK);
-        final var nativeEnergyStorage = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("neoforge", "energy_storage"),
+        final var nativeEnergyStorage = capabilities.addExistingType(Identifier.fromNamespaceAndPath("neoforge", "energy_storage"),
                 Capabilities.Energy.BLOCK);
 
-        capabilities.registerFallbackBlockEntityProvider(ResourceLocation.fromNamespaceAndPath("balm", "item_handler"),
+        capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", "item_handler"),
                 nativeItemHandler,
                 new BiFunction<>() {
                     private boolean running;
@@ -84,7 +84,7 @@ public class NeoForgeBalm {
                     }
                 });
 
-        capabilities.registerFallbackBlockEntityProvider(ResourceLocation.fromNamespaceAndPath("balm", "fluid_handler"),
+        capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", "fluid_handler"),
                 nativeFluidHandler,
                 new BiFunction<>() {
                     private boolean running;
@@ -113,7 +113,7 @@ public class NeoForgeBalm {
                     }
                 });
 
-        capabilities.registerFallbackBlockEntityProvider(ResourceLocation.fromNamespaceAndPath("balm", "energy_storage"),
+        capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", "energy_storage"),
                 nativeEnergyStorage,
                 new BiFunction<>() {
                     private boolean running;

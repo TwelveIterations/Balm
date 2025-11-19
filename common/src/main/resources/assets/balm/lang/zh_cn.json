@@ -36,7 +36,7 @@
   "balm.configuration.exampleMultilineString": "样例多行字符串类",
   "balm.configuration.exampleEnum": "样例枚举类",
   "balm.configuration.exampleStringList": "样例字符串列表类",
-  "balm.configuration.exampleResourceLocationSet": "样例资源路径类",
+  "balm.configuration.exampleIdentifierSet": "样例资源路径类",
   "balm.configuration.exampleIntList": "样例整数列表类",
   "balm.configuration.exampleEnumList": "样例枚举列表类",
   "balm.configuration.exampleCategory.innerField": "样例内部类",

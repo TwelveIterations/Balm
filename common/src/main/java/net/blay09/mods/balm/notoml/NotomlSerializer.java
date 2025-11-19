@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.notoml;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
 import java.io.IOException;
@@ -47,8 +47,8 @@ public class NotomlSerializer {
                     } else {
                         sb.append("\"").append(stringValue.replace("\"", "\\\"")).append("\"");
                     }
-                } else if (value instanceof ResourceLocation resourceLocationValue) {
-                    sb.append("\"").append(resourceLocationValue).append("\"");
+                } else if (value instanceof Identifier identifierValue) {
+                    sb.append("\"").append(identifierValue).append("\"");
                 } else if (value instanceof Collection<?> listValue) {
                     serializeList(listValue, sb);
                 } else if (value instanceof StringRepresentable stringRepresentable) {
@@ -84,8 +84,8 @@ public class NotomlSerializer {
             }
             if (value instanceof String stringValue) {
                 sb.append("\"").append(stringValue.replace("\"", "\\\"")).append("\"");
-            } else if (value instanceof ResourceLocation resourceLocationValue) {
-                sb.append("\"").append(resourceLocationValue).append("\"");
+            } else if (value instanceof Identifier identifierValue) {
+                sb.append("\"").append(identifierValue).append("\"");
             } else if (value instanceof StringRepresentable stringRepresentable) {
                 sb.append("\"").append(stringRepresentable.getSerializedName()).append("\"");
             } else if (value instanceof Enum<?> enumValue) {

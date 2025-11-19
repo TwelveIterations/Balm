@@ -13,19 +13,19 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Predicate;
 
 public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig config) implements CustomPacketPayload {
 
-    public static final Type<ClientboundConfigPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath("balm", "config"));
+    public static final Type<ClientboundConfigPacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath("balm", "config"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundConfigPacket> STREAM_CODEC = StreamCodec.of(ClientboundConfigPacket::encode,
             ClientboundConfigPacket::decode);
 
     private static ClientboundConfigPacket decode(RegistryFriendlyByteBuf buf) {
-        final var identifier = ResourceLocation.STREAM_CODEC.decode(buf);
+        final var identifier = Identifier.STREAM_CODEC.decode(buf);
         final var schema = Balm.config().getSchema(identifier);
         if (schema == null) {
             throw new RuntimeException("Received config packet for unknown schema: " + identifier);
@@ -51,7 +51,7 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
     }
 
     private static void encode(RegistryFriendlyByteBuf buf, ClientboundConfigPacket packet) {
-        ResourceLocation.STREAM_CODEC.encode(buf, packet.schema.identifier());
+        Identifier.STREAM_CODEC.encode(buf, packet.schema.identifier());
         final var rootProperties = packet.schema.rootProperties().stream().filter(ConfigSync::isSyncedProperty).toList();
         buf.writeVarInt(rootProperties.size());
         for (final var rootProperty : rootProperties) {

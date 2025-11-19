@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -26,7 +26,7 @@ public interface BalmDataComponentTypeRegistrar {
         return register(name, (id, builder) -> builderConsumer.apply(builder));
     }
 
-    <T> BalmDataComponentTypeRegistration<T> register(String name, BiFunction<ResourceLocation, DataComponentType.Builder<T>, DataComponentType.Builder<T>> constructor);
+    <T> BalmDataComponentTypeRegistration<T> register(String name, BiFunction<Identifier, DataComponentType.Builder<T>, DataComponentType.Builder<T>> constructor);
 
     <T> DataComponentType.Builder<T> createBuilder();
 }

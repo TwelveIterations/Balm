@@ -7,7 +7,7 @@ import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 
 import java.util.function.Function;
@@ -25,8 +25,8 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
 
     @Override
     public BalmItemRegistration register(String name, Function<Item.Properties, Item> constructor, Supplier<Item.Properties> properties) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
-        final var resourceKey = ResourceKey.create(Registries.ITEM, resourceLocation);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
+        final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(properties.get().setId(resourceKey)));
         return new BalmItemRegistrationImpl(holder);
     }

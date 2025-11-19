@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
@@ -33,24 +33,24 @@ import java.util.function.Supplier;
 @Deprecated
 public record FabricBalmRenderers(NamespaceResolver namespaceResolver) implements BalmRenderers {
     @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
+    public ModelLayerLocation registerModel(Identifier location, String layer, Supplier<LayerDefinition> layerDefinition) {
         final var modelLayerLocation = new ModelLayerLocation(location, layer);
         EntityModelLayerRegistry.registerModelLayer(modelLayerLocation, layerDefinition::get);
         return modelLayerLocation;
     }
 
     @Override
-    public <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
+    public <T extends Entity> void registerEntityRenderer(Identifier identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
         EntityRendererRegistry.register(type.get(), provider);
     }
 
     @Override
-    public <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider) {
+    public <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(Identifier identifier, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider) {
         BlockEntityRenderers.register(type.get(), provider);
     }
 
     @Override
-    public void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
+    public void registerBlockColorHandler(Identifier identifier, BlockColor color, Supplier<Block[]> blocks) {
         ColorProviderRegistry.BLOCK.register(color, blocks.get());
     }
 
@@ -60,12 +60,12 @@ public record FabricBalmRenderers(NamespaceResolver namespaceResolver) implement
     }
 
     @Override
-    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+    public <T extends ParticleOptions> void registerParticleProvider(Identifier identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
         ParticleFactoryRegistry.getInstance().register(particleType.get(), factory::apply);
     }
 
     @Override
-    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+    public <T extends ParticleOptions> void registerParticleProvider(Identifier identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
         ParticleFactoryRegistry.getInstance().register(particleType.get(), provider);
     }
 

@@ -13,7 +13,7 @@ import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -43,11 +43,11 @@ public class ForgeBalm {
         FMLClientSetupEvent.getBus(modBusGroup).addListener(ForgeBalmClient::onInitializeClient);
 
         final var capabilities = (ForgeBalmCapabilities) Balm.getCapabilities();
-        final var nativeItemHandler = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("forge", "item_handler"), IItemHandler.class, ForgeCapabilities.ITEM_HANDLER);
-        final var nativeFluidHandler = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("forge", "fluid_handler"), IFluidHandler.class, ForgeCapabilities.FLUID_HANDLER);
-        final var nativeEnergyStorage = capabilities.addExistingType(ResourceLocation.fromNamespaceAndPath("forge", "energy_storage"), IEnergyStorage.class, ForgeCapabilities.ENERGY);
+        final var nativeItemHandler = capabilities.addExistingType(Identifier.fromNamespaceAndPath("forge", "item_handler"), IItemHandler.class, ForgeCapabilities.ITEM_HANDLER);
+        final var nativeFluidHandler = capabilities.addExistingType(Identifier.fromNamespaceAndPath("forge", "fluid_handler"), IFluidHandler.class, ForgeCapabilities.FLUID_HANDLER);
+        final var nativeEnergyStorage = capabilities.addExistingType(Identifier.fromNamespaceAndPath("forge", "energy_storage"), IEnergyStorage.class, ForgeCapabilities.ENERGY);
 
-        capabilities.registerFallbackBlockEntityProvider(ResourceLocation.fromNamespaceAndPath("balm", "item_handler"),
+        capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", "item_handler"),
                 nativeItemHandler,
                 new BiFunction<>() {
                     private boolean running;
@@ -76,7 +76,7 @@ public class ForgeBalm {
                     }
                 });
 
-        capabilities.registerFallbackBlockEntityProvider(ResourceLocation.fromNamespaceAndPath("balm", "fluid_handler"),
+        capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", "fluid_handler"),
                 nativeFluidHandler,
                 new BiFunction<>() {
                     private boolean running;
@@ -105,7 +105,7 @@ public class ForgeBalm {
                     }
                 });
 
-        capabilities.registerFallbackBlockEntityProvider(ResourceLocation.fromNamespaceAndPath("balm", "energy_storage"),
+        capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", "energy_storage"),
                 nativeEnergyStorage,
                 new BiFunction<>() {
                     private boolean running;

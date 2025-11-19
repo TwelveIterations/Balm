@@ -33,7 +33,7 @@ import net.blay09.mods.balm.neoforge.event.NeoForgeBalmClientEvents;
 import net.blay09.mods.balm.neoforge.event.NeoForgeBalmEvents;
 import net.blay09.mods.balm.neoforge.server.packs.resources.NeoForgeBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
@@ -78,7 +78,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     }
 
     @Override
-    public void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+    public void addResourceReloadListener(Identifier identifier, PreparableReloadListener reloadListener) {
         resourceReloadListeners(identifier.getNamespace(), registrar -> registrar.register(identifier.getPath(), reloadListener));
     }
 

@@ -6,7 +6,7 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -28,8 +28,8 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
 
     @Override
     public <T extends Entity> BalmEntityTypeRegistration<T> register(String name, Supplier<EntityType.Builder<T>> builder) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
-        final var resourceKey = ResourceKey.create(Registries.ENTITY_TYPE, resourceLocation);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
+        final var resourceKey = ResourceKey.create(Registries.ENTITY_TYPE, identifier);
         final var holder = registrar.register(resourceKey, id -> builder.get().build(resourceKey));
         return new BalmEntityTypeRegistrationImpl<>(holder);
     }

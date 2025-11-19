@@ -4,14 +4,14 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.module.BalmModule;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 
 public class ForgeCommonCapabilities implements BalmModule {
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id("forge_common_capabilities");
     }
 
@@ -26,7 +26,7 @@ public class ForgeCommonCapabilities implements BalmModule {
         }));
     }
 
-    private static ResourceLocation id(String container) {
-        return ResourceLocation.fromNamespaceAndPath("balm", container);
+    private static Identifier id(String container) {
+        return Identifier.fromNamespaceAndPath("balm", container);
     }
 }

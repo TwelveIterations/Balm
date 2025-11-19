@@ -30,7 +30,7 @@ import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;
@@ -201,7 +201,7 @@ public class Balm {
      * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
-    public static void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
+    public static void addServerReloadListener(Identifier identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
         runtime.addServerReloadListener(identifier, reloadListener);
     }
 
@@ -517,7 +517,7 @@ public class Balm {
      * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
-    public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+    public static void addServerReloadListener(Identifier identifier, PreparableReloadListener reloadListener) {
         runtime.addServerReloadListener(identifier, it -> reloadListener);
     }
 
@@ -526,7 +526,7 @@ public class Balm {
      * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#resourceReloadListeners(String, Consumer)} instead.
      */
     @Deprecated
-    public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
+    public static void addServerReloadListener(Identifier identifier, Consumer<ResourceManager> reloadListener) {
         runtime.addServerReloadListener(identifier, reloadListener);
     }
 

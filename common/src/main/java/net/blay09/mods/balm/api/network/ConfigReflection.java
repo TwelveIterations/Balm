@@ -6,7 +6,7 @@ import net.blay09.mods.balm.api.config.reflection.*;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.builder.ConfigPropertyBuilder;
 import net.blay09.mods.balm.api.config.schema.builder.PropertyHolderBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
 import java.lang.reflect.Field;
@@ -56,8 +56,8 @@ public class ConfigReflection {
                 final var defaultValue = field.get(defaults);
                 if (type == String.class) {
                     property.stringOf((String) defaultValue);
-                } else if (type == ResourceLocation.class) {
-                    property.resourceLocationOf((ResourceLocation) defaultValue);
+                } else if (type == Identifier.class) {
+                    property.IdentifierOf((Identifier) defaultValue);
                 } else if (type == Integer.class || type == int.class) {
                     property.intOf((int) defaultValue);
                 } else if (type == Long.class || type == long.class) {
@@ -136,15 +136,15 @@ public class ConfigReflection {
 
     private static boolean isCategoryField(Field field) {
         return !field.getType().isPrimitive() && !field.getType()
-                .isEnum() && field.getType() != String.class && field.getType() != List.class && field.getType() != Set.class && field.getType() != ResourceLocation.class;
+                .isEnum() && field.getType() != String.class && field.getType() != List.class && field.getType() != Set.class && field.getType() != Identifier.class;
     }
 
-    public static ResourceLocation getIdentifier(Class<?> configDataClass) {
+    public static Identifier getIdentifier(Class<?> configDataClass) {
         final var configAnnotation = configDataClass.getAnnotation(Config.class);
         if (configAnnotation == null) {
             throw new IllegalArgumentException("Class " + configDataClass.getName() + " is missing a @Config annotation");
         }
-        return ResourceLocation.fromNamespaceAndPath(configAnnotation.value(), configAnnotation.type());
+        return Identifier.fromNamespaceAndPath(configAnnotation.value(), configAnnotation.type());
     }
 
     public static <T> LoadedReflectionConfig<T> of(Class<T> configDataClass, LoadedConfig loadedConfig) {

@@ -8,7 +8,7 @@ import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelDebugName;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
@@ -21,10 +21,10 @@ import java.util.List;
 public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements BalmModels {
 
     public static class AdditionalModel implements ModelDebugName {
-        private final ResourceLocation identifier;
+        private final Identifier identifier;
         private final StandaloneModelKey<BlockStateModel> modelKey = new StandaloneModelKey<>(this);
 
-        public AdditionalModel(ResourceLocation identifier) {
+        public AdditionalModel(Identifier identifier) {
             this.identifier = identifier;
         }
 
@@ -33,7 +33,7 @@ public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements
             return identifier.toString();
         }
 
-        public ResourceLocation identifier() {
+        public Identifier identifier() {
             return identifier;
         }
 
@@ -43,7 +43,7 @@ public record NeoForgeBalmModels(NamespaceResolver namespaceResolver) implements
     }
 
     @Override
-    public DeferredObject<BlockStateModel> loadModel(ResourceLocation identifier) {
+    public DeferredObject<BlockStateModel> loadModel(Identifier identifier) {
         final var registrations = getActiveRegistrations();
         final var additionalModel = new AdditionalModel(identifier);
         final var deferredModel = new DeferredObject<BlockStateModel>(identifier) {

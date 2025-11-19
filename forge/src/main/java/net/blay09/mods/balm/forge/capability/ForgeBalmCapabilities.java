@@ -8,7 +8,7 @@ import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -30,8 +30,8 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public record ForgeBalmCapabilities() implements BalmCapabilities {
-    private static final Map<ResourceLocation, Capability<?>> backingTypes = new ConcurrentHashMap<>();
-    private static final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
+    private static final Map<Identifier, Capability<?>> backingTypes = new ConcurrentHashMap<>();
+    private static final Map<Identifier, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
     private static final List<BlockEntityProviderRegistration<?, ?>> blockEntityProviders = new CopyOnWriteArrayList<>();
     private static final List<BlockEntityFallbackProviderRegistration<?, ?>> fallbackBlockEntityProviders = new CopyOnWriteArrayList<>();
 
@@ -54,16 +54,16 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
         return null;
     }
 
-    public <TApi> void preRegisterType(ResourceLocation identifier, CapabilityToken<TApi> capabilityToken) {
+    public <TApi> void preRegisterType(Identifier identifier, CapabilityToken<TApi> capabilityToken) {
         preRegisterType(identifier, CapabilityManager.get(capabilityToken));
     }
 
-    public <TApi> void preRegisterType(ResourceLocation identifier, Capability<TApi> capability) {
+    public <TApi> void preRegisterType(Identifier identifier, Capability<TApi> capability) {
         backingTypes.put(identifier, capability);
     }
 
     @Override
-    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
+    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
         getRegistrations(identifier.getNamespace()).apiClasses.add(apiClass);
         final var backingType = backingTypes.get(identifier);
         if (backingType == null) {
@@ -77,7 +77,7 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
+    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
         var type = types.get(identifier);
         if (type == null) {
             final var backingType = backingTypes.get(identifier);
@@ -102,13 +102,13 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
     }
 
     @Override
-    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
+    public <TApi, TContext> void registerProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
         blockEntityProviders.add(new BlockEntityProviderRegistration<>(identifier, type, provider, blockEntityTypes));
         flattenedBlockEntityProviders = null;
     }
 
     @Override
-    public <TApi, TContext> void registerFallbackBlockEntityProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider) {
+    public <TApi, TContext> void registerFallbackBlockEntityProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider) {
         fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(identifier, type, provider));
     }
 
@@ -137,7 +137,7 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
         }
     }
 
-    public <TApi> CapabilityType<Block, TApi, Direction> addExistingType(ResourceLocation identifier, Class<TApi> apiClass, Capability<TApi> capability) {
+    public <TApi> CapabilityType<Block, TApi, Direction> addExistingType(Identifier identifier, Class<TApi> apiClass, Capability<TApi> capability) {
         final var type = new CapabilityType<>(identifier,
                 Block.class,
                 apiClass,
@@ -172,12 +172,12 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
         }
     }
 
-    record BlockEntityProviderRegistration<TApi, TContext>(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type,
+    record BlockEntityProviderRegistration<TApi, TContext>(Identifier identifier, CapabilityType<Block, TApi, TContext> type,
                                                            BiFunction<BlockEntity, TContext, TApi> provider,
                                                            Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
     }
 
-    record BlockEntityFallbackProviderRegistration<TApi, TContext>(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type,
+    record BlockEntityFallbackProviderRegistration<TApi, TContext>(Identifier identifier, CapabilityType<Block, TApi, TContext> type,
                                                                    BiFunction<BlockEntity, TContext, TApi> provider) {
     }
 

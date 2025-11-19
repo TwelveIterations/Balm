@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Deprecated
 public final class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
-    private record ExtraModelRegistration(ResourceLocation identifier, ExtraModelKey<BlockStateModel> extraModelKey) {
+    private record ExtraModelRegistration(Identifier identifier, ExtraModelKey<BlockStateModel> extraModelKey) {
     }
 
     private final List<ExtraModelRegistration> additionalModels = Collections.synchronizedList(new ArrayList<>());
@@ -37,7 +37,7 @@ public final class FabricBalmModels implements BalmModels, ModelLoadingPlugin {
     }
 
     @Override
-    public DeferredObject<BlockStateModel> loadModel(final ResourceLocation identifier) {
+    public DeferredObject<BlockStateModel> loadModel(final Identifier identifier) {
         final var standaloneModelKey = ExtraModelKey.<BlockStateModel>create(identifier::toString);
         final var deferredObject = new DeferredObject<BlockStateModel>(identifier) {
             @Override

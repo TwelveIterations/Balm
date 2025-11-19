@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
@@ -41,7 +41,7 @@ import java.util.function.Supplier;
 public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements BalmRenderers {
 
     @Override
-    public ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition) {
+    public ModelLayerLocation registerModel(Identifier location, String layer, Supplier<LayerDefinition> layerDefinition) {
         final var modelLayerLocation = new ModelLayerLocation(location, layer);
         getActiveRegistrations().layerDefinitions.put(modelLayerLocation, layerDefinition);
         return modelLayerLocation;
@@ -49,18 +49,18 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
+    public <T extends Entity> void registerEntityRenderer(Identifier identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
         getActiveRegistrations().entityRenderers.add(Pair.of(type::get, (EntityRendererProvider<Entity>) provider));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider) {
+    public <TBlockEntity extends BlockEntity, TBlockEntityRenderState extends BlockEntityRenderState> void registerBlockEntityRenderer(Identifier identifier, Supplier<BlockEntityType<TBlockEntity>> type, BlockEntityRendererProvider<? super TBlockEntity, ? super TBlockEntityRenderState> provider) {
         getActiveRegistrations().blockEntityRenderers.add(Pair.of(type::get, (BlockEntityRendererProvider<BlockEntity, BlockEntityRenderState>) provider));
     }
 
     @Override
-    public void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
+    public void registerBlockColorHandler(Identifier identifier, BlockColor color, Supplier<Block[]> blocks) {
         getActiveRegistrations().blockColors.add(new ColorRegistration<>(color, blocks));
     }
 
@@ -70,12 +70,12 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
     }
 
     @Override
-    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+    public <T extends ParticleOptions> void registerParticleProvider(Identifier identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
         getActiveRegistrations().particleProviderFactories.add(new ParticleProviderFactoryRegistration<>(particleType, factory));
     }
 
     @Override
-    public <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+    public <T extends ParticleOptions> void registerParticleProvider(Identifier identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
         getActiveRegistrations().particleProviders.add(new ParticleProviderRegistration<>(particleType, provider));
     }
 

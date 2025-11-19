@@ -6,7 +6,7 @@ import net.blay09.mods.balm.api.compat.hudinfo.BlockInfoContext;
 import net.blay09.mods.balm.api.compat.hudinfo.HudInfoOutput;
 import net.blay09.mods.balm.common.compat.hudinfo.CommonBalmModSupportHudInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,10 +35,10 @@ public class TheOneProbeModCompat {
 
     private static class BalmProbeInfoProvider implements IProbeInfoProvider {
 
-        private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("balm", "top");
+        private static final Identifier ID = Identifier.fromNamespaceAndPath("balm", "top");
 
         @Override
-        public ResourceLocation getID() {
+        public Identifier getID() {
             return ID;
         }
 

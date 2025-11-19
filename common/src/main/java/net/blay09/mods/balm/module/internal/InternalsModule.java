@@ -10,7 +10,7 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.commands.internal.InternalsCommand;
 import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.common.resources.ConfigResourceCondition;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Internal module that registers Balm's own capabilities, commands, resources, and networking.
@@ -22,8 +22,8 @@ public final class InternalsModule implements BalmModule {
     private static final String MOD_ID = "balm";
 
     @Override
-    public ResourceLocation getId() {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, "common");
+    public Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MOD_ID, "common");
     }
 
     @Override
@@ -39,7 +39,7 @@ public final class InternalsModule implements BalmModule {
 
     @Override
     public void registerResources(BalmResources resources) {
-        resources.registerResourceCondition(ResourceLocation.fromNamespaceAndPath(MOD_ID, "config"), ConfigResourceCondition.CODEC);
+        resources.registerResourceCondition(Identifier.fromNamespaceAndPath(MOD_ID, "config"), ConfigResourceCondition.CODEC);
     }
 
     @Override

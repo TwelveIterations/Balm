@@ -45,7 +45,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -170,12 +170,12 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void initializeIfLoaded(String modId, String className);
 
     @Deprecated
-    default void addServerReloadListener(ResourceLocation identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
+    default void addServerReloadListener(Identifier identifier, Function<HolderLookup.Provider, PreparableReloadListener> reloadListener) {
         resourceReloadListeners(identifier.getNamespace(), registrar -> registrar.register(identifier.getPath(), reloadListener));
     }
 
     @Deprecated
-    default void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
+    default void addServerReloadListener(Identifier identifier, Consumer<ResourceManager> reloadListener) {
         resourceReloadListeners(identifier.getNamespace(), registrar -> registrar.register(identifier.getPath(), reloadListener));
     }
 

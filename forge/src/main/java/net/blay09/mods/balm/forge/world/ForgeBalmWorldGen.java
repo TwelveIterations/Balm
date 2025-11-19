@@ -9,7 +9,7 @@ import net.blay09.mods.balm.api.world.BiomePredicate;
 import net.blay09.mods.balm.forge.DeferredRegisters;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -36,7 +36,7 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
     }
 
     @Override
-    public <T extends Feature<?>> DeferredObject<T> registerFeature(ResourceLocation identifier, Supplier<T> supplier) {
+    public <T extends Feature<?>> DeferredObject<T> registerFeature(Identifier identifier, Supplier<T> supplier) {
         final var namespace = identifier.getNamespace();
         final var register = DeferredRegisters.get(ForgeRegistries.FEATURES, namespace);
         final var registryObject = register.register(identifier.getPath(), supplier);
@@ -44,21 +44,21 @@ public class ForgeBalmWorldGen implements BalmWorldGen {
     }
 
     @Override
-    public <T extends PlacementModifierType<?>> DeferredObject<T> registerPlacementModifier(ResourceLocation identifier, Supplier<T> supplier) {
+    public <T extends PlacementModifierType<?>> DeferredObject<T> registerPlacementModifier(Identifier identifier, Supplier<T> supplier) {
         final var register = DeferredRegisters.get(Registries.PLACEMENT_MODIFIER_TYPE, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), supplier);
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
     @Override
-    public <T extends PoiType> DeferredObject<T> registerPoiType(ResourceLocation identifier, Supplier<T> supplier) {
+    public <T extends PoiType> DeferredObject<T> registerPoiType(Identifier identifier, Supplier<T> supplier) {
         final var register = DeferredRegisters.get(Registries.POINT_OF_INTEREST_TYPE, identifier.getNamespace());
         final var registryObject = register.register(identifier.getPath(), supplier);
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
 
     @Override
-    public void modifyBiome(ResourceLocation id, BiomePredicate predicate, BiomeModifier modifier) {
+    public void modifyBiome(Identifier id, BiomePredicate predicate, BiomeModifier modifier) {
         biomeModifiers.add(Pair.of(predicate, modifier));
     }
 

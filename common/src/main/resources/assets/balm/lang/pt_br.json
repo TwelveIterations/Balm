@@ -36,7 +36,7 @@
   "balm.configuration.exampleMultilineString": "Exemplo Texto Multilinha",
   "balm.configuration.exampleEnum": "Exemplo Enumeração",
   "balm.configuration.exampleStringList": "Exemplo Lista de Textos",
-  "balm.configuration.exampleResourceLocationSet": "Exemplo Conjunto de Localizações de Recursos",
+  "balm.configuration.exampleIdentifierSet": "Exemplo Conjunto de Localizações de Recursos",
   "balm.configuration.exampleIntList": "Exemplo Lista de Inteiros",
   "balm.configuration.exampleEnumList": "Exemplo Lista de Enumerações",
   "balm.configuration.exampleCategory.innerField": "Exemplo Campo Interno",

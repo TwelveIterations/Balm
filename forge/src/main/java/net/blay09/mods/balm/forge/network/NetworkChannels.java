@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.forge.network;
 
 import com.google.common.collect.Sets;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.SimpleChannel;
 
@@ -17,7 +17,7 @@ public class NetworkChannels {
 
     public static SimpleChannel get(String modId) {
         return channels.computeIfAbsent(modId, key -> {
-            ResourceLocation channelName = ResourceLocation.fromNamespaceAndPath(key, "network");
+            Identifier channelName = Identifier.fromNamespaceAndPath(key, "network");
             ChannelBuilder builder = ChannelBuilder.named(channelName);
             final var networkVersion = networkVersions.get(modId);
             if (networkVersion != null) {

@@ -10,7 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -41,7 +41,7 @@ public interface BalmItems {
      * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
-    static Item.Properties itemProperties(ResourceLocation identifier) {
+    static Item.Properties itemProperties(Identifier identifier) {
         return new Item.Properties().setId(itemId(identifier));
     }
 
@@ -49,7 +49,7 @@ public interface BalmItems {
      * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
-    static ResourceKey<Item> itemId(ResourceLocation identifier) {
+    static ResourceKey<Item> itemId(Identifier identifier) {
         return ResourceKey.create(Registries.ITEM, identifier);
     }
 
@@ -57,7 +57,7 @@ public interface BalmItems {
      * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
-    static BlockItem blockItem(Block block, ResourceLocation identifier) {
+    static BlockItem blockItem(Block block, Identifier identifier) {
         return new BlockItem(block, itemProperties(identifier));
     }
 
@@ -65,7 +65,7 @@ public interface BalmItems {
      * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
-    default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier) {
+    default DeferredObject<Item> registerItem(Function<Identifier, Item> supplier, Identifier identifier) {
         return registerItem(supplier, identifier, identifier.withPath(identifier.getNamespace()));
     }
 
@@ -73,7 +73,7 @@ public interface BalmItems {
      * Use {@link net.blay09.mods.balm.core.BalmRegistrars#items(String, Consumer)} instead.
      */
     @Deprecated
-    default DeferredObject<Item> registerItem(Function<ResourceLocation, Item> constructor, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {
+    default DeferredObject<Item> registerItem(Function<Identifier, Item> constructor, Identifier identifier, @Nullable Identifier creativeTab) {
         final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);
         final var holder = Balm.getRuntime().registrar().register(resourceKey, constructor);
         BalmItems.legacyCreativeModeTabItems.put(identifier.getNamespace(), resourceKey);
@@ -84,7 +84,7 @@ public interface BalmItems {
      * Use {@link net.blay09.mods.balm.core.BalmRegistrars#creativeModeTabs(String, Consumer)} instead.
      */
     @Deprecated
-    default DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, ResourceLocation identifier) {
+    default DeferredObject<CreativeModeTab> registerCreativeModeTab(Supplier<ItemStack> iconSupplier, Identifier identifier) {
         final var holder = Balm.getRuntime().creativeModeTabs(identifier.getNamespace()).register(identifier.getPath(), builder -> {
             final var displayName = Component.translatable(identifier.toLanguageKey("itemGroup"));
             return builder
@@ -109,7 +109,7 @@ public interface BalmItems {
     /**
      * Use {@link net.blay09.mods.balm.core.BalmRegistrars#creativeModeTabs(String, Consumer)} instead.
      */
-    default void addToCreativeModeTab(ResourceLocation tabIdentifier, Supplier<ItemLike[]> itemsSupplier) {
+    default void addToCreativeModeTab(Identifier tabIdentifier, Supplier<ItemLike[]> itemsSupplier) {
         Balm.getEvents().onEvent(BuildCreativeModeTabContentsEvent.class, event -> {
             final var identifier = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(event.getTab());
             if (tabIdentifier.equals(identifier)) {
@@ -124,7 +124,7 @@ public interface BalmItems {
     /**
      * Use {@link net.blay09.mods.balm.core.BalmRegistrars#creativeModeTabs(String, Consumer)} instead.
      */
-    default void setCreativeModeTabSorting(ResourceLocation tabIdentifier, Comparator<ItemLike> comparator) {
+    default void setCreativeModeTabSorting(Identifier tabIdentifier, Comparator<ItemLike> comparator) {
         legacyCreativeModeTabSorting.put(tabIdentifier.getNamespace(), comparator);
     }
 

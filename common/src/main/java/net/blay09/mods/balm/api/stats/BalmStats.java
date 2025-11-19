@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.api.stats;
 
 import net.blay09.mods.balm.api.Balm;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
 
 /**
@@ -9,7 +9,7 @@ import net.minecraft.stats.StatFormatter;
  */
 @Deprecated
 public interface BalmStats {
-    default void registerCustomStat(ResourceLocation identifier) {
+    default void registerCustomStat(Identifier identifier) {
         Balm.getRuntime().customStats(identifier.getNamespace(), registrar -> registrar.register(identifier, StatFormatter.DEFAULT));
     }
 

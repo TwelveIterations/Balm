@@ -6,7 +6,7 @@ import net.minecraft.core.HolderOwner;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 
 import java.util.Optional;
@@ -39,8 +39,8 @@ public class DeferredHolder<T> implements Holder<T> {
     }
 
     @Override
-    public boolean is(ResourceLocation resourceLocation) {
-        return resourceKey.location().equals(resourceLocation);
+    public boolean is(Identifier identifier) {
+        return resourceKey.identifier().equals(identifier);
     }
 
     @Override

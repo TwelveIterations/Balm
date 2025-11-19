@@ -9,7 +9,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -122,7 +122,7 @@ public class BalmClient {
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#resourceReloadListeners(String, java.util.function.Consumer)} instead.
      */
     @Deprecated
-    public static void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+    public static void addResourceReloadListener(Identifier identifier, PreparableReloadListener reloadListener) {
         runtime.addResourceReloadListener(identifier, reloadListener);
     }
 

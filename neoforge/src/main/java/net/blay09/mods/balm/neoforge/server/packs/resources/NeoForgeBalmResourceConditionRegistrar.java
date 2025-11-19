@@ -5,7 +5,7 @@ import net.blay09.mods.balm.api.resources.BalmResourceCondition;
 import net.blay09.mods.balm.neoforge.DeferredRegisters;
 import net.blay09.mods.balm.neoforge.resources.NeoForgeBalmResourceCondition;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class NeoForgeBalmResourceConditionRegistrar implements BalmResourceConditionRegistrar {
@@ -18,7 +18,7 @@ public class NeoForgeBalmResourceConditionRegistrar implements BalmResourceCondi
 
     @Override
     public <T extends BalmResourceCondition> void register(String name, MapCodec<T> codec) {
-        final var identifier = ResourceLocation.fromNamespaceAndPath(namespace, name);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var register = DeferredRegisters.get(NeoForgeRegistries.CONDITION_SERIALIZERS, identifier.getNamespace());
         register.register(identifier.getPath(),
                 () -> codec.xmap(it -> new NeoForgeBalmResourceCondition<>(identifier, it, NeoForgeRegistries.CONDITION_SERIALIZERS::getValue),

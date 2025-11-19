@@ -5,7 +5,7 @@ import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.common.permission.OfflinePermissionContext;
 import net.blay09.mods.balm.common.permission.PlayerPermissionContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 public class NeoForgeBalmPermissions extends CommonBalmPermissions {
 
-    private final Map<ResourceLocation, PermissionNode<?>> nodes = new HashMap<>();
+    private final Map<Identifier, PermissionNode<?>> nodes = new HashMap<>();
 
     public NeoForgeBalmPermissions() {
         NeoForge.EVENT_BUS.addListener(this::registerNodes);
@@ -30,7 +30,7 @@ public class NeoForgeBalmPermissions extends CommonBalmPermissions {
     }
 
     @Override
-    public void registerPermission(ResourceLocation permission, Function<PermissionContext, Boolean> defaultResolver) {
+    public void registerPermission(Identifier permission, Function<PermissionContext, Boolean> defaultResolver) {
         super.registerPermission(permission, defaultResolver);
         nodes.put(permission, new PermissionNode<>(permission, PermissionTypes.BOOLEAN,
                 (serverPlayer, uuid, permissionDynamicContexts) ->
@@ -39,7 +39,7 @@ public class NeoForgeBalmPermissions extends CommonBalmPermissions {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean hasPermission(ServerPlayer player, ResourceLocation permission) {
+    public boolean hasPermission(ServerPlayer player, Identifier permission) {
         final var node = (PermissionNode<Boolean>) nodes.get(permission);
         if (node == null) {
             return false;
@@ -50,7 +50,7 @@ public class NeoForgeBalmPermissions extends CommonBalmPermissions {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean hasPermission(CommandSourceStack source, ResourceLocation permission) {
+    public boolean hasPermission(CommandSourceStack source, Identifier permission) {
         final var node = (PermissionNode<Boolean>) nodes.get(permission);
         if (node == null) {
             return false;

@@ -34,7 +34,7 @@ import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 /**
@@ -47,7 +47,7 @@ public interface BalmModule {
      * Should return a unique identifier for this module, e.g. <code>yourmod:common</code>. The namespace must be your mod id.
      * @return a unique identifier for this module.
      */
-    ResourceLocation getId();
+    Identifier getId();
 
     /**
      * @deprecated Use {@link #registerCustomStats(BalmCustomStatRegistrar)} instead.

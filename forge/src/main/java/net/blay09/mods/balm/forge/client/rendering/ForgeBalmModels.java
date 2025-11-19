@@ -6,7 +6,7 @@ import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,7 +23,7 @@ import java.util.Map;
 public record ForgeBalmModels() implements BalmModels {
 
     @Override
-    public DeferredObject<BlockStateModel> loadModel(ResourceLocation identifier) {
+    public DeferredObject<BlockStateModel> loadModel(Identifier identifier) {
         final var registrations = getRegistrations(identifier.getNamespace());
         final var deferredModel = new DeferredObject<BlockStateModel>(identifier) {
             @Override
@@ -47,8 +47,8 @@ public record ForgeBalmModels() implements BalmModels {
     }
 
     public static class Registrations implements ModBusEventRegister {
-        public final List<ResourceLocation> extraModels = new ArrayList<>();
-        public final Map<ResourceLocation, StateDefinition<Block, BlockState>> extraStateDefinitions = new HashMap<>();
+        public final List<Identifier> extraModels = new ArrayList<>();
+        public final Map<Identifier, StateDefinition<Block, BlockState>> extraStateDefinitions = new HashMap<>();
 
         private void onRegisterAdditionalModels(ModelEvent.RegisterModelStateDefinitions event) {
             extraModels.forEach(it -> {

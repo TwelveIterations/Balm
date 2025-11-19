@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.client.gui.components;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +9,12 @@ import java.util.List;
 public class SegmentedProgressRenderer implements ProgressRenderer {
     private final List<ProgressRenderer> segments = new ArrayList<>();
     private final List<Float> segmentWeights = new ArrayList<>();
-    private final ResourceLocation texture;
+    private final Identifier texture;
     private final int textureWidth;
     private final int textureHeight;
     private int totalLength;
 
-    public SegmentedProgressRenderer(ResourceLocation texture, int textureWidth, int textureHeight) {
+    public SegmentedProgressRenderer(Identifier texture, int textureWidth, int textureHeight) {
         this.texture = texture;
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;

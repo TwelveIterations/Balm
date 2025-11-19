@@ -4,7 +4,7 @@ import net.blay09.mods.balm.client.renderer.block.model.DeferredBlockStateModel;
 import net.blay09.mods.balm.client.renderer.block.model.internal.AbstractBalmBlockStateModelRegistrar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,7 +19,7 @@ public class ForgeBalmBlockStateModelRegistrar extends AbstractBalmBlockStateMod
     }
 
     @Override
-    public DeferredBlockStateModel register(ResourceLocation identifier) {
+    public DeferredBlockStateModel register(Identifier identifier) {
         final var stateDefinition = new StateDefinition.Builder<Block, BlockState>(Blocks.AIR).create(Block::defaultBlockState, BlockState::new);
         event.register(identifier, stateDefinition);
         return new ForgeDeferredBlockStateModel(stateDefinition);

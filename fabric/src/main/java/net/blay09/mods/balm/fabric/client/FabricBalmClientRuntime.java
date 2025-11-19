@@ -35,7 +35,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListe
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 
@@ -78,10 +78,10 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     }
 
     @Override
-    public void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+    public void addResourceReloadListener(Identifier identifier, PreparableReloadListener reloadListener) {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
             @Override
-            public ResourceLocation getFabricId() {
+            public Identifier getFabricId() {
                 return identifier;
             }
 

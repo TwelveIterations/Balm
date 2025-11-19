@@ -6,13 +6,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.resources.BalmResourceCondition;
 import net.blay09.mods.balm.api.resources.ResourceConditionContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
-public record ConfigResourceCondition(ResourceLocation configId, String category, String key, String value) implements BalmResourceCondition {
+public record ConfigResourceCondition(Identifier configId, String category, String key, String value) implements BalmResourceCondition {
 
     public static final MapCodec<ConfigResourceCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("config").forGetter(ConfigResourceCondition::configId),
+            Identifier.CODEC.fieldOf("config").forGetter(ConfigResourceCondition::configId),
             Codec.STRING.fieldOf("category").orElse("").forGetter(ConfigResourceCondition::category),
             Codec.STRING.fieldOf("key").forGetter(ConfigResourceCondition::key),
             Codec.STRING.fieldOf("value").forGetter(ConfigResourceCondition::value)

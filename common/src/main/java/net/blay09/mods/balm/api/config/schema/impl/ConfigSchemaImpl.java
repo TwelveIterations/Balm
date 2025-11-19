@@ -10,7 +10,7 @@ import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.api.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.api.config.schema.builder.ConfigCategoryBuilder;
 import net.blay09.mods.balm.api.config.schema.builder.ConfigPropertyBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,17 +18,17 @@ import java.util.Map;
 
 public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
 
-    private final ResourceLocation identifier;
+    private final Identifier identifier;
     private final Map<String, ConfigCategory> categories = new HashMap<>();
     private final Map<String, ConfiguredProperty<?>> rootProperties = new HashMap<>();
     private final Table<String, String, ConfiguredProperty<?>> properties = HashBasedTable.create();
 
-    public ConfigSchemaImpl(ResourceLocation identifier) {
+    public ConfigSchemaImpl(Identifier identifier) {
         this.identifier = identifier;
     }
 
     @Override
-    public ResourceLocation identifier() {
+    public Identifier identifier() {
         return identifier;
     }
 

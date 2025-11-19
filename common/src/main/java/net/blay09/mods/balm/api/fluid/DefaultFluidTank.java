@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.api.fluid;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
@@ -103,7 +103,7 @@ public class DefaultFluidTank implements FluidTank {
     }
 
     public void deserialize(ValueInput input) {
-        fluid = input.getString("Fluid").map(ResourceLocation::tryParse).map(BuiltInRegistries.FLUID::getValue).orElse(Fluids.EMPTY);
+        fluid = input.getString("Fluid").map(Identifier::tryParse).map(BuiltInRegistries.FLUID::getValue).orElse(Fluids.EMPTY);
         amount = input.getIntOr("Amount", 0);
     }
 

@@ -5,13 +5,13 @@ import net.blay09.mods.balm.common.resources.ResourceConditionContextImpl;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditionType;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public record FabricBalmResourceCondition<T extends BalmResourceCondition>(ResourceLocation identifier, T delegate,
-                                          Function<ResourceLocation, ResourceConditionType<?>> typeResolver) implements ResourceCondition {
+public record FabricBalmResourceCondition<T extends BalmResourceCondition>(Identifier identifier, T delegate,
+                                          Function<Identifier, ResourceConditionType<?>> typeResolver) implements ResourceCondition {
     @Override
     public ResourceConditionType<?> getType() {
         return typeResolver.apply(identifier);

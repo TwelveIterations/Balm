@@ -6,7 +6,7 @@ import net.blay09.mods.balm.fabric.resources.FabricBalmResourceCondition;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditionType;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FabricBalmResourceConditionRegistrar implements BalmResourceConditionRegistrar {
 
     // TODO Can we get rid of this static state?
-    private static final Map<ResourceLocation, ResourceConditionType<?>> conditions = new ConcurrentHashMap<>();
+    private static final Map<Identifier, ResourceConditionType<?>> conditions = new ConcurrentHashMap<>();
 
     private final String namespace;
 
@@ -24,7 +24,7 @@ public class FabricBalmResourceConditionRegistrar implements BalmResourceConditi
 
     @Override
     public <T extends BalmResourceCondition> void register(String path, MapCodec<T> codec) {
-        final var identifier = ResourceLocation.fromNamespaceAndPath(namespace, path);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, path);
         final var type = ResourceConditionType.create(identifier, codec
                 .xmap(it -> new FabricBalmResourceCondition<>(identifier, it, conditions::get),
                         FabricBalmResourceCondition::delegate));

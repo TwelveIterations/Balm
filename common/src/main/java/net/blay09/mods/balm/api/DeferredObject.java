@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Supplier;
 
@@ -9,26 +9,26 @@ import java.util.function.Supplier;
  */
 @Deprecated
 public class DeferredObject<T> {
-    private final ResourceLocation id;
+    private final Identifier id;
     private final Supplier<T> supplier;
     private final Supplier<Boolean> canResolveFunc;
     protected T object;
 
-    protected DeferredObject(ResourceLocation id) {
+    protected DeferredObject(Identifier id) {
         this(id, () -> null, () -> false);
     }
 
-    public DeferredObject(ResourceLocation id, Supplier<T> supplier) {
+    public DeferredObject(Identifier id, Supplier<T> supplier) {
         this(id, supplier, () -> false);
     }
 
-    public DeferredObject(ResourceLocation id, Supplier<T> supplier, Supplier<Boolean> canResolveFunc) {
+    public DeferredObject(Identifier id, Supplier<T> supplier, Supplier<Boolean> canResolveFunc) {
         this.id = id;
         this.supplier = supplier;
         this.canResolveFunc = canResolveFunc;
     }
 
-    public static <T> DeferredObject<T> of(ResourceLocation identifier, T instance) {
+    public static <T> DeferredObject<T> of(Identifier identifier, T instance) {
         return new DeferredObject<>(identifier, () -> instance).resolveImmediately();
     }
 
@@ -64,7 +64,7 @@ public class DeferredObject<T> {
         return this;
     }
 
-    public ResourceLocation getIdentifier() {
+    public Identifier getIdentifier() {
         return id;
     }
 

@@ -5,7 +5,7 @@ import net.blay09.mods.balm.world.level.block.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -30,8 +30,8 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
 
     @Override
     public BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, Supplier<BlockBehaviour.Properties> properties) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
-        final var resourceKey = ResourceKey.create(Registries.BLOCK, resourceLocation);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
+        final var resourceKey = ResourceKey.create(Registries.BLOCK, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(properties.get().setId(resourceKey)));
         return new BalmBlockRegistrationImpl(registrar, holder);
     }
@@ -83,7 +83,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         @Override
         public BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Supplier<Item.Properties> properties) {
             final var blockResourceKey = holder.unwrapKey().orElseThrow();
-            final var itemResourceKey = ResourceKey.create(Registries.ITEM, blockResourceKey.location());
+            final var itemResourceKey = ResourceKey.create(Registries.ITEM, blockResourceKey.identifier());
             registrar.register(itemResourceKey, (id) -> constructor.apply(holder.value(), properties.get().setId(itemResourceKey)));
             return this;
         }

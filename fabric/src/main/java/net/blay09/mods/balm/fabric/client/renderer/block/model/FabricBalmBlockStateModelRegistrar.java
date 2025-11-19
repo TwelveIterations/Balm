@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class FabricBalmBlockStateModelRegistrar extends AbstractBalmBlockStateModelRegistrar {
     private final ModelLoadingPlugin.Context context;
@@ -20,7 +20,7 @@ public class FabricBalmBlockStateModelRegistrar extends AbstractBalmBlockStateMo
     }
 
     @Override
-    public DeferredBlockStateModel register(ResourceLocation identifier) {
+    public DeferredBlockStateModel register(Identifier identifier) {
         final var extraModelKey = ExtraModelKey.<BlockStateModel>create(identifier::toString);
         context.addModel(extraModelKey, new SimpleUnbakedExtraModel<>(identifier, (model, baker) -> {
             final var textureSlots = model.getTopTextureSlots();

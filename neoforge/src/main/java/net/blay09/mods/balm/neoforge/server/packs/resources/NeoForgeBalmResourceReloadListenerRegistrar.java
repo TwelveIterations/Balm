@@ -2,7 +2,7 @@ package net.blay09.mods.balm.neoforge.server.packs.resources;
 
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -23,11 +23,11 @@ public class NeoForgeBalmResourceReloadListenerRegistrar implements BalmResource
 
     @Override
     public void register(String name, Function<HolderLookup.Provider, PreparableReloadListener> listenerFactory) {
-        event.addListener(ResourceLocation.fromNamespaceAndPath(namespace, name), listenerFactory.apply(event.getRegistryAccess()));
+        event.addListener(Identifier.fromNamespaceAndPath(namespace, name), listenerFactory.apply(event.getRegistryAccess()));
     }
 
     @Override
     public void register(String name, Consumer<ResourceManager> reloadListener) {
-        event.addListener(ResourceLocation.fromNamespaceAndPath(namespace, name), (ResourceManagerReloadListener) reloadListener::accept);
+        event.addListener(Identifier.fromNamespaceAndPath(namespace, name), (ResourceManagerReloadListener) reloadListener::accept);
     }
 }

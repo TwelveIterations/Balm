@@ -5,7 +5,7 @@ import net.blay09.mods.balm.mixin.ScreenAccessor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
@@ -22,7 +22,7 @@ public interface BalmScreens {
      * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#menuScreens(String, Consumer)} instead.
      */
     @Deprecated
-    default <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void registerScreen(ResourceLocation id, Supplier<MenuType<? extends TMenu>> type, BalmScreenFactory<TMenu, TScreen> screenFactory) {
+    default <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void registerScreen(Identifier id, Supplier<MenuType<? extends TMenu>> type, BalmScreenFactory<TMenu, TScreen> screenFactory) {
         BalmClient.getRuntime().menuScreens(id.getNamespace(), registrar -> registrar.register(id.getPath(), type, screenFactory));
     }
 

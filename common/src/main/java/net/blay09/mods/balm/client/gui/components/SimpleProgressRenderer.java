@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.client.gui.components;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SimpleProgressRenderer implements ProgressRenderer {
 
@@ -14,7 +14,7 @@ public class SimpleProgressRenderer implements ProgressRenderer {
     }
 
     private final Direction direction;
-    private final ResourceLocation texture;
+    private final Identifier texture;
     private final int textureWidth;
     private final int textureHeight;
     private int x;
@@ -24,7 +24,7 @@ public class SimpleProgressRenderer implements ProgressRenderer {
     private int textureU;
     private int textureV;
 
-    public SimpleProgressRenderer(ResourceLocation texture, int textureWidth, int textureHeight, Direction direction) {
+    public SimpleProgressRenderer(Identifier texture, int textureWidth, int textureHeight, Direction direction) {
         this.texture = texture;
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
@@ -49,19 +49,19 @@ public class SimpleProgressRenderer implements ProgressRenderer {
         return this;
     }
 
-    public static SimpleProgressRenderer horizontal(ResourceLocation texture, int textureWidth, int textureHeight) {
+    public static SimpleProgressRenderer horizontal(Identifier texture, int textureWidth, int textureHeight) {
         return new SimpleProgressRenderer(texture, textureWidth, textureHeight, Direction.HORIZONTAL);
     }
 
-    public static SimpleProgressRenderer vertical(ResourceLocation texture, int textureWidth, int textureHeight) {
+    public static SimpleProgressRenderer vertical(Identifier texture, int textureWidth, int textureHeight) {
         return new SimpleProgressRenderer(texture, textureWidth, textureHeight, Direction.VERTICAL);
     }
 
-    public static SimpleProgressRenderer reverseHorizontal(ResourceLocation texture, int textureWidth, int textureHeight) {
+    public static SimpleProgressRenderer reverseHorizontal(Identifier texture, int textureWidth, int textureHeight) {
         return new SimpleProgressRenderer(texture, textureWidth, textureHeight, Direction.REVERSE_HORIZONTAL);
     }
 
-    public static SimpleProgressRenderer reverseVertical(ResourceLocation texture, int textureWidth, int textureHeight) {
+    public static SimpleProgressRenderer reverseVertical(Identifier texture, int textureWidth, int textureHeight) {
         return new SimpleProgressRenderer(texture, textureWidth, textureHeight, Direction.REVERSE_VERTICAL);
     }
 
@@ -117,7 +117,7 @@ public class SimpleProgressRenderer implements ProgressRenderer {
         };
     }
 
-    public ResourceLocation texture() {
+    public Identifier texture() {
         return texture;
     }
 

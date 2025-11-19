@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.stats.internal.AbstractBalmCustomStatRegistrarImpl;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -20,14 +20,14 @@ public class NeoForgeBalmCustomStatRegistrar extends AbstractBalmCustomStatRegis
     }
 
     @Override
-    public ResourceLocation register(ResourceLocation statIdentifier, StatFormatter formatter) {
+    public Identifier register(Identifier statIdentifier, StatFormatter formatter) {
         final var stat = super.register(statIdentifier, formatter);
         ModBusEventRegisters.getRegistrations(namespace, Registrations.class).customStats.add(Pair.of(stat, formatter));
         return stat;
     }
 
     public static class Registrations {
-        public final List<Pair<ResourceLocation, StatFormatter>> customStats = new ArrayList<>();
+        public final List<Pair<Identifier, StatFormatter>> customStats = new ArrayList<>();
 
         @SubscribeEvent
         public void commonSetup(FMLCommonSetupEvent event) {

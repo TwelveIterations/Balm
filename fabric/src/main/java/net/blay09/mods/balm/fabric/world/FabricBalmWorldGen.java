@@ -13,7 +13,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 public class FabricBalmWorldGen implements BalmWorldGen {
     @Override
-    public <T extends Feature<?>> DeferredObject<T> registerFeature(ResourceLocation identifier, Supplier<T> supplier) {
+    public <T extends Feature<?>> DeferredObject<T> registerFeature(Identifier identifier, Supplier<T> supplier) {
         return new DeferredObject<>(identifier, () -> {
             T feature = supplier.get();
             Registry.register(BuiltInRegistries.FEATURE, identifier, feature);
@@ -33,7 +33,7 @@ public class FabricBalmWorldGen implements BalmWorldGen {
     }
 
     @Override
-    public <T extends PlacementModifierType<?>> DeferredObject<T> registerPlacementModifier(ResourceLocation identifier, Supplier<T> supplier) {
+    public <T extends PlacementModifierType<?>> DeferredObject<T> registerPlacementModifier(Identifier identifier, Supplier<T> supplier) {
         return new DeferredObject<>(identifier, () -> {
             T placementModifierType = supplier.get();
             Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, identifier, placementModifierType);
@@ -42,7 +42,7 @@ public class FabricBalmWorldGen implements BalmWorldGen {
     }
 
     @Override
-    public <T extends PoiType> DeferredObject<T> registerPoiType(ResourceLocation identifier, Supplier<T> supplier) {
+    public <T extends PoiType> DeferredObject<T> registerPoiType(Identifier identifier, Supplier<T> supplier) {
         return new DeferredObject<>(identifier, () -> {
             T poiType = supplier.get();
             final var resourceKey = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, identifier);
@@ -61,7 +61,7 @@ public class FabricBalmWorldGen implements BalmWorldGen {
     }
 
     @Override
-    public void modifyBiome(ResourceLocation id, BiomePredicate predicate, BiomeModifier modifier) {
+    public void modifyBiome(Identifier id, BiomePredicate predicate, BiomeModifier modifier) {
         BiomeModifications.create(id)
                 .add(ModificationPhase.ADDITIONS,
                         it -> predicate.test(it.getBiomeRegistryEntry()),

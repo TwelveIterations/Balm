@@ -7,7 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.BiFunction;
 
@@ -22,9 +22,9 @@ public class BalmDataComponentTypeRegistrarImpl implements BalmDataComponentType
     }
 
     @Override
-    public <T> BalmDataComponentTypeRegistration<T> register(String name, BiFunction<ResourceLocation, DataComponentType.Builder<T>, DataComponentType.Builder<T>> constructor) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
-        final var resourceKey = ResourceKey.create(Registries.DATA_COMPONENT_TYPE, resourceLocation);
+    public <T> BalmDataComponentTypeRegistration<T> register(String name, BiFunction<Identifier, DataComponentType.Builder<T>, DataComponentType.Builder<T>> constructor) {
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
+        final var resourceKey = ResourceKey.create(Registries.DATA_COMPONENT_TYPE, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(id, createBuilder()).build());
         return new BalmDataComponentTypeRegistrationImpl<>(holder);
     }

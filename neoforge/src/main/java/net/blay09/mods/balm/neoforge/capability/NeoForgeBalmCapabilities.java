@@ -5,7 +5,7 @@ import net.blay09.mods.balm.api.capability.CapabilityType;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 
 public record NeoForgeBalmCapabilities() implements BalmCapabilities {
 
-    private static final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
+    private static final Map<Identifier, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
 
     @Override
     public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type) {
@@ -38,7 +38,7 @@ public record NeoForgeBalmCapabilities() implements BalmCapabilities {
     }
 
     @Override
-    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
+    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
         if (scopeClass == Block.class) {
             final var capability = BlockCapability.create(identifier, apiClass, contextClass);
             final var type = new CapabilityType<>(identifier, scopeClass, apiClass, contextClass, capability);
@@ -51,7 +51,7 @@ public record NeoForgeBalmCapabilities() implements BalmCapabilities {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
+    public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
         var type = types.get(identifier);
         if (type == null) {
             type = registerType(identifier, scopeClass, apiClass, contextClass);
@@ -71,16 +71,16 @@ public record NeoForgeBalmCapabilities() implements BalmCapabilities {
     }
 
     @Override
-    public <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
+    public <TApi, TContext> void registerProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
         getRegistrations(identifier.getNamespace()).blockEntityProviders.add(new BlockEntityProviderRegistration<>(type, provider, blockEntityTypes));
     }
 
     @Override
-    public <TApi, TContext> void registerFallbackBlockEntityProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider) {
+    public <TApi, TContext> void registerFallbackBlockEntityProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider) {
         getRegistrations(identifier.getNamespace()).fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(type, provider));
     }
 
-    public <TApi, TContext> CapabilityType<Block, TApi, TContext> addExistingType(ResourceLocation identifier, BaseCapability<TApi, TContext> capability) {
+    public <TApi, TContext> CapabilityType<Block, TApi, TContext> addExistingType(Identifier identifier, BaseCapability<TApi, TContext> capability) {
         if (capability instanceof BlockCapability) {
             final var type = new CapabilityType<>(identifier,
                     Block.class,

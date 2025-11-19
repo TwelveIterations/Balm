@@ -5,7 +5,7 @@ import net.blay09.mods.balm.world.item.crafting.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
@@ -28,40 +28,40 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
     }
 
     @Override
-    public <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> BalmRecipeTypeRegistration<TRecipeInput, TRecipe> register(String name, Function<ResourceLocation, ? extends RecipeType<TRecipe>> constructor) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
-        final var resourceKey = ResourceKey.create(Registries.RECIPE_TYPE, resourceLocation);
+    public <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> BalmRecipeTypeRegistration<TRecipeInput, TRecipe> register(String name, Function<Identifier, ? extends RecipeType<TRecipe>> constructor) {
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
+        final var resourceKey = ResourceKey.create(Registries.RECIPE_TYPE, identifier);
         final var holder = registrar.register(resourceKey, constructor::apply);
         return new RecipeTypeRegistrationImpl<>(this, holder);
     }
 
     @Override
-    public <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> BalmRecipeSerializerRegistration<TRecipe> registerSerializer(String name, Function<ResourceLocation, RecipeSerializer<TRecipe>> constructor) {
-        final var id = ResourceLocation.fromNamespaceAndPath(namespace, name);
+    public <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> BalmRecipeSerializerRegistration<TRecipe> registerSerializer(String name, Function<Identifier, RecipeSerializer<TRecipe>> constructor) {
+        final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.RECIPE_SERIALIZER, id);
         final var holder = registrar.register(key, constructor::apply);
         return new RecipeSerializerRegistrationImpl<>(holder);
     }
 
     @Override
-    public BalmRecipeBookCategoryRegistration registerBookCategory(String name, Function<ResourceLocation, RecipeBookCategory> constructor) {
-        final var id = ResourceLocation.fromNamespaceAndPath(namespace, name);
+    public BalmRecipeBookCategoryRegistration registerBookCategory(String name, Function<Identifier, RecipeBookCategory> constructor) {
+        final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.RECIPE_BOOK_CATEGORY, id);
         final var holder = registrar.register(key, constructor);
         return new RecipeBookCategoryRegistrationImpl(holder);
     }
 
     @Override
-    public <T extends RecipeDisplay.Type<?>> BalmRecipeDisplayTypeRegistration<T> registerDisplayType(String name, Function<ResourceLocation, T> constructor) {
-        final var id = ResourceLocation.fromNamespaceAndPath(namespace, name);
+    public <T extends RecipeDisplay.Type<?>> BalmRecipeDisplayTypeRegistration<T> registerDisplayType(String name, Function<Identifier, T> constructor) {
+        final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.RECIPE_DISPLAY, id);
         final var holder = registrar.register(key, constructor::apply);
         return new RecipeDisplayTypeRegistrationImpl<>(holder);
     }
 
     @Override
-    public <T extends SlotDisplay.Type<?>> BalmSlotDisplayTypeRegistration<T> registerSlotDisplayType(String name, Function<ResourceLocation, T> constructor) {
-        final var id = ResourceLocation.fromNamespaceAndPath(namespace, name);
+    public <T extends SlotDisplay.Type<?>> BalmSlotDisplayTypeRegistration<T> registerSlotDisplayType(String name, Function<Identifier, T> constructor) {
+        final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.SLOT_DISPLAY, id);
         final var holder = registrar.register(key, constructor::apply);
         return new SlotDisplayTypeRegistrationImpl<>(holder);
@@ -85,7 +85,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         @Override
         public RecipeSerializer<TRecipe> serializer() {
             if (serializer == null) {
-                throw new IllegalStateException("Serializer not registered for recipe type " + type.unwrapKey().orElseThrow().location());
+                throw new IllegalStateException("Serializer not registered for recipe type " + type.unwrapKey().orElseThrow().identifier());
             }
             return serializer.value();
         }
@@ -93,7 +93,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         @Override
         public RecipeBookCategory bookCategory() {
             if (bookCategory == null) {
-                throw new IllegalStateException("Book category not registered for recipe type " + type.unwrapKey().orElseThrow().location());
+                throw new IllegalStateException("Book category not registered for recipe type " + type.unwrapKey().orElseThrow().identifier());
             }
             return bookCategory.value();
         }
@@ -144,14 +144,14 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
 
         @Override
         public BalmRecipeTypeRegistration<TRecipeInput, TRecipe> withSerializer(Supplier<RecipeSerializer<TRecipe>> constructor) {
-            final var name = holder.unwrapKey().orElseThrow().location().getPath();
+            final var name = holder.unwrapKey().orElseThrow().identifier().getPath();
             serializerRegistration = recipeTypeRegistrar.registerSerializer(name, (id) -> constructor.get());
             return this;
         }
 
         @Override
         public BalmRecipeTypeRegistration<TRecipeInput, TRecipe> withRecipeBookCategory() {
-            final var name = holder.unwrapKey().orElseThrow().location().getPath();
+            final var name = holder.unwrapKey().orElseThrow().identifier().getPath();
             bookCategoryRegistration = recipeTypeRegistrar.registerBookCategory(name, id -> new RecipeBookCategory());
             return this;
         }

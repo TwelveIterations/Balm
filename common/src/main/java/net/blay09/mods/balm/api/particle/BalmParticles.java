@@ -6,7 +6,7 @@ import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Function;
 
@@ -15,7 +15,7 @@ import java.util.function.Function;
  */
 @Deprecated
 public interface BalmParticles {
-    default <T extends ParticleOptions> DeferredObject<ParticleType<T>> registerParticle(Function<ResourceLocation, ParticleType<T>> supplier, ResourceLocation identifier) {
+    default <T extends ParticleOptions> DeferredObject<ParticleType<T>> registerParticle(Function<Identifier, ParticleType<T>> supplier, Identifier identifier) {
         final var holder = Balm.getRuntime().particleTypes(identifier.getNamespace()).register(identifier.getPath(), supplier).asHolder();
         return new DeferredObject<>(identifier, holder::value, holder::isBound);
     }

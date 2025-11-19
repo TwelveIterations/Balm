@@ -5,14 +5,14 @@ import net.blay09.mods.balm.neoforge.DeferredRegisters;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Function;
 
 public class NeoForgeBalmRegistrar implements BalmRegistrar {
 
     @Override
-    public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<ResourceLocation, T> resourceFunction) {
+    public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
         final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.location().getNamespace());
         return deferredRegister.register(resourceKey.location().getPath(), () -> resourceFunction.apply(resourceKey.location()));
     }
@@ -33,7 +33,7 @@ public class NeoForgeBalmRegistrar implements BalmRegistrar {
         }
 
         @Override
-        public Holder<T> register(String name, Function<ResourceLocation, T> resourceFunction) {
+        public Holder<T> register(String name, Function<Identifier, T> resourceFunction) {
             final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
             return deferredRegister.register(name, resourceFunction);
         }

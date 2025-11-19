@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.api.config.schema.builder;
 
 import net.blay09.mods.balm.api.config.schema.impl.ConfigSchemaImpl;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
@@ -72,7 +72,7 @@ public class ConfigPropertyBuilder {
         return schema.addAndReturn(new SetConfigProperty<>(this, nestedType, defaultValue));
     }
 
-    public ResourceLocationConfigProperty resourceLocationOf(ResourceLocation defaultValue) {
-        return schema.addAndReturn(new ResourceLocationConfigProperty(this, defaultValue));
+    public IdentifierConfigProperty IdentifierOf(Identifier defaultValue) {
+        return schema.addAndReturn(new IdentifierConfigProperty(this, defaultValue));
     }
 }

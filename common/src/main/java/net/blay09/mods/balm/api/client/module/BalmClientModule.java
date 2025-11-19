@@ -16,7 +16,7 @@ import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * This interface provides an easy and structured way of interacting with Balm on the client side.
@@ -28,7 +28,7 @@ public interface BalmClientModule {
      * Should return a unique identifier for this module, e.g. <code>yourmod:client</code>. The namespace must be your mod id.
      * @return a unique identifier for this module.
      */
-    ResourceLocation getId();
+    Identifier getId();
 
     default void registerEvents(BalmEvents events) {
     }

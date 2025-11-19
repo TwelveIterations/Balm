@@ -7,7 +7,7 @@ import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistra
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -44,8 +44,8 @@ public abstract class AbstractBalmBlockEntityTypeRegistrarImpl implements BalmBl
 
     @Override
     public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Supplier<Set<Block>> blocksSupplier) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
-        final var resourceKey = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, resourceLocation);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
+        final var resourceKey = ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, identifier);
         final var holder = registrar.register(resourceKey, (id) -> createBlockEntityType(constructor, blocksSupplier.get()));
         return new BalmBlockEntityTypeRegistrationImpl<>(holder);
     }

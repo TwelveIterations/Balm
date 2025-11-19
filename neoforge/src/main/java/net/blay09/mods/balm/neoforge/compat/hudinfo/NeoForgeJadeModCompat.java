@@ -5,7 +5,7 @@ import net.blay09.mods.balm.api.compat.hudinfo.BlockInfoContext;
 import net.blay09.mods.balm.api.compat.hudinfo.HudInfoOutput;
 import net.blay09.mods.balm.common.compat.hudinfo.CommonBalmModSupportHudInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
@@ -22,7 +22,7 @@ public class NeoForgeJadeModCompat implements IWailaPlugin {
 
     private static class BalmBlockComponentProvider implements IBlockComponentProvider {
 
-        private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("balm", "jade");
+        private static final Identifier ID = Identifier.fromNamespaceAndPath("balm", "jade");
 
         @Override
         public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
@@ -47,7 +47,7 @@ public class NeoForgeJadeModCompat implements IWailaPlugin {
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return ID;
         }
     }

@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.world.item;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 
 import java.util.function.BiFunction;
@@ -15,7 +15,7 @@ public interface BalmCreativeModeTabRegistrar {
         return register(name, (id, builder) -> builderConsumer.apply(builder));
     }
 
-    BalmCreativeModeTabRegistration register(String name, BiFunction<ResourceLocation, CreativeModeTab.Builder, CreativeModeTab.Builder> creativeModeTab);
+    BalmCreativeModeTabRegistration register(String name, BiFunction<Identifier, CreativeModeTab.Builder, CreativeModeTab.Builder> creativeModeTab);
 
     CreativeModeTab.Builder createBuilder();
 }

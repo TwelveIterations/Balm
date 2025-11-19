@@ -11,7 +11,7 @@ import net.blay09.mods.balm.api.event.client.DisconnectedFromServerEvent;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.network.ClientboundConfigPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ConfigSync implements BalmModule {
 
@@ -30,8 +30,8 @@ public class ConfigSync implements BalmModule {
     }
 
     @Override
-    public ResourceLocation getId() {
-        return ResourceLocation.fromNamespaceAndPath("balm", "config_sync");
+    public Identifier getId() {
+        return Identifier.fromNamespaceAndPath("balm", "config_sync");
     }
 
     @Override

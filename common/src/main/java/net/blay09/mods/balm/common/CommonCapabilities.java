@@ -8,7 +8,7 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.Block;
 
@@ -54,7 +54,7 @@ public class CommonCapabilities {
         }));
     }
 
-    private static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath("balm", path);
+    private static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath("balm", path);
     }
 }

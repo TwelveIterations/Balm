@@ -3,16 +3,16 @@ package net.blay09.mods.balm.api.config.schema;
 import net.blay09.mods.balm.api.config.LoadedConfig;
 import net.blay09.mods.balm.api.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.api.config.schema.impl.ConfigSchemaImpl;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
 
 public interface BalmConfigSchema {
-    static ConfigSchemaImpl create(ResourceLocation identifier) {
+    static ConfigSchemaImpl create(Identifier identifier) {
         return new ConfigSchemaImpl(identifier);
     }
 
-    ResourceLocation identifier();
+    Identifier identifier();
 
     LoadedConfig defaults();
 

@@ -7,7 +7,7 @@ import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.notoml.Notoml;
 import net.blay09.mods.balm.notoml.NotomlError;
 import net.blay09.mods.balm.notoml.NotomlParser;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public class FabricConfigLoader {
             return "boolean (true or false)";
         } else if (type == String.class) {
             return "string";
-        } else if (type == ResourceLocation.class) {
+        } else if (type == Identifier.class) {
             return "resource location";
         } else if (type == List.class) {
             return "list of " + getExpectedValueTypeMessage(innerType, null);
@@ -144,11 +144,11 @@ public class FabricConfigLoader {
             } else {
                 return value.toString();
             }
-        } else if (type == ResourceLocation.class) {
+        } else if (type == Identifier.class) {
             if (value instanceof String stringValue) {
-                return ResourceLocation.parse(stringValue);
+                return Identifier.parse(stringValue);
             } else {
-                return ResourceLocation.parse(value.toString());
+                return Identifier.parse(value.toString());
             }
         } else if (type == Boolean.class || type == Boolean.TYPE) {
             if (value instanceof Number) {

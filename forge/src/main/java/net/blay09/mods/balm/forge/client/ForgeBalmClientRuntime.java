@@ -34,7 +34,7 @@ import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraftforge.client.event.*;
@@ -78,7 +78,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     }
 
     @Override
-    public void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
+    public void addResourceReloadListener(Identifier identifier, PreparableReloadListener reloadListener) {
         if (Minecraft.getInstance().getResourceManager() instanceof ReloadableResourceManager reloadableResourceManager) {
             reloadableResourceManager.registerReloadListener(reloadListener);
         }

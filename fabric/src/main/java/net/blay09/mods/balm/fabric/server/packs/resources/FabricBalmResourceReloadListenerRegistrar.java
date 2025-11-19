@@ -4,7 +4,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerReg
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -25,12 +25,12 @@ public class FabricBalmResourceReloadListenerRegistrar implements BalmResourceRe
 
     @Override
     public void register(String name, Function<HolderLookup.Provider, PreparableReloadListener> listenerFactory) {
-        final var identifier = ResourceLocation.fromNamespaceAndPath(namespace, name);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(identifier, providers -> new IdentifiableResourceReloadListener() {
             private final PreparableReloadListener listener = listenerFactory.apply(providers);
 
             @Override
-            public ResourceLocation getFabricId() {
+            public Identifier getFabricId() {
                 return identifier;
             }
 
@@ -43,7 +43,7 @@ public class FabricBalmResourceReloadListenerRegistrar implements BalmResourceRe
 
     @Override
     public void register(String name, Consumer<ResourceManager> reloadListener) {
-        final var identifier = ResourceLocation.fromNamespaceAndPath(namespace, name);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public void onResourceManagerReload(ResourceManager resourceManager) {
@@ -51,7 +51,7 @@ public class FabricBalmResourceReloadListenerRegistrar implements BalmResourceRe
             }
 
             @Override
-            public ResourceLocation getFabricId() {
+            public Identifier getFabricId() {
                 return identifier;
             }
         });

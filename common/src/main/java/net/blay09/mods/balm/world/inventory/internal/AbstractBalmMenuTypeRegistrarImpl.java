@@ -7,7 +7,7 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
@@ -23,8 +23,8 @@ public abstract class AbstractBalmMenuTypeRegistrarImpl implements BalmMenuTypeR
 
     @Override
     public <TMenu extends AbstractContainerMenu, TPayload> BalmMenuTypeRegistration<TMenu> register(String name, BalmMenuFactory<TMenu, TPayload> factory) {
-        final var resourceLocation = ResourceLocation.fromNamespaceAndPath(namespace, name);
-        final var resourceKey = ResourceKey.create(Registries.MENU, resourceLocation);
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
+        final var resourceKey = ResourceKey.create(Registries.MENU, identifier);
         final var holder = registrar.register(resourceKey, id -> createMenuType(factory));
         return new BalmMenuTypeRegistrationImpl<>(holder);
     }

@@ -8,7 +8,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Function;
 
@@ -23,8 +23,8 @@ public abstract class AbstractBalmParticleTypeRegistrarImpl implements BalmParti
     }
 
     @Override
-    public <T extends ParticleOptions> BalmParticleTypeRegistration<T> register(String name, Function<ResourceLocation, ParticleType<T>> constructor) {
-        final var id = ResourceLocation.fromNamespaceAndPath(namespace, name);
+    public <T extends ParticleOptions> BalmParticleTypeRegistration<T> register(String name, Function<Identifier, ParticleType<T>> constructor) {
+        final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.PARTICLE_TYPE, id);
         final var holder = registrar.register(key, constructor::apply);
         return new BalmParticleTypeRegistrationImpl<>(holder);

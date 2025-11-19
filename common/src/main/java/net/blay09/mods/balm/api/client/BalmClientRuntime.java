@@ -18,7 +18,7 @@ import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 import java.util.function.Consumer;
@@ -83,7 +83,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void registerModule(BalmClientRegistrars registrars, BalmClientModule module);
 
     @Deprecated
-    void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
+    void addResourceReloadListener(Identifier identifier, PreparableReloadListener reloadListener);
 
     void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer);
 

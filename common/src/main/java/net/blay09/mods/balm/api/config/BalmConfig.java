@@ -2,7 +2,7 @@ package net.blay09.mods.balm.api.config;
 
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.network.ConfigReflection;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.File;
 import java.util.Collection;
@@ -11,11 +11,11 @@ import java.util.function.Consumer;
 public interface BalmConfig {
     void registerConfig(BalmConfigSchema schema);
 
-    BalmConfigSchema getSchema(ResourceLocation identifier);
+    BalmConfigSchema getSchema(Identifier identifier);
 
-    MutableLoadedConfig getLocalConfig(ResourceLocation identifier);
+    MutableLoadedConfig getLocalConfig(Identifier identifier);
 
-    LoadedConfig getActiveConfig(ResourceLocation identifier);
+    LoadedConfig getActiveConfig(Identifier identifier);
 
     File getConfigDir();
 

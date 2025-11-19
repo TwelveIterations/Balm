@@ -11,7 +11,7 @@ import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
 import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.blay09.mods.balm.common.config.ConfigLocalization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 
 public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
-    private static final Map<ResourceLocation, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new ConcurrentHashMap<>();
-    private static final Map<ResourceLocation, ModConfig> modConfigs = new ConcurrentHashMap<>();
+    private static final Map<Identifier, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new ConcurrentHashMap<>();
+    private static final Map<Identifier, ModConfig> modConfigs = new ConcurrentHashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmConfig.class);
 
     private static ModConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ModConfigSpec.Builder spec) {
@@ -59,8 +59,8 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                     () -> newListElement(configuredList),
                     (it) -> validateListElement(configuredList, it));
             case ConfiguredLong configuredLong -> spec.define(configuredLong.name(), configuredLong.defaultValue());
-            case ConfiguredResourceLocation configuredResourceLocation ->
-                    spec.define(configuredResourceLocation.name(), configuredResourceLocation.defaultValue().toString());
+            case ConfiguredIdentifier configuredIdentifier ->
+                    spec.define(configuredIdentifier.name(), configuredIdentifier.defaultValue().toString());
             case ConfiguredSet<?> configuredSet -> spec.defineListAllowEmpty(configuredSet.name(),
                     mapConfigCollectionToNeoForge(configuredSet.defaultValue()),
                     () -> newSetElement(configuredSet),
@@ -77,7 +77,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
     public static Object mapConfigValueToNeoForge(Object value) {
         return switch (value) {
-            case ResourceLocation resourceLocation -> resourceLocation.toString();
+            case Identifier identifier -> identifier.toString();
             case Float floatValue -> floatValue.doubleValue();
             case Set<?> setValue -> mapConfigCollectionToNeoForge(setValue);
             case List<?> listValue -> mapConfigCollectionToNeoForge(listValue);
@@ -95,7 +95,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
     public static Object mapConfigValueFromNeoForge(ConfiguredProperty<?> property, Object value) {
         return switch (property) {
-            case ConfiguredResourceLocation ignored -> ResourceLocation.parse((String) value);
+            case ConfiguredIdentifier ignored -> Identifier.parse((String) value);
             case ConfiguredFloat ignored -> ((Double) value).floatValue();
             case ConfiguredList<?> configuredList -> mapConfigListFromNeoForge(configuredList, (List<?>) value);
             case ConfiguredSet<?> configuredSet -> mapConfigSetFromNeoForge(configuredSet, (List<?>) value);
@@ -104,8 +104,8 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     }
 
     private static Object mapConfigValueFromNeoForge(Class<?> nestedType, Object value) {
-        if (nestedType == ResourceLocation.class) {
-            return ResourceLocation.parse((String) value);
+        if (nestedType == Identifier.class) {
+            return Identifier.parse((String) value);
         } else if (nestedType == Float.class) {
             return ((Double) value).floatValue();
         } else if (nestedType.isEnum() && value instanceof String) {
@@ -135,8 +135,8 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             return (T) Integer.valueOf(0);
         } else if (nestedType == Long.class) {
             return (T) Long.valueOf(0L);
-        } else if (nestedType == ResourceLocation.class) {
-            return (T) ResourceLocation.fromNamespaceAndPath("minecraft", "air").toString();
+        } else if (nestedType == Identifier.class) {
+            return (T) Identifier.fromNamespaceAndPath("minecraft", "air").toString();
         } else if (nestedType == String.class) {
             return (T) "";
         } else if (nestedType.isEnum()) {
@@ -191,8 +191,8 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             } catch (NumberFormatException e) {
                 return false;
             }
-        } else if (nestedType == ResourceLocation.class) {
-            return value instanceof String && ResourceLocation.tryParse(value.toString()) != null;
+        } else if (nestedType == Identifier.class) {
+            return value instanceof String && Identifier.tryParse(value.toString()) != null;
         } else if (nestedType == String.class) {
             return value instanceof String;
         } else if (nestedType.isEnum()) {
@@ -243,7 +243,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
         eventBus.addListener((ModConfigEvent.Loading event) -> {
             final var modConfig = event.getConfig();
-            final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+            final var identifier = Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
                 final var modConfigProperties = properties.get(schema.identifier());
@@ -260,7 +260,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         });
         eventBus.addListener((ModConfigEvent.Reloading event) -> {
             final var modConfig = event.getConfig();
-            final var identifier = ResourceLocation.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+            final var identifier = Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
             if (schema.identifier().equals(identifier)) {
                 modConfigs.put(schema.identifier(), modConfig);
                 final var modConfigProperties = properties.get(schema.identifier());

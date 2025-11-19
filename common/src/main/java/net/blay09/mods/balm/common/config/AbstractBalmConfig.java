@@ -9,7 +9,7 @@ import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.api.network.ConfigReflection;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
 import java.util.Map;
@@ -18,12 +18,12 @@ import java.util.function.Consumer;
 
 public abstract class AbstractBalmConfig implements BalmConfig {
 
-    private final Map<ResourceLocation, BalmConfigSchema> schemas = new ConcurrentHashMap<>();
-    private final Map<ResourceLocation, MutableLoadedConfig> localConfigs = new ConcurrentHashMap<>();
-    private final Map<ResourceLocation, LoadedConfig> activeConfigs = new ConcurrentHashMap<>();
+    private final Map<Identifier, BalmConfigSchema> schemas = new ConcurrentHashMap<>();
+    private final Map<Identifier, MutableLoadedConfig> localConfigs = new ConcurrentHashMap<>();
+    private final Map<Identifier, LoadedConfig> activeConfigs = new ConcurrentHashMap<>();
 
-    private final Map<ResourceLocation, Object> activeReflectionConfigs = new ConcurrentHashMap<>();
-    private final Multimap<ResourceLocation, Consumer<MutableLoadedConfig>> configLoadHandlers = ArrayListMultimap.create();
+    private final Map<Identifier, Object> activeReflectionConfigs = new ConcurrentHashMap<>();
+    private final Multimap<Identifier, Consumer<MutableLoadedConfig>> configLoadHandlers = ArrayListMultimap.create();
 
     @Override
     public void registerConfig(BalmConfigSchema schema) {
@@ -31,12 +31,12 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     @Override
-    public BalmConfigSchema getSchema(ResourceLocation identifier) {
+    public BalmConfigSchema getSchema(Identifier identifier) {
         return schemas.get(identifier);
     }
 
     @Override
-    public MutableLoadedConfig getLocalConfig(ResourceLocation identifier) {
+    public MutableLoadedConfig getLocalConfig(Identifier identifier) {
         return localConfigs.get(identifier);
     }
 
@@ -50,7 +50,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     @Override
-    public LoadedConfig getActiveConfig(ResourceLocation identifier) {
+    public LoadedConfig getActiveConfig(Identifier identifier) {
         return activeConfigs.get(identifier);
     }
 

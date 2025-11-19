@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.api.loot;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface BalmLootTables {
-    void registerLootModifier(ResourceLocation identifier, BalmLootModifier modifier);
+    void registerLootModifier(Identifier identifier, BalmLootModifier modifier);
 }
