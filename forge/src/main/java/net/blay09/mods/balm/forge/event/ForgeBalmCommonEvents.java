@@ -22,8 +22,10 @@ import net.minecraftforge.event.level.ChunkWatchEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
+@Deprecated
 public class ForgeBalmCommonEvents {
 
+    @Deprecated
     public static void registerEvents(ForgeBalmEvents events) {
         events.registerTickEvent(TickType.Server, TickPhase.Start, (ServerTickHandler handler) -> TickEvent.ServerTickEvent.Pre.BUS.addListener((orig) -> handler.handle(ServerLifecycleHooks.getCurrentServer())));
         events.registerTickEvent(TickType.Server, TickPhase.End, (ServerTickHandler handler) -> TickEvent.ServerTickEvent.Post.BUS.addListener((orig) -> handler.handle(ServerLifecycleHooks.getCurrentServer())));

@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.CustomFarmBlock;
 import net.blay09.mods.balm.api.event.CropGrowEvent;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -50,6 +51,12 @@ public class FabricCropBlockMixin {
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
+        } else {
+            if (FabricBalmSupplementalEvents.CROP_GROW_PRE.invoker()
+                    .handle(level, pos, state)
+                    .shouldSkipDefault()) {
+                callbackInfo.cancel();
+            }
         }
     }
 
@@ -57,6 +64,7 @@ public class FabricCropBlockMixin {
     public void randomTickPostGrow(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo callbackInfo) {
         CropGrowEvent.Post event = new CropGrowEvent.Post(level, pos, state);
         Balm.getEvents().fireEvent(event);
+        FabricBalmSupplementalEvents.CROP_GROW_POST.invoker().handle(level, pos, state);
     }
 
 }

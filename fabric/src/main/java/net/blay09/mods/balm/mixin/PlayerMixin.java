@@ -4,6 +4,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.entity.BalmPlayer;
 import net.blay09.mods.balm.api.event.LivingDamageEvent;
 import net.blay09.mods.balm.api.event.PlayerAttackEvent;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -28,9 +29,10 @@ public class PlayerMixin implements BalmPlayer {
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             return 0f;
-        } else {
-            return event.getDamageAmount();
         }
+        float effectiveDamage = event.getDamageAmount();
+        effectiveDamage = FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().handle((Player) (Object) this, damageSource, effectiveDamage);
+        return effectiveDamage;
     }
 
     @Inject(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
@@ -39,6 +41,10 @@ public class PlayerMixin implements BalmPlayer {
         PlayerAttackEvent event = new PlayerAttackEvent(player, entity);
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
+            callbackInfo.cancel();
+        } else if (FabricBalmSupplementalEvents.PLAYER_ATTACK.invoker()
+                .handle(player, entity)
+                .shouldSkipDefault()) {
             callbackInfo.cancel();
         }
     }

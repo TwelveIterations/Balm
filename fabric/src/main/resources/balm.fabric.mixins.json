@@ -30,7 +30,6 @@
     "ItemInHandRendererMixin",
     "KeyboardHandlerMixin",
     "MinecraftMixin",
-    "MouseHandlerMixin",
     "PlayerTabOverlayMixin",
     "ClientLevelMixin",
     "ClientLevelAccessor"

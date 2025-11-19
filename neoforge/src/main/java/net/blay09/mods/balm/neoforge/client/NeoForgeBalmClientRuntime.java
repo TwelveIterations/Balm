@@ -20,6 +20,7 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.color.block.NeoForgeBalmBlockColorRegistrar;
+import net.blay09.mods.balm.neoforge.client.event.NeoForgeBalmClientEventMappings;
 import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.NeoForgeBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.neoforge.client.model.geom.NeoForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.neoforge.client.particle.NeoForgeBalmParticleProviderRegistrar;
@@ -43,7 +44,8 @@ import java.util.function.Consumer;
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
 
     public NeoForgeBalmClientRuntime() {
-        NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.getEvents()));
+        NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.events()));
+        NeoForgeBalmClientEventMappings.bind();
     }
 
     @Override

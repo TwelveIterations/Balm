@@ -9,6 +9,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ItemCallback.Tooltip} instead.
+ */
+@Deprecated
 public class ItemTooltipEvent extends BalmEvent {
 
     private final ItemStack itemStack;

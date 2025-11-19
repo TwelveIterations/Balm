@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.core.BalmRegistrars;
+import net.blay09.mods.balm.event.BidirectionalEventMapper;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
@@ -135,4 +136,5 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer);
 
+    <TEvent> BidirectionalEventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass);
 }

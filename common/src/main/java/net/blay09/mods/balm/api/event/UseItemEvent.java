@@ -5,6 +5,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ItemCallback.Use} instead.
+ */
+@Deprecated
 public class UseItemEvent extends BalmEvent {
     private final Player player;
     private final Level level;

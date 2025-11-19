@@ -5,6 +5,10 @@ import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ReloadableServerResources;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ServerLifecycleCallback#RELOADING} instead.
+ */
+@Deprecated
 public class ServerReloadedEvent extends BalmEvent {
     private final MinecraftServer server;
     private final ReloadableServerResources resources;

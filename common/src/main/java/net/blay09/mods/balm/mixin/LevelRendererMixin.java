@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.BlockHighlightDrawEvent;
+import net.blay09.mods.balm.client.event.BalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderBuffers;
@@ -37,6 +38,12 @@ public class LevelRendererMixin {
             Balm.getEvents().fireEvent(event);
             if (event.isCanceled()) {
                 callbackInfo.cancel();
+            } else {
+                if (BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT.invoker()
+                        .handle(blockHitResult, poseStack, renderBuffers.bufferSource(), minecraft.gameRenderer.getMainCamera())
+                        .shouldSkipDefault()) {
+                    callbackInfo.cancel();
+                }
             }
         }
     }

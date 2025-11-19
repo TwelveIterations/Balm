@@ -4,6 +4,10 @@ import com.mojang.blaze3d.platform.Window;
 import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.client.gui.GuiGraphics;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.RenderCallback.Gui} instead.
+ */
+@Deprecated
 public abstract class GuiDrawEvent extends BalmEvent {
 
     private final Window window;
@@ -36,12 +40,20 @@ public abstract class GuiDrawEvent extends BalmEvent {
         PLAYER_LIST
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.RenderCallback.Gui} instead.
+     */
+    @Deprecated
     public static class Pre extends GuiDrawEvent {
         public Pre(Window window, GuiGraphics guiGraphics, Element element) {
             super(window, guiGraphics, element);
         }
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.RenderCallback.Gui} instead.
+     */
+    @Deprecated
     public static class Post extends GuiDrawEvent {
         public Post(Window window, GuiGraphics guiGraphics, Element element) {
             super(window, guiGraphics, element);

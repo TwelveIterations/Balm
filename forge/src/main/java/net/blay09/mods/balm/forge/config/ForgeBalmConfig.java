@@ -14,6 +14,7 @@ import net.blay09.mods.balm.common.config.AbstractBalmConfig;
 import net.blay09.mods.balm.common.config.ConfigLocalization;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.minecraft.resources.Identifier;
+import net.blay09.mods.balm.forge.event.ForgeBalmSupplementalEvents;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
@@ -213,6 +214,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
                 fireConfigLoadHandlers(schema, wrappedConfig);
                 Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
+                ForgeBalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
             }
         });
         ModConfigEvent.Reloading.getBus(modBusGroup).addListener((event) -> {
@@ -229,6 +231,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 updateActiveFromLocal(schema, wrappedConfig);
 
                 Balm.getEvents().fireEvent(new ConfigReloadedEvent(schema));
+                ForgeBalmSupplementalEvents.CONFIG_RELOADED.invoker().handle(schema);
             }
         });
 

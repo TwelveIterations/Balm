@@ -3,6 +3,10 @@ package net.blay09.mods.balm.api.event;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ItemCallback.Toss} instead.
+ */
+@Deprecated
 public class TossItemEvent extends BalmEvent {
     private final Player player;
     private final ItemStack itemStack;

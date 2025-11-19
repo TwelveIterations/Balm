@@ -4,6 +4,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ServerPlayerCallback.ChunkTracking} instead.
+ */
+@Deprecated
 public abstract class ChunkTrackingEvent {
     private final ServerLevel level;
     private final ServerPlayer player;
@@ -27,12 +31,20 @@ public abstract class ChunkTrackingEvent {
         return chunkPos;
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.event.callback.ServerPlayerCallback.ChunkTracking#START} instead.
+     */
+    @Deprecated
     public static class Start extends ChunkTrackingEvent {
         public Start(ServerLevel level, ServerPlayer player, ChunkPos chunkPos) {
             super(level, player, chunkPos);
         }
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.event.callback.ServerPlayerCallback.ChunkTracking#STOP} instead.
+     */
+    @Deprecated
     public static class Stop extends ChunkTrackingEvent {
         public Stop(ServerLevel level, ServerPlayer player, ChunkPos chunkPos) {
             super(level, player, chunkPos);

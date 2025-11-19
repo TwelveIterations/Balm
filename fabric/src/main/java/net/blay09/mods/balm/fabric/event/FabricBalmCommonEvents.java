@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionResult;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class FabricBalmCommonEvents {
 
     private static final List<ServerPlayerTickHandler> playerTickStartHandlers = new ArrayList<>();

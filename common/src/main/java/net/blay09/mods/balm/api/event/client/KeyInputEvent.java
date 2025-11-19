@@ -1,5 +1,9 @@
 package net.blay09.mods.balm.api.event.client;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ClientInputCallback.Keyboard} instead.
+ */
+@Deprecated
 public class KeyInputEvent {
     private final int key;
     private final int scanCode;

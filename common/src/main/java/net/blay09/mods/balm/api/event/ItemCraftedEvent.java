@@ -4,6 +4,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.ItemCallback.Craft} instead.
+ */
+@Deprecated
 public class ItemCraftedEvent extends BalmEvent {
     private final Player player;
     private final ItemStack itemStack;

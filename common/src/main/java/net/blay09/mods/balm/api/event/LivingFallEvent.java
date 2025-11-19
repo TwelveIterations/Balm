@@ -2,6 +2,10 @@ package net.blay09.mods.balm.api.event;
 
 import net.minecraft.world.entity.LivingEntity;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.LivingEntityCallback.Fall} instead.
+ */
+@Deprecated
 public class LivingFallEvent extends BalmEvent {
     private final LivingEntity entity;
     private Float fallDamageOverride;

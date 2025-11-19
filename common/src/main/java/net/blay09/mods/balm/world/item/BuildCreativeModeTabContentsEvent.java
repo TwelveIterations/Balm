@@ -3,6 +3,10 @@ package net.blay09.mods.balm.world.item;
 import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.world.item.CreativeModeTab;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.CreativeModeTabCallback} instead.
+ */
+@Deprecated
 public class BuildCreativeModeTabContentsEvent extends BalmEvent {
     private final CreativeModeTab tab;
     private final CreativeModeTab.Output output;

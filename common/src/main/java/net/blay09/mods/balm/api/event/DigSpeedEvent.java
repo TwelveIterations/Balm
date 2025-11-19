@@ -5,6 +5,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.BlockCallback.DigSpeed} instead.
+ */
+@Deprecated
 public class DigSpeedEvent extends BalmEvent {
     private final BlockGetter blockGetter;
     private final BlockPos pos;

@@ -3,6 +3,7 @@ package net.blay09.mods.balm.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.RenderHandEvent;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -21,6 +22,10 @@ public class ItemInHandRendererMixin {
         RenderHandEvent event = new RenderHandEvent(hand, itemStack, swingProgress);
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
+            callbackInfo.cancel();
+        } else if (FabricBalmSupplementalClientEvents.RENDER_HAND.invoker()
+                .handle(hand, itemStack, swingProgress)
+                .shouldSkipDefault()) {
             callbackInfo.cancel();
         }
     }

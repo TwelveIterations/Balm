@@ -6,6 +6,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.BlockCallback.Use} instead.
+ */
+@Deprecated
 public class UseBlockEvent extends BalmEvent {
     private final Player player;
     private final Level level;

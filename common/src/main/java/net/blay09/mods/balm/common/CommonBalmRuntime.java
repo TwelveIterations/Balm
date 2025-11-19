@@ -11,6 +11,9 @@ import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
 import net.blay09.mods.balm.core.BalmRegistrars;
+import net.blay09.mods.balm.event.BidirectionalEventMapper;
+import net.blay09.mods.balm.event.EventFactory;
+import net.blay09.mods.balm.event.internal.EventMapperImpl;
 import net.blay09.mods.balm.module.internal.InternalsModule;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.internal.BalmItemRegistrarImpl;
@@ -117,4 +120,16 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
         initializer.accept(new BalmDataComponentTypeRegistrarImpl(registrar(), namespace));
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <TEvent> BidirectionalEventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
+        final var nativeEventFactory = EventFactory.createArrayBacked(Consumer.class, (consumers) -> (rec) -> {
+            for (final var consumer : consumers) {
+                consumer.accept(rec);
+            }
+        });
+        final var mapper = new EventMapperImpl<Consumer<TEvent>>(eventClass.getName());
+        mapper.configureMapping(nativeEventFactory::register, nativeEventFactory::invoker);
+        return mapper;
+    }
 }

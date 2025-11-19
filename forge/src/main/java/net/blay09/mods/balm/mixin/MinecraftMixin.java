@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.client.ClientStartedEvent;
+import net.blay09.mods.balm.forge.client.event.ForgeBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,5 +15,6 @@ public class MinecraftMixin {
     void run(CallbackInfo callbackInfo) {
         final ClientStartedEvent event = new ClientStartedEvent(Minecraft.getInstance());
         Balm.getEvents().fireEvent(event);
+        ForgeBalmSupplementalClientEvents.CLIENT_STARTED.invoker().handle(Minecraft.getInstance());
     }
 }

@@ -3,6 +3,10 @@ package net.blay09.mods.balm.api.event;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.event.callback.PlayerCallback.Attack} instead.
+ */
+@Deprecated
 public class PlayerAttackEvent extends BalmEvent {
     private final Player player;
     private final Entity target;

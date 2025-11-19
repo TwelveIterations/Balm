@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
 import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
 import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
@@ -52,7 +53,8 @@ public class FabricBalmConfig extends AbstractBalmConfig {
         setLocalConfig(schema, mutableConfig);
         setActiveConfig(schema, config);
         fireConfigLoadHandlers(schema, mutableConfig);
-        Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
+        Balm.events().fireEvent(new ConfigLoadedEvent(schema));
+        FabricBalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
     }
 
     @Override
@@ -69,6 +71,7 @@ public class FabricBalmConfig extends AbstractBalmConfig {
         } catch (IOException e) {
             logger.error("Failed to save config file {}", configFile, e);
         }
+        FabricBalmSupplementalEvents.CONFIG_RELOADED.invoker().handle(schema);
     }
 
     private LoadedConfig loadConfigFromConfigFile(BalmConfigSchema schema) {

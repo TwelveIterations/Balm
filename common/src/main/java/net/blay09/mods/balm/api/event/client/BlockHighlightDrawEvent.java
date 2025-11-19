@@ -6,6 +6,10 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.BlockHitResult;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.RenderCallback.BlockHighlight} instead.
+ */
+@Deprecated
 public class BlockHighlightDrawEvent extends BalmEvent {
     private final BlockHitResult hitResult;
     private final PoseStack poseStack;

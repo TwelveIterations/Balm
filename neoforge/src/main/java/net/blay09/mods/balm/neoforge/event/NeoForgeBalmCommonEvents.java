@@ -24,6 +24,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+@Deprecated
 public class NeoForgeBalmCommonEvents {
 
     public static void registerEvents(NeoForgeBalmEvents events) {

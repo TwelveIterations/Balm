@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.PlayerChangedDimensionEvent;
 import net.blay09.mods.balm.api.event.PlayerOpenMenuEvent;
 import net.blay09.mods.balm.api.event.TossItemEvent;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -29,6 +30,7 @@ public class ServerPlayerMixin {
     public void openMenu(@Nullable MenuProvider menuProvider, CallbackInfoReturnable<OptionalInt> callbackInfo) {
         ServerPlayer player = (ServerPlayer) (Object) this;
         Balm.getEvents().fireEvent(new PlayerOpenMenuEvent(player, player.containerMenu));
+        FabricBalmSupplementalEvents.SERVER_PLAYER_OPEN_MENU.invoker().handle(player, player.containerMenu);
     }
 
     @Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("HEAD"))
@@ -44,6 +46,7 @@ public class ServerPlayerMixin {
         final ResourceKey<Level> toDim = transition.newLevel().dimension();
         if (!fromDim.equals(toDim)) {
             Balm.getEvents().fireEvent(new PlayerChangedDimensionEvent(player, fromDim, toDim));
+            FabricBalmSupplementalEvents.SERVER_PLAYER_CHANGED_DIMENSION.invoker().handle(player, fromDim, toDim);
         }
     }
 
@@ -55,6 +58,10 @@ public class ServerPlayerMixin {
         TossItemEvent event = new TossItemEvent(player, selected);
         Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
+            callbackInfo.cancel();
+        } else if (FabricBalmSupplementalEvents.ITEM_TOSSED.invoker()
+                .handle(player, selected)
+                .shouldSkipDefault()) {
             callbackInfo.cancel();
         }
     }

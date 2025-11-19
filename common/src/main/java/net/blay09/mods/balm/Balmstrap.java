@@ -2,6 +2,9 @@ package net.blay09.mods.balm;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.event.BidirectionalEventMapper;
+
+import java.util.function.Consumer;
 
 public class Balmstrap {
     /**
@@ -15,5 +18,9 @@ public class Balmstrap {
     public static void onRuntimeAvailable(Runnable callback) {
         // TODO In the future, we could avoid the potentially early class load here by having the runtime pull from this class instead.
         Balm.getRuntime().onRuntimeAvailable(callback);
+    }
+
+    public static <TEvent> BidirectionalEventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass) {
+        return Balm.getRuntime().createBoundCustomEvent(eventClass);
     }
 }

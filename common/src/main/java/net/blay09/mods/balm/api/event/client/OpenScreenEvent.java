@@ -4,6 +4,10 @@ import net.blay09.mods.balm.api.event.BalmEvent;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Open} instead.
+ */
+@Deprecated
 public class OpenScreenEvent extends BalmEvent {
     private Screen screen;
     private Screen newScreen;

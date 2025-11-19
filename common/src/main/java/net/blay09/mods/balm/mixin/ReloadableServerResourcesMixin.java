@@ -2,6 +2,7 @@ package net.blay09.mods.balm.mixin;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.event.server.ServerReloadedEvent;
+import net.blay09.mods.balm.event.BalmSupplementalEvents;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.Registry;
@@ -25,6 +26,7 @@ public class ReloadableServerResourcesMixin {
     @Inject(method = "loadResources(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/core/LayeredRegistryAccess;Ljava/util/List;Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/commands/Commands$CommandSelection;Lnet/minecraft/server/permissions/PermissionSet;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;", at = @At("RETURN"), cancellable = true)
     private static void loadResources(ResourceManager resourceManager, LayeredRegistryAccess<RegistryLayer> registryAccess, List<Registry.PendingTags<?>> pendingTags, FeatureFlagSet featureFlagSet, Commands.CommandSelection commandSelection, PermissionSet permissionSet, Executor e1, Executor e2, CallbackInfoReturnable<CompletableFuture<ReloadableServerResources>> callbackInfo) {
         callbackInfo.getReturnValue().thenAccept(it -> Balm.getEvents().fireEvent(new ServerReloadedEvent(it)));
+        callbackInfo.getReturnValue().thenAccept(it -> BalmSupplementalEvents.SERVER_RELOADING.invoker().handle(Balm.platform().server(), it));
     }
 
 }

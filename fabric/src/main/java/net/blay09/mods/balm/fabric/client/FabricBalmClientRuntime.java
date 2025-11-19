@@ -14,6 +14,8 @@ import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegis
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmClientEventMappings;
+import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.blay09.mods.balm.fabric.client.gui.screens.inventory.FabricBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.entity.FabricBalmEntityRendererRegistrar;
@@ -21,7 +23,9 @@ import net.blay09.mods.balm.fabric.client.model.geom.FabricBalmModelLayerRegistr
 import net.blay09.mods.balm.fabric.client.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.particle.FabricBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.chunk.FabricBalmBlockRenderTypeRegistrar;
+import net.blay09.mods.balm.fabric.event.FabricBalmEventMappings;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
+import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.blay09.mods.balm.fabric.event.client.FabricBalmClientEvents;
 import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
@@ -32,6 +36,8 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
+        FabricBalmSupplementalClientEvents.initialize();
+        FabricBalmClientEventMappings.bind();
     }
 
     @Override

@@ -18,6 +18,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated
 public class NeoForgeBalmClientEvents {
 
     public static void registerEvents(NeoForgeBalmEvents events) {
