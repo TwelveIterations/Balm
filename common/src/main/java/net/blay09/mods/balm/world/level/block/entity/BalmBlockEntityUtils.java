@@ -13,7 +13,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.function.Consumer;
 
-public class BlockEntityUtils {
+public class BalmBlockEntityUtils {
     public static void sync(BlockEntity blockEntity) {
         final var level = blockEntity.getLevel();
         if (level instanceof ServerLevel serverLevel) {
