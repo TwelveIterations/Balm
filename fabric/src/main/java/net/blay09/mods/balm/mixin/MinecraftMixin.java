@@ -38,7 +38,7 @@ public class MinecraftMixin {
     @ModifyVariable(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;", opcode = Opcodes.GETFIELD, shift = At.Shift.AFTER), argsOnly = true)
     public Screen modifyScreen(Screen screen) {
         OpenScreenEvent event = new OpenScreenEvent(screen);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         var effectiveScreen = event.getNewScreen() != null ? event.getNewScreen() : screen;
         effectiveScreen = FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().handle(effectiveScreen);
         return effectiveScreen;
@@ -82,7 +82,7 @@ public class MinecraftMixin {
     @ModifyArg(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"), index = 0)
     public InteractionHand modifyHand(InteractionHand hand, @Share("currentUseEvent") LocalRef<UseItemInputEvent> balmCurrentUseEvent) {
         UseItemInputEvent event = new UseItemInputEvent(hand);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         balmCurrentUseEvent.set(event);
         return hand;
     }
@@ -90,7 +90,7 @@ public class MinecraftMixin {
     @Inject(method = "clearClientLevel(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"))
     public void clearClientLevel(Screen p_91321_, CallbackInfo ci) {
         if (this.level != null) {
-            Balm.getEvents().fireEvent(new LevelLoadingEvent.Unload(this.level));
+            Balm.events().fireEvent(new LevelLoadingEvent.Unload(this.level));
             FabricBalmSupplementalClientEvents.CLIENT_LEVEL_UNLOAD.invoker().handle(this.level);
         }
     }
@@ -98,7 +98,7 @@ public class MinecraftMixin {
     @Inject(method = "setLevel(Lnet/minecraft/client/multiplayer/ClientLevel;)V", at = @At("HEAD"))
     public void setLevel(ClientLevel clientLevel, CallbackInfo ci) {
         if (this.level != null) {
-            Balm.getEvents().fireEvent(new LevelLoadingEvent.Unload(this.level));
+            Balm.events().fireEvent(new LevelLoadingEvent.Unload(this.level));
             FabricBalmSupplementalClientEvents.CLIENT_LEVEL_UNLOAD.invoker().handle(this.level);
         }
     }

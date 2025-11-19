@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
 
     public FabricBalmClientRuntime() {
-        FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
+        FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.events()));
         FabricBalmSupplementalClientEvents.initialize();
         FabricBalmClientEventMappings.bind();
     }

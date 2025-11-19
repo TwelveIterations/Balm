@@ -17,7 +17,7 @@ public class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundPlayerAbilitiesPacket;<init>(Lnet/minecraft/world/entity/player/Abilities;)V"))
     private void handlePlayerConnection(Connection connection, ServerPlayer player, CommonListenerCookie commonListenerCookie, CallbackInfo callbackInfo) {
         final PlayerConnectedEvent event = new PlayerConnectedEvent(player);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         NeoForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED.invoker().handle(player);
     }
 }

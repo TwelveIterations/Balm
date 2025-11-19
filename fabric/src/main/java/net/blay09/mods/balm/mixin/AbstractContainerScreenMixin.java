@@ -16,13 +16,13 @@ public class AbstractContainerScreenMixin {
     @Inject(method = "renderBackground(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At(value = "RETURN"))
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo callbackInfo) {
         Screen screen = (Screen) (Object) this;
-        Balm.getEvents().fireEvent(new ContainerScreenDrawEvent.Background(screen, guiGraphics, mouseX, mouseY));
+        Balm.events().fireEvent(new ContainerScreenDrawEvent.Background(screen, guiGraphics, mouseX, mouseY));
     }
 
     @Inject(method = "renderContents(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V", shift = At.Shift.AFTER))
     public void renderForeground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo callbackInfo) {
         Screen screen = (Screen) (Object) this;
-        Balm.getEvents().fireEvent(new ContainerScreenDrawEvent.Foreground(screen, guiGraphics, mouseX, mouseY));
+        Balm.events().fireEvent(new ContainerScreenDrawEvent.Foreground(screen, guiGraphics, mouseX, mouseY));
     }
 
 }

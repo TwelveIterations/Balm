@@ -213,7 +213,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 setActiveConfig(schema, wrappedConfig);
 
                 fireConfigLoadHandlers(schema, wrappedConfig);
-                Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
+                Balm.events().fireEvent(new ConfigLoadedEvent(schema));
                 ForgeBalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
             }
         });
@@ -230,7 +230,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 setLocalConfig(schema, wrappedConfig);
                 updateActiveFromLocal(schema, wrappedConfig);
 
-                Balm.getEvents().fireEvent(new ConfigReloadedEvent(schema));
+                Balm.events().fireEvent(new ConfigReloadedEvent(schema));
                 ForgeBalmSupplementalEvents.CONFIG_RELOADED.invoker().handle(schema);
             }
         });

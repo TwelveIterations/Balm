@@ -21,7 +21,7 @@ public class BlockStateBaseMixin {
         final var digSpeed = cir.getReturnValueF();
         final var state = ((BlockStateBaseAccessor) blockStateBase).callAsState();
         final var event = new DigSpeedEvent(blockGetter, blockPos, state, digSpeed, player);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         if (event.isCanceled()) {
             cir.setReturnValue(-1f);
         } else if (event.getSpeedOverride() != null) {

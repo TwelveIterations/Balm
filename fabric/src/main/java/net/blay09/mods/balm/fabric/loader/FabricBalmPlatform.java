@@ -25,8 +25,8 @@ public class FabricBalmPlatform implements BalmPlatform {
     private final AtomicReference<MinecraftServer> currentServer = new AtomicReference<>();
 
     public void initialize() {
-        Balm.getEvents().onEvent(ServerStartingEvent.class, event -> currentServer.set(event.getServer()));
-        Balm.getEvents().onEvent(ServerStoppedEvent.class, event -> currentServer.set(null));
+        Balm.events().onEvent(ServerStartingEvent.class, event -> currentServer.set(event.getServer()));
+        Balm.events().onEvent(ServerStoppedEvent.class, event -> currentServer.set(null));
     }
 
     @Override

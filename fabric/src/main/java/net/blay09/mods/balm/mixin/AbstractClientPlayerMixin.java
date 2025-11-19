@@ -18,7 +18,7 @@ public class AbstractClientPlayerMixin {
     private void getFieldOfViewModifier(boolean allowScoping, float current, CallbackInfoReturnable<Float> callbackInfo,
                                         @Local(ordinal = 1) float originalFov) {
         FovUpdateEvent event = new FovUpdateEvent((LivingEntity) (Object) this, originalFov);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         float effectiveFov = event.getFov() != null ? event.getFov() : originalFov;
         effectiveFov = FabricBalmSupplementalClientEvents.UPDATE_FOV.invoker().handle((LivingEntity) (Object) this, effectiveFov);
         if (effectiveFov != originalFov) {

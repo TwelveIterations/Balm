@@ -14,7 +14,7 @@ public class MinecraftMixin {
     @Inject(method = "run()V", at = @At("HEAD"))
     void run(CallbackInfo callbackInfo) {
         final ClientStartedEvent event = new ClientStartedEvent(Minecraft.getInstance());
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         ForgeBalmSupplementalClientEvents.CLIENT_STARTED.invoker().handle(Minecraft.getInstance());
     }
 }

@@ -37,11 +37,11 @@ public class FabricBalmConfig extends AbstractBalmConfig {
 
             // Not pretty, but the event system doesn't actually care about priorities, and we don't have a config load context yet.
             // Might revisit after the event overhaul and perhaps add more context to BalmConfig in 1.21.11.
-            Balm.getEvents().onEvent(ServerStartingEvent.class, event -> {
+            Balm.events().onEvent(ServerStartingEvent.class, event -> {
                 currentServer.set(event.getServer());
                 loadLocalConfig(schema);
             });
-            Balm.getEvents().onEvent(ServerStoppedEvent.class, event -> {
+            Balm.events().onEvent(ServerStoppedEvent.class, event -> {
                 currentServer.set(null);
             });
         }

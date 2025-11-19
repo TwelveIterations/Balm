@@ -22,7 +22,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
 
     default void initializeModule(BalmClientModule module) {
         final var modId = module.getId().getNamespace();
-        module.registerEvents(Balm.getEvents());
+        module.registerEvents(Balm.events());
         resourceReloadListeners(modId, module::registerClientReloadListeners);
         blockColors(modId, module::registerBlockColors);
         blockRenderTypes(modId, module::registerBlockRenderTypes);
