@@ -12,13 +12,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
+import java.util.Objects;
+
 public class RebornEnergy {
     public RebornEnergy() {
         EnergyStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
             private boolean running;
 
             @Override
-            public @Nullable EnergyStorage find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Direction direction) {
+            public @Nullable EnergyStorage find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction direction) {
                 if (running) {
                     return null;
                 }
@@ -30,7 +32,7 @@ public class RebornEnergy {
                     }
                 } else if (blockEntity != null){
                     running = true;
-                    final var energyStorage = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.ENERGY_STORAGE);
+                    final var energyStorage = Balm.capabilities().getCapability(blockEntity, direction, Objects.requireNonNull(CommonCapabilities.ENERGY_STORAGE));
                     running = false;
                     if (energyStorage != null) {
                         return new RebornEnergyStorage(energyStorage);

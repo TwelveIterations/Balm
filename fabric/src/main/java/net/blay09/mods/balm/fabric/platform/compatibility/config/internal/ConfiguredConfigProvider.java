@@ -11,6 +11,7 @@ import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ClassUtils;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,7 +72,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
             }
 
             @Override
-            public IConfigValue<?> getValue() {
+            public @Nullable IConfigValue<?> getValue() {
                 return null;
             }
 
@@ -81,7 +82,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
             }
 
             @Override
-            public Component getTooltip() {
+            public @Nullable Component getTooltip() {
                 return null;
             }
 
@@ -112,7 +113,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
             }
 
             @Override
-            public IConfigValue<?> getValue() {
+            public @Nullable IConfigValue<?> getValue() {
                 return null;
             }
 
@@ -122,7 +123,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
             }
 
             @Override
-            public Component getTooltip() {
+            public @Nullable Component getTooltip() {
                 return null;
             }
 
@@ -200,7 +201,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                     }
 
                     @Override
-                    public Component getValidationHint() {
+                    public @Nullable Component getValidationHint() {
                         return null;
                     }
 

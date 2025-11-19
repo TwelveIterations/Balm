@@ -8,6 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 public class DeferredHolder<T> implements Holder<T> {
 
     private final ResourceKey<T> resourceKey;
+    @Nullable
     private Holder<T> delegate;
 
     public DeferredHolder(ResourceKey<T> resourceKey) {

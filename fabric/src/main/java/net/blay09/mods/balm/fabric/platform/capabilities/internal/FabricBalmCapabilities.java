@@ -43,7 +43,8 @@ public class FabricBalmCapabilities implements BalmCapabilities {
     }
 
     @Override
-    public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type) {
+    @Nullable
+    public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable TContext context, CapabilityType<Block, TApi, TContext> type) {
         @SuppressWarnings("unchecked") final var lookup = (BlockApiLookup<TApi, TContext>) type.backingType();
         return lookup.find(level, pos, state, blockEntity, context);
     }

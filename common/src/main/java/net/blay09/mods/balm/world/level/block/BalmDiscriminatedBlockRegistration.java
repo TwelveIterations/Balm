@@ -3,11 +3,12 @@ package net.blay09.mods.balm.world.level.block;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.*;
 
-public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockRegistration> {
+public interface BalmDiscriminatedBlockRegistration<T> extends Map<@Nullable T, BalmBlockRegistration> {
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems() {
         forEach((discriminator, it) -> it.withDefaultItem());
         return this;
@@ -18,7 +19,7 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockR
         return this;
     }
 
-    default BalmDiscriminatedBlockRegistration<T> withDefaultItems(BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
+    default BalmDiscriminatedBlockRegistration<T> withDefaultItems(BiFunction<@Nullable T, Item.Properties, Item.Properties> propertiesBuilder) {
         forEach((discriminator, it) -> it.withItem(BlockItem::new, () -> propertiesBuilder.apply(discriminator, new Item.Properties())));
         return this;
     }
@@ -43,7 +44,7 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockR
         return this;
     }
 
-    default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
+    default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<@Nullable T, Item.Properties, Item.Properties> propertiesBuilder) {
         forEach((discrimination, it) -> it.withItem(constructor, () -> propertiesBuilder.apply(discrimination, new Item.Properties())));
         return this;
     }

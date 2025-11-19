@@ -7,6 +7,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerMixin implements BalmForcedPoseHolder {
 
     @Unique
+    @Nullable
     private Pose forcedPose;
 
     @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setAbsorptionAmount(F)V"), argsOnly = true)
@@ -44,12 +46,13 @@ public class PlayerMixin implements BalmForcedPoseHolder {
     }
 
     @Override
+    @Nullable
     public Pose balm$getForcedPose() {
         return forcedPose;
     }
 
     @Override
-    public void balm$setForcedPose(Pose pose) {
+    public void balm$setForcedPose(@Nullable Pose pose) {
         forcedPose = pose;
     }
 }

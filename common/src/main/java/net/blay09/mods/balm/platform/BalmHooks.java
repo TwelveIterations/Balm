@@ -57,6 +57,7 @@ public interface BalmHooks {
      * <li>On Fabric, only returns a dye color if the item extends {@link net.minecraft.world.item.DyeItem}</li>
      * <li>On NeoForge and Forge, also returns a dye color if the item has any of the dye tags.</li>
      */
+    @Nullable
     DyeColor getColor(ItemStack itemStack);
 
     void setBurnTime(Item item, int burnTime);

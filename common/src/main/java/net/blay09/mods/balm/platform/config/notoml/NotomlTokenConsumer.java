@@ -1,13 +1,18 @@
 package net.blay09.mods.balm.platform.config.notoml;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class NotomlTokenConsumer {
     private String currentCategory = "";
     private String currentProperty = "";
+    @Nullable
     private List<String> currentList;
+    @Nullable
     private StringBuilder currentMultiLineString;
+    @Nullable
     private StringBuilder currentComment;
 
     public void emitComment(String comment) {
@@ -48,7 +53,9 @@ public abstract class NotomlTokenConsumer {
     }
 
     public void emitListEnd() {
-        onPropertyParsed(currentCategory, currentProperty, currentList);
+        if (currentList != null) {
+            onPropertyParsed(currentCategory, currentProperty, currentList);
+        }
         currentList = null;
     }
 
@@ -57,7 +64,9 @@ public abstract class NotomlTokenConsumer {
     }
 
     public void emitMultiLineStringEnd() {
-        onPropertyParsed(currentCategory, currentProperty, currentMultiLineString.toString().trim());
+        if (currentMultiLineString != null) {
+            onPropertyParsed(currentCategory, currentProperty, currentMultiLineString.toString().trim());
+        }
         currentMultiLineString = null;
     }
 

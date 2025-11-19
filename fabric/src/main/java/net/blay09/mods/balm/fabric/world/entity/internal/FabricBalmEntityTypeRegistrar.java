@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -20,6 +21,6 @@ public class FabricBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegistr
     @SuppressWarnings("unchecked")
     protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityTypeHolder, Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributes) {
         final var entityType = entityTypeHolder.value();
-        FabricDefaultAttributeRegistry.register((EntityType<? extends LivingEntity>) entityType, attributes.apply(AttributeSupplier.builder()));
+        FabricDefaultAttributeRegistry.register((EntityType<? extends @NotNull LivingEntity>) entityType, attributes.apply(AttributeSupplier.builder()));
     }
 }

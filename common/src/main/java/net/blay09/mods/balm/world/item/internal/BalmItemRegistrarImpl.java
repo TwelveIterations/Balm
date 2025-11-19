@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -33,6 +34,7 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
 
     private static class BalmItemRegistrationImpl implements BalmItemRegistration {
         private final Holder<Item> holder;
+        @Nullable
         private DeferredItem deferredItem;
 
         private BalmItemRegistrationImpl(Holder<Item> holder) {

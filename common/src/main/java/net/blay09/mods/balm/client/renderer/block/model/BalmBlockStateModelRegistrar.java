@@ -10,9 +10,9 @@ import java.util.function.Function;
 public interface BalmBlockStateModelRegistrar {
     DeferredBlockStateModel register(Identifier identifier);
 
-    default <T> Map<T, DeferredBlockStateModel> registerDiscriminated(T[] values, Function<T, Identifier> identifierFunction) {
+    default <T> Map<@Nullable T, DeferredBlockStateModel> registerDiscriminated(T[] values, Function<T, Identifier> identifierFunction) {
         return registerDiscriminated(Set.of(values), identifierFunction);
     }
 
-    <T> Map<T, DeferredBlockStateModel> registerDiscriminated(Set<@Nullable T> values, Function<T, Identifier> identifierFunction);
+    <T> Map<@Nullable T, DeferredBlockStateModel> registerDiscriminated(Set<@Nullable T> values, Function<T, Identifier> identifierFunction);
 }

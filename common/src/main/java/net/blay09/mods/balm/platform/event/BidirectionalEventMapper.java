@@ -1,7 +1,6 @@
 package net.blay09.mods.balm.platform.event;
 
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

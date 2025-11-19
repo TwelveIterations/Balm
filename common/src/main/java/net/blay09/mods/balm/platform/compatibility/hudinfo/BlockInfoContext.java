@@ -6,6 +6,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jspecify.annotations.Nullable;
 
-public record BlockInfoContext(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity, BlockHitResult hitResult, Player player) {
+public record BlockInfoContext(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, BlockHitResult hitResult, Player player) {
 }

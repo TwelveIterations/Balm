@@ -3,6 +3,7 @@ package net.blay09.mods.balm.world.inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +41,13 @@ public final class QuickMove {
     private static final String PLAYER_HOTBAR = "hotbar";
 
     /**
-     * Functional interface matching the signature of {@link AbstractContainerMenu#moveItemStackTo(ItemStack, int, int, boolean)}.
+     * Functional interface matching the signature of {@code AbstractContainerMenu#moveItemStackTo(ItemStack, int, int, boolean)}.
      * To be passed as a method reference from your container menu since <code>moveItemStackTo</code> is protected.
      */
     @FunctionalInterface
     public interface MoveItemStackTo {
         /**
-         * Matches the signature of {@link AbstractContainerMenu#moveItemStackTo(ItemStack, int, int, boolean)}.
+         * Matches the signature of {@code AbstractContainerMenu#moveItemStackTo(ItemStack, int, int, boolean)}.
          *
          * @param itemStack the stack to move/merge (will be mutated)
          * @param start     start slot index (inclusive)
@@ -289,6 +290,7 @@ public final class QuickMove {
             return itemStack;
         }
 
+        @Nullable
         private NamedRange findRangeByIndex(int index) {
             for (final var range : ranges) {
                 if (range.contains(index)) {
@@ -298,6 +300,7 @@ public final class QuickMove {
             return null;
         }
 
+        @Nullable
         private NamedRange findRangeByName(String name) {
             for (final var range : ranges) {
                 if (range.name.equals(name)) {

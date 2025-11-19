@@ -1,11 +1,13 @@
 package net.blay09.mods.balm.platform.internal;
 
 import net.blay09.mods.balm.platform.PlatformProxy;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class PlatformProxyImpl<T> implements PlatformProxy<T> {
     private final String platform;
+    @Nullable
     private String clazzName;
 
     public PlatformProxyImpl(String platform) {

@@ -3,14 +3,17 @@ package net.blay09.mods.balm.platform.config;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.reflection.internal.ConfigReflection;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public interface BalmConfig {
     void registerConfig(BalmConfigSchema schema);
 
+    @Nullable
     BalmConfigSchema getSchema(Identifier identifier);
 
     MutableLoadedConfig getLocalConfig(Identifier identifier);
@@ -44,12 +47,14 @@ public interface BalmConfig {
         return schema;
     }
 
+    @Nullable
     default BalmConfigSchema getSchema(Class<?> configDataClass) {
         return getSchema(ConfigReflection.getIdentifier(configDataClass));
     }
 
     default <T> T getActiveConfig(Class<T> configDataClass) {
-        final var loadedConfig = getActiveConfig(getSchema(configDataClass));
+        final var schema = getSchema(configDataClass);
+        final var loadedConfig = getActiveConfig(Objects.requireNonNull(schema));
         return ConfigReflection.of(configDataClass, loadedConfig).data();
     }
 
@@ -66,6 +71,9 @@ public interface BalmConfig {
     void onConfigAvailable(BalmConfigSchema schema, Consumer<MutableLoadedConfig> handler);
 
     default <T> void onConfigAvailable(Class<T> configDataClass, Consumer<T> handler) {
-        onConfigAvailable(getSchema(configDataClass), (config) -> handler.accept(getActiveConfig(configDataClass)));
+        final var schema = getSchema(configDataClass);
+        if (schema != null) {
+            onConfigAvailable(schema, (config) -> handler.accept(getActiveConfig(configDataClass)));
+        }
     }
 }

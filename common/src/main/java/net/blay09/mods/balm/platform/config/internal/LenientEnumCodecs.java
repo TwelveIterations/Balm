@@ -7,6 +7,7 @@ import com.mojang.serialization.DynamicOps;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -23,7 +24,7 @@ public class LenientEnumCodecs {
         return new LenientEnumCodec<>(values, nameLookup, indexLookup);
     }
 
-    private static <T extends Enum<T>> Function<String, T> createNameLookup(T[] values, Function<String, String> keyFunction) {
+    private static <T extends Enum<T>> Function<@Nullable String, @Nullable T> createNameLookup(T[] values, Function<String, String> keyFunction) {
         if (values.length > 16) {
             final var map = Arrays.stream(values)
                     .collect(Collectors.toMap((value) -> keyFunction.apply(getSerializedName(value).toLowerCase(Locale.ROOT)), Function.identity()));

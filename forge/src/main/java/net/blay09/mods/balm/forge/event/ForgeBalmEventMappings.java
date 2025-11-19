@@ -29,7 +29,6 @@ import net.minecraftforge.eventbus.api.event.characteristic.Cancellable;
 import net.minecraftforge.eventbus.api.listener.Priority;
 import net.minecraftforge.eventbus.internal.Event;
 import net.minecraftforge.fml.LogicalSide;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.function.BiConsumer;

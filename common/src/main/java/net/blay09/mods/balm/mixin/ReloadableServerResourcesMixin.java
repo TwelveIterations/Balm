@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -24,7 +25,7 @@ public class ReloadableServerResourcesMixin {
 
     @Inject(method = "loadResources(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/core/LayeredRegistryAccess;Ljava/util/List;Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/commands/Commands$CommandSelection;Lnet/minecraft/server/permissions/PermissionSet;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;", at = @At("RETURN"))
     private static void loadResources(ResourceManager resourceManager, LayeredRegistryAccess<RegistryLayer> registryAccess, List<Registry.PendingTags<?>> pendingTags, FeatureFlagSet featureFlagSet, Commands.CommandSelection commandSelection, PermissionSet permissionSet, Executor e1, Executor e2, CallbackInfoReturnable<CompletableFuture<ReloadableServerResources>> callbackInfo) {
-        callbackInfo.getReturnValue().thenAccept(it -> BalmSupplementalEvents.SERVER_RELOADING.invoker().handle(Balm.platform().server(), it));
+        callbackInfo.getReturnValue().thenAccept(it -> BalmSupplementalEvents.SERVER_RELOADING.invoker().handle(Objects.requireNonNull(Balm.platform().server()), it));
     }
 
 }

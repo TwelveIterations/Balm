@@ -10,6 +10,7 @@ import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementa
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -19,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FabricBalmConfig extends AbstractBalmConfig {
 
     private static final Logger logger = LogUtils.getLogger();
-    private final AtomicReference<MinecraftServer> currentServer = new AtomicReference<>();
+    private final AtomicReference<@Nullable MinecraftServer> currentServer = new AtomicReference<>();
 
     @Override
     public void registerConfig(BalmConfigSchema schema) {

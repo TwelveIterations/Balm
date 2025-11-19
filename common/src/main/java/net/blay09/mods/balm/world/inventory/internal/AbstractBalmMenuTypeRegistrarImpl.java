@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractBalmMenuTypeRegistrarImpl implements BalmMenuTypeRegistrar {
 
@@ -34,7 +35,7 @@ public abstract class AbstractBalmMenuTypeRegistrarImpl implements BalmMenuTypeR
 
         @SuppressWarnings("unchecked")
         private BalmMenuTypeRegistrationImpl(Holder<?> holder) {
-            this.holder = (Holder<MenuType<T>>) holder;
+            this.holder = (Holder<@NotNull MenuType<T>>) holder;
         }
 
         @Override

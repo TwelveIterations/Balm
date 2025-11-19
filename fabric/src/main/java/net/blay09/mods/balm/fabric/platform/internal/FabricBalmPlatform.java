@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FabricBalmPlatform implements BalmPlatform {
 
-    private final AtomicReference<MinecraftServer> currentServer = new AtomicReference<>();
+    private final AtomicReference<@Nullable MinecraftServer> currentServer = new AtomicReference<>();
 
     public void initialize() {
         ServerLifecycleCallback.Starting.EVENT.register(currentServer::set);

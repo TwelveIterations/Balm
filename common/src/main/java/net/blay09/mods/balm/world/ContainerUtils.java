@@ -39,7 +39,7 @@ public class ContainerUtils {
     }
 
     public static ItemStack insertItem(Container container, ItemStack itemStack, boolean simulate) {
-        if (container == null || itemStack.isEmpty()) {
+        if (itemStack.isEmpty()) {
             return itemStack;
         }
 
@@ -54,7 +54,7 @@ public class ContainerUtils {
     }
 
     public static ItemStack insertItem(Container container, int slot, ItemStack itemStack, boolean simulate) {
-        if (container == null || itemStack.isEmpty()) {
+        if (itemStack.isEmpty()) {
             return itemStack;
         }
 
@@ -91,7 +91,7 @@ public class ContainerUtils {
     }
 
     public static ItemStack insertItemStacked(Container container, ItemStack itemStack, boolean simulate) {
-        if (container == null || itemStack.isEmpty()) {
+        if (itemStack.isEmpty()) {
             return itemStack;
         }
 

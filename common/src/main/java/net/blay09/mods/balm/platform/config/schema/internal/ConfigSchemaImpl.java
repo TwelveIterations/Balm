@@ -11,6 +11,7 @@ import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategoryBuilder;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigPropertyBuilder;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,11 +61,13 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
     }
 
     @Override
+    @Nullable
     public ConfiguredProperty<?> findProperty(String category, String property) {
         return properties.get(category, property);
     }
 
     @Override
+    @Nullable
     public ConfiguredProperty<?> findRootProperty(String property) {
         return properties.get("", property);
     }

@@ -8,6 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 public class PrimitiveConfigCodecs {
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -40,19 +41,19 @@ public class PrimitiveConfigCodecs {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> StreamCodec<ByteBuf, T> streamCodec(Class<T> type) {
         if (type == String.class) {
-            return (StreamCodec<ByteBuf, T>) ByteBufCodecs.STRING_UTF8;
+            return (StreamCodec<@NotNull ByteBuf, T>) ByteBufCodecs.STRING_UTF8;
         } else if (type == Integer.class || type == int.class) {
-            return (StreamCodec<ByteBuf, T>) ByteBufCodecs.INT;
+            return (StreamCodec<@NotNull ByteBuf, T>) ByteBufCodecs.INT;
         } else if (type == Long.class || type == long.class) {
-            return (StreamCodec<ByteBuf, T>) ByteBufCodecs.LONG;
+            return (StreamCodec<@NotNull ByteBuf, T>) ByteBufCodecs.LONG;
         } else if (type == Float.class || type == float.class) {
-            return (StreamCodec<ByteBuf, T>) ByteBufCodecs.FLOAT;
+            return (StreamCodec<@NotNull ByteBuf, T>) ByteBufCodecs.FLOAT;
         } else if (type == Double.class || type == double.class) {
-            return (StreamCodec<ByteBuf, T>) ByteBufCodecs.DOUBLE;
+            return (StreamCodec<@NotNull ByteBuf, T>) ByteBufCodecs.DOUBLE;
         } else if (type == Boolean.class || type == boolean.class) {
-            return (StreamCodec<ByteBuf, T>) ByteBufCodecs.BOOL;
+            return (StreamCodec<@NotNull ByteBuf, T>) ByteBufCodecs.BOOL;
         } else if (type == Identifier.class) {
-            return (StreamCodec<ByteBuf, T>) Identifier.STREAM_CODEC;
+            return (StreamCodec<@NotNull ByteBuf, T>) Identifier.STREAM_CODEC;
         } else if (type.isEnum() && StringRepresentable.class.isAssignableFrom(type)) {
             return enumStreamCodec((Class) type);
         } else {

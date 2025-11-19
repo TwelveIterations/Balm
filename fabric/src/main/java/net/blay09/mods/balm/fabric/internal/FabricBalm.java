@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class FabricBalm implements ModInitializer {
@@ -65,7 +66,7 @@ public class FabricBalm implements ModInitializer {
             private boolean running;
 
             @Override
-            public @Nullable Storage<ItemVariant> find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Direction direction) {
+            public @Nullable Storage<ItemVariant> find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction direction) {
                 if (running) {
                     return null;
                 }
@@ -77,7 +78,7 @@ public class FabricBalm implements ModInitializer {
                     }
                 } else if (blockEntity != null) {
                     running = true;
-                    final var container = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
+                    final var container = Balm.capabilities().getCapability(blockEntity, direction, Objects.requireNonNull(CommonCapabilities.CONTAINER));
                     running = false;
                     if (container != null) {
                         return InventoryStorage.of(container, direction);
@@ -92,7 +93,7 @@ public class FabricBalm implements ModInitializer {
             private boolean running;
 
             @Override
-            public @Nullable Storage<FluidVariant> find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Direction direction) {
+            public @Nullable Storage<FluidVariant> find(Level world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction direction) {
                 if (running) {
                     return null;
                 }
@@ -104,7 +105,7 @@ public class FabricBalm implements ModInitializer {
                     }
                 } else if (blockEntity != null) {
                     running = true;
-                    final var fluidTank = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.FLUID_TANK);
+                    final var fluidTank = Balm.capabilities().getCapability(blockEntity, direction, Objects.requireNonNull(CommonCapabilities.FLUID_TANK));
                     running = false;
                     if (fluidTank != null) {
                         return new BalmFluidStorage(fluidTank);

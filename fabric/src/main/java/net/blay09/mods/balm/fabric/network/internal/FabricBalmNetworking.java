@@ -40,6 +40,7 @@ public class FabricBalmNetworking implements BalmNetworking {
     private static final Logger logger = LoggerFactory.getLogger(FabricBalmNetworking.class);
 
     private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new HashMap<>();
+    @Nullable
     private static PacketSender replyPacketSender;
     private final Set<String> registeredMods = Collections.synchronizedSet(new HashSet<>());
     private final Set<String> clientOnlyMods = Collections.synchronizedSet(new HashSet<>());

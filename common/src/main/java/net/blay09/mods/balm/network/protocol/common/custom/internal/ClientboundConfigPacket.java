@@ -35,6 +35,9 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
         for (int j = 0; j < rootPropertyCount; j++) {
             final var property = buf.readUtf();
             final var propertySchema = schema.findRootProperty(property);
+            if (propertySchema == null) {
+                throw new RuntimeException("Received config packet for unknown root property: " + property);
+            }
             decodePropertyInto(propertySchema, buf, config);
         }
         final var categoryCount = buf.readVarInt();
@@ -44,6 +47,9 @@ public record ClientboundConfigPacket(BalmConfigSchema schema, LoadedConfig conf
             for (int j = 0; j < propertyCount; j++) {
                 final var property = buf.readUtf();
                 final var propertySchema = schema.findProperty(category, property);
+                if (propertySchema == null) {
+                    throw new RuntimeException("Received config packet for unknown property: " + property);
+                }
                 decodePropertyInto(propertySchema, buf, config);
             }
         }

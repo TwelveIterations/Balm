@@ -1,8 +1,11 @@
 package net.blay09.mods.balm.platform.config.notoml;
 
+import org.jspecify.annotations.Nullable;
+
 public class NotomlError {
 
     private final String message;
+    @Nullable
     private Throwable cause;
     private int line = -1;
 
@@ -19,6 +22,7 @@ public class NotomlError {
         return message;
     }
 
+    @Nullable
     public Throwable getCause() {
         return cause;
     }

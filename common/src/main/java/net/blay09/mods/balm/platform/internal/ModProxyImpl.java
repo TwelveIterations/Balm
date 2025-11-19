@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.platform.internal;
 
 import net.blay09.mods.balm.platform.ModProxy;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 public class ModProxyImpl<T> implements ModProxy<T> {
     private final Predicate<String> modLoadedPredicate;
     private final List<ModEntry> proxies = new ArrayList<>();
+    @Nullable
     private Function<List<T>, T> multiplexer;
     private T fallback;
 
@@ -64,6 +66,7 @@ public class ModProxyImpl<T> implements ModProxy<T> {
 
     public Supplier<T> buildLazily() {
         return new Supplier<>() {
+            @Nullable
             private T instance;
 
             @Override

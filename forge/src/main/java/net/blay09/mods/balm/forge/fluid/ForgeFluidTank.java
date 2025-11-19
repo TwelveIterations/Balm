@@ -3,7 +3,6 @@ package net.blay09.mods.balm.forge.fluid;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class ForgeFluidTank implements IFluidHandler {
 

@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,7 +149,7 @@ public class NodeSorting {
 		return noCycle;
 	}
 
-	private static <N extends SortableNode<N>> void forwardVisit(N node, N parent, List<N> toposort) {
+	private static <N extends SortableNode<N>> void forwardVisit(N node, @Nullable N parent, List<N> toposort) {
 		if (!node.visited) {
 			// Not yet visited.
 			node.visited = true;

@@ -9,6 +9,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -35,7 +36,7 @@ public abstract class AbstractBalmParticleTypeRegistrarImpl implements BalmParti
 
         @SuppressWarnings("unchecked")
         private BalmParticleTypeRegistrationImpl(Holder<?> holder) {
-            this.holder = (Holder<ParticleType<T>>) holder;
+            this.holder = (Holder<@NotNull ParticleType<T>>) holder;
         }
 
         @Override

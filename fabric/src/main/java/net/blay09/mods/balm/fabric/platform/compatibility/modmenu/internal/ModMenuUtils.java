@@ -4,8 +4,10 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.fabric.platform.compatibility.config.internal.ClothConfigUtils;
 import net.blay09.mods.balm.fabric.platform.compatibility.config.internal.ConfiguredConfigProvider;
+import org.jspecify.annotations.Nullable;
 
 public class ModMenuUtils {
+    @Nullable
     public static ConfigScreenFactory<?> getConfigScreen(String modId) {
         if (Balm.platform().isModLoaded("cloth-config")) {
             return ClothConfigUtils.getConfigScreen(modId);

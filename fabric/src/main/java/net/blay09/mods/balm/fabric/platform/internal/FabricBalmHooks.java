@@ -28,6 +28,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 public class FabricBalmHooks implements BalmHooks {
 
     @Override
@@ -71,6 +73,7 @@ public class FabricBalmHooks implements BalmHooks {
     }
 
     @Override
+    @Nullable
     public DyeColor getColor(ItemStack itemStack) {
         if (itemStack.getItem() instanceof DyeItem) {
             return ((DyeItem) itemStack.getItem()).getDyeColor();
@@ -91,14 +94,14 @@ public class FabricBalmHooks implements BalmHooks {
     @Override
     public boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        final var fluidTank = Balm.capabilities().getCapability(blockEntity, hitResult.getDirection(), CommonCapabilities.FLUID_TANK);
+        final var fluidTank = blockEntity != null ? Balm.capabilities().getCapability(blockEntity, hitResult.getDirection(), Objects.requireNonNull(CommonCapabilities.FLUID_TANK)) : null;
         if (fluidTank != null) {
             ItemStack handItem = player.getItemInHand(hand);
             if (handItem.getItem() == Items.BUCKET) {
                 int drained = fluidTank.drain(fluidTank.getFluid(), 1000, true);
                 if (drained >= 1000) {
                     Item bucketItem = fluidTank.getFluid().getBucket();
-                    if (bucketItem != null && bucketItem != Items.AIR) {
+                    if (bucketItem != Items.AIR) {
                         ItemStack bucketItemStack = new ItemStack(bucketItem);
                         if (handItem.getCount() > 1) {
                             if (player.addItem(bucketItemStack)) {
@@ -143,7 +146,7 @@ public class FabricBalmHooks implements BalmHooks {
     }
 
     @Override
-    public void setForcedPose(Player player, Pose pose) {
+    public void setForcedPose(Player player, @Nullable Pose pose) {
         ((BalmForcedPoseHolder) player).balm$setForcedPose(pose);
     }
 

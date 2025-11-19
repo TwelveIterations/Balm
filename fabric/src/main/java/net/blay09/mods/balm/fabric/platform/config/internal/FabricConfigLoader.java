@@ -8,6 +8,7 @@ import net.blay09.mods.balm.platform.config.notoml.Notoml;
 import net.blay09.mods.balm.platform.config.notoml.NotomlError;
 import net.blay09.mods.balm.platform.config.notoml.NotomlParser;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -73,7 +74,8 @@ public class FabricConfigLoader {
         return backupFile;
     }
 
-    private static String getExpectedValueTypeMessage(Class<?> type, Class<?> innerType) {
+    @Nullable
+    private static String getExpectedValueTypeMessage(@Nullable Class<?> type, @Nullable Class<?> innerType) {
         if (type == Integer.class || type == Integer.TYPE) {
             return "integer";
         } else if (type == Long.class || type == Long.TYPE) {
@@ -90,14 +92,15 @@ public class FabricConfigLoader {
             return "list of " + getExpectedValueTypeMessage(innerType, null);
         } else if (type == Set.class) {
             return "set of " + getExpectedValueTypeMessage(innerType, null);
-        } else if (Enum.class.isAssignableFrom(type)) {
+        } else if (type != null && Enum.class.isAssignableFrom(type)) {
             Enum<?>[] enumConstants = (Enum<?>[]) type.getEnumConstants();
             return "enum value (" + String.join(", ", Arrays.stream(enumConstants).map(Enum::name).toArray(String[]::new)) + ")";
         }
         return null;
     }
 
-    private static Object convertValue(Object value, Class<?> type, Class<?> innerType) {
+    @Nullable
+    private static Object convertValue(Object value, @Nullable Class<?> type, @Nullable Class<?> innerType) {
         if (type == Integer.class || type == Integer.TYPE) {
             if (value instanceof Number) {
                 return ((Number) value).intValue();
@@ -198,7 +201,7 @@ public class FabricConfigLoader {
             } else {
                 throw new IllegalArgumentException("Invalid list value: '" + value + "'");
             }
-        } else if (Enum.class.isAssignableFrom(type)) {
+        } else if (type != null && Enum.class.isAssignableFrom(type)) {
             if (value instanceof String) {
                 try {
                     return parseEnumValue(type, (String) value);
@@ -212,6 +215,7 @@ public class FabricConfigLoader {
         return null;
     }
 
+    @Nullable
     private static Object parseEnumValue(Class<?> type, String value) {
         for (Object enumConstant : type.getEnumConstants()) {
             if (enumConstant.toString().equalsIgnoreCase(value)) {

@@ -14,18 +14,23 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public interface BalmCapabilities {
-    <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type);
+    <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable TContext context, CapabilityType<Block, TApi, TContext> type);
 
     <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass);
 
     <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass);
 
+    @Nullable
     default <TApi> TApi getCapability(BlockEntity blockEntity, CapabilityType<Block, TApi, ?> type) {
         return getCapability(blockEntity, null, type);
     }
 
-    default <TApi, TContext> TApi getCapability(BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type) {
-        return getCapability(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, context, type);
+    @Nullable
+    default <TApi, TContext> TApi getCapability(BlockEntity blockEntity, @Nullable TContext context, CapabilityType<Block, TApi, TContext> type) {
+        if (blockEntity.getLevel() != null) {
+            return getCapability(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, context, type);
+        }
+        return null;
     }
 
     <TApi, TContext> void registerProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<Set<BlockEntityType<?>>> blockEntityTypes);

@@ -10,6 +10,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -39,7 +40,7 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
 
         @SuppressWarnings("unchecked")
         private BalmEntityTypeRegistrationImpl(Holder<?> holder) {
-            this.holder = (Holder<EntityType<T>>) holder;
+            this.holder = (Holder<@NotNull EntityType<T>>) holder;
         }
 
         @Override

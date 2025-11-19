@@ -11,6 +11,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -55,7 +56,7 @@ public abstract class AbstractBalmBlockEntityTypeRegistrarImpl implements BalmBl
 
         @SuppressWarnings("unchecked")
         private BalmBlockEntityTypeRegistrationImpl(Holder<?> holder) {
-            this.holder = (Holder<BlockEntityType<T>>) holder;
+            this.holder = (Holder<@NotNull BlockEntityType<T>>) holder;
         }
 
         @Override

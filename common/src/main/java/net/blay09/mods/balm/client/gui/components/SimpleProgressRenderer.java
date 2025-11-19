@@ -2,6 +2,7 @@ package net.blay09.mods.balm.client.gui.components;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 public class SimpleProgressRenderer implements ProgressRenderer {
 
@@ -66,7 +67,7 @@ public class SimpleProgressRenderer implements ProgressRenderer {
     }
 
     public static SimpleProgressRenderer invisible() {
-        return new SimpleProgressRenderer(null, 0, 0, Direction.INVISIBLE);
+        return new SimpleProgressRenderer(Identifier.fromNamespaceAndPath("balm", "empty"), 0, 0, Direction.INVISIBLE);
     }
 
     @Override

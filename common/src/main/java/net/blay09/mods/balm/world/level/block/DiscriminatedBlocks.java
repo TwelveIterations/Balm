@@ -1,18 +1,20 @@
 package net.blay09.mods.balm.world.level.block;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
 import java.util.stream.Stream;
 
-public interface DiscriminatedBlocks<T> extends Map<T, DeferredBlock> {
+public interface DiscriminatedBlocks<T> extends Map<@Nullable T, DeferredBlock> {
     Stream<Map.Entry<T, DeferredBlock>> filterNonNullDiscriminatorEntries();
 
     Stream<DeferredBlock> filterNonNullDiscriminators();
 
-    static <T> String prefix(T value, String name) {
+    static <T> String prefix(@Nullable T value, String name) {
         return value == null ? name : value + "_" + name;
     }
 
-    static <T> String suffix(String name, T value) {
+    static <T> String suffix(String name, @Nullable T value) {
         return value == null ? name : name + "_" + value;
     }
 }
