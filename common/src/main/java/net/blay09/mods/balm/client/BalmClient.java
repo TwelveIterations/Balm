@@ -75,7 +75,6 @@ public class BalmClient {
      * For internal use. Provides access to the runtime powering mod-loader specific functions.
      * Generally, you should not need to access the runtime directly, as all its methods are exposed on {@link Balm}.
      */
-    @ApiStatus.Internal
     public static BalmClientRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
     }

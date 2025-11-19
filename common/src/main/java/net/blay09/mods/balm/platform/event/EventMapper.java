@@ -45,7 +45,6 @@ public interface EventMapper<TCallback> {
      *
      * @param registrar The consumer that takes the priority phase and listener and registers it to the mod-loader specific bus.
      */
-    @ApiStatus.Internal
     void configureMapping(BiConsumer<Identifier, TCallback> registrar);
 
     /**

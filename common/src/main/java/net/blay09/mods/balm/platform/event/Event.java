@@ -24,7 +24,6 @@ import net.minecraft.resources.Identifier;
  * @param <T> The listener type.
  * @see EventFactory
  */
-@ApiStatus.NonExtendable // Should only be extended by Balm.
 public abstract class Event<T> {
     /**
      * The invoker field. This should be updated by the implementation to
