@@ -6,6 +6,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.List;
 
@@ -13,11 +14,14 @@ import java.util.List;
 public interface ScreenAccessor {
 
     @Accessor("children")
-    List<GuiEventListener> balm_getChildren();
+    List<GuiEventListener> balm$getChildren();
 
     @Accessor("narratables")
-    List<NarratableEntry> balm_getNarratables();
+    List<NarratableEntry> balm$getNarratables();
 
     @Accessor("renderables")
-    List<Renderable> balm_getRenderables();
+    List<Renderable> balm$getRenderables();
+
+    @Invoker("addRenderableWidget")
+    <T extends GuiEventListener & Renderable & NarratableEntry> T balm$addRenderableWidget(T widget);
 }
