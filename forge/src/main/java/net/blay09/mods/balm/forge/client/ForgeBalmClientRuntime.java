@@ -44,7 +44,7 @@ import java.util.function.Consumer;
 public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadContext> {
 
     public ForgeBalmClientRuntime() {
-        ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.events()));
+        ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.getEvents()));
     }
 
     @Override

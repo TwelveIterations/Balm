@@ -28,7 +28,7 @@ public class ServerPlayerMixin {
     @Inject(method = "openMenu(Lnet/minecraft/world/MenuProvider;)Ljava/util/OptionalInt;", at = @At("RETURN"))
     public void openMenu(@Nullable MenuProvider menuProvider, CallbackInfoReturnable<OptionalInt> callbackInfo) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        Balm.events().fireEvent(new PlayerOpenMenuEvent(player, player.containerMenu));
+        Balm.getEvents().fireEvent(new PlayerOpenMenuEvent(player, player.containerMenu));
     }
 
     @Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("HEAD"))
@@ -43,7 +43,7 @@ public class ServerPlayerMixin {
         final ResourceKey<Level> fromDim = fromDimHolder.get();
         final ResourceKey<Level> toDim = transition.newLevel().dimension();
         if (!fromDim.equals(toDim)) {
-            Balm.events().fireEvent(new PlayerChangedDimensionEvent(player, fromDim, toDim));
+            Balm.getEvents().fireEvent(new PlayerChangedDimensionEvent(player, fromDim, toDim));
         }
     }
 
@@ -53,7 +53,7 @@ public class ServerPlayerMixin {
         Inventory inventory = player.getInventory();
         ItemStack selected = inventory.getSelectedItem();
         TossItemEvent event = new TossItemEvent(player, selected);
-        Balm.events().fireEvent(event);
+        Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
         }

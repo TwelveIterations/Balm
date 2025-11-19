@@ -22,7 +22,7 @@ public class ChatComponentMixin {
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V", at = @At("HEAD"), cancellable = true)
     public void renderPre(GuiGraphics guiGraphics, int tickCount, int x, int y, boolean bl, CallbackInfo callbackInfo) {
         GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.CHAT);
-        Balm.events().fireEvent(event);
+        Balm.getEvents().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
         }
@@ -30,6 +30,6 @@ public class ChatComponentMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, int tickCount, int x, int y, boolean bl, CallbackInfo callbackInfo) {
-        Balm.events().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.CHAT));
+        Balm.getEvents().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.CHAT));
     }
 }

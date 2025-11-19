@@ -17,7 +17,7 @@ public class AbstractClientPlayerMixin {
     private void getFieldOfViewModifier(boolean allowScoping, float current, CallbackInfoReturnable<Float> callbackInfo,
                                         @Local(ordinal = 1) float originalFov) {
         FovUpdateEvent event = new FovUpdateEvent((LivingEntity) (Object) this, originalFov);
-        Balm.events().fireEvent(event);
+        Balm.getEvents().fireEvent(event);
         Float override = event.getFov();
         if (override != null) {
             callbackInfo.setReturnValue(override);

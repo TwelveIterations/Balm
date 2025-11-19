@@ -13,6 +13,6 @@ public class MinecraftMixin {
     @Inject(method = "run()V", at = @At("HEAD"))
     void run(CallbackInfo callbackInfo) {
         final ClientStartedEvent event = new ClientStartedEvent(Minecraft.getInstance());
-        Balm.events().fireEvent(event);
+        Balm.getEvents().fireEvent(event);
     }
 }

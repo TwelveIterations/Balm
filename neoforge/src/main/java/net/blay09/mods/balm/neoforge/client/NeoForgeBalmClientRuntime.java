@@ -43,7 +43,7 @@ import java.util.function.Consumer;
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
 
     public NeoForgeBalmClientRuntime() {
-        NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.events()));
+        NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.getEvents()));
     }
 
     @Override

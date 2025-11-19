@@ -19,7 +19,7 @@ public class FabricBalmClient implements ClientModInitializer {
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 
-        Balm.events().onEvent(ConnectedToServerEvent.class, event -> {
+        Balm.getEvents().onEvent(ConnectedToServerEvent.class, event -> {
             final var networking = (FabricBalmNetworking) Balm.networking();
             final var modVersions = new HashMap<String, NetworkVersions>();
             for (final var modId : networking.getRegisteredMods()) {
