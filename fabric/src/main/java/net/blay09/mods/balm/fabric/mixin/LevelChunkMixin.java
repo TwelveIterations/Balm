@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.mixin;
+package net.blay09.mods.balm.fabric.mixin;
 
 import net.blay09.mods.balm.world.level.block.entity.OnLoadHandler;
 import net.blay09.mods.balm.fabric.block.entity.BlockEntityOnLoadCallback;

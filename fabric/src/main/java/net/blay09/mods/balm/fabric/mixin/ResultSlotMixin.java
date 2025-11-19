@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.mixin;
+package net.blay09.mods.balm.fabric.mixin;
 
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.world.entity.player.Player;

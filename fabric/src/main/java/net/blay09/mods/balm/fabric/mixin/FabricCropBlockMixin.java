@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.mixin;
+package net.blay09.mods.balm.fabric.mixin;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;

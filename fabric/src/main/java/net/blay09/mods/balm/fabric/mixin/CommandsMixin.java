@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.mixin;
+package net.blay09.mods.balm.fabric.mixin;
 
 import com.mojang.brigadier.ParseResults;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;

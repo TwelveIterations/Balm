@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.mixin;
+package net.blay09.mods.balm.fabric.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
