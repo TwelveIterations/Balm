@@ -34,8 +34,8 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
 
     private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private static final List<BalmModule> modules = Collections.synchronizedList(new ArrayList<>());
-    private final Supplier<BalmSafeClientAccess> proxy = this.<BalmSafeClientAccess>sidedProxy("net.blay09.mods.balm.api.BalmProxy",
-            "net.blay09.mods.balm.api.client.BalmClientProxy").buildLazily();
+    private final Supplier<BalmSafeClientAccess> proxy = this.<BalmSafeClientAccess>sidedProxy("net.blay09.mods.balm.platform.BalmSafeClientAccess",
+            "net.blay09.mods.balm.client.platform.internal.BalmClientSafeClientAccess").buildLazily();
 
     private boolean ready;
 

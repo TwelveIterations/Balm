@@ -40,8 +40,8 @@ import java.util.function.Supplier;
 
 public class FabricBalm implements ModInitializer {
 
-    private static final Supplier<FabricBalmProxy> proxy = Balm.<FabricBalmProxy>sidedProxy("net.blay09.mods.balm.fabric.FabricBalmProxy",
-            "net.blay09.mods.balm.fabric.client.FabricBalmClientProxy")
+    private static final Supplier<FabricBalmProxy> proxy = Balm.<FabricBalmProxy>sidedProxy("net.blay09.mods.balm.fabric.platform.internalFabricBalmProxy",
+            "net.blay09.mods.balm.fabric.client.internal.platform.internal.FabricBalmClientProxy")
             .buildLazily();
 
     public static FabricBalmProxy getProxy() {

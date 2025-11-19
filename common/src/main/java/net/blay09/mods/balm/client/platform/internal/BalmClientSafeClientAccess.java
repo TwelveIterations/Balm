@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.platform.internal;
+package net.blay09.mods.balm.client.platform.internal;
 
 import net.blay09.mods.balm.platform.BalmSafeClientAccess;
 import net.blay09.mods.kuma.api.Kuma;
