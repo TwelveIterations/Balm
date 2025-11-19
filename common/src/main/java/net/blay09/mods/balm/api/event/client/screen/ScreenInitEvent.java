@@ -19,7 +19,7 @@ public abstract class ScreenInitEvent extends BalmEvent {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Init#PRE} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Init#BEFORE} instead.
      */
     @Deprecated
     public static class Pre extends ScreenInitEvent {
@@ -29,7 +29,7 @@ public abstract class ScreenInitEvent extends BalmEvent {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Init#POST} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Init#AFTER} instead.
      */
     @Deprecated
     public static class Post extends ScreenInitEvent {

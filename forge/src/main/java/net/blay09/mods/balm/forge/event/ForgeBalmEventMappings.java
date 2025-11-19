@@ -46,22 +46,22 @@ public class ForgeBalmEventMappings {
     );
 
     public static void bind() {
-        bindSimple(ServerTickCallback.PRE, TickEvent.ServerTickEvent.Pre.BUS, (event, it) -> it.handle(event.server()));
-        bindSimple(ServerTickCallback.POST, TickEvent.ServerTickEvent.Post.BUS, (event, it) -> it.handle(event.server()));
-        bindFiltered(ServerTickCallback.ServerLevelTick.PRE, TickEvent.LevelTickEvent.Pre.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerLevel) event.level()));
-        bindFiltered(ServerTickCallback.ServerLevelTick.POST, TickEvent.LevelTickEvent.Post.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerLevel) event.level()));
-        bindFiltered(ServerTickCallback.ServerPlayerTick.PRE, TickEvent.PlayerTickEvent.Pre.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerPlayer) event.player()));
-        bindFiltered(ServerTickCallback.ServerPlayerTick.POST, TickEvent.PlayerTickEvent.Post.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerPlayer) event.player()));
+        bindSimple(ServerTickCallback.BEFORE, TickEvent.ServerTickEvent.Pre.BUS, (event, it) -> it.handle(event.server()));
+        bindSimple(ServerTickCallback.AFTER, TickEvent.ServerTickEvent.Post.BUS, (event, it) -> it.handle(event.server()));
+        bindFiltered(ServerTickCallback.ServerLevelTick.BEFORE, TickEvent.LevelTickEvent.Pre.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerLevel) event.level()));
+        bindFiltered(ServerTickCallback.ServerLevelTick.AFTER, TickEvent.LevelTickEvent.Post.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerLevel) event.level()));
+        bindFiltered(ServerTickCallback.ServerPlayerTick.BEFORE, TickEvent.PlayerTickEvent.Pre.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerPlayer) event.player()));
+        bindFiltered(ServerTickCallback.ServerPlayerTick.AFTER, TickEvent.PlayerTickEvent.Post.BUS, event -> event.side() == LogicalSide.SERVER, (event, it) -> it.handle((ServerPlayer) event.player()));
         // TODO LivingEvent.LivingTickEvent only ticks for living entities and has no pre/post
-        bindSimple(ServerTickCallback.ServerEntityTick.PRE, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
-        bindSimple(ServerTickCallback.ServerEntityTick.POST, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
+        bindSimple(ServerTickCallback.ServerEntityTick.BEFORE, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
+        bindSimple(ServerTickCallback.ServerEntityTick.AFTER, LivingEvent.LivingTickEvent.BUS, (event, it) -> it.handle(event.getEntity()));
 
-        bindSimple(ServerLifecycleCallback.STARTING, ServerAboutToStartEvent.BUS, (event, it) -> it.handle(event.getServer()));
-        bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.BUS, (event, it) -> it.handle(event.getServer()));
-        bindSimple(ServerLifecycleCallback.STOPPING, ServerStoppingEvent.BUS, (event, it) -> it.handle(event.getServer()));
-        bindSimple(ServerLifecycleCallback.STOPPED, ServerStoppedEvent.BUS, (event, it) -> it.handle(event.getServer()));
-        ServerLifecycleCallback.RELOADING.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
-        ServerLifecycleCallback.RELOADED.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
+        bindSimple(ServerLifecycleCallback.Starting.EVENT, ServerAboutToStartEvent.BUS, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.Started.EVENT, ServerStartedEvent.BUS, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.Stopping.EVENT, ServerStoppingEvent.BUS, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.Stopped.EVENT, ServerStoppedEvent.BUS, (event, it) -> it.handle(event.getServer()));
+        ServerLifecycleCallback.Reloading.EVENT.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
+        ServerLifecycleCallback.Reloaded.EVENT.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
 
         bindCancelable(BlockCallback.DigSpeed.EVENT, PlayerEvent.BreakSpeed.BUS, (event, it) -> event.getPosition().map(pos -> {
             final var level = event.getEntity().level();
@@ -84,19 +84,19 @@ public class ForgeBalmEventMappings {
 
         bindCancelable(CommandCallback.EVENT, CommandEvent.BUS, (event, it) -> it.handle(event.getParseResults()).shouldSkipDefault());
 
-        ConfigCallback.LOADED.configureMapping(ForgeBalmSupplementalEvents.CONFIG_LOADED::register);
-        ConfigCallback.RELOADED.configureMapping(ForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
+        ConfigCallback.Loaded.EVENT.configureMapping(ForgeBalmSupplementalEvents.CONFIG_LOADED::register);
+        ConfigCallback.Reloaded.EVENT.configureMapping(ForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
 
-        bindSimple(CropCallback.Grow.PRE, BlockEvent.CropGrowEvent.Pre.BUS, (event, it) -> {
+        bindSimple(CropCallback.Grow.BEFORE, BlockEvent.CropGrowEvent.Pre.BUS, (event, it) -> {
             if (it.handle(event.getLevel(), event.getPos(), event.getState()).shouldSkipDefault()) {
                 event.setResult(Result.DENY);
             }
         });
-        bindSimple(CropCallback.Grow.POST, BlockEvent.CropGrowEvent.Post.BUS, (event, it) -> it.handle(event.getLevel(), event.getPos(), event.getState()));
+        bindSimple(CropCallback.Grow.AFTER, BlockEvent.CropGrowEvent.Post.BUS, (event, it) -> it.handle(event.getLevel(), event.getPos(), event.getState()));
 
         bindSimple(EntityCallback.Add.EVENT, EntityJoinLevelEvent.BUS, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
 
-        bindSimple(CreativeModeTabCallback.BUILD_CONTENTS, BuildCreativeModeTabContentsEvent.BUS, (event, it) -> it.handle(event.getTab(), event));
+        bindSimple(CreativeModeTabCallback.BuildContents.EVENT, BuildCreativeModeTabContentsEvent.BUS, (event, it) -> it.handle(event.getTab(), event));
 
         bindCancelable(ItemCallback.Use.EVENT, PlayerInteractEvent.RightClickItem.BUS, (event, it) -> {
             final var result = it.handle(event.getEntity(), event.getLevel(), event.getHand());
@@ -113,16 +113,16 @@ public class ForgeBalmEventMappings {
 
         bindSimple(LivingEntityCallback.Heal.EVENT, LivingHealEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getAmount()));
         bindSimple(LivingEntityCallback.Fall.EVENT, LivingFallEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getDamageMultiplier()));
-        bindSimple(LivingEntityCallback.Death.PRE, LivingDeathEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getSource()));
+        bindSimple(LivingEntityCallback.Death.BEFORE, LivingDeathEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getSource()));
         // TODO no post event on Forge
-        bindSimple(LivingEntityCallback.Death.POST, LivingDeathEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getSource()));
+        bindSimple(LivingEntityCallback.Death.AFTER, LivingDeathEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getSource()));
         bindSimple(LivingEntityCallback.Damage.EVENT, LivingDamageEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getSource(), event.getAmount()));
 
         bindSimple(PlayerCallback.Attack.EVENT, AttackEntityEvent.BUS, (event, it) -> it.handle(event.getEntity(), event.getTarget()));
 
-        ServerPlayerCallback.CONNECTED.configureMapping(ForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
-        bindSimple(ServerPlayerCallback.LOGIN, PlayerEvent.PlayerLoggedInEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
-        bindSimple(ServerPlayerCallback.LOGOUT, PlayerEvent.PlayerLoggedOutEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        ServerPlayerCallback.Connected.EVENT.configureMapping(ForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
+        bindSimple(ServerPlayerCallback.Login.EVENT, PlayerEvent.PlayerLoggedInEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        bindSimple(ServerPlayerCallback.Logout.EVENT, PlayerEvent.PlayerLoggedOutEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.OpenMenu.EVENT, PlayerContainerEvent.Open.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity(), event.getContainer()));
         bindSimple(ServerPlayerCallback.DimensionChange.EVENT, PlayerEvent.PlayerChangedDimensionEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity(), event.getFrom(), event.getTo()));
         // TODO passing same entity twice currently

@@ -8,7 +8,7 @@ import net.blay09.mods.balm.event.EventFactory;
 import net.blay09.mods.balm.event.EventHandling;
 
 public class ForgeBalmSupplementalClientEvents {
-    public static final Event<ClientLifecycleCallback> CLIENT_STARTED = EventFactory.createArrayBacked(ClientLifecycleCallback.class, (listeners) -> (client) -> {
+    public static final Event<ClientLifecycleCallback.Started> CLIENT_STARTED = EventFactory.createArrayBacked(ClientLifecycleCallback.Started.class, (listeners) -> (client) -> {
         for (final var listener : listeners) {
             listener.handle(client);
         }

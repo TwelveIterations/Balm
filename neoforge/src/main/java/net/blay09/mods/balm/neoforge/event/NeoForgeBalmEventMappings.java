@@ -50,21 +50,21 @@ public class NeoForgeBalmEventMappings {
     );
 
     public static void bind() {
-        bindSimple(ServerTickCallback.PRE, ServerTickEvent.Pre.class, (event, it) -> it.handle(event.getServer()));
-        bindSimple(ServerTickCallback.POST, ServerTickEvent.Post.class, (event, it) -> it.handle(event.getServer()));
-        bindFiltered(ServerTickCallback.ServerLevelTick.PRE, LevelTickEvent.Pre.class, event -> !event.getLevel().isClientSide(), (event, it) -> it.handle((ServerLevel) event.getLevel()));
-        bindFiltered(ServerTickCallback.ServerLevelTick.POST, LevelTickEvent.Post.class, event -> !event.getLevel().isClientSide(), (event, it) -> it.handle((ServerLevel) event.getLevel()));
-        bindFiltered(ServerTickCallback.ServerPlayerTick.PRE, PlayerTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
-        bindFiltered(ServerTickCallback.ServerPlayerTick.POST, PlayerTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
-        bindFiltered(ServerTickCallback.ServerEntityTick.PRE, EntityTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
-        bindFiltered(ServerTickCallback.ServerEntityTick.POST, EntityTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+        bindSimple(ServerTickCallback.BEFORE, ServerTickEvent.Pre.class, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerTickCallback.AFTER, ServerTickEvent.Post.class, (event, it) -> it.handle(event.getServer()));
+        bindFiltered(ServerTickCallback.ServerLevelTick.BEFORE, LevelTickEvent.Pre.class, event -> !event.getLevel().isClientSide(), (event, it) -> it.handle((ServerLevel) event.getLevel()));
+        bindFiltered(ServerTickCallback.ServerLevelTick.AFTER, LevelTickEvent.Post.class, event -> !event.getLevel().isClientSide(), (event, it) -> it.handle((ServerLevel) event.getLevel()));
+        bindFiltered(ServerTickCallback.ServerPlayerTick.BEFORE, PlayerTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        bindFiltered(ServerTickCallback.ServerPlayerTick.AFTER, PlayerTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        bindFiltered(ServerTickCallback.ServerEntityTick.BEFORE, EntityTickEvent.Pre.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+        bindFiltered(ServerTickCallback.ServerEntityTick.AFTER, EntityTickEvent.Post.class, event -> !event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
 
-        bindSimple(ServerLifecycleCallback.STARTING, ServerAboutToStartEvent.class, (event, it) -> it.handle(event.getServer()));
-        bindSimple(ServerLifecycleCallback.STARTED, ServerStartedEvent.class, (event, it) -> it.handle(event.getServer()));
-        bindSimple(ServerLifecycleCallback.STOPPING, ServerStoppingEvent.class, (event, it) -> it.handle(event.getServer()));
-        bindSimple(ServerLifecycleCallback.STOPPED, ServerStoppedEvent.class, (event, it) -> it.handle(event.getServer()));
-        ServerLifecycleCallback.RELOADING.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
-        ServerLifecycleCallback.RELOADED.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
+        bindSimple(ServerLifecycleCallback.Starting.EVENT, ServerAboutToStartEvent.class, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.Started.EVENT, ServerStartedEvent.class, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.Stopping.EVENT, ServerStoppingEvent.class, (event, it) -> it.handle(event.getServer()));
+        bindSimple(ServerLifecycleCallback.Stopped.EVENT, ServerStoppedEvent.class, (event, it) -> it.handle(event.getServer()));
+        ServerLifecycleCallback.Reloading.EVENT.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
+        ServerLifecycleCallback.Reloaded.EVENT.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
 
         bindCancelable(BlockCallback.DigSpeed.EVENT, PlayerEvent.BreakSpeed.class, (PlayerEvent.BreakSpeed event, BlockCallback.DigSpeed it) -> event.getPosition().map(pos -> {
             final var level = event.getEntity().level();
@@ -87,19 +87,19 @@ public class NeoForgeBalmEventMappings {
 
         bindCancelable(CommandCallback.EVENT, CommandEvent.class, (event, it) -> it.handle(event.getParseResults()).shouldSkipDefault());
 
-        ConfigCallback.LOADED.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_LOADED::register);
-        ConfigCallback.RELOADED.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
+        ConfigCallback.Loaded.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_LOADED::register);
+        ConfigCallback.Reloaded.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
 
-        bindSimple(CropCallback.Grow.PRE, CropGrowEvent.Pre.class, (event, it) -> {
+        bindSimple(CropCallback.Grow.BEFORE, CropGrowEvent.Pre.class, (event, it) -> {
             if (it.handle(event.getLevel(), event.getPos(), event.getState()).shouldSkipDefault()) {
                 event.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
             }
         });
-        bindSimple(CropCallback.Grow.POST, CropGrowEvent.Post.class, (event, it) -> it.handle(event.getLevel(), event.getPos(), event.getState()));
+        bindSimple(CropCallback.Grow.AFTER, CropGrowEvent.Post.class, (event, it) -> it.handle(event.getLevel(), event.getPos(), event.getState()));
 
         bindSimple(EntityCallback.Add.EVENT, EntityJoinLevelEvent.class, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
 
-        bindSimple(CreativeModeTabCallback.BUILD_CONTENTS, BuildCreativeModeTabContentsEvent.class, (event, it) -> it.handle(event.getTab(), event));
+        bindSimple(CreativeModeTabCallback.BuildContents.EVENT, BuildCreativeModeTabContentsEvent.class, (event, it) -> it.handle(event.getTab(), event));
 
         bindCancelable(ItemCallback.Use.EVENT, PlayerInteractEvent.RightClickItem.class, (event, it) -> {
             final var result = it.handle(event.getEntity(), event.getLevel(), event.getHand());
@@ -116,16 +116,16 @@ public class NeoForgeBalmEventMappings {
 
         bindSimple(LivingEntityCallback.Heal.EVENT, LivingHealEvent.class, (event, it) -> it.handle(event.getEntity(), event.getAmount()));
         bindSimple(LivingEntityCallback.Fall.EVENT, LivingFallEvent.class, (event, it) -> it.handle(event.getEntity(), event.getDamageMultiplier()));
-        bindSimple(LivingEntityCallback.Death.PRE, LivingDeathEvent.class, (event, it) -> it.handle(event.getEntity(), event.getSource()));
+        bindSimple(LivingEntityCallback.Death.BEFORE, LivingDeathEvent.class, (event, it) -> it.handle(event.getEntity(), event.getSource()));
         // TODO no post event on Forge
-        bindSimple(LivingEntityCallback.Death.POST, LivingDeathEvent.class, (event, it) -> it.handle(event.getEntity(), event.getSource()));
+        bindSimple(LivingEntityCallback.Death.AFTER, LivingDeathEvent.class, (event, it) -> it.handle(event.getEntity(), event.getSource()));
         bindSimple(LivingEntityCallback.Damage.EVENT, LivingDamageEvent.Pre.class, (event, it) -> it.handle(event.getEntity(), event.getSource(), event.getNewDamage()));
 
         bindSimple(PlayerCallback.Attack.EVENT, AttackEntityEvent.class, (event, it) -> it.handle(event.getEntity(), event.getTarget()));
 
-        ServerPlayerCallback.CONNECTED.configureMapping(NeoForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
-        bindSimple(ServerPlayerCallback.LOGIN, PlayerEvent.PlayerLoggedInEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
-        bindSimple(ServerPlayerCallback.LOGOUT, PlayerEvent.PlayerLoggedOutEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        ServerPlayerCallback.Connected.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
+        bindSimple(ServerPlayerCallback.Login.EVENT, PlayerEvent.PlayerLoggedInEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        bindSimple(ServerPlayerCallback.Logout.EVENT, PlayerEvent.PlayerLoggedOutEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.OpenMenu.EVENT, PlayerContainerEvent.Open.class, (event, it) -> it.handle((ServerPlayer) event.getEntity(), event.getContainer()));
         bindSimple(ServerPlayerCallback.DimensionChange.EVENT, PlayerEvent.PlayerChangedDimensionEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity(), event.getFrom(), event.getTo()));
         // TODO passing same entity twice currently

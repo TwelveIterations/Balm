@@ -31,13 +31,13 @@ public class FabricBalmSupplementalEvents {
         }
     });
 
-    public static final Event<ConfigCallback> CONFIG_LOADED = EventFactory.createArrayBacked(ConfigCallback.class, (listeners) -> (schema) -> {
+    public static final Event<ConfigCallback.Loaded> CONFIG_LOADED = EventFactory.createArrayBacked(ConfigCallback.Loaded.class, (listeners) -> (schema) -> {
         for (final var listener : listeners) {
             listener.handle(schema);
         }
     });
 
-    public static final Event<ConfigCallback> CONFIG_RELOADED = EventFactory.createArrayBacked(ConfigCallback.class, (listeners) -> (schema) -> {
+    public static final Event<ConfigCallback.Reloaded> CONFIG_RELOADED = EventFactory.createArrayBacked(ConfigCallback.Reloaded.class, (listeners) -> (schema) -> {
         for (final var listener : listeners) {
             listener.handle(schema);
         }
@@ -67,7 +67,7 @@ public class FabricBalmSupplementalEvents {
         }
     });
 
-    public static final Event<ServerPlayerCallback> SERVER_PLAYER_LOGIN = EventFactory.createArrayBacked(ServerPlayerCallback.class, (listeners) -> (player) -> {
+    public static final Event<ServerPlayerCallback.Login> SERVER_PLAYER_LOGIN = EventFactory.createArrayBacked(ServerPlayerCallback.Login.class, (listeners) -> (player) -> {
         for (final var listener : listeners) {
             listener.handle(player);
         }

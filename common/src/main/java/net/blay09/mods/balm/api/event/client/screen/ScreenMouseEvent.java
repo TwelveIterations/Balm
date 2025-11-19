@@ -46,7 +46,7 @@ public abstract class ScreenMouseEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MousePress#PRE} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MousePress#BEFORE} instead.
          */
         @Deprecated
         public static class Pre extends Click {
@@ -56,7 +56,7 @@ public abstract class ScreenMouseEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MousePress#POST} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MousePress#AFTER} instead.
          */
         @Deprecated
         public static class Post extends Click {
@@ -76,7 +76,7 @@ public abstract class ScreenMouseEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MouseRelease#PRE} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MouseRelease#BEFORE} instead.
          */
         @Deprecated
         public static class Pre extends Release {
@@ -86,7 +86,7 @@ public abstract class ScreenMouseEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MouseRelease#POST} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MouseRelease#AFTER} instead.
          */
         @Deprecated
         public static class Post extends Release {
@@ -119,7 +119,7 @@ public abstract class ScreenMouseEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MouseDrag#PRE} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MouseDrag#BEFORE} instead.
          */
         @Deprecated
         public static class Pre extends Drag {
@@ -129,7 +129,7 @@ public abstract class ScreenMouseEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MouseDrag#POST} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.MouseDrag#AFTER} instead.
          */
         @Deprecated
         public static class Post extends Drag {

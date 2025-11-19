@@ -11,31 +11,31 @@ public interface ServerTickCallback {
 
     void handle(MinecraftServer server);
 
-    EventMapper<ServerTickCallback> PRE = EventMapper.createUnbound("ServerTickCallback.PRE");
-    EventMapper<ServerTickCallback> POST = EventMapper.createUnbound("ServerTickCallback.POST");
+    EventMapper<ServerTickCallback> BEFORE = EventMapper.createUnbound("ServerTickCallback.Before");
+    EventMapper<ServerTickCallback> AFTER = EventMapper.createUnbound("ServerTickCallback.After");
 
     @FunctionalInterface
     interface ServerEntityTick {
         void handle(Entity entity);
 
-        EventMapper<ServerEntityTick> PRE = EventMapper.createUnbound("ServerTickCallback.Entity.PRE");
-        EventMapper<ServerEntityTick> POST = EventMapper.createUnbound("ServerTickCallback.Entity.POST");
+        EventMapper<ServerEntityTick> BEFORE = EventMapper.createUnbound("ServerEntityTick.Before");
+        EventMapper<ServerEntityTick> AFTER = EventMapper.createUnbound("ServerEntityTick.After");
     }
 
     @FunctionalInterface
     interface ServerLevelTick {
         void handle(ServerLevel level);
 
-        EventMapper<ServerLevelTick> PRE = EventMapper.createUnbound("ServerTickCallback.Level.PRE");
-        EventMapper<ServerLevelTick> POST = EventMapper.createUnbound("ServerTickCallback.Level.POST");
+        EventMapper<ServerLevelTick> BEFORE = EventMapper.createUnbound("ServerLevelTick.Before");
+        EventMapper<ServerLevelTick> AFTER = EventMapper.createUnbound("ServerLevelTick.After");
     }
 
     @FunctionalInterface
     interface ServerPlayerTick {
         void handle(ServerPlayer player);
 
-        EventMapper<ServerPlayerTick> PRE = EventMapper.createUnbound("ServerTickCallback.Player.PRE");
-        EventMapper<ServerPlayerTick> POST = EventMapper.createUnbound("ServerTickCallback.Player.POST");
+        EventMapper<ServerPlayerTick> BEFORE = EventMapper.createUnbound("ServerPlayerTick.Before");
+        EventMapper<ServerPlayerTick> AFTER = EventMapper.createUnbound("ServerPlayerTick.After");
     }
 
 }

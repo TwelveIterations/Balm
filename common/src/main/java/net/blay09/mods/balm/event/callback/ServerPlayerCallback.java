@@ -8,13 +8,29 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 
-@FunctionalInterface
-public interface ServerPlayerCallback {
-    void handle(ServerPlayer player);
 
-    EventMapper<ServerPlayerCallback> CONNECTED = EventMapper.createUnbound("ServerPlayerCallback.CONNECTED");
-    EventMapper<ServerPlayerCallback> LOGIN = EventMapper.createUnbound("ServerPlayerCallback.LOGIN");
-    EventMapper<ServerPlayerCallback> LOGOUT = EventMapper.createUnbound("ServerPlayerCallback.LOGOUT");
+public interface ServerPlayerCallback {
+
+    @FunctionalInterface
+    interface Connected {
+        void handle(ServerPlayer player);
+
+        EventMapper<Connected> EVENT = EventMapper.createUnbound("ServerPlayerCallback.Connected");
+    }
+
+    @FunctionalInterface
+    interface Login {
+        void handle(ServerPlayer player);
+
+        EventMapper<Login> EVENT = EventMapper.createUnbound("ServerPlayerCallback.Login");
+    }
+
+    @FunctionalInterface
+    interface Logout {
+        void handle(ServerPlayer player);
+
+        EventMapper<Logout> EVENT = EventMapper.createUnbound("ServerPlayerCallback.Logout");
+    }
 
     @FunctionalInterface
     interface OpenMenu {

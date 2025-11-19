@@ -10,7 +10,7 @@ public class BalmSupplementalEvents {
         }
     });
 
-    public static final Event<ServerLifecycleCallback> SERVER_RELOADED = EventFactory.createArrayBacked(ServerLifecycleCallback.class, (listeners) -> (server) -> {
+    public static final Event<ServerLifecycleCallback.Reloaded> SERVER_RELOADED = EventFactory.createArrayBacked(ServerLifecycleCallback.Reloaded.class, (listeners) -> (server) -> {
         for (final var listener : listeners) {
             listener.handle(server);
         }

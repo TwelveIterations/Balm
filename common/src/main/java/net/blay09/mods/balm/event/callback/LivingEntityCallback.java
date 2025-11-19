@@ -24,8 +24,8 @@ public interface LivingEntityCallback {
     interface Death {
         EventHandling handle(LivingEntity entity, DamageSource damageSource);
 
-        EventMapper<Death> PRE = EventMapper.createUnbound("LivingEntityCallback.Death.PRE");
-        EventMapper<Death> POST = EventMapper.createUnbound("LivingEntityCallback.Death.POST");
+        EventMapper<Death> BEFORE = EventMapper.createUnbound("LivingEntityCallback.Death.PRE");
+        EventMapper<Death> AFTER = EventMapper.createUnbound("LivingEntityCallback.Death.POST");
     }
 
     @FunctionalInterface

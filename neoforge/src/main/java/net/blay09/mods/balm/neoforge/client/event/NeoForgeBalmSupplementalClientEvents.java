@@ -6,7 +6,7 @@ import net.blay09.mods.balm.event.Event;
 import net.blay09.mods.balm.event.EventFactory;
 
 public class NeoForgeBalmSupplementalClientEvents {
-    public static final Event<ClientLifecycleCallback> CLIENT_STARTED = EventFactory.createArrayBacked(ClientLifecycleCallback.class, (listeners) -> (player) -> {
+    public static final Event<ClientLifecycleCallback.Started> CLIENT_STARTED = EventFactory.createArrayBacked(ClientLifecycleCallback.Started.class, (listeners) -> (player) -> {
         for (final var listener : listeners) {
             listener.handle(player);
         }

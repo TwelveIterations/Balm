@@ -44,7 +44,7 @@ public abstract class ScreenDrawEvent extends BalmEvent {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render#PRE} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render#BEFORE} instead.
      */
     @Deprecated
     public static class Pre extends ScreenDrawEvent {
@@ -54,7 +54,7 @@ public abstract class ScreenDrawEvent extends BalmEvent {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render#POST} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.Render#AFTER} instead.
      */
     @Deprecated
     public static class Post extends ScreenDrawEvent {

@@ -31,7 +31,7 @@ public interface RenderCallback {
     interface Hand {
         EventHandling handle(InteractionHand hand, ItemStack itemStack, float swingProgress);
 
-        EventMapper<Hand> EVENT = EventMapper.createUnbound("RenderCallback.Hand");
+        EventMapper<Hand> EVENT = EventMapper.createUnbound("RenderCallback.RenderHand");
     }
 
     @FunctionalInterface
@@ -40,35 +40,35 @@ public interface RenderCallback {
 
         @FunctionalInterface
         interface Health extends Gui {
-            EventMapper<Health> PRE = EventMapper.createUnbound("RenderCallback.Gui.Health.PRE");
-            EventMapper<Health> POST = EventMapper.createUnbound("RenderCallback.Gui.Health.POST");
+            EventMapper<Health> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Health.Before");
+            EventMapper<Health> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Health.After");
         }
 
         @FunctionalInterface
         interface Chat extends Gui {
-            EventMapper<Chat> PRE = EventMapper.createUnbound("RenderCallback.Gui.Chat.PRE");
-            EventMapper<Chat> POST = EventMapper.createUnbound("RenderCallback.Gui.Chat.POST");
+            EventMapper<Chat> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Chat.Before");
+            EventMapper<Chat> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Chat.After");
         }
 
         @FunctionalInterface
         interface Debug extends Gui {
-            EventMapper<Debug> PRE = EventMapper.createUnbound("RenderCallback.Gui.Debug.PRE");
-            EventMapper<Debug> POST = EventMapper.createUnbound("RenderCallback.Gui.Debug.POST");
+            EventMapper<Debug> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Debug.Before");
+            EventMapper<Debug> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Debug.After");
         }
 
         @FunctionalInterface
         interface BossInfo extends Gui {
-            EventMapper<BossInfo> PRE = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.PRE");
-            EventMapper<BossInfo> POST = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.POST");
+            EventMapper<BossInfo> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.Before");
+            EventMapper<BossInfo> AFTER = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.After");
         }
 
         @FunctionalInterface
         interface PlayerList extends Gui {
-            EventMapper<PlayerList> PRE = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.PRE");
-            EventMapper<PlayerList> POST = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.POST");
+            EventMapper<PlayerList> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.Before");
+            EventMapper<PlayerList> AFTER = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.After");
         }
 
-        EventMapper<Gui> PRE = EventMapper.createUnbound("RenderCallback.Gui.PRE");
-        EventMapper<Gui> POST = EventMapper.createUnbound("RenderCallback.Gui.POST");
+        EventMapper<Gui> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Before");
+        EventMapper<Gui> AFTER = EventMapper.createUnbound("RenderCallback.Gui.After");
     }
 }

@@ -10,31 +10,31 @@ import net.minecraft.world.entity.Entity;
 public interface ClientTickCallback {
     void handle(Minecraft client);
 
-    EventMapper<ClientTickCallback> PRE = EventMapper.createUnbound("ClientTickCallback.PRE");
-    EventMapper<ClientTickCallback> POST = EventMapper.createUnbound("ClientTickCallback.POST");
+    EventMapper<ClientTickCallback> BEFORE = EventMapper.createUnbound("ClientTickCallback.Before");
+    EventMapper<ClientTickCallback> AFTER = EventMapper.createUnbound("ClientTickCallback.After");
 
     @FunctionalInterface
     interface ClientPlayerTick {
         void handle(AbstractClientPlayer player);
 
-        EventMapper<ClientPlayerTick> PRE = EventMapper.createUnbound("ClientTickCallback.Player.PRE");
-        EventMapper<ClientPlayerTick> POST = EventMapper.createUnbound("ClientTickCallback.Player.POST");
+        EventMapper<ClientPlayerTick> BEFORE = EventMapper.createUnbound("ClientPlayerTick.Before");
+        EventMapper<ClientPlayerTick> AFTER = EventMapper.createUnbound("ClientPlayerTick.After");
     }
 
     @FunctionalInterface
     interface ClientLevelTick {
         void handle(ClientLevel level);
 
-        EventMapper<ClientLevelTick> PRE = EventMapper.createUnbound("ClientTickCallback.Level.PRE");
-        EventMapper<ClientLevelTick> POST = EventMapper.createUnbound("ClientTickCallback.Level.POST");
+        EventMapper<ClientLevelTick> BEFORE = EventMapper.createUnbound("ClientLevelTick.Before");
+        EventMapper<ClientLevelTick> AFTER = EventMapper.createUnbound("ClientLevelTick.After");
     }
 
     @FunctionalInterface
     interface ClientEntityTick {
         void handle(Entity entity);
 
-        EventMapper<ClientEntityTick> PRE = EventMapper.createUnbound("ClientTickCallback.Entity.PRE");
-        EventMapper<ClientEntityTick> POST = EventMapper.createUnbound("ClientTickCallback.Entity.POST");
+        EventMapper<ClientEntityTick> BEFORE = EventMapper.createUnbound("ClientEntityTick.Before");
+        EventMapper<ClientEntityTick> AFTER = EventMapper.createUnbound("ClientEntityTick.After");
     }
 
 }

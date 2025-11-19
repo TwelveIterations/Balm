@@ -32,7 +32,7 @@ public class CropGrowEvent extends BalmEvent {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.event.callback.CropCallback.Grow#PRE} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.event.callback.CropCallback.Grow#BEFORE} instead.
      */
     @Deprecated
     public static class Pre extends CropGrowEvent {
@@ -42,7 +42,7 @@ public class CropGrowEvent extends BalmEvent {
     }
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.event.callback.CropCallback.Grow#POST} instead.
+     * @deprecated Use {@link net.blay09.mods.balm.event.callback.CropCallback.Grow#AFTER} instead.
      */
     @Deprecated
     public static class Post extends CropGrowEvent {

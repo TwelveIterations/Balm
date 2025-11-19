@@ -28,21 +28,21 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
 
     public static void bind() {
-        bindSimple(ClientTickCallback.PRE, ClientTickEvent.Pre.class, (event, it) -> it.handle(Minecraft.getInstance()));
-        bindSimple(ClientTickCallback.POST, ClientTickEvent.Post.class, (event, it) -> it.handle(Minecraft.getInstance()));
-        bindFiltered(ClientTickCallback.ClientLevelTick.PRE, LevelTickEvent.Pre.class, event -> event.getLevel().isClientSide(), (event, it) -> it.handle((ClientLevel) event.getLevel()));
-        bindFiltered(ClientTickCallback.ClientLevelTick.POST, LevelTickEvent.Post.class, event -> event.getLevel().isClientSide(), (event, it) -> it.handle((ClientLevel) event.getLevel()));
-        bindFiltered(ClientTickCallback.ClientPlayerTick.PRE, PlayerTickEvent.Pre.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle((AbstractClientPlayer) event.getEntity()));
-        bindFiltered(ClientTickCallback.ClientPlayerTick.POST, PlayerTickEvent.Post.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle((AbstractClientPlayer) event.getEntity()));
-        bindFiltered(ClientTickCallback.ClientEntityTick.PRE, EntityTickEvent.Pre.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
-        bindFiltered(ClientTickCallback.ClientEntityTick.POST, EntityTickEvent.Post.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+        bindSimple(ClientTickCallback.BEFORE, ClientTickEvent.Pre.class, (event, it) -> it.handle(Minecraft.getInstance()));
+        bindSimple(ClientTickCallback.AFTER, ClientTickEvent.Post.class, (event, it) -> it.handle(Minecraft.getInstance()));
+        bindFiltered(ClientTickCallback.ClientLevelTick.BEFORE, LevelTickEvent.Pre.class, event -> event.getLevel().isClientSide(), (event, it) -> it.handle((ClientLevel) event.getLevel()));
+        bindFiltered(ClientTickCallback.ClientLevelTick.AFTER, LevelTickEvent.Post.class, event -> event.getLevel().isClientSide(), (event, it) -> it.handle((ClientLevel) event.getLevel()));
+        bindFiltered(ClientTickCallback.ClientPlayerTick.BEFORE, PlayerTickEvent.Pre.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle((AbstractClientPlayer) event.getEntity()));
+        bindFiltered(ClientTickCallback.ClientPlayerTick.AFTER, PlayerTickEvent.Post.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle((AbstractClientPlayer) event.getEntity()));
+        bindFiltered(ClientTickCallback.ClientEntityTick.BEFORE, EntityTickEvent.Pre.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
+        bindFiltered(ClientTickCallback.ClientEntityTick.AFTER, EntityTickEvent.Post.class, event -> event.getEntity().level().isClientSide(), (event, it) -> it.handle(event.getEntity()));
 
-        ClientLifecycleCallback.STARTED.configureMapping(NeoForgeBalmSupplementalClientEvents.CLIENT_STARTED::register);
-        bindSimple(ClientLifecycleCallback.CONNECTED_TO_SERVER, ClientPlayerNetworkEvent.LoggingIn.class, (event, it) -> it.handle(Minecraft.getInstance()));
-        bindSimple(ClientLifecycleCallback.DISCONNECTED_FROM_SERVER, ClientPlayerNetworkEvent.LoggingOut.class, (event, it) -> it.handle(Minecraft.getInstance()));
+        ClientLifecycleCallback.Started.EVENT.configureMapping(NeoForgeBalmSupplementalClientEvents.CLIENT_STARTED::register);
+        bindSimple(ClientLifecycleCallback.ConnectedToServer.EVENT, ClientPlayerNetworkEvent.LoggingIn.class, (event, it) -> it.handle(Minecraft.getInstance()));
+        bindSimple(ClientLifecycleCallback.DisconnectedFromServer.EVENT, ClientPlayerNetworkEvent.LoggingOut.class, (event, it) -> it.handle(Minecraft.getInstance()));
 
-        ScreenCallback.Init.PRE.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE::register);
-        ScreenCallback.Init.POST.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_POST::register);
+        ScreenCallback.Init.BEFORE.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE::register);
+        ScreenCallback.Init.AFTER.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_POST::register);
         bindSimple(ScreenCallback.Open.EVENT, ScreenEvent.Opening.class, (event, it) -> {
             final var newScreen = it.handle(event.getScreen());
             if (newScreen != null) {
@@ -50,20 +50,20 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
             }
         });
 
-        bindSimple(ScreenCallback.Render.PRE, ScreenEvent.Render.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
-        bindSimple(ScreenCallback.Render.POST, ScreenEvent.Render.Post.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
-        bindCancelable(ScreenCallback.KeyPress.PRE, ScreenEvent.KeyPressed.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
-        bindCancelable(ScreenCallback.KeyPress.POST, ScreenEvent.KeyPressed.Post.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
-        bindCancelable(ScreenCallback.KeyRelease.PRE, ScreenEvent.KeyReleased.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
-        bindCancelable(ScreenCallback.KeyRelease.POST, ScreenEvent.KeyReleased.Post.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
-        bindCancelable(ScreenCallback.MousePress.PRE, ScreenEvent.MouseButtonPressed.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseButtonEvent(), false));
-        bindSimple(ScreenCallback.MousePress.POST, ScreenEvent.MouseButtonPressed.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseButtonEvent(), false));
-        bindCancelable(ScreenCallback.MouseRelease.PRE, ScreenEvent.MouseButtonReleased.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton(), false));
-        bindSimple(ScreenCallback.MouseRelease.POST, ScreenEvent.MouseButtonReleased.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton(), false));
-        bindCancelable(ScreenCallback.MouseDrag.PRE, ScreenEvent.MouseDragged.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY(), false));
-        bindSimple(ScreenCallback.MouseDrag.POST, ScreenEvent.MouseDragged.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY(), false));
-        bindSimple(ScreenCallback.MouseScroll.PRE, ScreenEvent.MouseScrolled.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY(), false));
-        bindSimple(ScreenCallback.MouseScroll.POST, ScreenEvent.MouseScrolled.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY(), false));
+        bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
+        bindSimple(ScreenCallback.Render.AFTER, ScreenEvent.Render.Post.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
+        bindCancelable(ScreenCallback.KeyPress.BEFORE, ScreenEvent.KeyPressed.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
+        bindCancelable(ScreenCallback.KeyPress.AFTER, ScreenEvent.KeyPressed.Post.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
+        bindCancelable(ScreenCallback.KeyRelease.BEFORE, ScreenEvent.KeyReleased.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
+        bindCancelable(ScreenCallback.KeyRelease.AFTER, ScreenEvent.KeyReleased.Post.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
+        bindCancelable(ScreenCallback.MousePress.BEFORE, ScreenEvent.MouseButtonPressed.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseButtonEvent(), false));
+        bindSimple(ScreenCallback.MousePress.AFTER, ScreenEvent.MouseButtonPressed.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseButtonEvent(), false));
+        bindCancelable(ScreenCallback.MouseRelease.BEFORE, ScreenEvent.MouseButtonReleased.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton(), false));
+        bindSimple(ScreenCallback.MouseRelease.AFTER, ScreenEvent.MouseButtonReleased.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton(), false));
+        bindCancelable(ScreenCallback.MouseDrag.BEFORE, ScreenEvent.MouseDragged.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY(), false));
+        bindSimple(ScreenCallback.MouseDrag.AFTER, ScreenEvent.MouseDragged.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY(), false));
+        bindSimple(ScreenCallback.MouseScroll.BEFORE, ScreenEvent.MouseScrolled.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY(), false));
+        bindSimple(ScreenCallback.MouseScroll.AFTER, ScreenEvent.MouseScrolled.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY(), false));
 
         bindSimple(ClientInputCallback.Keyboard.EVENT, InputEvent.Key.class, (event, it) -> it.handle(event.getKey(), event.getScanCode(), event.getAction(), event.getModifiers()));
 
@@ -83,34 +83,34 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
             event.setNewFovModifier(newFov);
         });
         bindCancelable(RenderCallback.Hand.EVENT, RenderHandEvent.class, (event, it) -> it.handle(event.getHand(), event.getItemStack(), event.getSwingProgress()).shouldSkipDefault());
-        bindSimple(RenderCallback.Gui.PRE, RenderGuiEvent.Pre.class, (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindSimple(RenderCallback.Gui.POST, RenderGuiEvent.Post.class, (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindFiltered(RenderCallback.Gui.Health.PRE, RenderGuiLayerEvent.Pre.class,
+        bindSimple(RenderCallback.Gui.BEFORE, RenderGuiEvent.Pre.class, (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+        bindSimple(RenderCallback.Gui.AFTER, RenderGuiEvent.Post.class, (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+        bindFiltered(RenderCallback.Gui.Health.BEFORE, RenderGuiLayerEvent.Pre.class,
                 event -> VanillaGuiLayers.PLAYER_HEALTH.equals(event.getName()),
                 (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindFiltered(RenderCallback.Gui.Health.POST, RenderGuiLayerEvent.Post.class,
+        bindFiltered(RenderCallback.Gui.Health.AFTER, RenderGuiLayerEvent.Post.class,
                 event -> VanillaGuiLayers.PLAYER_HEALTH.equals(event.getName()),
                 (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindFiltered(RenderCallback.Gui.Chat.PRE, RenderGuiLayerEvent.Pre.class,
+        bindFiltered(RenderCallback.Gui.Chat.BEFORE, RenderGuiLayerEvent.Pre.class,
                 event -> VanillaGuiLayers.CHAT.equals(event.getName()),
                 (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindFiltered(RenderCallback.Gui.Chat.POST, RenderGuiLayerEvent.Post.class,
+        bindFiltered(RenderCallback.Gui.Chat.AFTER, RenderGuiLayerEvent.Post.class,
                 event -> VanillaGuiLayers.CHAT.equals(event.getName()),
                 (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindFiltered(RenderCallback.Gui.BossInfo.PRE, RenderGuiLayerEvent.Pre.class,
+        bindFiltered(RenderCallback.Gui.BossInfo.BEFORE, RenderGuiLayerEvent.Pre.class,
                 event -> VanillaGuiLayers.BOSS_OVERLAY.equals(event.getName()),
                 (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindFiltered(RenderCallback.Gui.BossInfo.POST, RenderGuiLayerEvent.Post.class,
+        bindFiltered(RenderCallback.Gui.BossInfo.AFTER, RenderGuiLayerEvent.Post.class,
                 event -> VanillaGuiLayers.BOSS_OVERLAY.equals(event.getName()),
                 (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindFiltered(RenderCallback.Gui.PlayerList.PRE, RenderGuiLayerEvent.Pre.class,
+        bindFiltered(RenderCallback.Gui.PlayerList.BEFORE, RenderGuiLayerEvent.Pre.class,
                 event -> VanillaGuiLayers.TAB_LIST.equals(event.getName()),
                 (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindFiltered(RenderCallback.Gui.PlayerList.POST, RenderGuiLayerEvent.Post.class,
+        bindFiltered(RenderCallback.Gui.PlayerList.AFTER, RenderGuiLayerEvent.Post.class,
                 event -> VanillaGuiLayers.TAB_LIST.equals(event.getName()),
                 (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        RenderCallback.Gui.Debug.PRE.configureMapping(BalmSupplementalClientEvents.RENDER_GUI_DEBUG_PRE::register);
-        RenderCallback.Gui.Debug.POST.configureMapping(BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST::register);
+        RenderCallback.Gui.Debug.BEFORE.configureMapping(BalmSupplementalClientEvents.RENDER_GUI_DEBUG_PRE::register);
+        RenderCallback.Gui.Debug.AFTER.configureMapping(BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST::register);
         RenderCallback.BlockHighlight.EVENT.configureMapping(BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT::register);
     }
 

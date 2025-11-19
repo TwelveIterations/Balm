@@ -46,7 +46,7 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyPress#PRE} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyPress#BEFORE} instead.
          */
         @Deprecated
         public static class Pre extends Press {
@@ -56,7 +56,7 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyPress#POST} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyPress#AFTER} instead.
          */
         @Deprecated
         public static class Post extends Press {
@@ -76,7 +76,7 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyRelease#PRE} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyRelease#BEFORE} instead.
          */
         @Deprecated
         public static class Pre extends Release {
@@ -86,7 +86,7 @@ public abstract class ScreenKeyEvent extends BalmEvent {
         }
 
         /**
-         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyRelease#POST} instead.
+         * @deprecated Use {@link net.blay09.mods.balm.client.event.callback.ScreenCallback.KeyRelease#AFTER} instead.
          */
         @Deprecated
         public static class Post extends Release {

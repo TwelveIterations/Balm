@@ -27,37 +27,37 @@ public class FabricBalmEventMappings {
     );
 
     public static void bind() {
-        ServerTickCallback.PRE.configureMapping((phase, it)
+        ServerTickCallback.BEFORE.configureMapping((phase, it)
                 -> ServerTickEvents.START_SERVER_TICK.register(mapPhase(phase), it::handle));
-        ServerTickCallback.POST.configureMapping((phase, it)
+        ServerTickCallback.AFTER.configureMapping((phase, it)
                 -> ServerTickEvents.END_SERVER_TICK.register(mapPhase(phase), it::handle));
-        ServerTickCallback.ServerLevelTick.PRE.configureMapping((phase, it)
+        ServerTickCallback.ServerLevelTick.BEFORE.configureMapping((phase, it)
                 -> ServerTickEvents.START_WORLD_TICK.register(mapPhase(phase), it::handle));
-        ServerTickCallback.ServerLevelTick.POST.configureMapping((phase, it)
+        ServerTickCallback.ServerLevelTick.AFTER.configureMapping((phase, it)
                 -> ServerTickEvents.END_WORLD_TICK.register(mapPhase(phase), it::handle));
-        ServerTickCallback.ServerPlayerTick.PRE.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_PRE::register);
-        ServerTickCallback.ServerPlayerTick.POST.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_POST::register);
-        ServerTickCallback.ServerEntityTick.PRE.configureMapping(FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_PRE::register);
-        ServerTickCallback.ServerEntityTick.POST.configureMapping(FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_POST::register);
+        ServerTickCallback.ServerPlayerTick.BEFORE.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_PRE::register);
+        ServerTickCallback.ServerPlayerTick.AFTER.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_TICK_POST::register);
+        ServerTickCallback.ServerEntityTick.BEFORE.configureMapping(FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_PRE::register);
+        ServerTickCallback.ServerEntityTick.AFTER.configureMapping(FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_POST::register);
 
-        ServerLifecycleCallback.STARTING.configureMapping((phase, it)
+        ServerLifecycleCallback.Starting.EVENT.configureMapping((phase, it)
                 -> ServerLifecycleEvents.SERVER_STARTING.register(mapPhase(phase), it::handle));
-        ServerLifecycleCallback.STARTED.configureMapping((phase, it)
+        ServerLifecycleCallback.Started.EVENT.configureMapping((phase, it)
                 -> ServerLifecycleEvents.SERVER_STARTED.register(mapPhase(phase), it::handle));
-        ServerLifecycleCallback.STOPPING.configureMapping((phase, it)
+        ServerLifecycleCallback.Stopping.EVENT.configureMapping((phase, it)
                 -> ServerLifecycleEvents.SERVER_STOPPING.register(mapPhase(phase), it::handle));
-        ServerLifecycleCallback.STOPPED.configureMapping((phase, it)
+        ServerLifecycleCallback.Stopped.EVENT.configureMapping((phase, it)
                 -> ServerLifecycleEvents.SERVER_STOPPED.register(mapPhase(phase), it::handle));
-        ServerLifecycleCallback.RELOADING.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
-        ServerLifecycleCallback.RELOADED.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
+        ServerLifecycleCallback.Reloading.EVENT.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
+        ServerLifecycleCallback.Reloaded.EVENT.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
 
-        ConfigCallback.LOADED.configureMapping(FabricBalmSupplementalEvents.CONFIG_LOADED::register);
-        ConfigCallback.RELOADED.configureMapping(FabricBalmSupplementalEvents.CONFIG_RELOADED::register);
+        ConfigCallback.Loaded.EVENT.configureMapping(FabricBalmSupplementalEvents.CONFIG_LOADED::register);
+        ConfigCallback.Reloaded.EVENT.configureMapping(FabricBalmSupplementalEvents.CONFIG_RELOADED::register);
 
-        ServerPlayerCallback.CONNECTED.configureMapping((phase, it)
+        ServerPlayerCallback.Connected.EVENT.configureMapping((phase, it)
                 -> ServerPlayConnectionEvents.JOIN.register(mapPhase(phase), (handler, sender, server) -> it.handle(handler.player)));
-        ServerPlayerCallback.LOGIN.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_LOGIN::register);
-        ServerPlayerCallback.LOGOUT.configureMapping((phase, it)
+        ServerPlayerCallback.Login.EVENT.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_LOGIN::register);
+        ServerPlayerCallback.Logout.EVENT.configureMapping((phase, it)
                 -> ServerPlayConnectionEvents.DISCONNECT.register(mapPhase(phase), (handler, server) -> it.handle(handler.player)));
         ServerPlayerCallback.OpenMenu.EVENT.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_OPEN_MENU::register);
         ServerPlayerCallback.DimensionChange.EVENT.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_CHANGED_DIMENSION::register);
@@ -90,15 +90,15 @@ public class FabricBalmEventMappings {
         LivingEntityCallback.Damage.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_DAMAGE::register);
         LivingEntityCallback.Fall.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_FALL::register);
         LivingEntityCallback.Heal.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_HEAL::register);
-        LivingEntityCallback.Death.PRE.configureMapping((phase, it)
+        LivingEntityCallback.Death.BEFORE.configureMapping((phase, it)
                 -> ServerLivingEntityEvents.ALLOW_DEATH.register((livingEntity, damageSource, damage) -> it.handle(livingEntity, damageSource).shouldSkipDefault()));
-        LivingEntityCallback.Death.POST.configureMapping((phase, it)
+        LivingEntityCallback.Death.AFTER.configureMapping((phase, it)
                 -> ServerLivingEntityEvents.AFTER_DEATH.register(it::handle));
 
         PlayerCallback.Attack.EVENT.configureMapping(FabricBalmSupplementalEvents.PLAYER_ATTACK::register);
 
-        CropCallback.Grow.PRE.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_PRE::register);
-        CropCallback.Grow.POST.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_POST::register);
+        CropCallback.Grow.BEFORE.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_PRE::register);
+        CropCallback.Grow.AFTER.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_POST::register);
 
         BlockCallback.Use.EVENT.configureMapping((phase, it)
                 -> UseBlockCallback.EVENT.register(mapPhase(phase), it::handle));
@@ -106,7 +106,7 @@ public class FabricBalmEventMappings {
         BlockCallback.Break.EVENT.configureMapping((phase, it)
                 -> PlayerBlockBreakEvents.BEFORE.register(mapPhase(phase), (world, player, pos, state, blockEntity) -> !it.handle(world, pos, state, blockEntity, player).shouldSkipDefault()));
 
-        CreativeModeTabCallback.BUILD_CONTENTS.configureMapping((phase, it)
+        CreativeModeTabCallback.BuildContents.EVENT.configureMapping((phase, it)
                 -> ItemGroupEvents.MODIFY_ENTRIES_ALL.register(mapPhase(phase), it::handle));
     }
 
