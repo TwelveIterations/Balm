@@ -7,7 +7,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 
 public class BalmScreenUtils {
-    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(Screen screen, T widget) {
+    public static <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(Screen screen, T widget) {
         return ((ScreenAccessor) screen).balm$addRenderableWidget(widget);
     }
 }
