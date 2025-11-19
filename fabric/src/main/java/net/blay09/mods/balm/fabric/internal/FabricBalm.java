@@ -58,8 +58,8 @@ public class FabricBalm implements ModInitializer {
         ((FabricBalmPlatform) Balm.platform()).initialize();
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
-            CompoundTag data = ((BalmDataHolder) oldPlayer).getFabricBalmData();
-            ((BalmDataHolder) newPlayer).setFabricBalmData(data);
+            CompoundTag data = ((BalmDataHolder) oldPlayer).balm$getFabricBalmData();
+            ((BalmDataHolder) newPlayer).balm$setFabricBalmData(data);
         });
 
         ItemStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {

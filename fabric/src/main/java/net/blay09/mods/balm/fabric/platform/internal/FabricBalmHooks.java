@@ -44,19 +44,19 @@ public class FabricBalmHooks implements BalmHooks {
 
     @Override
     public CompoundTag getPersistentData(Entity entity) {
-        var balmData = ((BalmDataHolder) entity).getFabricBalmData();
+        var balmData = ((BalmDataHolder) entity).balm$getFabricBalmData();
         if (balmData.isEmpty()) {
             // If we have no data, try to import from NeoForge in case the world was migrated
-            balmData = ((BalmDataHolder) entity).getNeoForgeBalmData();
+            balmData = ((BalmDataHolder) entity).balm$getNeoForgeBalmData();
             if (!balmData.isEmpty()) {
-                ((BalmDataHolder) entity).setFabricBalmData(balmData);
+                ((BalmDataHolder) entity).balm$setFabricBalmData(balmData);
             }
         }
         if (balmData.isEmpty()) {
             // If we still have no data, try to import from Forge in case the world was migrated
-            balmData = ((BalmDataHolder) entity).getForgeBalmData();
+            balmData = ((BalmDataHolder) entity).balm$getForgeBalmData();
             if (!balmData.isEmpty()) {
-                ((BalmDataHolder) entity).setFabricBalmData(balmData);
+                ((BalmDataHolder) entity).balm$setFabricBalmData(balmData);
             }
         }
         return balmData;

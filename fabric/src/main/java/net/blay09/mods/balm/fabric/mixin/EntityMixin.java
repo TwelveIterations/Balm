@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,8 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Entity.class)
 public class EntityMixin implements BalmDataHolder {
 
+    @Unique
     private CompoundTag balmData = new CompoundTag();
+    @Unique
     private CompoundTag forgeBalmData = new CompoundTag();
+    @Unique
     private CompoundTag neoForgeBalmData = new CompoundTag();
 
     @Inject(method = "load(Lnet/minecraft/world/level/storage/ValueInput;)V", at = @At("HEAD"))
@@ -41,32 +45,32 @@ public class EntityMixin implements BalmDataHolder {
     }
 
     @Override
-    public CompoundTag getFabricBalmData() {
+    public CompoundTag balm$getFabricBalmData() {
         return balmData;
     }
 
     @Override
-    public void setFabricBalmData(CompoundTag tag) {
+    public void balm$setFabricBalmData(CompoundTag tag) {
         this.balmData = tag;
     }
 
     @Override
-    public CompoundTag getForgeBalmData() {
+    public CompoundTag balm$getForgeBalmData() {
         return forgeBalmData;
     }
 
     @Override
-    public void setForgeBalmData(CompoundTag tag) {
+    public void balm$setForgeBalmData(CompoundTag tag) {
         this.forgeBalmData = tag;
     }
 
     @Override
-    public CompoundTag getNeoForgeBalmData() {
+    public CompoundTag balm$getNeoForgeBalmData() {
         return neoForgeBalmData;
     }
 
     @Override
-    public void setNeoForgeBalmData(CompoundTag tag) {
+    public void balm$setNeoForgeBalmData(CompoundTag tag) {
         this.neoForgeBalmData = tag;
     }
 }

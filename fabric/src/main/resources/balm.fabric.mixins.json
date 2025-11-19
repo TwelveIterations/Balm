@@ -31,7 +31,8 @@
     "MinecraftMixin",
     "PlayerTabOverlayMixin",
     "ClientLevelMixin",
-    "ClientLevelAccessor"
+    "ClientLevelAccessor",
+    "BossHealthOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1

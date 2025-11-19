@@ -4,16 +4,16 @@ import net.minecraft.nbt.CompoundTag;
 
 public interface BalmDataHolder {
 
-    CompoundTag getFabricBalmData();
+    CompoundTag balm$getFabricBalmData();
 
-    void setFabricBalmData(CompoundTag tag);
+    void balm$setFabricBalmData(CompoundTag tag);
 
-    CompoundTag getForgeBalmData();
+    CompoundTag balm$getForgeBalmData();
 
-    void setForgeBalmData(CompoundTag tag);
+    void balm$setForgeBalmData(CompoundTag tag);
 
-    CompoundTag getNeoForgeBalmData();
+    CompoundTag balm$getNeoForgeBalmData();
 
-    void setNeoForgeBalmData(CompoundTag tag);
+    void balm$setNeoForgeBalmData(CompoundTag tag);
 
 }
