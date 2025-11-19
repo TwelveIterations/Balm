@@ -21,7 +21,7 @@ public interface EventMapper<TCallback> {
         return new EventMapperImpl<>(name);
     }
 
-    static <TEvent> EventMapper<Consumer<TEvent>> createBound(Class<TEvent> eventClass) {
+    static <TEvent> BidirectionalEventMapper<Consumer<TEvent>> createBound(Class<TEvent> eventClass) {
         return Balmstrap.createBoundCustomEvent(eventClass);
     }
 
