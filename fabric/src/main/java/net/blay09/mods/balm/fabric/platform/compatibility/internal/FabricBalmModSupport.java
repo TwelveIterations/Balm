@@ -19,7 +19,7 @@ public class FabricBalmModSupport implements BalmModSupport {
 
     public FabricBalmModSupport(BalmRuntime<?> runtime) {
         trinkets = runtime.<BalmModSupportTrinkets>modProxy()
-                .with("trinkets", "net.blay09.mods.balm.fabric.compat.trinkets.TrinketsIntegration")
+                .with("trinkets", "net.blay09.mods.balm.fabric.platform.compatibility.trinkets.internal.TrinketsIntegration")
                 .withMultiplexer(TrinketsMultiplexer::new)
                 .withFallback(new NoopTrinkets())
                 .buildLazily();

@@ -3,25 +3,25 @@ loaderVersion="${neoforge_loader_version_range}"
 license="${license}"
 issueTrackerURL="https://github.com/TwelveIterationMods/Balm/issues"
 [[mods]]
-modId="${mod_id}"
+modId="balm"
 version="${version}"
 displayName="${mod_name}"
 displayURL="https://mods.twelveiterations.com/"
-logoFile="${mod_id}.png"
+logoFile="balm.png"
 credits="BlayTheNinth"
 authors="BlayTheNinth"
 description='''${description}'''
 [[mixins]]
-config = "${mod_id}.mixins.json"
+config = "balm.mixins.json"
 [[mixins]]
-config = "${mod_id}.neoforge.mixins.json"
-[[dependencies.${mod_id}]]
+config = "balm.neoforge.mixins.json"
+[[dependencies.balm]]
 modId="neoforge"
 type="required"
 versionRange="${neoforge_version_range}"
 ordering="NONE"
 side="BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.balm]]
 modId="minecraft"
 type="required"
 versionRange="${minecraft_version_range}"

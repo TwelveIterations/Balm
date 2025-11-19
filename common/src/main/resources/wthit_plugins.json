@@ -1,7 +1,7 @@
 {
   "balm:wthit": {
     "entrypoints": {
-      "client": "net.blay09.mods.balm.common.compat.hudinfo.WTHITModCompat"
+      "client": "net.blay09.mods.balm.platform.compatibility.hudinfo.internal.WTHITModCompat"
     }
   }
 }

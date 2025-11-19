@@ -172,6 +172,6 @@ public class FabricBalm implements ModInitializer {
                     }
                 });
 
-        Balm.initializeIfLoaded("team_reborn_energy", "net.blay09.mods.balm.fabric.compat.energy.RebornEnergy");
+        Balm.initializeIfLoaded("team_reborn_energy", "net.blay09.mods.balm.fabric.platform.compatibility.energy.internal.RebornEnergy");
     }
 }

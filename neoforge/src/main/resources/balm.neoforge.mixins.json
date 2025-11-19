@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.blay09.mods.balm.mixin",
+  "package": "net.blay09.mods.balm.neoforge.internal.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "EntityMixin",
