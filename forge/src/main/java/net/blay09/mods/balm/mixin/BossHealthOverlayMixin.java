@@ -22,7 +22,7 @@ public class BossHealthOverlayMixin {
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
     public void renderPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
         GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.BOSS_INFO);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
         }
@@ -30,7 +30,7 @@ public class BossHealthOverlayMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        Balm.getEvents().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.BOSS_INFO));
+        Balm.events().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.BOSS_INFO));
     }
 
 }

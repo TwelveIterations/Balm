@@ -23,7 +23,7 @@ public class PlayerMixin implements BalmPlayer {
     @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setAbsorptionAmount(F)V"), argsOnly = true)
     private float actuallyHurt(float damageAmount, ServerLevel level, DamageSource damageSource) {
         LivingDamageEvent event = new LivingDamageEvent((Player) (Object) this, damageSource, damageAmount);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         if (event.isCanceled()) {
             return 0f;
         } else {
@@ -35,7 +35,7 @@ public class PlayerMixin implements BalmPlayer {
     private void attack(Entity entity, CallbackInfo callbackInfo) {
         Player player = (Player) (Object) this;
         PlayerAttackEvent event = new PlayerAttackEvent(player, entity);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.cancel();
         }

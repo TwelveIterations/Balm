@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.commands.internal.InternalsCommand;
 import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.common.resources.ConfigResourceCondition;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.minecraft.resources.Identifier;
 
 /**
@@ -37,8 +38,8 @@ public final class InternalsModule implements BalmModule {
     }
 
     @Override
-    public void registerResources(BalmResources resources) {
-        resources.registerResourceCondition(Identifier.fromNamespaceAndPath(MOD_ID, "config"), ConfigResourceCondition.CODEC);
+    public void registerResourceConditions(BalmResourceConditionRegistrar resourceConditions) {
+        resourceConditions.register("config", ConfigResourceCondition.CODEC);
     }
 
     @Override

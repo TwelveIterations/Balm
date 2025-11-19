@@ -16,14 +16,14 @@ public class MouseHandlerMixin {
     @WrapOperation(method = "handleAccumulatedMovement()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;mouseDragged(Lnet/minecraft/client/input/MouseButtonEvent;DD)Z"))
     public boolean mouseDragged(Screen screen, MouseButtonEvent event, double dragX, double dragY, Operation<Boolean> operation) {
         ScreenMouseEvent.Drag.Pre preEvent = new ScreenMouseEvent.Drag.Pre(screen, event.x(), event.y(), event.button(), dragX, dragY);
-        Balm.getEvents().fireEvent(preEvent);
+        Balm.events().fireEvent(preEvent);
         if (preEvent.isCanceled()) {
             return true;
         }
 
         final var result = operation.call(screen, event, dragX, dragY);
         ScreenMouseEvent.Drag.Post postEvent = new ScreenMouseEvent.Drag.Post(screen, event.x(), event.y(), event.button(), dragX, dragY);
-        Balm.getEvents().fireEvent(postEvent);
+        Balm.events().fireEvent(postEvent);
         return result;
     }
 

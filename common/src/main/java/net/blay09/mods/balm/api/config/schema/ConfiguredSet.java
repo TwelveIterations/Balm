@@ -12,7 +12,7 @@ public interface ConfiguredSet<T> extends ConfiguredProperty<Set<T>>, NestedType
     }
 
     default Set<T> get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, Set<T> value) {
@@ -20,6 +20,6 @@ public interface ConfiguredSet<T> extends ConfiguredProperty<Set<T>>, NestedType
     }
 
     default void set(Set<T> value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

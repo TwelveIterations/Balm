@@ -23,7 +23,7 @@ public abstract class LivingEntityMixin {
     @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAbsorptionAmount(F)V"), argsOnly = true)
     private float actuallyHurt(float damageAmount, ServerLevel serverLevel, DamageSource damageSource) {
         LivingDamageEvent event = new LivingDamageEvent((LivingEntity) (Object) this, damageSource, damageAmount);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         if (event.isCanceled()) {
             return 0f;
         } else {
@@ -34,7 +34,7 @@ public abstract class LivingEntityMixin {
     @Inject(method = "causeFallDamage(DFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At("HEAD"), cancellable = true)
     private void causeFallDamage(double distance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> callbackInfo, @Share("eventRef") LocalRef<LivingFallEvent> eventRef) {
         LivingFallEvent event = new LivingFallEvent((LivingEntity) (Object) this);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         if (event.isCanceled()) {
             callbackInfo.setReturnValue(false);
         }

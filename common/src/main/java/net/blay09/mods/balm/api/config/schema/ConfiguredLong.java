@@ -10,7 +10,7 @@ public interface ConfiguredLong extends ConfiguredProperty<Long> {
     }
 
     default long get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, long value) {
@@ -18,6 +18,6 @@ public interface ConfiguredLong extends ConfiguredProperty<Long> {
     }
 
     default void set(long value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

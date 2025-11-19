@@ -25,14 +25,7 @@ import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.fabric.event.client.FabricBalmClientEvents;
 import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
@@ -46,21 +39,6 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
         BalmLoadContexts.register(modId, context);
 
         initializer.accept(new BalmClientRegistrars(this, modId));
-    }
-
-    @Override
-    public void addResourceReloadListener(Identifier identifier, PreparableReloadListener reloadListener) {
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
-            @Override
-            public Identifier getFabricId() {
-                return identifier;
-            }
-
-            @Override
-            public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier preparationBarrier, Executor executor2) {
-                return reloadListener.reload(sharedState, executor, preparationBarrier, executor2);
-            }
-        });
     }
 
     @Override

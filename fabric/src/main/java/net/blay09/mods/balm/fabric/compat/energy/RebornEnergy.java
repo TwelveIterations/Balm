@@ -30,7 +30,7 @@ public class RebornEnergy {
                     }
                 } else if (blockEntity != null){
                     running = true;
-                    final var energyStorage = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.ENERGY_STORAGE);
+                    final var energyStorage = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.ENERGY_STORAGE);
                     running = false;
                     if (energyStorage != null) {
                         return new RebornEnergyStorage(energyStorage);

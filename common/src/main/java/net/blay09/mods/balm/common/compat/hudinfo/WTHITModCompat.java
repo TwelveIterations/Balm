@@ -19,7 +19,7 @@ public class WTHITModCompat implements IWailaClientPlugin {
         @Override
         public void appendBody(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             final var block = accessor.getBlock();
-            final var modSupport = ((CommonBalmModSupportHudInfo) Balm.getModSupport().hudInfo());
+            final var modSupport = ((CommonBalmModSupportHudInfo) Balm.modSupport().hudInfo());
             final var blockInfoProviders = modSupport.getBlockInfoProviders(block);
             if (blockInfoProviders.isEmpty()) {
                 return;

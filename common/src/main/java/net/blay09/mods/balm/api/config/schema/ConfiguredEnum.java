@@ -10,7 +10,7 @@ public interface ConfiguredEnum<T extends Enum<T>> extends ConfiguredProperty<T>
     }
 
     default T get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, T value) {
@@ -18,6 +18,6 @@ public interface ConfiguredEnum<T extends Enum<T>> extends ConfiguredProperty<T>
     }
 
     default void set(T value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

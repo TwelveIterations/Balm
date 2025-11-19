@@ -16,7 +16,7 @@ public class CommandsMixin {
     @Inject(method = "performCommand(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/commands/Commands;executeCommandInContext(Lnet/minecraft/commands/CommandSourceStack;Ljava/util/function/Consumer;)V"), cancellable = true)
     private void onCommandExecuted(ParseResults<CommandSourceStack> parseResults, String command, CallbackInfo ci) {
         final var event = new CommandEvent(parseResults);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
         if (event.isCanceled()) {
             ci.cancel();
         }

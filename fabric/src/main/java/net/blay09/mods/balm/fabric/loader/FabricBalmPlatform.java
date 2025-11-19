@@ -55,11 +55,6 @@ public class FabricBalmPlatform implements BalmPlatform {
     }
 
     @Override
-    public String getModName(String modId) {
-        return FabricLoader.getInstance().getModContainer(modId).map(it -> it.getMetadata().getName()).orElse(modId);
-    }
-
-    @Override
     public Optional<ModInfo> getModInfo(String modId) {
         return FabricLoader.getInstance().getModContainer(modId).map(FabricModInfo::new);
     }

@@ -21,7 +21,7 @@ import java.io.File;
 /**
  * Registers the <code>/balm</code> commands for developers.
  *
- * @see Balm#getCommands()
+ * @see Balm#commands()
  */
 public final class InternalsCommand {
 
@@ -40,7 +40,7 @@ public final class InternalsCommand {
                         .requires(BalmCommands.requirePermission(PERMISSION_BALM_DEV))
                         .executes(context -> {
                             balmDevCounter++;
-                            if (Balm.isDevelopmentEnvironment() || balmDevCounter >= 3) {
+                            if (Balm.platform().isDevelopmentEnvironment() || balmDevCounter >= 3) {
                                 final var source = context.getSource();
                                 final var server = source.getServer();
                                 final var level = source.getLevel();
@@ -77,7 +77,7 @@ public final class InternalsCommand {
                                 .requires(BalmCommands.requirePermission(PERMISSION_BALM_EXPORT_CONFIG))
                                 .then(Commands.argument("mod", StringArgumentType.string()).executes(context -> {
                                             final var mod = context.getArgument("mod", String.class);
-                                            final var schemas = Balm.getConfig().getSchemasByNamespace(mod);
+                                            final var schemas = Balm.config().getSchemasByNamespace(mod);
                                             try {
                                                 ConfigJsonExport.exportToFile(schemas, new File("exports/config/" + mod + ".json"));
                                             } catch (Exception e) {
@@ -92,7 +92,7 @@ public final class InternalsCommand {
                                 .requires(BalmCommands.requirePermission(PERMISSION_BALM_EXPORT_ICONS))
                                 .then(Commands.argument("filter", StringArgumentType.greedyString()).executes(context -> {
                                     final var filter = context.getArgument("filter", String.class);
-                                    if (Balm.getProxy().isClient()) {
+                                    if (Balm.safeClientAccess().isClient()) {
                                         try {
                                             IconExport.export(filter);
                                         } catch (Exception e) {

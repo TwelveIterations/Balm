@@ -255,7 +255,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                 setActiveConfig(schema, wrappedConfig);
 
                 fireConfigLoadHandlers(schema, wrappedConfig);
-                Balm.getEvents().fireEvent(new ConfigLoadedEvent(schema));
+                Balm.events().fireEvent(new ConfigLoadedEvent(schema));
             }
         });
         eventBus.addListener((ModConfigEvent.Reloading event) -> {
@@ -271,7 +271,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                 setLocalConfig(schema, wrappedConfig);
                 updateActiveFromLocal(schema, wrappedConfig);
 
-                Balm.getEvents().fireEvent(new ConfigReloadedEvent(schema));
+                Balm.events().fireEvent(new ConfigReloadedEvent(schema));
             }
         });
 

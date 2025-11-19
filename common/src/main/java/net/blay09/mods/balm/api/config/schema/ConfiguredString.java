@@ -10,7 +10,7 @@ public interface ConfiguredString extends ConfiguredProperty<String> {
     }
 
     default String get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, String value) {
@@ -18,6 +18,6 @@ public interface ConfiguredString extends ConfiguredProperty<String> {
     }
 
     default void set(String value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

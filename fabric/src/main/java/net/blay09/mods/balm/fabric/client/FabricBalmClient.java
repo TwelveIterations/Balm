@@ -9,7 +9,6 @@ import net.blay09.mods.balm.api.network.ServerboundModListMessage;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 
 import java.util.HashMap;
 
@@ -20,17 +19,15 @@ public class FabricBalmClient implements ClientModInitializer {
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 
-        ModelLoadingPlugin.register((FabricBalmModels) BalmClient.getModels());
-
-        Balm.getEvents().onEvent(ConnectedToServerEvent.class, event -> {
-            final var networking = (FabricBalmNetworking) Balm.getNetworking();
+        Balm.events().onEvent(ConnectedToServerEvent.class, event -> {
+            final var networking = (FabricBalmNetworking) Balm.networking();
             final var modVersions = new HashMap<String, NetworkVersions>();
             for (final var modId : networking.getRegisteredMods()) {
                 networking.getNetworkVersions(modId, BalmEnvironment.CLIENT).ifPresent(clientVersions -> {
                     modVersions.put(modId, clientVersions);
                 });
             }
-            Balm.getNetworking().sendToServer(new ServerboundModListMessage(modVersions));
+            Balm.networking().sendToServer(new ServerboundModListMessage(modVersions));
         });
     }
 }

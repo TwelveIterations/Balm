@@ -20,7 +20,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         return new IModConfig() {
             @Override
             public ActionResult update(IConfigEntry entry) {
-                Balm.getConfig().saveLocalConfig(schema, config);
+                Balm.config().saveLocalConfig(schema, config);
                 return ActionResult.success();
             }
 
@@ -36,7 +36,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public String getFileName() {
-                return Balm.getConfig().getConfigFile(schema).getName();
+                return Balm.config().getConfigFile(schema).getName();
             }
 
             @Override
@@ -243,14 +243,14 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
     }
 
     public static Screen createConfigScreen(String modId, Screen parent) {
-        final var configs = Balm.getConfig().getSchemasByNamespace(modId);
+        final var configs = Balm.config().getSchemasByNamespace(modId);
         final var configsByType = new HashMap<ConfigType, Set<IModConfig>>();
         final var universalConfigs = configs.stream()
                 .filter(it -> !it.identifier().getPath().equals("client"))
-                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema))).collect(Collectors.toSet());
+                .map(schema -> mapConfig(schema, Balm.config().getLocalConfig(schema))).collect(Collectors.toSet());
         final var clientConfigs = configs.stream()
                 .filter(it -> it.identifier().getPath().equals("client"))
-                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema))).collect(Collectors.toSet());
+                .map(schema -> mapConfig(schema, Balm.config().getLocalConfig(schema))).collect(Collectors.toSet());
         configsByType.put(ConfigType.UNIVERSAL, universalConfigs);
         configsByType.put(ConfigType.CLIENT, clientConfigs);
         return ConfigScreenHelper.createSelectionScreen(parent,
@@ -261,9 +261,9 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
     @Override
     public Set<IModConfig> getConfigurationsForMod(ModContext modContext) {
-        final var configs = Balm.getConfig().getSchemasByNamespace(modContext.modId());
+        final var configs = Balm.config().getSchemasByNamespace(modContext.modId());
         return configs.stream()
-                .map(schema -> mapConfig(schema, Balm.getConfig().getLocalConfig(schema)))
+                .map(schema -> mapConfig(schema, Balm.config().getLocalConfig(schema)))
                 .collect(Collectors.toSet());
     }
 }

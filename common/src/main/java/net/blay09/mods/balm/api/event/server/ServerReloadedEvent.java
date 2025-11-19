@@ -10,7 +10,7 @@ public class ServerReloadedEvent extends BalmEvent {
     private final ReloadableServerResources resources;
 
     public ServerReloadedEvent(ReloadableServerResources resources) {
-        this.server = Balm.getHooks().getServer();
+        this.server = Balm.platform().server();
         this.resources = resources;
     }
 

@@ -20,14 +20,14 @@ public class ClothConfigUtils {
             final var builder = ConfigBuilder.create()
                     .setParentScreen(screen)
                     .setTitle(Component.translatable(ConfigLocalization.forTitle(modId)));
-            final var schemas = Balm.getConfig().getSchemasByNamespace(modId);
+            final var schemas = Balm.config().getSchemasByNamespace(modId);
             builder.setSavingRunnable(() -> {
                 for (final var schema : schemas) {
-                    Balm.getConfig().saveLocalConfig(schema, Balm.getConfig().getLocalConfig(schema));
+                    Balm.config().saveLocalConfig(schema, Balm.config().getLocalConfig(schema));
                 }
             });
             for (final var schema : schemas) {
-                final var config = Balm.getConfig().getLocalConfig(schema);
+                final var config = Balm.config().getLocalConfig(schema);
                 final var categories = schema.categories();
                 ConfigCategory rootCategory = null;
                 for (final var rootProperty : schema.rootProperties()) {

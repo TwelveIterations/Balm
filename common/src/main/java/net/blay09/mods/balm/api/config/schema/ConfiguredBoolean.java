@@ -10,7 +10,7 @@ public interface ConfiguredBoolean extends ConfiguredProperty<Boolean> {
     }
 
     default boolean get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, boolean value) {
@@ -18,6 +18,6 @@ public interface ConfiguredBoolean extends ConfiguredProperty<Boolean> {
     }
 
     default void set(boolean value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

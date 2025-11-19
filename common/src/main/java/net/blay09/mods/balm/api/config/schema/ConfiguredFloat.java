@@ -10,7 +10,7 @@ public interface ConfiguredFloat extends ConfiguredProperty<Float> {
     }
 
     default float get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, float value) {
@@ -18,6 +18,6 @@ public interface ConfiguredFloat extends ConfiguredProperty<Float> {
     }
 
     default void set(float value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

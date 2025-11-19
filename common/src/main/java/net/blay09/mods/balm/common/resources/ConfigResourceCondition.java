@@ -20,8 +20,8 @@ public record ConfigResourceCondition(Identifier configId, String category, Stri
 
     @Override
     public boolean test(ResourceConditionContext context) {
-        final var schema = Balm.getConfig().getSchema(configId);
-        final var config = Balm.getConfig().getActiveConfig(schema);
+        final var schema = Balm.config().getSchema(configId);
+        final var config = Balm.config().getActiveConfig(schema);
         final var property = schema.findProperty(category, key);
         if (property != null) {
             final var rawValue = config.getRaw(property);

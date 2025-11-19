@@ -18,7 +18,7 @@ public class LootTableMixin {
     @Inject(method = "getRandomItems(Lnet/minecraft/world/level/storage/loot/LootContext;)Lit/unimi/dsi/fastutil/objects/ObjectArrayList;", at = @At("RETURN"), cancellable = true)
     public void getRandomItems(LootContext lootContext, CallbackInfoReturnable<List<ItemStack>> callbackInfo) {
         var drops = callbackInfo.getReturnValue();
-        var lootModifiers = ((CommonBalmLootTables) Balm.getLootTables()).lootModifiers;
+        var lootModifiers = ((CommonBalmLootTables) Balm.lootModifiers()).lootModifiers;
         for (BalmLootModifier modifier : lootModifiers.values()) {
             modifier.apply(lootContext, drops);
         }

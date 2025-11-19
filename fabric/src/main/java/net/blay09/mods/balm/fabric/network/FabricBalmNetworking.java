@@ -154,7 +154,7 @@ public class FabricBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
-        if (!Balm.getProxy().isConnected()) {
+        if (!Balm.safeClientAccess().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
         } else {
             ClientPlayNetworking.send(message);

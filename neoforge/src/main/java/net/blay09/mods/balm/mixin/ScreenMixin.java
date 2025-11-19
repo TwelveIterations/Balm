@@ -13,22 +13,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ScreenMixin {
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
     private void beforeInit(Minecraft client, int width, int height, CallbackInfo ci) {
-        Balm.getEvents().fireEvent(new ScreenInitEvent.Pre((Screen) (Object) this));
+        Balm.events().fireEvent(new ScreenInitEvent.Pre((Screen) (Object) this));
     }
 
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("TAIL"))
     private void afterInit(Minecraft client, int width, int height, CallbackInfo ci) {
-        Balm.getEvents().fireEvent(new ScreenInitEvent.Post((Screen) (Object) this));
+        Balm.events().fireEvent(new ScreenInitEvent.Post((Screen) (Object) this));
     }
 
     @Inject(method = "resize(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
     private void beforeResize(Minecraft client, int width, int height, CallbackInfo ci) {
-        Balm.getEvents().fireEvent(new ScreenInitEvent.Pre((Screen) (Object) this));
+        Balm.events().fireEvent(new ScreenInitEvent.Pre((Screen) (Object) this));
     }
 
     @Inject(method = "resize(Lnet/minecraft/client/Minecraft;II)V", at = @At("TAIL"))
     private void afterResize(Minecraft client, int width, int height, CallbackInfo ci) {
-        Balm.getEvents().fireEvent(new ScreenInitEvent.Post((Screen) (Object) this));
+        Balm.events().fireEvent(new ScreenInitEvent.Post((Screen) (Object) this));
     }
 
 }

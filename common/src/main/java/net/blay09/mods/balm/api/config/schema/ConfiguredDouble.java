@@ -10,7 +10,7 @@ public interface ConfiguredDouble extends ConfiguredProperty<Double> {
     }
 
     default double get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, double value) {
@@ -18,6 +18,6 @@ public interface ConfiguredDouble extends ConfiguredProperty<Double> {
     }
 
     default void set(double value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

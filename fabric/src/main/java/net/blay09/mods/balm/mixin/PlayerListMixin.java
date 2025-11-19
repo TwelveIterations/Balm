@@ -16,6 +16,6 @@ public class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At(value = "RETURN"))
     private void handlePlayerConnection(Connection connection, ServerPlayer player, CommonListenerCookie commonListenerCookie, CallbackInfo callbackInfo) {
         final PlayerLoginEvent event = new PlayerLoginEvent(player);
-        Balm.getEvents().fireEvent(event);
+        Balm.events().fireEvent(event);
     }
 }

@@ -12,7 +12,7 @@ public interface ConfiguredList<T> extends ConfiguredProperty<List<T>>, NestedTy
     }
 
     default List<T> get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, List<T> value) {
@@ -20,6 +20,6 @@ public interface ConfiguredList<T> extends ConfiguredProperty<List<T>>, NestedTy
     }
 
     default void set(List<T> value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

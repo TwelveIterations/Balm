@@ -34,7 +34,7 @@ public class LevelRendererMixin {
                     poseStack,
                     renderBuffers.bufferSource(),
                     minecraft.gameRenderer.getMainCamera());
-            Balm.getEvents().fireEvent(event);
+            Balm.events().fireEvent(event);
             if (event.isCanceled()) {
                 callbackInfo.cancel();
             }

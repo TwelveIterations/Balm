@@ -10,7 +10,7 @@ public interface ConfiguredInt extends ConfiguredProperty<Integer> {
     }
 
     default int get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, int value) {
@@ -18,6 +18,6 @@ public interface ConfiguredInt extends ConfiguredProperty<Integer> {
     }
 
     default void set(int value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }

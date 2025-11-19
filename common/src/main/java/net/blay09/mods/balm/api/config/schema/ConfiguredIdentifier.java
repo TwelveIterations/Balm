@@ -11,7 +11,7 @@ public interface ConfiguredIdentifier extends ConfiguredProperty<Identifier> {
     }
 
     default Identifier get() {
-        return get(Balm.getConfig().getActiveConfig(parentSchema()));
+        return get(Balm.config().getActiveConfig(parentSchema()));
     }
 
     default void set(MutableLoadedConfig config, Identifier value) {
@@ -19,6 +19,6 @@ public interface ConfiguredIdentifier extends ConfiguredProperty<Identifier> {
     }
 
     default void set(Identifier value) {
-        set(Balm.getConfig().getLocalConfig(parentSchema()), value);
+        set(Balm.config().getLocalConfig(parentSchema()), value);
     }
 }
