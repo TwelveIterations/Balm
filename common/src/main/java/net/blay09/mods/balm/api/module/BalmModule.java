@@ -4,7 +4,6 @@ import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.permission.BalmPermissions;
@@ -86,9 +85,6 @@ public interface BalmModule {
     }
 
     default void registerBlocks(BalmBlockRegistrar factory) {
-    }
-
-    default void registerEvents(BalmEvents events) {
     }
 
     default void registerDataComponentTypes(BalmDataComponentTypeRegistrar dataComponentTypes) {

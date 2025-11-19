@@ -23,7 +23,6 @@
   ],
   "client": [
     "AbstractClientPlayerMixin",
-    "AbstractContainerScreenMixin",
     "ChatComponentMixin",
     "EntityModelSetAccessor",
     "GuiMixin",

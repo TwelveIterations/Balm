@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.PlayerLoginEvent;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At(value = "RETURN"))
     private void handlePlayerConnection(Connection connection, ServerPlayer player, CommonListenerCookie commonListenerCookie, CallbackInfo callbackInfo) {
-        final PlayerLoginEvent event = new PlayerLoginEvent(player);
-        Balm.events().fireEvent(event);
         FabricBalmSupplementalEvents.SERVER_PLAYER_LOGIN.invoker().handle(player);
     }
 }

@@ -4,6 +4,9 @@ import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.client.BalmClientRuntime;
 import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.common.config.ConfigSync;
+import net.blay09.mods.balm.common.config.ConfigSyncClient;
+import net.blay09.mods.balm.core.BalmRegistrars;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +43,8 @@ public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLo
         for (final var callback : initCallbacks) {
             callback.run();
         }
+
+        registerModule(new BalmClientRegistrars(this, "balm"), new ConfigSyncClient());
     }
 
 }

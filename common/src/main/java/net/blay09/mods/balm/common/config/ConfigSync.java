@@ -4,13 +4,11 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.api.config.schema.builder.ConfigCategory;
-import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
-import net.blay09.mods.balm.api.event.PlayerLoginEvent;
-import net.blay09.mods.balm.api.event.client.DisconnectedFromServerEvent;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.network.ClientboundConfigPacket;
+import net.blay09.mods.balm.event.callback.ConfigCallback;
+import net.blay09.mods.balm.event.callback.ServerPlayerCallback;
 import net.minecraft.resources.Identifier;
 
 public class ConfigSync implements BalmModule {
@@ -43,24 +41,23 @@ public class ConfigSync implements BalmModule {
     }
 
     @Override
-    public void registerEvents(BalmEvents events) {
-        events.onEvent(PlayerLoginEvent.class, event -> {
+    public void initialize() {
+        ServerPlayerCallback.Login.EVENT.register(player -> {
             final var schemas = Balm.config().getSchemas();
             for (final var schema : schemas) {
                 if (hasSyncedProperties(schema)) {
                     final var loaded = Balm.config().getActiveConfig(schema);
                     if (loaded != null) {
                         final var packet = new ClientboundConfigPacket(schema, loaded);
-                        Balm.networking().sendTo(event.getPlayer(), packet);
+                        Balm.networking().sendTo(player, packet);
                     }
                 }
             }
         });
 
-        events.onEvent(ConfigReloadedEvent.class, event -> {
+        ConfigCallback.Reloaded.EVENT.register(schema -> {
             final var server = Balm.platform().server();
             if (server != null) {
-                final var schema = event.getSchema();
                 if (hasSyncedProperties(schema)) {
                     final var loaded = Balm.config().getActiveConfig(schema);
                     if (loaded != null) {
@@ -68,13 +65,6 @@ public class ConfigSync implements BalmModule {
                         Balm.networking().sendToAll(server, packet);
                     }
                 }
-            }
-        });
-
-        events.onEvent(DisconnectedFromServerEvent.class, event -> {
-            final var config = Balm.config();
-            if (config instanceof AbstractBalmConfig abstractBalmConfig) {
-                abstractBalmConfig.resetToLocalConfig();
             }
         });
     }

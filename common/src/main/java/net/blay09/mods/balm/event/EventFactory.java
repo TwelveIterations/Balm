@@ -19,7 +19,7 @@ package net.blay09.mods.balm.event;
 import java.util.function.Function;
 
 import net.blay09.mods.balm.event.internal.EventFactoryImpl;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Helper for creating {@link Event} classes.
@@ -95,7 +95,7 @@ public final class EventFactory {
      * @param <T>            The listener type.
      * @return The Event instance.
      */
-    public static <T> Event<T> createWithPhases(Class<? super T> type, Function<T[], T> invokerFactory, ResourceLocation... defaultPhases) {
+    public static <T> Event<T> createWithPhases(Class<? super T> type, Function<T[], T> invokerFactory, Identifier... defaultPhases) {
         EventFactoryImpl.ensureContainsDefault(defaultPhases);
         EventFactoryImpl.ensureNoDuplicates(defaultPhases);
 

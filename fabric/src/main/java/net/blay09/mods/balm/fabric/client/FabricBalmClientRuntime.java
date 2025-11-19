@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.fabric.client;
 
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
@@ -23,10 +22,6 @@ import net.blay09.mods.balm.fabric.client.model.geom.FabricBalmModelLayerRegistr
 import net.blay09.mods.balm.fabric.client.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.particle.FabricBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.fabric.client.renderer.chunk.FabricBalmBlockRenderTypeRegistrar;
-import net.blay09.mods.balm.fabric.event.FabricBalmEventMappings;
-import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
-import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
-import net.blay09.mods.balm.fabric.event.client.FabricBalmClientEvents;
 import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 
@@ -35,7 +30,6 @@ import java.util.function.Consumer;
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadContext> {
 
     public FabricBalmClientRuntime() {
-        FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.events()));
         FabricBalmSupplementalClientEvents.initialize();
         FabricBalmClientEventMappings.bind();
     }

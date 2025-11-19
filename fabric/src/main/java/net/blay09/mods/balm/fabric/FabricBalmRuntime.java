@@ -13,7 +13,6 @@ import net.blay09.mods.balm.fabric.server.packs.resources.FabricBalmResourceCond
 import net.blay09.mods.balm.fabric.world.entity.FabricBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
-import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.network.BalmNetworking;
@@ -47,8 +46,6 @@ import java.util.function.Supplier;
 
 public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
-    @Deprecated
-    private final FabricBalmEvents events = new FabricBalmEvents();
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
     private final BalmHooks hooks = new FabricBalmHooks();
@@ -64,7 +61,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
             .buildLazily();
 
     public FabricBalmRuntime() {
-        FabricBalmCommonEvents.registerEvents(events);
         FabricBalmSupplementalEvents.initialize();
         FabricBalmEventMappings.bind();
     }
@@ -72,11 +68,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public BalmConfig getConfig() {
         return config;
-    }
-
-    @Override
-    public BalmEvents getEvents() {
-        return events;
     }
 
     @Override

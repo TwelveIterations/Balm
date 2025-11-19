@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.DigSpeedEvent;
 import net.blay09.mods.balm.event.BalmSupplementalEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -20,14 +18,7 @@ public class BlockStateBaseMixin {
         final var blockStateBase = (BlockBehaviour.BlockStateBase) (Object) this;
         final var digSpeed = cir.getReturnValueF();
         final var state = ((BlockStateBaseAccessor) blockStateBase).callAsState();
-        final var event = new DigSpeedEvent(blockGetter, blockPos, state, digSpeed, player);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
-            cir.setReturnValue(-1f);
-        } else if (event.getSpeedOverride() != null) {
-            float effectiveSpeed = event.getSpeedOverride();
-            effectiveSpeed = BalmSupplementalEvents.BLOCK_DIG_SPEED.invoker().handle(blockGetter, blockPos, state, player, effectiveSpeed);
-            cir.setReturnValue(effectiveSpeed);
-        }
+        final var effectiveSpeed = BalmSupplementalEvents.BLOCK_DIG_SPEED.invoker().handle(blockGetter, blockPos, state, player, digSpeed);
+        cir.setReturnValue(effectiveSpeed);
     }
 }

@@ -1,8 +1,6 @@
 package net.blay09.mods.balm.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.client.RenderHandEvent;
 import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
@@ -19,11 +17,7 @@ public class ItemInHandRendererMixin {
 
     @Inject(method = "renderArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", at = @At("HEAD"), cancellable = true)
     void renderArmWithItem(AbstractClientPlayer player, float partialTicks, float lerpedPitch, InteractionHand hand, float swingProgress, ItemStack itemStack, float equipProgress, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, CallbackInfo callbackInfo) {
-        RenderHandEvent event = new RenderHandEvent(hand, itemStack, swingProgress);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
-            callbackInfo.cancel();
-        } else if (FabricBalmSupplementalClientEvents.RENDER_HAND.invoker()
+        if (FabricBalmSupplementalClientEvents.RENDER_HAND.invoker()
                 .handle(hand, itemStack, swingProgress)
                 .shouldSkipDefault()) {
             callbackInfo.cancel();

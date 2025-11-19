@@ -13,12 +13,12 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 
 public class FabricBalmEventMappings {
-    private static final Map<ResourceLocation, ResourceLocation> PRIORITIES = Map.of(
+    private static final Map<Identifier, Identifier> PRIORITIES = Map.of(
             EventPhases.LOWEST, EventPhases.LOWEST,
             EventPhases.LOW, EventPhases.LOW,
             EventPhases.DEFAULT, net.fabricmc.fabric.api.event.Event.DEFAULT_PHASE,
@@ -110,7 +110,7 @@ public class FabricBalmEventMappings {
                 -> ItemGroupEvents.MODIFY_ENTRIES_ALL.register(mapPhase(phase), it::handle));
     }
 
-    public static ResourceLocation mapPhase(ResourceLocation phase) {
+    public static Identifier mapPhase(Identifier phase) {
         return PRIORITIES.getOrDefault(phase, Event.DEFAULT_PHASE);
     }
 }

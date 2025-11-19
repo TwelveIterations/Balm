@@ -2,7 +2,7 @@ package net.blay09.mods.balm.event;
 
 import net.blay09.mods.balm.Balmstrap;
 import net.blay09.mods.balm.event.internal.EventMapperImpl;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.BiConsumer;
@@ -39,7 +39,7 @@ public interface EventMapper<TCallback> {
      * @param listener the listener to register to the event.
      * @see EventPhases
      */
-    void register(ResourceLocation phase, TCallback listener);
+    void register(Identifier phase, TCallback listener);
 
     /**
      * For internal use by Balm or custom event mappers. Binds a registrar and invoker callback to this event.
@@ -47,7 +47,7 @@ public interface EventMapper<TCallback> {
      * @param registrar The consumer that takes the priority phase and listener and registers it to the mod-loader specific bus.
      */
     @ApiStatus.Internal
-    void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar);
+    void configureMapping(BiConsumer<Identifier, TCallback> registrar);
 
     /**
      * For internal use by Balm. Returns the name of this event mapper.

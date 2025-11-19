@@ -2,7 +2,6 @@ package net.blay09.mods.balm.api.client.module;
 
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
-import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
@@ -25,9 +24,6 @@ public interface BalmClientModule {
      * @return a unique identifier for this module.
      */
     Identifier getId();
-
-    default void registerEvents(BalmEvents events) {
-    }
 
     default void registerBlockStateModels(BalmBlockStateModelRegistrar models) {
     }

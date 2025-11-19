@@ -1,9 +1,6 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.entity.BalmPlayer;
-import net.blay09.mods.balm.api.event.LivingDamageEvent;
-import net.blay09.mods.balm.api.event.PlayerAttackEvent;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,24 +22,13 @@ public class PlayerMixin implements BalmPlayer {
 
     @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setAbsorptionAmount(F)V"), argsOnly = true)
     private float actuallyHurt(float damageAmount, ServerLevel level, DamageSource damageSource) {
-        LivingDamageEvent event = new LivingDamageEvent((Player) (Object) this, damageSource, damageAmount);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
-            return 0f;
-        }
-        float effectiveDamage = event.getDamageAmount();
-        effectiveDamage = FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().handle((Player) (Object) this, damageSource, effectiveDamage);
-        return effectiveDamage;
+        return FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().handle((Player) (Object) this, damageSource, damageAmount);
     }
 
     @Inject(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
     private void attack(Entity entity, CallbackInfo callbackInfo) {
         Player player = (Player) (Object) this;
-        PlayerAttackEvent event = new PlayerAttackEvent(player, entity);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
-            callbackInfo.cancel();
-        } else if (FabricBalmSupplementalEvents.PLAYER_ATTACK.invoker()
+        if (FabricBalmSupplementalEvents.PLAYER_ATTACK.invoker()
                 .handle(player, entity)
                 .shouldSkipDefault()) {
             callbackInfo.cancel();

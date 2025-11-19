@@ -1,13 +1,11 @@
 package net.blay09.mods.balm.fabric.loader;
 
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
-import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
 import net.blay09.mods.balm.api.resources.ModResource;
 import net.blay09.mods.balm.api.resources.ModResourceVisitor;
 import net.blay09.mods.balm.api.resources.PathModResource;
+import net.blay09.mods.balm.event.callback.ServerLifecycleCallback;
 import net.blay09.mods.balm.loader.BalmPlatform;
 import net.blay09.mods.balm.loader.ModInfo;
 import net.fabricmc.loader.api.FabricLoader;
@@ -25,8 +23,8 @@ public class FabricBalmPlatform implements BalmPlatform {
     private final AtomicReference<MinecraftServer> currentServer = new AtomicReference<>();
 
     public void initialize() {
-        Balm.events().onEvent(ServerStartingEvent.class, event -> currentServer.set(event.getServer()));
-        Balm.events().onEvent(ServerStoppedEvent.class, event -> currentServer.set(null));
+        ServerLifecycleCallback.Starting.EVENT.register(currentServer::set);
+        ServerLifecycleCallback.Stopped.EVENT.register(server -> currentServer.set(null));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.event;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.BiConsumer;
@@ -29,6 +29,6 @@ public interface BidirectionalEventMapper<TCallback> extends EventMapper<TCallba
      * @param invoker   The invoker that takes the incoming parameters and fires them into the mod-loader specific bus.
      */
     @ApiStatus.Internal
-    void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TCallback> invoker);
+    void configureMapping(BiConsumer<Identifier, TCallback> registrar, Supplier<TCallback> invoker);
 
 }

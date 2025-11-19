@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.event;
 
 import net.blay09.mods.balm.event.internal.AsymmetricalEventMapperImpl;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.BiConsumer;
@@ -35,7 +35,7 @@ public interface AsymmetricalEventMapper<TCallback, TInvoker> {
      * @param listener the listener to register to the event.
      * @see EventPhases
      */
-    void register(ResourceLocation phase, TCallback listener);
+    void register(Identifier phase, TCallback listener);
 
     /**
      * Provides a callable invoker that will fire this event into its backing event bus.
@@ -51,5 +51,5 @@ public interface AsymmetricalEventMapper<TCallback, TInvoker> {
      * @param invoker   The invoker that takes the incoming parameters and fires them into the mod-loader specific bus.
      */
     @ApiStatus.Internal
-    void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TInvoker> invoker);
+    void configureMapping(BiConsumer<Identifier, TCallback> registrar, Supplier<TInvoker> invoker);
 }

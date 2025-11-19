@@ -1,14 +1,11 @@
 package net.blay09.mods.balm.fabric.config;
 
 import com.mojang.logging.LogUtils;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.LoadedConfig;
 import net.blay09.mods.balm.api.config.MutableLoadedConfig;
 import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
-import net.blay09.mods.balm.api.event.server.ServerStartingEvent;
-import net.blay09.mods.balm.api.event.server.ServerStoppedEvent;
 import net.blay09.mods.balm.common.config.AbstractBalmConfig;
+import net.blay09.mods.balm.event.callback.ServerLifecycleCallback;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
@@ -35,15 +32,13 @@ public class FabricBalmConfig extends AbstractBalmConfig {
             setLocalConfig(schema, defaultConfig);
             setActiveConfig(schema, defaultConfig);
 
-            // Not pretty, but the event system doesn't actually care about priorities, and we don't have a config load context yet.
+            // Not pretty, but we don't have a config load context yet.
             // Might revisit after the event overhaul and perhaps add more context to BalmConfig in 1.21.11.
-            Balm.events().onEvent(ServerStartingEvent.class, event -> {
-                currentServer.set(event.getServer());
+            ServerLifecycleCallback.Starting.EVENT.register(server -> {
+                currentServer.set(server);
                 loadLocalConfig(schema);
             });
-            Balm.events().onEvent(ServerStoppedEvent.class, event -> {
-                currentServer.set(null);
-            });
+            ServerLifecycleCallback.Stopped.EVENT.register(server -> currentServer.set(null));
         }
     }
 
@@ -53,7 +48,6 @@ public class FabricBalmConfig extends AbstractBalmConfig {
         setLocalConfig(schema, mutableConfig);
         setActiveConfig(schema, config);
         fireConfigLoadHandlers(schema, mutableConfig);
-        Balm.events().fireEvent(new ConfigLoadedEvent(schema));
         FabricBalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
     }
 

@@ -4,7 +4,6 @@ import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.api.network.BalmNetworking;
@@ -139,10 +138,6 @@ public class Balm {
      */
     public static BalmProxy safeClientAccess() {
         return runtime.getProxy();
-    }
-
-    public static BalmEvents events() {
-        return runtime.getEvents();
     }
 
     /**

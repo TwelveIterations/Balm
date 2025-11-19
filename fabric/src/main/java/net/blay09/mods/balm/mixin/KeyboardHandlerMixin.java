@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.client.KeyInputEvent;
 import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
@@ -23,7 +21,6 @@ public class KeyboardHandlerMixin {
     @Inject(method = "keyPress(JILnet/minecraft/client/input/KeyEvent;)V", at = @At("TAIL"))
     public void keyPress(long window, int action, KeyEvent event, CallbackInfo callbackInfo) {
         if (window == this.minecraft.getWindow().handle()) {
-            Balm.events().fireEvent(new KeyInputEvent(event.key(), event.scancode(), action, event.modifiers()));
             FabricBalmSupplementalClientEvents.KEYBOARD_INPUT.invoker().handle(event.key(), event.scancode(), action, event.modifiers());
         }
     }

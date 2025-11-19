@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.client.GuiDrawEvent;
 import net.blay09.mods.balm.fabric.client.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -24,22 +22,15 @@ public class PlayerTabOverlayMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;ILnet/minecraft/world/scores/Scoreboard;Lnet/minecraft/world/scores/Objective;)V", at = @At("HEAD"), cancellable = true)
     public void renderPre(GuiGraphics guiGraphics, int width, Scoreboard scoreboard, Objective objective, CallbackInfo callbackInfo) {
-        GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.PLAYER_LIST);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
+        if (FabricBalmSupplementalClientEvents.RENDER_GUI_PLAYER_LIST_PRE.invoker()
+                .handle(guiGraphics, minecraft.getWindow())
+                .shouldSkipDefault()) {
             callbackInfo.cancel();
-        } else {
-            if (FabricBalmSupplementalClientEvents.RENDER_GUI_PLAYER_LIST_PRE.invoker()
-                    .handle(guiGraphics, minecraft.getWindow())
-                    .shouldSkipDefault()) {
-                callbackInfo.cancel();
-            }
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;ILnet/minecraft/world/scores/Scoreboard;Lnet/minecraft/world/scores/Objective;)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, int width, Scoreboard scoreboard, Objective objective, CallbackInfo callbackInfo) {
-        Balm.events().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.PLAYER_LIST));
         FabricBalmSupplementalClientEvents.RENDER_GUI_PLAYER_LIST_POST.invoker().handle(guiGraphics, minecraft.getWindow());
     }
 }

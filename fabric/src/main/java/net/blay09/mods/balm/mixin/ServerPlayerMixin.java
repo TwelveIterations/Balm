@@ -2,10 +2,6 @@ package net.blay09.mods.balm.mixin;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.PlayerChangedDimensionEvent;
-import net.blay09.mods.balm.api.event.PlayerOpenMenuEvent;
-import net.blay09.mods.balm.api.event.TossItemEvent;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,7 +25,6 @@ public class ServerPlayerMixin {
     @Inject(method = "openMenu(Lnet/minecraft/world/MenuProvider;)Ljava/util/OptionalInt;", at = @At("RETURN"))
     public void openMenu(@Nullable MenuProvider menuProvider, CallbackInfoReturnable<OptionalInt> callbackInfo) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        Balm.events().fireEvent(new PlayerOpenMenuEvent(player, player.containerMenu));
         FabricBalmSupplementalEvents.SERVER_PLAYER_OPEN_MENU.invoker().handle(player, player.containerMenu);
     }
 
@@ -45,7 +40,6 @@ public class ServerPlayerMixin {
         final ResourceKey<Level> fromDim = fromDimHolder.get();
         final ResourceKey<Level> toDim = transition.newLevel().dimension();
         if (!fromDim.equals(toDim)) {
-            Balm.events().fireEvent(new PlayerChangedDimensionEvent(player, fromDim, toDim));
             FabricBalmSupplementalEvents.SERVER_PLAYER_CHANGED_DIMENSION.invoker().handle(player, fromDim, toDim);
         }
     }
@@ -55,11 +49,7 @@ public class ServerPlayerMixin {
         ServerPlayer player = (ServerPlayer) (Object) this;
         Inventory inventory = player.getInventory();
         ItemStack selected = inventory.getSelectedItem();
-        TossItemEvent event = new TossItemEvent(player, selected);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
-            callbackInfo.cancel();
-        } else if (FabricBalmSupplementalEvents.ITEM_TOSSED.invoker()
+        if (FabricBalmSupplementalEvents.ITEM_TOSSED.invoker()
                 .handle(player, selected)
                 .shouldSkipDefault()) {
             callbackInfo.cancel();

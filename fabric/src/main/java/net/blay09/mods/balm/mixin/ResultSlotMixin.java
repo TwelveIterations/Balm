@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.ItemCraftedEvent;
 import net.blay09.mods.balm.fabric.event.FabricBalmSupplementalEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -27,13 +25,11 @@ public class ResultSlotMixin {
 
     @Inject(method = "onTake(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"))
     public void onTake(Player player, ItemStack itemStack, CallbackInfo callbackInfo) {
-        Balm.events().fireEvent(new ItemCraftedEvent(player, itemStack, craftSlots));
         FabricBalmSupplementalEvents.ITEM_CRAFTED.invoker().handle(player, itemStack, craftSlots);
     }
 
     @Inject(method = "onQuickCraft(Lnet/minecraft/world/item/ItemStack;I)V", at = @At("HEAD"))
     public void onQuickCraft(ItemStack itemStack, int i, CallbackInfo callbackInfo) {
-        Balm.events().fireEvent(new ItemCraftedEvent(player, itemStack, craftSlots));
         FabricBalmSupplementalEvents.ITEM_CRAFTED.invoker().handle(player, itemStack, craftSlots);
     }
 

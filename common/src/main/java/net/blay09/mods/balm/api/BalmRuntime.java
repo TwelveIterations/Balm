@@ -7,7 +7,6 @@ import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.event.BidirectionalEventMapper;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
-import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.loot.BalmLootTables;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.api.module.BalmModule;
@@ -37,8 +36,6 @@ import java.util.function.Consumer;
 
 public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmConfig getConfig();
-
-    BalmEvents getEvents();
 
     BalmWorldGen getWorldGen();
 
@@ -97,10 +94,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerPermissions(getPermissions());
         particleTypes(modId, module::registerParticleTypes);
         module.registerAdditional(registrar());
-
         resourceReloadListeners(modId, module::registerReloadListeners);
 
-        module.registerEvents(getEvents());
         module.initialize();
     }
 

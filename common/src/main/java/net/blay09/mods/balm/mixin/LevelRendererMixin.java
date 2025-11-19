@@ -2,8 +2,6 @@ package net.blay09.mods.balm.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.client.BlockHighlightDrawEvent;
 import net.blay09.mods.balm.client.event.BalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -31,19 +29,10 @@ public class LevelRendererMixin {
     @Inject(method = "renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;IF)V", at = @At("HEAD"), cancellable = true)
     public void renderHitOutline(PoseStack poseStack, VertexConsumer vertexConsumer, double x, double y, double z, BlockOutlineRenderState state, int color, float f, CallbackInfo callbackInfo) {
         if (minecraft.hitResult instanceof BlockHitResult blockHitResult) {
-            BlockHighlightDrawEvent event = new BlockHighlightDrawEvent(blockHitResult,
-                    poseStack,
-                    renderBuffers.bufferSource(),
-                    minecraft.gameRenderer.getMainCamera());
-            Balm.events().fireEvent(event);
-            if (event.isCanceled()) {
+            if (BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT.invoker()
+                    .handle(blockHitResult, poseStack, renderBuffers.bufferSource(), minecraft.gameRenderer.getMainCamera())
+                    .shouldSkipDefault()) {
                 callbackInfo.cancel();
-            } else {
-                if (BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT.invoker()
-                        .handle(blockHitResult, poseStack, renderBuffers.bufferSource(), minecraft.gameRenderer.getMainCamera())
-                        .shouldSkipDefault()) {
-                    callbackInfo.cancel();
-                }
             }
         }
     }

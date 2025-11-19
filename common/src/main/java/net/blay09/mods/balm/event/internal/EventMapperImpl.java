@@ -3,7 +3,7 @@ package net.blay09.mods.balm.event.internal;
 import net.blay09.mods.balm.event.BidirectionalEventMapper;
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -17,7 +17,7 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
     private Supplier<TCallback> invoker;
 
     @Nullable
-    private BiConsumer<ResourceLocation, TCallback> registrar;
+    private BiConsumer<Identifier, TCallback> registrar;
 
     public EventMapperImpl(String name) {
         this.name = name;
@@ -29,7 +29,7 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
     }
 
     @Override
-    public void register(ResourceLocation phase, TCallback listener) {
+    public void register(Identifier phase, TCallback listener) {
         if (registrar == null) {
             throw new IllegalStateException("Event has not been bound.");
         }
@@ -47,12 +47,12 @@ public class EventMapperImpl<TCallback> implements EventMapper<TCallback>, Bidir
     }
 
     @Override
-    public void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar) {
+    public void configureMapping(BiConsumer<Identifier, TCallback> registrar) {
         this.registrar = registrar;
     }
 
     @Override
-    public void configureMapping(BiConsumer<ResourceLocation, TCallback> registrar, Supplier<TCallback> invoker) {
+    public void configureMapping(BiConsumer<Identifier, TCallback> registrar, Supplier<TCallback> invoker) {
         this.registrar = registrar;
         this.invoker = invoker;
     }
