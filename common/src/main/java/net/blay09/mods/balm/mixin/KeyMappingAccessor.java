@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.internal.mixin;
+package net.blay09.mods.balm.mixin;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;

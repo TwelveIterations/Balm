@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.internal.mixin;
+package net.blay09.mods.balm.mixin;
 
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;

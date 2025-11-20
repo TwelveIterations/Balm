@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.internal.mixin;
+package net.blay09.mods.balm.mixin;
 
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;

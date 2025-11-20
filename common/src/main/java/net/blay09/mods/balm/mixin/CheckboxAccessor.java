@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.internal.mixin;
+package net.blay09.mods.balm.mixin;
 
 import net.minecraft.client.gui.components.Checkbox;
 import org.spongepowered.asm.mixin.Mixin;

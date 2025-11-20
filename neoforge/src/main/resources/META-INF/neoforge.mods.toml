@@ -14,6 +14,8 @@ description='''${description}'''
 [[mixins]]
 config = "balm.mixins.json"
 [[mixins]]
+config = "balm.api.mixins.json"
+[[mixins]]
 config = "balm.neoforge.mixins.json"
 [[dependencies.balm]]
 modId="neoforge"

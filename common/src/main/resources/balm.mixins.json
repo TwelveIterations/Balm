@@ -11,17 +11,10 @@
     "LootTableMixin",
     "MinecraftServerMixin",
     "ReloadableServerResourcesMixin",
-    "SlotAccessor",
     "StemBlockMixin",
     "RandomizableContainerBlockEntityMixin"
   ],
   "client": [
-    "AbstractContainerScreenAccessor",
-    "CheckboxAccessor",
-    "ImageButtonAccessor",
-    "KeyMappingAccessor",
-    "MouseHandlerAccessor",
-    "ScreenAccessor",
     "DebugScreenOverlayMixin",
     "LevelRendererMixin",
     "ChestRendererMixin"

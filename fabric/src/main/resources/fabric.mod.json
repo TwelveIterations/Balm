@@ -34,6 +34,7 @@
   },
   "mixins": [
     "${mod_id}.mixins.json",
+    "${mod_id}.api.mixins.json",
     "${mod_id}.fabric.mixins.json"
   ],
   "depends": {
