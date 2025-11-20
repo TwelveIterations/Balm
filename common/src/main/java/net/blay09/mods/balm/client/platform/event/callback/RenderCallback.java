@@ -34,41 +34,44 @@ public interface RenderCallback {
         EventMapper<Hand> EVENT = EventMapper.createUnbound("RenderCallback.RenderHand");
     }
 
-    @FunctionalInterface
     interface Gui {
-        EventHandling handle(GuiGraphics guiGraphics, Window window);
 
         @FunctionalInterface
-        interface Health extends Gui {
-            EventMapper<Health> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Health.Before");
-            EventMapper<Health> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Health.After");
+        interface Before {
+            EventHandling handle(GuiGraphics guiGraphics, Window window);
         }
 
         @FunctionalInterface
-        interface Chat extends Gui {
-            EventMapper<Chat> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Chat.Before");
-            EventMapper<Chat> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Chat.After");
+        interface After {
+            void handle(GuiGraphics guiGraphics, Window window);
         }
 
-        @FunctionalInterface
-        interface Debug extends Gui {
-            EventMapper<Debug> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Debug.Before");
-            EventMapper<Debug> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Debug.After");
+        interface Health {
+            EventMapper<Before> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Health.Before");
+            EventMapper<After> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Health.After");
         }
 
-        @FunctionalInterface
-        interface BossInfo extends Gui {
-            EventMapper<BossInfo> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.Before");
-            EventMapper<BossInfo> AFTER = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.After");
+        interface Chat {
+            EventMapper<Before> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Chat.Before");
+            EventMapper<After> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Chat.After");
         }
 
-        @FunctionalInterface
-        interface PlayerList extends Gui {
-            EventMapper<PlayerList> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.Before");
-            EventMapper<PlayerList> AFTER = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.After");
+        interface Debug {
+            EventMapper<Before> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Debug.Before");
+            EventMapper<After> AFTER = EventMapper.createUnbound("RenderCallback.Gui.Debug.After");
         }
 
-        EventMapper<Gui> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Before");
-        EventMapper<Gui> AFTER = EventMapper.createUnbound("RenderCallback.Gui.After");
+        interface BossInfo {
+            EventMapper<Before> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.Before");
+            EventMapper<After> AFTER = EventMapper.createUnbound("RenderCallback.Gui.BossInfo.After");
+        }
+
+        interface PlayerList {
+            EventMapper<Before> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.Before");
+            EventMapper<After> AFTER = EventMapper.createUnbound("RenderCallback.Gui.PlayerList.After");
+        }
+
+        EventMapper<Before> BEFORE = EventMapper.createUnbound("RenderCallback.Gui.Before");
+        EventMapper<After> AFTER = EventMapper.createUnbound("RenderCallback.Gui.After");
     }
 }
