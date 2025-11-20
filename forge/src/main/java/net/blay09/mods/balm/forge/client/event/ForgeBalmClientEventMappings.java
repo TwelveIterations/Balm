@@ -38,6 +38,7 @@ public class ForgeBalmClientEventMappings extends ForgeBalmEventMappings {
             return false;
         }));
         bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.BUS, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
+        bindSimple(ScreenCallback.Render.AFTER_BACKGROUND, ScreenEvent.Render.Background.BUS, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
         bindSimple(ScreenCallback.Render.AFTER, ScreenEvent.Render.Post.BUS, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
         bindCancelable(ScreenCallback.KeyPress.BEFORE, ScreenEvent.KeyPressed.Pre.BUS, (event, it) -> it.handle(event.getScreen(), event.getInfo()));
         bindCancelable(ScreenCallback.KeyPress.AFTER, ScreenEvent.KeyPressed.Post.BUS, (event, it) -> it.handle(event.getScreen(), event.getInfo()));

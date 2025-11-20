@@ -37,7 +37,7 @@ public class FabricBalmSupplementalClientEvents {
         }
     });
 
-    public static final Event<RenderCallback.Gui> RENDER_GUI_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.class, (listeners) -> (guiGraphics, window) -> {
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         var handling = EventHandling.RESUME;
         for (final var listener : listeners) {
             handling = handling.merge(listener.handle(guiGraphics, window));
@@ -48,7 +48,13 @@ public class FabricBalmSupplementalClientEvents {
         return handling;
     });
 
-    public static final Event<RenderCallback.Gui> RENDER_GUI_POST = EventFactory.createArrayBacked(RenderCallback.Gui.class, (listeners) -> (guiGraphics, window) -> {
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
+        for (final var listener : listeners) {
+            listener.handle(guiGraphics, window);
+        }
+    });
+
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_HEALTH_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         var handling = EventHandling.RESUME;
         for (final var listener : listeners) {
             handling = handling.merge(listener.handle(guiGraphics, window));
@@ -59,7 +65,13 @@ public class FabricBalmSupplementalClientEvents {
         return handling;
     });
 
-    public static final Event<RenderCallback.Gui.Health> RENDER_GUI_HEALTH_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Health.class, (listeners) -> (guiGraphics, window) -> {
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_HEALTH_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
+        for (final var listener : listeners) {
+            listener.handle(guiGraphics, window);
+        }
+    });
+
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_CHAT_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         var handling = EventHandling.RESUME;
         for (final var listener : listeners) {
             handling = handling.merge(listener.handle(guiGraphics, window));
@@ -70,7 +82,13 @@ public class FabricBalmSupplementalClientEvents {
         return handling;
     });
 
-    public static final Event<RenderCallback.Gui.Health> RENDER_GUI_HEALTH_POST = EventFactory.createArrayBacked(RenderCallback.Gui.Health.class, (listeners) -> (guiGraphics, window) -> {
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_CHAT_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
+        for (final var listener : listeners) {
+            listener.handle(guiGraphics, window);
+        }
+    });
+
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_BOSS_INFO_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         var handling = EventHandling.RESUME;
         for (final var listener : listeners) {
             handling = handling.merge(listener.handle(guiGraphics, window));
@@ -81,7 +99,13 @@ public class FabricBalmSupplementalClientEvents {
         return handling;
     });
 
-    public static final Event<RenderCallback.Gui.Chat> RENDER_GUI_CHAT_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Chat.class, (listeners) -> (guiGraphics, window) -> {
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_BOSS_INFO_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
+        for (final var listener : listeners) {
+            listener.handle(guiGraphics, window);
+        }
+    });
+
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_PLAYER_LIST_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         var handling = EventHandling.RESUME;
         for (final var listener : listeners) {
             handling = handling.merge(listener.handle(guiGraphics, window));
@@ -92,59 +116,10 @@ public class FabricBalmSupplementalClientEvents {
         return handling;
     });
 
-    public static final Event<RenderCallback.Gui.Chat> RENDER_GUI_CHAT_POST = EventFactory.createArrayBacked(RenderCallback.Gui.Chat.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_PLAYER_LIST_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
+            listener.handle(guiGraphics, window);
         }
-        return handling;
-    });
-
-    public static final Event<RenderCallback.Gui.BossInfo> RENDER_GUI_BOSS_INFO_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.BossInfo.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
-        for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
-        }
-        return handling;
-    });
-
-    public static final Event<RenderCallback.Gui.BossInfo> RENDER_GUI_BOSS_INFO_POST = EventFactory.createArrayBacked(RenderCallback.Gui.BossInfo.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
-        for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
-        }
-        return handling;
-    });
-
-    public static final Event<RenderCallback.Gui.PlayerList> RENDER_GUI_PLAYER_LIST_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.PlayerList.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
-        for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
-        }
-        return handling;
-    });
-
-    public static final Event<RenderCallback.Gui.PlayerList> RENDER_GUI_PLAYER_LIST_POST = EventFactory.createArrayBacked(RenderCallback.Gui.PlayerList.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
-        for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
-        }
-        return handling;
     });
 
     public static final Event<RenderCallback.UpdateFov> UPDATE_FOV = EventFactory.createArrayBacked(RenderCallback.UpdateFov.class, (listeners) -> (entity, fov) -> {
@@ -227,6 +202,12 @@ public class FabricBalmSupplementalClientEvents {
     });
 
     public static final Event<ScreenCallback.Render> SCREEN_RENDER_POST = EventFactory.createArrayBacked(ScreenCallback.Render.class, (listeners) -> (screen, guiGraphics, mouseX, mouseY, tickDelta) -> {
+        for (final var listener : listeners) {
+            listener.handle(screen, guiGraphics, mouseX, mouseY, tickDelta);
+        }
+    });
+
+    public static final Event<ScreenCallback.Render> SCREEN_RENDER_BACKGROUND_POST = EventFactory.createArrayBacked(ScreenCallback.Render.class, (listeners) -> (screen, guiGraphics, mouseX, mouseY, tickDelta) -> {
         for (final var listener : listeners) {
             listener.handle(screen, guiGraphics, mouseX, mouseY, tickDelta);
         }
@@ -345,6 +326,7 @@ public class FabricBalmSupplementalClientEvents {
         ScreenEvents.BEFORE_INIT.register((client, initScreen, scaledWidth, scaledHeight) -> {
             ScreenEvents.beforeRender(initScreen).register((screen, guiGraphics, mouseX, mouseY, tickDelta) -> SCREEN_RENDER_PRE.invoker().handle(screen, guiGraphics, mouseX, mouseY, tickDelta));
             ScreenEvents.afterRender(initScreen).register((screen, guiGraphics, mouseX, mouseY, tickDelta) -> SCREEN_RENDER_POST.invoker().handle(screen, guiGraphics, mouseX, mouseY, tickDelta));
+            ScreenEvents.afterBackground(initScreen).register((screen, guiGraphics, mouseX, mouseY, tickDelta) -> SCREEN_RENDER_BACKGROUND_POST.invoker().handle(screen, guiGraphics, mouseX, mouseY, tickDelta));
 
             ScreenKeyboardEvents.allowKeyPress(initScreen).register((screen, keyEvent) -> !SCREEN_KEY_PRESS_PRE.invoker().handle(screen, keyEvent));
             ScreenKeyboardEvents.afterKeyPress(initScreen).register((screen, keyEvent) -> SCREEN_KEY_PRESS_POST.invoker().handle(screen, keyEvent));

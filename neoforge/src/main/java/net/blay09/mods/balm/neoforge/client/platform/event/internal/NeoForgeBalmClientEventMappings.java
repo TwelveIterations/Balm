@@ -51,6 +51,7 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
         });
 
         bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
+        bindSimple(ScreenCallback.Render.AFTER_BACKGROUND, ScreenEvent.Render.Background.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
         bindSimple(ScreenCallback.Render.AFTER, ScreenEvent.Render.Post.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
         bindCancelable(ScreenCallback.KeyPress.BEFORE, ScreenEvent.KeyPressed.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
         bindCancelable(ScreenCallback.KeyPress.AFTER, ScreenEvent.KeyPressed.Post.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));

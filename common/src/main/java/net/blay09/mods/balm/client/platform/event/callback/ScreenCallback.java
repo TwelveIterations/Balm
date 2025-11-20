@@ -12,6 +12,7 @@ public interface ScreenCallback {
         void handle(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta);
 
         EventMapper<Render> BEFORE = EventMapper.createUnbound("ScreenCallback.Render.Before");
+        EventMapper<Render> AFTER_BACKGROUND = EventMapper.createUnbound("ScreenCallback.Render.AfterBackground");
         EventMapper<Render> AFTER = EventMapper.createUnbound("ScreenCallback.Render.After");
     }
 

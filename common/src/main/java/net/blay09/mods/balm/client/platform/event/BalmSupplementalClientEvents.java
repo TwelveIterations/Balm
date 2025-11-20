@@ -6,7 +6,7 @@ import net.blay09.mods.balm.platform.event.EventFactory;
 import net.blay09.mods.balm.platform.event.EventHandling;
 
 public class BalmSupplementalClientEvents {
-    public static final Event<RenderCallback.Gui.Debug> RENDER_GUI_DEBUG_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Debug.class, (listeners) -> (guiGraphics, window) -> {
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_DEBUG_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         var handling = EventHandling.RESUME;
         for (final var listener : listeners) {
             handling = handling.merge(listener.handle(guiGraphics, window));
@@ -17,15 +17,10 @@ public class BalmSupplementalClientEvents {
         return handling;
     });
 
-    public static final Event<RenderCallback.Gui.Debug> RENDER_GUI_DEBUG_POST = EventFactory.createArrayBacked(RenderCallback.Gui.Debug.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_DEBUG_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
+            listener.handle(guiGraphics, window);
         }
-        return handling;
     });
 
     public static final Event<RenderCallback.BlockHighlight> RENDER_BLOCK_HIGHLIGHT = EventFactory.createArrayBacked(RenderCallback.BlockHighlight.class, (listeners) -> (blockHitResult, poseStack, multiBufferSource, camera) -> {

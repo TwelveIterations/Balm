@@ -57,6 +57,7 @@ public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
                 -> ScreenEvents.AFTER_INIT.register(mapPhase(phase), (client, screen, scaledWidth, scaledHeight) -> it.handle(screen)));
         ScreenCallback.Open.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_OPEN::register);
         ScreenCallback.Render.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_PRE::register);
+        ScreenCallback.Render.AFTER_BACKGROUND.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_BACKGROUND_POST::register);
         ScreenCallback.Render.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_POST::register);
         ScreenCallback.KeyPress.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_PRESS_PRE::register);
         ScreenCallback.KeyPress.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_PRESS_POST::register);
