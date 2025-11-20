@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class NeoForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegistrarImpl {
@@ -28,9 +27,9 @@ public class NeoForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegis
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributes) {
+    protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Supplier<AttributeSupplier.Builder> attributes) {
         final var registrations = getActiveRegistrations();
-        registrations.attributeSuppliers.put((Holder<@NotNull EntityType<? extends @NotNull LivingEntity>>) (Holder<?>) entityType, () -> attributes.apply(AttributeSupplier.builder()).build());
+        registrations.attributeSuppliers.put((Holder<@NotNull EntityType<? extends @NotNull LivingEntity>>) (Holder<?>) entityType, () -> attributes.get().build());
     }
 
     private Registrations getActiveRegistrations() {

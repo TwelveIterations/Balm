@@ -25,7 +25,7 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
         this.namespace = namespace;
     }
 
-    protected abstract <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributesFunction);
+    protected abstract <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Supplier<AttributeSupplier.Builder> attributesFunction);
 
     @Override
     public <T extends Entity> BalmEntityTypeRegistration<T> register(String name, Supplier<EntityType.Builder<T>> builder) {
@@ -49,8 +49,14 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
         }
 
         @Override
-        public BalmEntityTypeRegistration<T> withDefaultAttributes(Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributesFunction) {
+        public BalmEntityTypeRegistration<T> withDefaultAttributes(Supplier<AttributeSupplier.Builder> attributesFunction) {
             registerDefaultAttributes(holder, attributesFunction);
+            return this;
+        }
+
+        @Override
+        public BalmEntityTypeRegistration<T> withDefaultAttributes(Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributesFunction) {
+            registerDefaultAttributes(holder, () -> attributesFunction.apply(AttributeSupplier.builder()));
             return this;
         }
     }
