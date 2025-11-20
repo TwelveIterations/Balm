@@ -1,6 +1,6 @@
 # Balm
 
-Minecraft Library Mod. Abstraction Layer for Multiplatform Mods.
+Minecraft Library Mod. Abstraction Layer for Multi-Loader Mods.
 
 Balm is a library mod for mod developers that simplifies the process of creating multi-loader mods by providing common
 interfaces and events and removing the need for most mod-loader specific code.
