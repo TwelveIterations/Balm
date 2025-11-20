@@ -14,12 +14,12 @@ public class FabricBalmParticleProviderRegistrar implements BalmParticleProvider
     public static final FabricBalmParticleProviderRegistrar INSTANCE = new FabricBalmParticleProviderRegistrar();
 
     @Override
-    public <T extends ParticleOptions> void register(Holder<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+    public <T extends ParticleOptions> void register(Holder<? extends ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
         ParticleFactoryRegistry.getInstance().register(particleType.value(), factory::apply);
     }
 
     @Override
-    public <T extends ParticleOptions> void register(Holder<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+    public <T extends ParticleOptions> void register(Holder<? extends ParticleType<T>> particleType, ParticleProvider<T> provider) {
         ParticleFactoryRegistry.getInstance().register(particleType.value(), provider);
     }
 }

@@ -14,12 +14,12 @@ public class FabricBalmEntityRendererRegistrar implements BalmEntityRendererRegi
     public static final BalmEntityRendererRegistrar INSTANCE = new FabricBalmEntityRendererRegistrar();
 
     @Override
-    public <T extends Entity> void register(Holder<EntityType<T>> entityTypeHolder, EntityRendererProvider<? super T> provider) {
+    public <T extends Entity> void register(Holder<? extends EntityType<? extends T>> entityTypeHolder, EntityRendererProvider<? super T> provider) {
         EntityRenderers.register(entityTypeHolder.value(), provider);
     }
 
     @Override
-    public <T extends Entity> void register(String name, Supplier<EntityType<T>> entityTypeSupplier, EntityRendererProvider<? super T> provider) {
+    public <T extends Entity> void register(String name, Supplier<? extends EntityType<? extends T>> entityTypeSupplier, EntityRendererProvider<? super T> provider) {
         EntityRenderers.register(entityTypeSupplier.get(), provider);
     }
 }

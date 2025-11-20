@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 public interface BalmParticleProviderRegistrar {
 
-    <T extends ParticleOptions> void register(Holder<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
+    <T extends ParticleOptions> void register(Holder<? extends ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
-    <T extends ParticleOptions> void register(Holder<ParticleType<T>> particleType, ParticleProvider<T> provider);
+    <T extends ParticleOptions> void register(Holder<? extends ParticleType<T>> particleType, ParticleProvider<T> provider);
 }

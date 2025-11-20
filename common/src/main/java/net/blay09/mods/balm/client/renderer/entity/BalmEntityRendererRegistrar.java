@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public interface BalmEntityRendererRegistrar {
 
-    <T extends Entity> void register(Holder<EntityType<T>> entityTypeHolder, EntityRendererProvider<? super T> provider);
+    <T extends Entity> void register(Holder<? extends EntityType<? extends T>> entityTypeHolder, EntityRendererProvider<? super T> provider);
 
-    <T extends Entity> void register(String name, Supplier<EntityType<T>> entityTypeSupplier, EntityRendererProvider<? super T> provider);
+    <T extends Entity> void register(String name, Supplier<? extends EntityType<? extends T>> entityTypeSupplier, EntityRendererProvider<? super T> provider);
 }
