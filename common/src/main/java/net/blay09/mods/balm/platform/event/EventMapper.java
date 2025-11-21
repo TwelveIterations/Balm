@@ -1,11 +1,13 @@
 package net.blay09.mods.balm.platform.event;
 
 import net.blay09.mods.balm.Balmstrap;
+import net.blay09.mods.balm.platform.event.callback.ConfigCallback;
 import net.blay09.mods.balm.platform.event.internal.EventMapperImpl;
 import net.minecraft.resources.Identifier;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Provides a uni-directional mapping from common code to a loader specific event.
@@ -53,4 +55,6 @@ public interface EventMapper<TCallback> {
      * @return the name of this event mapper.
      */
     String name();
+
+    EventMapper<TCallback> filter(String name, Function<TCallback, TCallback> filter);
 }

@@ -7,6 +7,7 @@ import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMapper<TCallback>, AsymmetricalEventMapper<TCallback, TInvoker> {
@@ -60,5 +61,12 @@ public class AsymmetricalEventMapperImpl<TCallback, TInvoker> implements EventMa
     @Override
     public String name() {
         return name;
+    }
+
+    @Override
+    public EventMapper<TCallback> filter(String name, Function<TCallback, TCallback> filter) {
+        final EventMapper<TCallback> mapper = EventMapper.createUnbound(name() + "(" + name + ")");
+        mapper.configureMapping((phase, it) -> this.register(phase, filter.apply(it)));
+        return mapper;
     }
 }
