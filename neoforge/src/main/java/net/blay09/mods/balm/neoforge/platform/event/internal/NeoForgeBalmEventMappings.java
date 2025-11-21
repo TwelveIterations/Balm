@@ -14,6 +14,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.CommandEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -100,7 +101,8 @@ public class NeoForgeBalmEventMappings {
         });
         bindSimple(CropCallback.Grow.After.EVENT, CropGrowEvent.Post.class, (event, it) -> it.afterGrow(event.getLevel(), event.getPos(), event.getState()));
 
-        bindSimple(EntityCallback.Add.EVENT, EntityJoinLevelEvent.class, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
+        bindSimple(EntityCallback.AddedToLevel.EVENT, EntityJoinLevelEvent.class, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
+        bindSimple(EntityCallback.RemovedFromLevel.EVENT, EntityLeaveLevelEvent.class, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
 
         bindSimple(CreativeModeTabCallback.BuildContents.EVENT, BuildCreativeModeTabContentsEvent.class, (event, it) -> it.handle(event.getTab(), event));
 

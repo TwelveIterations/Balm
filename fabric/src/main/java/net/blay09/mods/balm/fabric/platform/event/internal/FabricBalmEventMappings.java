@@ -85,8 +85,10 @@ public class FabricBalmEventMappings {
 
         CommandCallback.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.COMMAND::register);
 
-        EntityCallback.Add.EVENT.configureMapping((phase, it)
+        EntityCallback.AddedToLevel.EVENT.configureMapping((phase, it)
                 -> ServerEntityEvents.ENTITY_LOAD.register(mapPhase(phase), (entity, level) -> it.handle(level, entity)));
+        EntityCallback.RemovedFromLevel.EVENT.configureMapping((phase, it)
+                -> ServerEntityEvents.ENTITY_UNLOAD.register(mapPhase(phase), (entity, level) -> it.handle(level, entity)));
 
         LivingEntityCallback.Damage.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_DAMAGE::register);
         LivingEntityCallback.Fall.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_FALL::register);

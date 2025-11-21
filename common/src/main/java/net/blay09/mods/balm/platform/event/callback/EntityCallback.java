@@ -6,9 +6,16 @@ import net.minecraft.world.level.Level;
 
 public interface EntityCallback {
     @FunctionalInterface
-    interface Add {
+    interface AddedToLevel {
         void handle(Level level, Entity entity);
 
-        EventMapper<Add> EVENT = EventMapper.createUnbound("EntityCallback.Add");
+        EventMapper<AddedToLevel> EVENT = EventMapper.createUnbound("EntityCallback.AddedToLevel");
+    }
+
+    @FunctionalInterface
+    interface RemovedFromLevel {
+        void handle(Level level, Entity entity);
+
+        EventMapper<RemovedFromLevel> EVENT = EventMapper.createUnbound("EntityCallback.RemovedFromLevel");
     }
 }
