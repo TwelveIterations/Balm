@@ -37,29 +37,20 @@ public class MinecraftMixin {
 
     @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;interactAt(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"))
     public InteractionResult startUseItemInteractAt(MultiPlayerGameMode instance, Player player, Entity entity, EntityHitResult entityHitResult, InteractionHand hand, Operation<InteractionResult> operation) {
-        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().handle(player, hand);
-        if (result == InteractionResult.PASS) {
-            return operation.call(instance, player, entity, entityHitResult, hand);
-        }
-        return result;
+        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().beforeUse(player, hand);
+        return result.interactionResult().orElseGet(() -> operation.call(instance, player, entity, entityHitResult, hand));
     }
 
     @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"))
     public InteractionResult startUseItemOn(MultiPlayerGameMode instance, LocalPlayer player, InteractionHand hand, BlockHitResult blockHitResult, Operation<InteractionResult> operation) {
-        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().handle(player, hand);
-        if (result == InteractionResult.PASS) {
-            return operation.call(instance, player, hand, blockHitResult);
-        }
-        return result;
+        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().beforeUse(player, hand);
+        return result.interactionResult().orElseGet(() -> operation.call(instance, player, hand, blockHitResult));
     }
 
     @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItem(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"))
     public InteractionResult startUseItem(MultiPlayerGameMode instance, Player player, InteractionHand hand, Operation<InteractionResult> operation) {
-        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().handle(player, hand);
-        if (result == InteractionResult.PASS) {
-            return operation.call(instance, player, hand);
-        }
-        return result;
+        final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().beforeUse(player, hand);
+        return result.interactionResult().orElseGet(() -> operation.call(instance, player, hand));
     }
 
     @Inject(method = "clearClientLevel(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"))

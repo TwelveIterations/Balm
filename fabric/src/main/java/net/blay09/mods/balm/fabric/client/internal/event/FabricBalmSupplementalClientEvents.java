@@ -4,6 +4,7 @@ import net.blay09.mods.balm.client.platform.event.callback.*;
 import net.blay09.mods.balm.fabric.internal.mixin.ClientLevelAccessor;
 import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventFactory;
+import net.blay09.mods.balm.platform.event.callback.InteractionEventResult;
 import net.blay09.mods.balm.platform.event.callback.LevelCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -129,14 +130,13 @@ public class FabricBalmSupplementalClientEvents {
     });
 
     public static final Event<ClientItemCallback.Use> CLIENT_USE_ITEM = EventFactory.createArrayBacked(ClientItemCallback.Use.class, (listeners) -> (player, hand) -> {
-        InteractionResult result = InteractionResult.PASS;
         for (final var listener : listeners) {
-            result = listener.handle(player, hand);
-            if (result != InteractionResult.PASS) {
-                break;
+            final var result = listener.beforeUse(player, hand);
+            if(result.interactionResult().isPresent()) {
+                return result;
             }
         }
-        return result;
+        return InteractionEventResult.DEFAULT;
     });
 
     public static final Event<ClientInputCallback.Keyboard> KEYBOARD_INPUT = EventFactory.createArrayBacked(ClientInputCallback.Keyboard.class, (listeners) -> (key, scanCode, action, modifiers) -> {

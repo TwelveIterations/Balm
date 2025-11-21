@@ -1,25 +1,13 @@
 package net.blay09.mods.balm.neoforge.client.platform.event.internal;
 
-import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientInputCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientItemCallback;
-import net.blay09.mods.balm.client.platform.event.callback.RenderCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ScreenCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.event.BalmSupplementalClientEvents;
+import net.blay09.mods.balm.client.platform.event.callback.*;
 import net.blay09.mods.balm.neoforge.platform.event.internal.NeoForgeBalmEventMappings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.InteractionResult;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RenderHandEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -70,9 +58,11 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
 
         bindCancelable(ClientItemCallback.Use.EVENT, InputEvent.InteractionKeyMappingTriggered.class, (event, it) -> {
             if (event.isUseItem() && Minecraft.getInstance().player != null) {
-                final var result = it.handle(Minecraft.getInstance().player, event.getHand());
-                if (result != InteractionResult.PASS) {
-                    event.setSwingHand(false);
+                final var result = it.beforeUse(Minecraft.getInstance().player, event.getHand());
+                final var interactionResult = result.interactionResult().orElse(null);
+                if (interactionResult != null) {
+                    event.setSwingHand(interactionResult instanceof InteractionResult.Success success
+                            && success.swingSource() == InteractionResult.SwingSource.CLIENT);
                     return true;
                 }
             }
