@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.*;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -92,7 +93,8 @@ public class FabricBalmEventMappings {
         LivingEntityCallback.Death.Before.EVENT.configureMapping((phase, it)
                 -> ServerLivingEntityEvents.ALLOW_DEATH.register((livingEntity, damageSource, damage) -> !it.allowDeath(livingEntity, damageSource)));
 
-        PlayerCallback.Attack.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.PLAYER_ATTACK::register);
+        PlayerCallback.Attack.Before.EVENT.configureMapping((phase, it)
+                -> AttackEntityCallback.EVENT.register(mapPhase(phase), (player, target, hand, entity, entityHitResult) -> !it.allowAttack(player, entity) ? InteractionResult.FAIL : InteractionResult.PASS));
 
         CropCallback.Grow.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_PRE::register);
         CropCallback.Grow.After.EVENT.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_POST::register);

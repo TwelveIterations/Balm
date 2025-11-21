@@ -104,19 +104,6 @@ public class FabricBalmSupplementalEvents {
         return newAmount;
     });
 
-    /**
-     * @deprecated TODO Can't this use the existing attack event in Fabric?
-     */
-    @Deprecated
-    public static final Event<PlayerCallback.Attack.Before> PLAYER_ATTACK = EventFactory.createArrayBacked(PlayerCallback.Attack.Before.class, (listeners) -> (player, target) -> {
-        for (final var listener : listeners) {
-            if (!listener.allowAttack(player, target)) {
-                return false;
-            }
-        }
-        return true;
-    });
-
     public static final Event<CropCallback.Grow.Before> CROP_GROW_PRE = EventFactory.createArrayBacked(CropCallback.Grow.Before.class, (listeners) -> (level, pos, state) -> {
         for (final var listener : listeners) {
             final var result = Objects.requireNonNull(listener.beforeGrow(level, pos, state), () -> "CropCallback.Grow.Before.Result must not be null in " + listener.getClass().getName());

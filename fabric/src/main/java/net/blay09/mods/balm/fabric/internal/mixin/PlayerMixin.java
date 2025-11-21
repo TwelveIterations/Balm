@@ -4,7 +4,6 @@ import net.blay09.mods.balm.world.entity.BalmForcedPoseHolder;
 import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
@@ -25,14 +24,6 @@ public class PlayerMixin implements BalmForcedPoseHolder {
     @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setAbsorptionAmount(F)V"), argsOnly = true)
     private float actuallyHurt(float damageAmount, ServerLevel level, DamageSource damageSource) {
         return FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().computeDamage((Player) (Object) this, damageSource, damageAmount);
-    }
-
-    @Inject(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
-    private void attack(Entity entity, CallbackInfo callbackInfo) {
-        Player player = (Player) (Object) this;
-        if (!FabricBalmSupplementalEvents.PLAYER_ATTACK.invoker().allowAttack(player, entity)) {
-            callbackInfo.cancel();
-        }
     }
 
     @Inject(method = "updatePlayerPose()V", at = @At("HEAD"), cancellable = true)
