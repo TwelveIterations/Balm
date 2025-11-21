@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.client.platform.event;
+package net.blay09.mods.balm.client.platform.event.internal;
 
 import net.blay09.mods.balm.client.platform.event.callback.RenderCallback;
 import net.blay09.mods.balm.platform.event.Event;

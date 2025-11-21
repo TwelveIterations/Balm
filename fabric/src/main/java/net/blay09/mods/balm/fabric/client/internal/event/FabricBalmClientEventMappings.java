@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.fabric.client.internal.event;
 
-import net.blay09.mods.balm.client.platform.event.BalmSupplementalClientEvents;
+import net.blay09.mods.balm.client.platform.event.internal.BalmSupplementalClientEvents;
 import net.blay09.mods.balm.client.platform.event.callback.*;
 import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmEventMappings;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;

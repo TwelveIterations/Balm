@@ -1,13 +1,12 @@
 package net.blay09.mods.balm.neoforge.platform.event.internal;
 
-import net.blay09.mods.balm.platform.event.BalmSupplementalEvents;
+import net.blay09.mods.balm.platform.event.internal.BalmSupplementalEvents;
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.blay09.mods.balm.platform.event.EventPhases;
 import net.blay09.mods.balm.platform.event.callback.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.ICancellableEvent;

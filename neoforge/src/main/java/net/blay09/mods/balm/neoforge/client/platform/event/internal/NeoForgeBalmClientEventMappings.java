@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.neoforge.client.platform.event.internal;
 
-import net.blay09.mods.balm.client.platform.event.BalmSupplementalClientEvents;
+import net.blay09.mods.balm.client.platform.event.internal.BalmSupplementalClientEvents;
 import net.blay09.mods.balm.client.platform.event.callback.*;
 import net.blay09.mods.balm.neoforge.platform.event.internal.NeoForgeBalmEventMappings;
 import net.minecraft.client.Minecraft;

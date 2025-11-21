@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.internal.mixin;
 
-import net.blay09.mods.balm.platform.event.BalmSupplementalEvents;
+import net.blay09.mods.balm.platform.event.internal.BalmSupplementalEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;

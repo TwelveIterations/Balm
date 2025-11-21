@@ -2,7 +2,7 @@ package net.blay09.mods.balm.internal.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.blay09.mods.balm.client.platform.event.BalmSupplementalClientEvents;
+import net.blay09.mods.balm.client.platform.event.internal.BalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderBuffers;

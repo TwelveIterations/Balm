@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.fabric.platform.event.internal;
 
-import net.blay09.mods.balm.platform.event.BalmSupplementalEvents;
+import net.blay09.mods.balm.platform.event.internal.BalmSupplementalEvents;
 import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventPhases;
 import net.blay09.mods.balm.platform.event.callback.*;

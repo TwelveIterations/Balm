@@ -1,5 +1,7 @@
-package net.blay09.mods.balm.platform.event;
+package net.blay09.mods.balm.platform.event.internal;
 
+import net.blay09.mods.balm.platform.event.Event;
+import net.blay09.mods.balm.platform.event.EventFactory;
 import net.blay09.mods.balm.platform.event.callback.BlockCallback;
 import net.blay09.mods.balm.platform.event.callback.ServerLifecycleCallback;
 
