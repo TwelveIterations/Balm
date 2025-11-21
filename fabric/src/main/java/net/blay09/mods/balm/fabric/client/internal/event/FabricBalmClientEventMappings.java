@@ -7,6 +7,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 
 public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
 
@@ -56,21 +58,52 @@ public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
         ScreenCallback.Init.After.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.AFTER_INIT.register(mapPhase(phase), (client, screen, scaledWidth, scaledHeight) -> it.afterInit(screen)));
         ScreenCallback.Opening.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_OPEN::register);
-        ScreenCallback.Render.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_PRE::register);
-        ScreenCallback.Render.AFTER_BACKGROUND.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_BACKGROUND_POST::register);
-        ScreenCallback.Render.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_POST::register);
-        ScreenCallback.KeyPress.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_PRESS_PRE::register);
-        ScreenCallback.KeyPress.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_PRESS_POST::register);
-        ScreenCallback.KeyRelease.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_RELEASE_PRE::register);
-        ScreenCallback.KeyRelease.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_RELEASE_POST::register);
-        ScreenCallback.MousePress.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_PRESS_PRE::register);
-        ScreenCallback.MousePress.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_PRESS_POST::register);
-        ScreenCallback.MouseRelease.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_RELEASE_PRE::register);
-        ScreenCallback.MouseRelease.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_RELEASE_POST::register);
-        ScreenCallback.MouseScroll.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_SCROLL_PRE::register);
-        ScreenCallback.MouseScroll.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_SCROLL_POST::register);
-        ScreenCallback.MouseDrag.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_DRAG_PRE::register);
-        ScreenCallback.MouseDrag.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_DRAG_POST::register);
+
+        ScreenCallback.Render.BEFORE.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenEvents.beforeRender(initScreen).register(mapPhase(phase), it::render)));
+        ScreenCallback.Render.AFTER_BACKGROUND.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenEvents.afterBackground(initScreen).register(mapPhase(phase), it::render)));
+        ScreenCallback.Render.AFTER.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenEvents.afterRender(initScreen).register(mapPhase(phase), it::render)));
+        ScreenCallback.KeyPress.Before.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenKeyboardEvents.beforeKeyPress(initScreen).register(mapPhase(phase), it::keyPressed)));
+        ScreenCallback.KeyPress.After.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenKeyboardEvents.afterKeyPress(initScreen).register(mapPhase(phase), it::afterKeyPressed)));
+        ScreenCallback.KeyRelease.Before.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenKeyboardEvents.beforeKeyRelease(initScreen).register(mapPhase(phase), it::keyReleased)));
+        ScreenCallback.KeyRelease.After.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenKeyboardEvents.afterKeyRelease(initScreen).register(mapPhase(phase), it::afterKeyReleased)));
+        ScreenCallback.MousePress.Before.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenMouseEvents.beforeMouseClick(initScreen).register(mapPhase(phase), it::mousePressed)));
+        ScreenCallback.MousePress.After.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenMouseEvents.afterMouseClick(initScreen).register(mapPhase(phase), it::afterMousePressed)));
+        ScreenCallback.MouseRelease.Before.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenMouseEvents.beforeMouseRelease(initScreen).register(mapPhase(phase), (screen, event) -> it.mouseReleased(screen, event.x(), event.y(), event.button()))));
+        ScreenCallback.MouseRelease.After.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenMouseEvents.afterMouseRelease(initScreen).register(mapPhase(phase), (screen, event, consumed) -> it.afterMouseReleased(screen, event.x(), event.y(), event.button(), consumed))));
+        ScreenCallback.MouseScroll.Before.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenMouseEvents.beforeMouseScroll(initScreen).register(mapPhase(phase), it::mouseScrolled)));
+        ScreenCallback.MouseScroll.After.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenMouseEvents.afterMouseScroll(initScreen).register(mapPhase(phase), it::afterMouseScrolled)));
+        ScreenCallback.MouseDrag.Before.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenMouseEvents.beforeMouseDrag(initScreen).register(mapPhase(phase), (screen, event, horizontalAmount, verticalAmount) -> it.mouseDragged(screen, event.x(), event.y(), event.button(), horizontalAmount, verticalAmount))));
+        ScreenCallback.MouseDrag.After.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
+                -> ScreenMouseEvents.afterMouseDrag(initScreen).register(mapPhase(phase), (screen, event, horizontalAmount, verticalAmount, consumed) -> it.afterMouseDragged(screen, event.x(), event.y(), event.button(), horizontalAmount, verticalAmount, consumed))));
     }
 
 }
