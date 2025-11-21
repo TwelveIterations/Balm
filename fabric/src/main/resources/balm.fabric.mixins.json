@@ -15,7 +15,6 @@
     "PlayerMixin",
     "ResultSlotMixin",
     "ServerPlayerMixin",
-    "PlayerListMixin",
     "CommandsMixin",
     "PoiTypesAccessor",
     "RandomizableContainerMixin",

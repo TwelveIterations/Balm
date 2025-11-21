@@ -127,9 +127,8 @@ public class NeoForgeBalmEventMappings {
 
         bindCancelable(PlayerCallback.Attack.Before.EVENT, AttackEntityEvent.class, (event, it) -> !it.allowAttack(event.getEntity(), event.getTarget()));
 
-        ServerPlayerCallback.Connected.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
-        bindSimple(ServerPlayerCallback.Login.EVENT, PlayerEvent.PlayerLoggedInEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
-        bindSimple(ServerPlayerCallback.Logout.EVENT, PlayerEvent.PlayerLoggedOutEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        bindSimple(ServerPlayerCallback.Join.EVENT, PlayerEvent.PlayerLoggedInEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
+        bindSimple(ServerPlayerCallback.Leave.EVENT, PlayerEvent.PlayerLoggedOutEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.OpenMenu.EVENT, PlayerContainerEvent.Open.class, (event, it) -> it.handle((ServerPlayer) event.getEntity(), event.getContainer()));
         bindSimple(ServerPlayerCallback.DimensionChange.EVENT, PlayerEvent.PlayerChangedDimensionEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity(), event.getFrom(), event.getTo()));
         // TODO passing same entity twice currently

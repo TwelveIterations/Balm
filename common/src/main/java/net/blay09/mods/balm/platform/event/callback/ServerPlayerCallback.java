@@ -12,24 +12,17 @@ import net.minecraft.world.level.Level;
 public interface ServerPlayerCallback {
 
     @FunctionalInterface
-    interface Connected {
+    interface Join {
         void handle(ServerPlayer player);
 
-        EventMapper<Connected> EVENT = EventMapper.createUnbound("ServerPlayerCallback.Connected");
+        EventMapper<Join> EVENT = EventMapper.createUnbound("ServerPlayerCallback.Join");
     }
 
     @FunctionalInterface
-    interface Login {
+    interface Leave {
         void handle(ServerPlayer player);
 
-        EventMapper<Login> EVENT = EventMapper.createUnbound("ServerPlayerCallback.Login");
-    }
-
-    @FunctionalInterface
-    interface Logout {
-        void handle(ServerPlayer player);
-
-        EventMapper<Logout> EVENT = EventMapper.createUnbound("ServerPlayerCallback.Logout");
+        EventMapper<Leave> EVENT = EventMapper.createUnbound("ServerPlayerCallback.Leave");
     }
 
     @FunctionalInterface

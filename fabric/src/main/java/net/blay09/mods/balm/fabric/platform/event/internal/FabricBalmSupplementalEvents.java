@@ -68,12 +68,6 @@ public class FabricBalmSupplementalEvents {
         }
     });
 
-    public static final Event<ServerPlayerCallback.Login> SERVER_PLAYER_LOGIN = EventFactory.createArrayBacked(ServerPlayerCallback.Login.class, (listeners) -> (player) -> {
-        for (final var listener : listeners) {
-            listener.handle(player);
-        }
-    });
-
     public static final Event<ItemCallback.Craft.After> ITEM_CRAFTED = EventFactory.createArrayBacked(ItemCallback.Craft.After.class, (listeners) -> (player, itemStack, craftMatrix) -> {
         for (final var listener : listeners) {
             listener.afterCraft(player, itemStack, craftMatrix);

@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
 
@@ -55,11 +54,8 @@ public class FabricBalmEventMappings {
         ConfigCallback.Loaded.EVENT.configureMapping(FabricBalmSupplementalEvents.CONFIG_LOADED::register);
         ConfigCallback.Reloaded.EVENT.configureMapping(FabricBalmSupplementalEvents.CONFIG_RELOADED::register);
 
-        ServerPlayerCallback.Connected.EVENT.configureMapping((phase, it)
-                -> ServerPlayConnectionEvents.JOIN.register(mapPhase(phase), (handler, sender, server) -> it.handle(handler.player)));
-        ServerPlayerCallback.Login.EVENT.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_LOGIN::register);
-        ServerPlayerCallback.Logout.EVENT.configureMapping((phase, it)
-                -> ServerPlayConnectionEvents.DISCONNECT.register(mapPhase(phase), (handler, server) -> it.handle(handler.player)));
+        ServerPlayerCallback.Join.EVENT.configureMapping((phase, it) -> ServerPlayerEvents.JOIN.register(mapPhase(phase), it::handle));
+        ServerPlayerCallback.Leave.EVENT.configureMapping((phase, it) -> ServerPlayerEvents.LEAVE.register(mapPhase(phase), it::handle));
         ServerPlayerCallback.OpenMenu.EVENT.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_OPEN_MENU::register);
         ServerPlayerCallback.DimensionChange.EVENT.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_CHANGED_DIMENSION::register);
         ServerPlayerCallback.Respawn.EVENT.configureMapping((phase, it)

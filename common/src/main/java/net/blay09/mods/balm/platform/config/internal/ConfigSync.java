@@ -42,7 +42,7 @@ public class ConfigSync implements BalmModule {
 
     @Override
     public void initialize() {
-        ServerPlayerCallback.Login.EVENT.register(player -> {
+        ServerPlayerCallback.Join.EVENT.register(player -> {
             final var schemas = Balm.config().getSchemas();
             for (final var schema : schemas) {
                 if (hasSyncedProperties(schema)) {
