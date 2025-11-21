@@ -4,8 +4,7 @@ plugins {
 }
 
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
-    version = project.version
+    archivesName = "${mod_id}-${project.name}-${libs.minecraft.get().version}"
 }
 
 java {
@@ -26,12 +25,6 @@ repositories {
         }
         filter { includeGroupAndSubgroups("org.spongepowered") }
     }
-    maven {
-        url "https://maven.twelveiterations.com/repository/maven-public/"
-        content {
-            includeGroup "net.blay09.mods"
-        }
-    }
     exclusiveContent {
         forRepositories(
                 maven {
@@ -39,7 +32,7 @@ repositories {
                     url = 'https://maven.parchmentmc.org/'
                 },
                 maven {
-                    name = "NeoForge"
+                    name = 'NeoForge'
                     url = 'https://maven.neoforged.net/releases'
                 }
         )
@@ -94,7 +87,7 @@ jar {
                 'Implementation-Title'  : project.name,
                 'Implementation-Version': project.jar.archiveVersion,
                 'Implementation-Vendor' : mod_author,
-                'Built-On-Minecraft'    : minecraft_version,
+                'Built-On-Minecraft'    : libs.minecraft.get().version,
                 'MixinConfigs'          : "${mod_id}.mixins.json,${mod_id}.api.mixins.json,${mod_id}.${project.name}.mixins.json",
         ])
     }
@@ -104,23 +97,17 @@ processResources {
     def expandProps = [
             "version": version,
             "group": project.group, //Else we target the task's group.
-            "minecraft_version": minecraft_version,
-            "minimum_minecraft_version": minecraft_version_range.replaceAll("[\\[\\])]", "").split(",")[0],
-            "forge_version": forge_version,
-            "forge_loader_version_range": forge_loader_version_range,
-            "forge_version_range": forge_version_range,
-            "minecraft_version_range": minecraft_version_range,
-            "fabric_version": fabric_version,
-            "fabric_loader_version": fabric_loader_version,
+            "minecraft_version": libs.minecraft.get().version.replace('-pre', '-beta.'),
+            "forge_version": libs.forge.get().version,
+            "fabric_api_version": libs.fabricApi.get().version,
+            "fabric_loader_version": libs.fabricLoader.get().version,
             "mod_name": mod_name,
             "mod_main": mod_name.split(/\s+/).collect { word -> word.capitalize() }.join(""),
             "mod_author": mod_author,
             "mod_id": mod_id,
             "license": license,
             "description": project.description,
-            "neoforge_version": neoforge_version,
-            "neoforge_version_range": neoforge_version_range,
-            "neoforge_loader_version_range": neoforge_loader_version_range,
+            "neoforge_version": libs.neoForge.get().version,
             "credits": credits,
             "java_version": java_version,
             "homepage": homepage,
@@ -130,9 +117,18 @@ processResources {
             "pack_format_number": pack_format_number
     ]
 
-    filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {
+    def jsonExpandProps = expandProps.collectEntries {
+        key, value -> [(key): value instanceof String ? value.replace("\n", "\\\\n") : value]
+    }
+
+    filesMatching(['META-INF/mods.toml', 'META-INF/neoforge.mods.toml']) {
         expand expandProps
     }
+
+    filesMatching(['pack.mcmeta', 'fabric.mod.json', '*.mixins.json']) {
+        expand jsonExpandProps
+    }
+
     inputs.properties(expandProps)
 }
 
@@ -140,7 +136,7 @@ publishing {
     publications {
         register('mavenJava', MavenPublication) {
             version = project.version
-            artifactId "${mod_id.replace('_', '-')}-${project.name}"
+            artifactId = "${mod_id.replace('_', '-')}-${project.name}"
             from components.java
         }
     }

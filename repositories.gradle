@@ -1,5 +1,12 @@
 repositories {
     maven {
+        url "https://maven.twelveiterations.com/repository/maven-public/"
+        content {
+            includeGroup "net.blay09.mods"
+        }
+    }
+
+    maven {
         url "https://maven.twelveiterations.com/repository/maven-proxy/"
         content {
             includeGroup "dev.emi"

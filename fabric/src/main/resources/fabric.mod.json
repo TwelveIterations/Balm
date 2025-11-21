@@ -10,7 +10,7 @@
     "BlayTheNinth"
   ],
   "contact": {
-    "homepage": "https://mods.twelveiterations.com/",
+    "homepage": "https://balm.twelveiterations.com/",
     "sources": "https://github.com/TwelveIterationMods/Balm",
     "issues": "https://github.com/TwelveIterationMods/Balm/issues"
   },
@@ -40,7 +40,7 @@
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": "*",
-    "minecraft": ">=${minimum_minecraft_version}",
+    "minecraft": ">=${minecraft_version}",
     "java": ">=${java_version}"
   },
   "suggests": {
