@@ -10,7 +10,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -25,7 +24,7 @@ public abstract class AbstractBalmParticleTypeRegistrarImpl implements BalmParti
     }
 
     @Override
-    public <T extends ParticleOptions> BalmParticleTypeRegistration<T> register(String name, Function<Identifier, ParticleType<T>> constructor) {
+    public <TOptions extends ParticleOptions, TType extends ParticleType<TOptions>> BalmParticleTypeRegistration<TType> register(String name, Function<Identifier, TType> constructor) {
         final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.PARTICLE_TYPE, id);
         final var holder = registrar.register(key, constructor::apply);
@@ -39,16 +38,16 @@ public abstract class AbstractBalmParticleTypeRegistrarImpl implements BalmParti
         return new BalmParticleTypeRegistrationImpl<>(holder);
     }
 
-    private static class BalmParticleTypeRegistrationImpl<T extends ParticleOptions> implements BalmParticleTypeRegistration<T> {
-        private final Holder<ParticleType<T>> holder;
+    private static class BalmParticleTypeRegistrationImpl<TOptions extends ParticleOptions, TType extends ParticleType<TOptions>> implements BalmParticleTypeRegistration<TType> {
+        private final Holder<TType> holder;
 
         @SuppressWarnings("unchecked")
         private BalmParticleTypeRegistrationImpl(Holder<?> holder) {
-            this.holder = (Holder<@NotNull ParticleType<T>>) holder;
+            this.holder = (Holder<TType>) holder;
         }
 
         @Override
-        public Holder<ParticleType<T>> asHolder() {
+        public Holder<TType> asHolder() {
             return holder;
         }
     }

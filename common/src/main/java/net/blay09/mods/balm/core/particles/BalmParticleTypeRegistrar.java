@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import java.util.function.Function;
 
 public interface BalmParticleTypeRegistrar {
-    <T extends ParticleOptions> BalmParticleTypeRegistration<T> register(String name, Function<Identifier, ParticleType<T>> constructor);
+    <TOptions extends ParticleOptions, TType extends ParticleType<TOptions>> BalmParticleTypeRegistration<TType> register(String name, Function<Identifier, TType> constructor);
     
     BalmParticleTypeRegistration<SimpleParticleType> register(String name, boolean overrideLimiter);
 
