@@ -82,7 +82,8 @@ public class NeoForgeBalmEventMappings {
         });
         bindCancelable(BlockCallback.Use.EVENT, PlayerInteractEvent.RightClickBlock.class, (event, it) -> {
             final var result = it.handle(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
-            return result != InteractionResult.PASS;
+            result.interactionResult().ifPresent(event::setCancellationResult);
+            return result.interactionResult().isPresent();
         });
 
         bindCancelable(CommandCallback.Before.EVENT, CommandEvent.class, (event, it) -> !it.allowCommand(event.getParseResults()));
@@ -106,7 +107,8 @@ public class NeoForgeBalmEventMappings {
 
         bindCancelable(ItemCallback.Use.EVENT, PlayerInteractEvent.RightClickItem.class, (event, it) -> {
             final var result = it.handle(event.getEntity(), event.getLevel(), event.getHand());
-            return result != InteractionResult.PASS;
+            result.interactionResult().ifPresent(event::setCancellationResult);
+            return result.interactionResult().isPresent();
         });
         bindSimple(ItemCallback.Tooltip.EVENT, ItemTooltipEvent.class, (event, it) -> it.handle(event.getItemStack(), event.getToolTip(), event.getFlags()));
         bindSimple(ItemCallback.Craft.After.EVENT, PlayerEvent.ItemCraftedEvent.class, (event, it) -> it.afterCraft(event.getEntity(), event.getCrafting(), event.getInventory()));

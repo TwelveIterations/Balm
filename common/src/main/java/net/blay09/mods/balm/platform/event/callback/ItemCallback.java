@@ -16,7 +16,7 @@ public interface ItemCallback {
 
     @FunctionalInterface
     interface Use {
-        InteractionResult handle(Player player, Level level, InteractionHand hand);
+        InteractionEventResult handle(Player player, Level level, InteractionHand hand);
 
         EventMapper<Use> EVENT = EventMapper.createUnbound("ItemCallback.Use");
     }

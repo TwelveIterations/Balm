@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.InteractionResult;
 
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public class FabricBalmEventMappings {
         ItemCallback.Craft.After.EVENT.configureMapping(FabricBalmSupplementalEvents.ITEM_CRAFTED::register);
         ItemCallback.Toss.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.ITEM_TOSSED::register);
         ItemCallback.Use.EVENT.configureMapping((phase, it)
-                -> UseItemCallback.EVENT.register(mapPhase(phase), it::handle));
+                -> UseItemCallback.EVENT.register(mapPhase(phase), (player, level, hand) -> mapInteractionResult(it.handle(player, level, hand))));
         ItemCallback.Tooltip.EVENT.configureMapping((phase, it)
                 -> ItemTooltipCallback.EVENT.register(mapPhase(phase), (itemStack, context, flag, tooltip) -> it.handle(itemStack, tooltip, flag)));
 
@@ -99,13 +100,17 @@ public class FabricBalmEventMappings {
         CropCallback.Grow.After.EVENT.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_POST::register);
 
         BlockCallback.Use.EVENT.configureMapping((phase, it)
-                -> UseBlockCallback.EVENT.register(mapPhase(phase), it::handle));
+                -> UseBlockCallback.EVENT.register(mapPhase(phase), (player, level, hand, hitResult) -> mapInteractionResult(it.handle(player, level, hand, hitResult))));
         BlockCallback.DigSpeed.EVENT.configureMapping(BalmSupplementalEvents.BLOCK_DIG_SPEED::register);
         BlockCallback.Break.Before.EVENT.configureMapping((phase, it)
                 -> PlayerBlockBreakEvents.BEFORE.register(mapPhase(phase), (world, player, pos, state, blockEntity) -> it.allowBreak(world, pos, state, blockEntity, player)));
 
         CreativeModeTabCallback.BuildContents.EVENT.configureMapping((phase, it)
                 -> ItemGroupEvents.MODIFY_ENTRIES_ALL.register(mapPhase(phase), it::handle));
+    }
+
+    private static InteractionResult mapInteractionResult(InteractionEventResult result) {
+        return result.interactionResult().orElse(InteractionResult.PASS);
     }
 
     public static Identifier mapPhase(Identifier phase) {
