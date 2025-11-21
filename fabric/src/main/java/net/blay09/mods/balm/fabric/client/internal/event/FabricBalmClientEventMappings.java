@@ -51,26 +51,26 @@ public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
         ClientInputCallback.Keyboard.EVENT.configureMapping(FabricBalmSupplementalClientEvents.KEYBOARD_INPUT::register);
         ClientItemCallback.Use.EVENT.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM::register);
 
-        ScreenCallback.Init.BEFORE.configureMapping((phase, it)
-                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, screen, scaledWidth, scaledHeight) -> it.handle(screen)));
-        ScreenCallback.Init.AFTER.configureMapping((phase, it)
-                -> ScreenEvents.AFTER_INIT.register(mapPhase(phase), (client, screen, scaledWidth, scaledHeight) -> it.handle(screen)));
-        ScreenCallback.Open.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_OPEN::register);
+        ScreenCallback.Init.Before.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, screen, scaledWidth, scaledHeight) -> it.beforeInit(screen)));
+        ScreenCallback.Init.After.EVENT.configureMapping((phase, it)
+                -> ScreenEvents.AFTER_INIT.register(mapPhase(phase), (client, screen, scaledWidth, scaledHeight) -> it.afterInit(screen)));
+        ScreenCallback.Opening.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_OPEN::register);
         ScreenCallback.Render.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_PRE::register);
         ScreenCallback.Render.AFTER_BACKGROUND.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_BACKGROUND_POST::register);
         ScreenCallback.Render.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_RENDER_POST::register);
-        ScreenCallback.KeyPress.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_PRESS_PRE::register);
-        ScreenCallback.KeyPress.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_PRESS_POST::register);
-        ScreenCallback.KeyRelease.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_RELEASE_PRE::register);
-        ScreenCallback.KeyRelease.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_RELEASE_POST::register);
-        ScreenCallback.MousePress.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_PRESS_PRE::register);
-        ScreenCallback.MousePress.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_PRESS_POST::register);
-        ScreenCallback.MouseRelease.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_RELEASE_PRE::register);
-        ScreenCallback.MouseRelease.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_RELEASE_POST::register);
-        ScreenCallback.MouseScroll.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_SCROLL_PRE::register);
-        ScreenCallback.MouseScroll.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_SCROLL_POST::register);
-        ScreenCallback.MouseDrag.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_DRAG_PRE::register);
-        ScreenCallback.MouseDrag.AFTER.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_DRAG_POST::register);
+        ScreenCallback.KeyPress.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_PRESS_PRE::register);
+        ScreenCallback.KeyPress.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_PRESS_POST::register);
+        ScreenCallback.KeyRelease.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_RELEASE_PRE::register);
+        ScreenCallback.KeyRelease.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_KEY_RELEASE_POST::register);
+        ScreenCallback.MousePress.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_PRESS_PRE::register);
+        ScreenCallback.MousePress.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_PRESS_POST::register);
+        ScreenCallback.MouseRelease.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_RELEASE_PRE::register);
+        ScreenCallback.MouseRelease.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_RELEASE_POST::register);
+        ScreenCallback.MouseScroll.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_SCROLL_PRE::register);
+        ScreenCallback.MouseScroll.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_SCROLL_POST::register);
+        ScreenCallback.MouseDrag.Before.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_DRAG_PRE::register);
+        ScreenCallback.MouseDrag.After.EVENT.configureMapping(FabricBalmSupplementalClientEvents.SCREEN_MOUSE_DRAG_POST::register);
     }
 
 }

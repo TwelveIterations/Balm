@@ -29,30 +29,30 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
         bindSimple(ClientLifecycleCallback.ConnectedToServer.EVENT, ClientPlayerNetworkEvent.LoggingIn.class, (event, it) -> it.handle(Minecraft.getInstance()));
         bindSimple(ClientLifecycleCallback.DisconnectedFromServer.EVENT, ClientPlayerNetworkEvent.LoggingOut.class, (event, it) -> it.handle(Minecraft.getInstance()));
 
-        ScreenCallback.Init.BEFORE.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE::register);
-        ScreenCallback.Init.AFTER.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_POST::register);
-        bindSimple(ScreenCallback.Open.EVENT, ScreenEvent.Opening.class, (event, it) -> {
-            final var newScreen = it.handle(event.getScreen());
+        ScreenCallback.Init.Before.EVENT.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE::register);
+        ScreenCallback.Init.After.EVENT.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_POST::register);
+        bindSimple(ScreenCallback.Opening.EVENT, ScreenEvent.Opening.class, (event, it) -> {
+            final var newScreen = it.modifyScreen(event.getScreen());
             if (newScreen != null) {
                 event.setNewScreen(newScreen);
             }
         });
 
-        bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
-        bindSimple(ScreenCallback.Render.AFTER_BACKGROUND, ScreenEvent.Render.Background.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
-        bindSimple(ScreenCallback.Render.AFTER, ScreenEvent.Render.Post.class, (event, it) -> it.handle(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
-        bindCancelable(ScreenCallback.KeyPress.BEFORE, ScreenEvent.KeyPressed.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
-        bindCancelable(ScreenCallback.KeyPress.AFTER, ScreenEvent.KeyPressed.Post.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
-        bindCancelable(ScreenCallback.KeyRelease.BEFORE, ScreenEvent.KeyReleased.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
-        bindCancelable(ScreenCallback.KeyRelease.AFTER, ScreenEvent.KeyReleased.Post.class, (event, it) -> it.handle(event.getScreen(), event.getKeyEvent()));
-        bindCancelable(ScreenCallback.MousePress.BEFORE, ScreenEvent.MouseButtonPressed.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseButtonEvent(), false));
-        bindSimple(ScreenCallback.MousePress.AFTER, ScreenEvent.MouseButtonPressed.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseButtonEvent(), false));
-        bindCancelable(ScreenCallback.MouseRelease.BEFORE, ScreenEvent.MouseButtonReleased.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton(), false));
-        bindSimple(ScreenCallback.MouseRelease.AFTER, ScreenEvent.MouseButtonReleased.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton(), false));
-        bindCancelable(ScreenCallback.MouseDrag.BEFORE, ScreenEvent.MouseDragged.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY(), false));
-        bindSimple(ScreenCallback.MouseDrag.AFTER, ScreenEvent.MouseDragged.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY(), false));
-        bindSimple(ScreenCallback.MouseScroll.BEFORE, ScreenEvent.MouseScrolled.Pre.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY(), false));
-        bindSimple(ScreenCallback.MouseScroll.AFTER, ScreenEvent.MouseScrolled.Post.class, (event, it) -> it.handle(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY(), false));
+        bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
+        bindSimple(ScreenCallback.Render.AFTER_BACKGROUND, ScreenEvent.Render.Background.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
+        bindSimple(ScreenCallback.Render.AFTER, ScreenEvent.Render.Post.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
+        bindCancelable(ScreenCallback.KeyPress.Before.EVENT, ScreenEvent.KeyPressed.Pre.class, (event, it) -> it.keyPressed(event.getScreen(), event.getKeyEvent()));
+        bindSimple(ScreenCallback.KeyPress.After.EVENT, ScreenEvent.KeyPressed.Post.class, (event, it) -> it.afterKeyPressed(event.getScreen(), event.getKeyEvent()));
+        bindCancelable(ScreenCallback.KeyRelease.Before.EVENT, ScreenEvent.KeyReleased.Pre.class, (event, it) -> it.keyReleased(event.getScreen(), event.getKeyEvent()));
+        bindSimple(ScreenCallback.KeyRelease.After.EVENT, ScreenEvent.KeyReleased.Post.class, (event, it) -> it.afterKeyReleased(event.getScreen(), event.getKeyEvent()));
+        bindCancelable(ScreenCallback.MousePress.Before.EVENT, ScreenEvent.MouseButtonPressed.Pre.class, (event, it) -> it.mousePressed(event.getScreen(), event.getMouseButtonEvent()));
+        bindSimple(ScreenCallback.MousePress.After.EVENT, ScreenEvent.MouseButtonPressed.Post.class, (event, it) -> it.afterMousePressed(event.getScreen(), event.getMouseButtonEvent(), event.getClickResult()));
+        bindCancelable(ScreenCallback.MouseRelease.Before.EVENT, ScreenEvent.MouseButtonReleased.Pre.class, (event, it) -> it.mouseReleased(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton()));
+        bindSimple(ScreenCallback.MouseRelease.After.EVENT, ScreenEvent.MouseButtonReleased.Post.class, (event, it) -> it.afterMouseReleased(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton(), event.getReleaseResult()));
+        bindCancelable(ScreenCallback.MouseDrag.Before.EVENT, ScreenEvent.MouseDragged.Pre.class, (event, it) -> it.mouseDragged(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY()));
+        bindSimple(ScreenCallback.MouseDrag.After.EVENT, ScreenEvent.MouseDragged.Post.class, (event, it) -> it.afterMouseDragged(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY(), false));
+        bindSimple(ScreenCallback.MouseScroll.Before.EVENT, ScreenEvent.MouseScrolled.Pre.class, (event, it) -> it.mouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY()));
+        bindSimple(ScreenCallback.MouseScroll.After.EVENT, ScreenEvent.MouseScrolled.Post.class, (event, it) -> it.afterMouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY(), false));
 
         bindSimple(ClientInputCallback.Keyboard.EVENT, InputEvent.Key.class, (event, it) -> it.handle(event.getKey(), event.getScanCode(), event.getAction(), event.getModifiers()));
 

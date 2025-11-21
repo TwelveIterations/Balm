@@ -9,7 +9,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 public interface ScreenCallback {
     @FunctionalInterface
     interface Render {
-        void handle(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta);
+        void render(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta);
 
         EventMapper<Render> BEFORE = EventMapper.createUnbound("ScreenCallback.Render.Before");
         EventMapper<Render> AFTER_BACKGROUND = EventMapper.createUnbound("ScreenCallback.Render.AfterBackground");
@@ -17,65 +17,121 @@ public interface ScreenCallback {
     }
 
     @FunctionalInterface
-    interface Open {
-        Screen handle(Screen screen);
+    interface Opening {
+        Screen modifyScreen(Screen screen);
 
-        EventMapper<Open> EVENT = EventMapper.createUnbound("ScreenCallback.Open");
+        EventMapper<Opening> EVENT = EventMapper.createUnbound("ScreenCallback.Opening");
     }
 
-    @FunctionalInterface
     interface Init {
-        void handle(Screen screen);
+        @FunctionalInterface
+        interface Before {
+            void beforeInit(Screen screen);
 
-        EventMapper<Init> BEFORE = EventMapper.createUnbound("ScreenCallback.Init.Before");
-        EventMapper<Init> AFTER = EventMapper.createUnbound("ScreenCallback.Init.After");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("ScreenCallback.Init.Before");
+        }
+
+        @FunctionalInterface
+        interface After {
+            void afterInit(Screen screen);
+
+            EventMapper<After> EVENT = EventMapper.createUnbound("ScreenCallback.Init.AFter");
+        }
     }
 
-    @FunctionalInterface
     interface KeyRelease {
-        boolean handle(Screen screen, KeyEvent event);
+        @FunctionalInterface
+        interface Before {
+            boolean keyReleased(Screen screen, KeyEvent event);
 
-        EventMapper<KeyRelease> BEFORE = EventMapper.createUnbound("ScreenCallback.KeyRelease.Before");
-        EventMapper<KeyRelease> AFTER = EventMapper.createUnbound("ScreenCallback.KeyRelease.After");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("ScreenCallback.KeyRelease.Before");
+        }
+
+        @FunctionalInterface
+        interface After {
+            void afterKeyReleased(Screen screen, KeyEvent event);
+
+            EventMapper<After> EVENT = EventMapper.createUnbound("ScreenCallback.KeyRelease.After");
+        }
     }
 
-    @FunctionalInterface
     interface KeyPress {
-        boolean handle(Screen screen, KeyEvent event);
+        @FunctionalInterface
+        interface Before {
+            boolean keyPressed(Screen screen, KeyEvent event);
 
-        EventMapper<KeyPress> BEFORE = EventMapper.createUnbound("ScreenCallback.KeyPress.Before");
-        EventMapper<KeyPress> AFTER = EventMapper.createUnbound("ScreenCallback.KeyPress.After");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("ScreenCallback.KeyPress.Before");
+        }
+
+        @FunctionalInterface
+        interface After {
+            void afterKeyPressed(Screen screen, KeyEvent event);
+
+            EventMapper<After> EVENT = EventMapper.createUnbound("ScreenCallback.KeyPress.After");
+        }
     }
 
-    @FunctionalInterface
     interface MousePress {
-        boolean handle(Screen screen, MouseButtonEvent event, boolean consumed);
+        @FunctionalInterface
+        interface Before {
+            boolean mousePressed(Screen screen, MouseButtonEvent event);
 
-        EventMapper<MousePress> BEFORE = EventMapper.createUnbound("ScreenCallback.MousePress.Before");
-        EventMapper<MousePress> AFTER = EventMapper.createUnbound("ScreenCallback.MousePress.After");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("ScreenCallback.MousePress.Before");
+        }
+
+        @FunctionalInterface
+        interface After {
+            boolean afterMousePressed(Screen screen, MouseButtonEvent event, boolean consumed);
+
+            EventMapper<After> EVENT = EventMapper.createUnbound("ScreenCallback.MousePress.After");
+        }
     }
 
-    @FunctionalInterface
     interface MouseRelease {
-        boolean handle(Screen screen, double mouseX, double mouseY, int button, boolean consumed);
+        @FunctionalInterface
+        interface Before {
+            boolean mouseReleased(Screen screen, double mouseX, double mouseY, int button);
 
-        EventMapper<MouseRelease> BEFORE = EventMapper.createUnbound("ScreenCallback.MouseRelease.Before");
-        EventMapper<MouseRelease> AFTER = EventMapper.createUnbound("ScreenCallback.MouseRelease.After");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("ScreenCallback.MouseRelease.Before");
+        }
+
+        @FunctionalInterface
+        interface After {
+            boolean afterMouseReleased(Screen screen, double mouseX, double mouseY, int button, boolean consumed);
+
+            EventMapper<After> EVENT = EventMapper.createUnbound("ScreenCallback.MouseRelease.After");
+        }
     }
 
-    @FunctionalInterface
     interface MouseDrag {
-        boolean handle(Screen screen, double mouseX, double mouseY, int button, double horizontalAmount, double verticalAmount, boolean consumed);
+        @FunctionalInterface
+        interface Before {
+            boolean mouseDragged(Screen screen, double mouseX, double mouseY, int button, double horizontalAmount, double verticalAmount);
 
-        EventMapper<MouseDrag> BEFORE = EventMapper.createUnbound("ScreenCallback.MouseDrag.Before");
-        EventMapper<MouseDrag> AFTER = EventMapper.createUnbound("ScreenCallback.MouseDrag.After");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("ScreenCallback.MouseDrag.Before");
+        }
+
+        @FunctionalInterface
+        interface After {
+            boolean afterMouseDragged(Screen screen, double mouseX, double mouseY, int button, double horizontalAmount, double verticalAmount, boolean consumed);
+
+            EventMapper<After> EVENT = EventMapper.createUnbound("ScreenCallback.MouseDrag.After");
+        }
     }
 
-    @FunctionalInterface
     interface MouseScroll {
-        boolean handle(Screen screen, double mouseX, double mouseY, double horizontalAmount, double verticalAmount, boolean consumed);
+        @FunctionalInterface
+        interface Before {
+            boolean mouseScrolled(Screen screen, double mouseX, double mouseY, double horizontalAmount, double verticalAmount);
 
-        EventMapper<MouseScroll> BEFORE = EventMapper.createUnbound("ScreenCallback.MouseScroll.Before");
-        EventMapper<MouseScroll> AFTER = EventMapper.createUnbound("ScreenCallback.MouseScroll.After");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("ScreenCallback.MouseScroll.Before");
+        }
+
+        @FunctionalInterface
+        interface After {
+            boolean afterMouseScrolled(Screen screen, double mouseX, double mouseY, double horizontalAmount, double verticalAmount, boolean consumed);
+
+            EventMapper<After> EVENT = EventMapper.createUnbound("ScreenCallback.MouseScroll.After");
+        }
     }
 }

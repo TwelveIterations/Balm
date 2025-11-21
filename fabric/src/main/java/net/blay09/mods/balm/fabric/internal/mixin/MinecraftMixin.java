@@ -32,7 +32,7 @@ public class MinecraftMixin {
 
     @ModifyVariable(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;", opcode = Opcodes.GETFIELD, shift = At.Shift.AFTER), argsOnly = true)
     public Screen modifyScreen(Screen screen) {
-        return FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().handle(screen);
+        return FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().modifyScreen(screen);
     }
 
     @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;interactAt(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"))

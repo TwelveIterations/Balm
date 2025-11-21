@@ -12,15 +12,15 @@ public class NeoForgeBalmSupplementalClientEvents {
         }
     });
 
-    public static final Event<ScreenCallback.Init> SCREEN_INIT_PRE = EventFactory.createArrayBacked(ScreenCallback.Init.class, (listeners) -> (screen) -> {
+    public static final Event<ScreenCallback.Init.Before> SCREEN_INIT_PRE = EventFactory.createArrayBacked(ScreenCallback.Init.Before.class, (listeners) -> (screen) -> {
         for (final var listener : listeners) {
-            listener.handle(screen);
+            listener.beforeInit(screen);
         }
     });
 
-    public static final Event<ScreenCallback.Init> SCREEN_INIT_POST = EventFactory.createArrayBacked(ScreenCallback.Init.class, (listeners) -> (screen) -> {
+    public static final Event<ScreenCallback.Init.After> SCREEN_INIT_POST = EventFactory.createArrayBacked(ScreenCallback.Init.After.class, (listeners) -> (screen) -> {
         for (final var listener : listeners) {
-            listener.handle(screen);
+            listener.afterInit(screen);
         }
     });
 }
