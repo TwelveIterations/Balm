@@ -21,29 +21,25 @@ public class GuiMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V", at = @At("HEAD"), cancellable = true)
     public void renderAllPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo callbackInfo) {
-        if (FabricBalmSupplementalClientEvents.RENDER_GUI_PRE.invoker()
-                .handle(guiGraphics, minecraft.getWindow())
-                .shouldSkipDefault()) {
+        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V", at = @At("TAIL"))
     public void renderAllPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalClientEvents.RENDER_GUI_POST.invoker().handle(guiGraphics, minecraft.getWindow());
+        FabricBalmSupplementalClientEvents.RENDER_GUI_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 
     @Inject(method = "renderPlayerHealth(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
     public void renderPlayerHealthPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        if (FabricBalmSupplementalClientEvents.RENDER_GUI_HEALTH_PRE.invoker()
-                .handle(guiGraphics, minecraft.getWindow())
-                .shouldSkipDefault()) {
+        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_HEALTH_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
         }
     }
 
     @Inject(method = "renderPlayerHealth(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPlayerHealthPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalClientEvents.RENDER_GUI_HEALTH_POST.invoker().handle(guiGraphics, minecraft.getWindow());
+        FabricBalmSupplementalClientEvents.RENDER_GUI_HEALTH_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 }

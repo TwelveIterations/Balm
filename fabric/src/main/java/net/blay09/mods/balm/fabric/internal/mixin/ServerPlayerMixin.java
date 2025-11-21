@@ -49,9 +49,7 @@ public class ServerPlayerMixin {
         ServerPlayer player = (ServerPlayer) (Object) this;
         Inventory inventory = player.getInventory();
         ItemStack selected = inventory.getSelectedItem();
-        if (FabricBalmSupplementalEvents.ITEM_TOSSED.invoker()
-                .handle(player, selected)
-                .shouldSkipDefault()) {
+        if (FabricBalmSupplementalEvents.ITEM_TOSSED.invoker().allowToss(player, selected)) {
             callbackInfo.cancel();
         }
     }

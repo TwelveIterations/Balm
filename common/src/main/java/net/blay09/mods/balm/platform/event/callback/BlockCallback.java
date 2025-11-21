@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.platform.event.callback;
 
-import net.blay09.mods.balm.platform.event.EventHandling;
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -17,16 +16,18 @@ import org.jspecify.annotations.Nullable;
 public interface BlockCallback {
     @FunctionalInterface
     interface DigSpeed {
-        float handle(BlockGetter blockGetter, BlockPos pos, BlockState state, Player player, float speed);
+        float computeDigSpeed(BlockGetter blockGetter, BlockPos pos, BlockState state, Player player, float digSpeed);
 
         EventMapper<DigSpeed> EVENT = EventMapper.createUnbound("BlockCallback.DigSpeed");
     }
 
-    @FunctionalInterface
     interface Break {
-        EventHandling handle(LevelAccessor level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Player player);
+        @FunctionalInterface
+        interface Before {
+            boolean allowBreak(LevelAccessor level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Player player);
 
-        EventMapper<Break> EVENT = EventMapper.createUnbound("BlockCallback.Break");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("BlockCallback.Break.Before");
+        }
     }
 
     @FunctionalInterface

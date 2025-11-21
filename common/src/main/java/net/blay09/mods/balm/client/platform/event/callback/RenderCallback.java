@@ -2,7 +2,6 @@ package net.blay09.mods.balm.client.platform.event.callback;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.blay09.mods.balm.platform.event.EventHandling;
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,21 +14,21 @@ import net.minecraft.world.phys.BlockHitResult;
 public interface RenderCallback {
     @FunctionalInterface
     interface UpdateFov {
-        float handle(LivingEntity entity, float fov);
+        float computeFov(LivingEntity entity, float fov);
 
         EventMapper<UpdateFov> EVENT = EventMapper.createUnbound("RenderCallback.UpdateFov");
     }
 
     @FunctionalInterface
     interface BlockHighlight {
-        EventHandling handle(BlockHitResult hitResult, PoseStack poseStack, MultiBufferSource multiBufferSource, Camera camera);
+        boolean shouldRender(BlockHitResult hitResult, PoseStack poseStack, MultiBufferSource multiBufferSource, Camera camera);
 
         EventMapper<BlockHighlight> EVENT = EventMapper.createUnbound("RenderCallback.BlockHighlight");
     }
 
     @FunctionalInterface
     interface Hand {
-        EventHandling handle(InteractionHand hand, ItemStack itemStack, float swingProgress);
+        boolean shouldRender(InteractionHand hand, ItemStack itemStack, float swingProgress);
 
         EventMapper<Hand> EVENT = EventMapper.createUnbound("RenderCallback.RenderHand");
     }
@@ -38,12 +37,12 @@ public interface RenderCallback {
 
         @FunctionalInterface
         interface Before {
-            EventHandling handle(GuiGraphics guiGraphics, Window window);
+            boolean shouldRender(GuiGraphics guiGraphics, Window window);
         }
 
         @FunctionalInterface
         interface After {
-            void handle(GuiGraphics guiGraphics, Window window);
+            void afterRender(GuiGraphics guiGraphics, Window window);
         }
 
         interface Health {

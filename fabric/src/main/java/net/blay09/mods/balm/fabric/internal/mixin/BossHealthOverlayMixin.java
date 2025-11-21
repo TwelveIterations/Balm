@@ -20,16 +20,14 @@ public class BossHealthOverlayMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
     public void renderPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        if (FabricBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_PRE.invoker()
-                .handle(guiGraphics, minecraft.getWindow())
-                .shouldSkipDefault()) {
+        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_POST.invoker().handle(guiGraphics, minecraft.getWindow());
+        FabricBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 
 }

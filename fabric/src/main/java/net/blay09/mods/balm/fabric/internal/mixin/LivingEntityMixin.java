@@ -16,20 +16,20 @@ public abstract class LivingEntityMixin {
 
     @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setAbsorptionAmount(F)V"), argsOnly = true)
     private float actuallyHurt(float damageAmount, ServerLevel serverLevel, DamageSource damageSource) {
-        return FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().handle((LivingEntity) (Object) this, damageSource, damageAmount);
+        return FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().computeDamage((LivingEntity) (Object) this, damageSource, damageAmount);
     }
 
     @WrapOperation(method = "causeFallDamage(DFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;calculateFallDamage(DF)I"))
     private int calculateFallDamage(LivingEntity self, double fallDistance, float multiplier, Operation<Integer> operation) {
         float effectiveDamage = operation.call(self, fallDistance, multiplier);
-        effectiveDamage = FabricBalmSupplementalEvents.LIVING_FALL.invoker().handle(self, effectiveDamage);
+        effectiveDamage = FabricBalmSupplementalEvents.LIVING_FALL.invoker().computeFallDamage(self, effectiveDamage);
         return Mth.floor(effectiveDamage);
     }
 
     @ModifyVariable(method = "heal(F)V", at = @At("HEAD"), argsOnly = true)
     private float modifyHealing(float heal) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        return FabricBalmSupplementalEvents.LIVING_HEAL.invoker().handle(entity, heal);
+        return FabricBalmSupplementalEvents.LIVING_HEAL.invoker().computeHeal(entity, heal);
     }
 
 }

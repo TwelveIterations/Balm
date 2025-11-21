@@ -18,7 +18,7 @@ public class BlockStateBaseMixin {
         final var blockStateBase = (BlockBehaviour.BlockStateBase) (Object) this;
         final var digSpeed = cir.getReturnValueF();
         final var state = ((BlockStateBaseAccessor) blockStateBase).callAsState();
-        final var effectiveSpeed = BalmSupplementalEvents.BLOCK_DIG_SPEED.invoker().handle(blockGetter, blockPos, state, player, digSpeed);
+        final var effectiveSpeed = BalmSupplementalEvents.BLOCK_DIG_SPEED.invoker().computeDigSpeed(blockGetter, blockPos, state, player, digSpeed);
         cir.setReturnValue(effectiveSpeed);
     }
 }

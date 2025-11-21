@@ -21,15 +21,13 @@ public class ChatComponentMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;IIIZZ)V", at = @At("HEAD"), cancellable = true)
     public void renderPre(GuiGraphics guiGraphics, Font font, int tickCount, int x, int y, boolean bl, boolean ble, CallbackInfo callbackInfo) {
-        if (FabricBalmSupplementalClientEvents.RENDER_GUI_CHAT_PRE.invoker()
-                .handle(guiGraphics, minecraft.getWindow())
-                .shouldSkipDefault()) {
+        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_CHAT_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;IIIZZ)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, Font font, int tickCount, int x, int y, boolean bl, boolean ble, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalClientEvents.RENDER_GUI_CHAT_POST.invoker().handle(guiGraphics, minecraft.getWindow());
+        FabricBalmSupplementalClientEvents.RENDER_GUI_CHAT_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 }

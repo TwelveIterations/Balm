@@ -19,7 +19,7 @@ public class BalmSupplementalEvents {
     public static final Event<BlockCallback.DigSpeed> BLOCK_DIG_SPEED = EventFactory.createArrayBacked(BlockCallback.DigSpeed.class, (listeners) -> (blockGetter, pos, state, player, speed) -> {
         float newSpeed = speed;
         for (final var listener : listeners) {
-            newSpeed = listener.handle(blockGetter, pos, state, player, newSpeed);
+            newSpeed = listener.computeDigSpeed(blockGetter, pos, state, player, newSpeed);
         }
         return newSpeed;
     });

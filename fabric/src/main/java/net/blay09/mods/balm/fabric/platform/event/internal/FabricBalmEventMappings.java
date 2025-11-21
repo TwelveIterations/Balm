@@ -75,36 +75,34 @@ public class FabricBalmEventMappings {
         LevelCallback.Chunk.UNLOAD.configureMapping((phase, it)
                 -> ServerChunkEvents.CHUNK_UNLOAD.register(mapPhase(phase), (level, chunk) -> it.handle(level, chunk, chunk.getPos())));
 
-        ItemCallback.Craft.EVENT.configureMapping(FabricBalmSupplementalEvents.ITEM_CRAFTED::register);
-        ItemCallback.Toss.EVENT.configureMapping(FabricBalmSupplementalEvents.ITEM_TOSSED::register);
+        ItemCallback.Craft.After.EVENT.configureMapping(FabricBalmSupplementalEvents.ITEM_CRAFTED::register);
+        ItemCallback.Toss.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.ITEM_TOSSED::register);
         ItemCallback.Use.EVENT.configureMapping((phase, it)
                 -> UseItemCallback.EVENT.register(mapPhase(phase), it::handle));
         ItemCallback.Tooltip.EVENT.configureMapping((phase, it)
                 -> ItemTooltipCallback.EVENT.register(mapPhase(phase), (itemStack, context, flag, tooltip) -> it.handle(itemStack, tooltip, flag)));
 
-        CommandCallback.EVENT.configureMapping(FabricBalmSupplementalEvents.COMMAND::register);
+        CommandCallback.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.COMMAND::register);
 
         EntityCallback.Add.EVENT.configureMapping((phase, it)
                 -> ServerEntityEvents.ENTITY_LOAD.register(mapPhase(phase), (entity, level) -> it.handle(level, entity)));
 
-        LivingEntityCallback.Damage.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_DAMAGE::register);
-        LivingEntityCallback.Fall.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_FALL::register);
-        LivingEntityCallback.Heal.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_HEAL::register);
-        LivingEntityCallback.Death.BEFORE.configureMapping((phase, it)
-                -> ServerLivingEntityEvents.ALLOW_DEATH.register((livingEntity, damageSource, damage) -> it.handle(livingEntity, damageSource).shouldSkipDefault()));
-        LivingEntityCallback.Death.AFTER.configureMapping((phase, it)
-                -> ServerLivingEntityEvents.AFTER_DEATH.register(it::handle));
+        LivingEntityCallback.Damage.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_DAMAGE::register);
+        LivingEntityCallback.Fall.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_FALL::register);
+        LivingEntityCallback.Heal.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_HEAL::register);
+        LivingEntityCallback.Death.Before.EVENT.configureMapping((phase, it)
+                -> ServerLivingEntityEvents.ALLOW_DEATH.register((livingEntity, damageSource, damage) -> !it.allowDeath(livingEntity, damageSource)));
 
-        PlayerCallback.Attack.EVENT.configureMapping(FabricBalmSupplementalEvents.PLAYER_ATTACK::register);
+        PlayerCallback.Attack.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.PLAYER_ATTACK::register);
 
-        CropCallback.Grow.BEFORE.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_PRE::register);
-        CropCallback.Grow.AFTER.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_POST::register);
+        CropCallback.Grow.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_PRE::register);
+        CropCallback.Grow.After.EVENT.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_POST::register);
 
         BlockCallback.Use.EVENT.configureMapping((phase, it)
                 -> UseBlockCallback.EVENT.register(mapPhase(phase), it::handle));
         BlockCallback.DigSpeed.EVENT.configureMapping(BalmSupplementalEvents.BLOCK_DIG_SPEED::register);
-        BlockCallback.Break.EVENT.configureMapping((phase, it)
-                -> PlayerBlockBreakEvents.BEFORE.register(mapPhase(phase), (world, player, pos, state, blockEntity) -> !it.handle(world, pos, state, blockEntity, player).shouldSkipDefault()));
+        BlockCallback.Break.Before.EVENT.configureMapping((phase, it)
+                -> PlayerBlockBreakEvents.BEFORE.register(mapPhase(phase), (world, player, pos, state, blockEntity) -> it.allowBreak(world, pos, state, blockEntity, player)));
 
         CreativeModeTabCallback.BuildContents.EVENT.configureMapping((phase, it)
                 -> ItemGroupEvents.MODIFY_ENTRIES_ALL.register(mapPhase(phase), it::handle));

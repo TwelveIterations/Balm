@@ -80,36 +80,36 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
         });
 
         bindSimple(RenderCallback.UpdateFov.EVENT, ComputeFovModifierEvent.class, (event, it) -> {
-            final var newFov = it.handle(event.getPlayer(), event.getFovModifier());
+            final var newFov = it.computeFov(event.getPlayer(), event.getFovModifier());
             event.setNewFovModifier(newFov);
         });
-        bindCancelable(RenderCallback.Hand.EVENT, RenderHandEvent.class, (event, it) -> it.handle(event.getHand(), event.getItemStack(), event.getSwingProgress()).shouldSkipDefault());
-        bindSimple(RenderCallback.Gui.BEFORE, RenderGuiEvent.Pre.class, (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
-        bindSimple(RenderCallback.Gui.AFTER, RenderGuiEvent.Post.class, (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+        bindCancelable(RenderCallback.Hand.EVENT, RenderHandEvent.class, (event, it) -> !it.shouldRender(event.getHand(), event.getItemStack(), event.getSwingProgress()));
+        bindCancelable(RenderCallback.Gui.BEFORE, RenderGuiEvent.Pre.class, (event, it) -> !it.shouldRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+        bindSimple(RenderCallback.Gui.AFTER, RenderGuiEvent.Post.class, (event, it) -> it.afterRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         bindFiltered(RenderCallback.Gui.Health.BEFORE, RenderGuiLayerEvent.Pre.class,
                 event -> VanillaGuiLayers.PLAYER_HEALTH.equals(event.getName()),
-                (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+                (event, it) -> it.shouldRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         bindFiltered(RenderCallback.Gui.Health.AFTER, RenderGuiLayerEvent.Post.class,
                 event -> VanillaGuiLayers.PLAYER_HEALTH.equals(event.getName()),
-                (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+                (event, it) -> it.afterRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         bindFiltered(RenderCallback.Gui.Chat.BEFORE, RenderGuiLayerEvent.Pre.class,
                 event -> VanillaGuiLayers.CHAT.equals(event.getName()),
-                (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+                (event, it) -> it.shouldRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         bindFiltered(RenderCallback.Gui.Chat.AFTER, RenderGuiLayerEvent.Post.class,
                 event -> VanillaGuiLayers.CHAT.equals(event.getName()),
-                (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+                (event, it) -> it.afterRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         bindFiltered(RenderCallback.Gui.BossInfo.BEFORE, RenderGuiLayerEvent.Pre.class,
                 event -> VanillaGuiLayers.BOSS_OVERLAY.equals(event.getName()),
-                (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+                (event, it) -> it.shouldRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         bindFiltered(RenderCallback.Gui.BossInfo.AFTER, RenderGuiLayerEvent.Post.class,
                 event -> VanillaGuiLayers.BOSS_OVERLAY.equals(event.getName()),
-                (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+                (event, it) -> it.afterRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         bindFiltered(RenderCallback.Gui.PlayerList.BEFORE, RenderGuiLayerEvent.Pre.class,
                 event -> VanillaGuiLayers.TAB_LIST.equals(event.getName()),
-                (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+                (event, it) -> it.shouldRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         bindFiltered(RenderCallback.Gui.PlayerList.AFTER, RenderGuiLayerEvent.Post.class,
                 event -> VanillaGuiLayers.TAB_LIST.equals(event.getName()),
-                (event, it) -> it.handle(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
+                (event, it) -> it.afterRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
         RenderCallback.Gui.Debug.BEFORE.configureMapping(BalmSupplementalClientEvents.RENDER_GUI_DEBUG_PRE::register);
         RenderCallback.Gui.Debug.AFTER.configureMapping(BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST::register);
         RenderCallback.BlockHighlight.EVENT.configureMapping(BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT::register);

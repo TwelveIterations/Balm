@@ -1,38 +1,44 @@
 package net.blay09.mods.balm.platform.event.callback;
 
-import net.blay09.mods.balm.platform.event.EventHandling;
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface LivingEntityCallback {
-    @FunctionalInterface
     interface Heal {
-        float handle(LivingEntity entity, float amount);
+        @FunctionalInterface
+        interface Before {
+            float computeHeal(LivingEntity entity, float healAmount);
 
-        EventMapper<Heal> EVENT = EventMapper.createUnbound("LivingEntityCallback.Heal");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("LivingEntityCallback.Heal.Before");
+        }
     }
 
-    @FunctionalInterface
     interface Fall {
-        float handle(LivingEntity entity, float fallDamage);
+        @FunctionalInterface
+        interface Before {
+            float computeFallDamage(LivingEntity entity, float fallDamage);
 
-        EventMapper<Fall> EVENT = EventMapper.createUnbound("LivingEntityCallback.Fall");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("LivingEntityCallback.Fall.Before");
+        }
     }
 
-    @FunctionalInterface
     interface Death {
-        EventHandling handle(LivingEntity entity, DamageSource damageSource);
+        @FunctionalInterface
+        interface Before {
+            boolean allowDeath(LivingEntity entity, DamageSource damageSource);
 
-        EventMapper<Death> BEFORE = EventMapper.createUnbound("LivingEntityCallback.Death.PRE");
-        EventMapper<Death> AFTER = EventMapper.createUnbound("LivingEntityCallback.Death.POST");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("LivingEntityCallback.Death.Before");
+        }
     }
 
-    @FunctionalInterface
     interface Damage {
-        float handle(LivingEntity entity, DamageSource damageSource, float damageAmount);
+        @FunctionalInterface
+        interface Before {
+            float computeDamage(LivingEntity entity, DamageSource damageSource, float damageAmount);
 
-        EventMapper<Damage> EVENT = EventMapper.createUnbound("LivingEntityCallback.Damage");
+            EventMapper<Before> EVENT = EventMapper.createUnbound("LivingEntityCallback.Damage.Before");
+        }
     }
 
 }

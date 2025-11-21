@@ -2,9 +2,10 @@ package net.blay09.mods.balm.fabric.platform.event.internal;
 
 import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventFactory;
-import net.blay09.mods.balm.platform.event.EventHandling;
 import net.blay09.mods.balm.platform.event.callback.*;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+
+import java.util.Objects;
 
 public class FabricBalmSupplementalEvents {
     public static final Event<ServerTickCallback.ServerPlayerTick> SERVER_PLAYER_TICK_PRE = EventFactory.createArrayBacked(ServerTickCallback.ServerPlayerTick.class, (listeners) -> (player) -> {
@@ -73,89 +74,81 @@ public class FabricBalmSupplementalEvents {
         }
     });
 
-    public static final Event<ItemCallback.Craft> ITEM_CRAFTED = EventFactory.createArrayBacked(ItemCallback.Craft.class, (listeners) -> (player, itemStack, craftMatrix) -> {
+    public static final Event<ItemCallback.Craft.After> ITEM_CRAFTED = EventFactory.createArrayBacked(ItemCallback.Craft.After.class, (listeners) -> (player, itemStack, craftMatrix) -> {
         for (final var listener : listeners) {
-            listener.handle(player, itemStack, craftMatrix);
+            listener.afterCraft(player, itemStack, craftMatrix);
         }
     });
 
-    public static final Event<ItemCallback.Toss> ITEM_TOSSED = EventFactory.createArrayBacked(ItemCallback.Toss.class, (listeners) -> (player, itemStack) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<ItemCallback.Toss.Before> ITEM_TOSSED = EventFactory.createArrayBacked(ItemCallback.Toss.Before.class, (listeners) -> (player, itemStack) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(player, itemStack));
-            if (handling.shouldSkipListeners()) {
-                break;
+            if (!listener.allowToss(player, itemStack)) {
+                return false;
             }
         }
-        return handling;
+        return true;
     });
 
-    public static final Event<CommandCallback> COMMAND = EventFactory.createArrayBacked(CommandCallback.class, (listeners) -> (parseResults) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<CommandCallback.Before> COMMAND = EventFactory.createArrayBacked(CommandCallback.Before.class, (listeners) -> (parseResults) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(parseResults));
-            if (handling.shouldSkipListeners()) {
-                break;
+            if (!listener.allowCommand(parseResults)) {
+                return false;
             }
         }
-        return handling;
+        return true;
     });
 
-    public static final Event<LivingEntityCallback.Damage> LIVING_DAMAGE = EventFactory.createArrayBacked(LivingEntityCallback.Damage.class, (listeners) -> (entity, damageSource, damageAmount) -> {
+    public static final Event<LivingEntityCallback.Damage.Before> LIVING_DAMAGE = EventFactory.createArrayBacked(LivingEntityCallback.Damage.Before.class, (listeners) -> (entity, damageSource, damageAmount) -> {
         float newDamageAmount = damageAmount;
         for (final var listener : listeners) {
-            newDamageAmount = listener.handle(entity, damageSource, newDamageAmount);
+            newDamageAmount = listener.computeDamage(entity, damageSource, newDamageAmount);
         }
         return newDamageAmount;
     });
 
-    public static final Event<LivingEntityCallback.Fall> LIVING_FALL = EventFactory.createArrayBacked(LivingEntityCallback.Fall.class, (listeners) -> (entity, fallDamage) -> {
+    public static final Event<LivingEntityCallback.Fall.Before> LIVING_FALL = EventFactory.createArrayBacked(LivingEntityCallback.Fall.Before.class, (listeners) -> (entity, fallDamage) -> {
         float newDamage = fallDamage;
         for (final var listener : listeners) {
-            newDamage = listener.handle(entity, newDamage);
+            newDamage = listener.computeFallDamage(entity, newDamage);
         }
         return newDamage;
     });
 
-    public static final Event<LivingEntityCallback.Heal> LIVING_HEAL = EventFactory.createArrayBacked(LivingEntityCallback.Heal.class, (listeners) -> (entity, amount) -> {
+    public static final Event<LivingEntityCallback.Heal.Before> LIVING_HEAL = EventFactory.createArrayBacked(LivingEntityCallback.Heal.Before.class, (listeners) -> (entity, amount) -> {
         float newAmount = amount;
         for (final var listener : listeners) {
-            newAmount = listener.handle(entity, amount);
+            newAmount = listener.computeHeal(entity, amount);
         }
         return newAmount;
     });
 
-    public static final Event<PlayerCallback.Attack> PLAYER_ATTACK = EventFactory.createArrayBacked(PlayerCallback.Attack.class, (listeners) -> (player, target) -> {
-        var handling = EventHandling.RESUME;
+    /**
+     * @deprecated TODO Can't this use the existing attack event in Fabric?
+     */
+    @Deprecated
+    public static final Event<PlayerCallback.Attack.Before> PLAYER_ATTACK = EventFactory.createArrayBacked(PlayerCallback.Attack.Before.class, (listeners) -> (player, target) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(player, target));
-            if (handling.shouldSkipListeners()) {
-                break;
+            if (!listener.allowAttack(player, target)) {
+                return false;
             }
         }
-        return handling;
+        return true;
     });
 
-    public static final Event<CropCallback.Grow> CROP_GROW_PRE = EventFactory.createArrayBacked(CropCallback.Grow.class, (listeners) -> (level, pos, state) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<CropCallback.Grow.Before> CROP_GROW_PRE = EventFactory.createArrayBacked(CropCallback.Grow.Before.class, (listeners) -> (level, pos, state) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(level, pos, state));
-            if (handling.shouldSkipListeners()) {
-                break;
+            final var result = Objects.requireNonNull(listener.beforeGrow(level, pos, state), () -> "CropCallback.Grow.Before.Result must not be null in " + listener.getClass().getName());
+            if (result != CropCallback.Grow.Before.Result.DEFAULT) {
+                return result;
             }
         }
-        return handling;
+        return CropCallback.Grow.Before.Result.DEFAULT;
     });
 
-    public static final Event<CropCallback.Grow> CROP_GROW_POST = EventFactory.createArrayBacked(CropCallback.Grow.class, (listeners) -> (level, pos, state) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<CropCallback.Grow.After> CROP_GROW_POST = EventFactory.createArrayBacked(CropCallback.Grow.After.class, (listeners) -> (level, pos, state) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(level, pos, state));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
+            listener.afterGrow(level, pos, state);
         }
-        return handling;
     });
 
     public static void initialize() {

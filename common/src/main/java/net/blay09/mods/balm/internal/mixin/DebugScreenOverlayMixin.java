@@ -21,9 +21,8 @@ public class DebugScreenOverlayMixin {
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
     public void renderPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
         final var window = minecraft.getWindow();
-        if (BalmSupplementalClientEvents.RENDER_GUI_DEBUG_PRE.invoker()
-                .handle(guiGraphics, window)
-                .shouldSkipDefault()) {
+        if (!BalmSupplementalClientEvents.RENDER_GUI_DEBUG_PRE.invoker()
+                .shouldRender(guiGraphics, window)) {
             callbackInfo.cancel();
         }
     }
@@ -31,6 +30,6 @@ public class DebugScreenOverlayMixin {
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
         final var window = minecraft.getWindow();
-        BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST.invoker().handle(guiGraphics, window);
+        BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST.invoker().afterRender(guiGraphics, window);
     }
 }

@@ -68,34 +68,37 @@ public class NeoForgeBalmEventMappings {
 
         bindCancelable(BlockCallback.DigSpeed.EVENT, PlayerEvent.BreakSpeed.class, (PlayerEvent.BreakSpeed event, BlockCallback.DigSpeed it) -> event.getPosition().map(pos -> {
             final var level = event.getEntity().level();
-            final var speed = it.handle(level, pos, event.getState(), event.getEntity(), event.getNewSpeed());
+            final var speed = it.computeDigSpeed(level, pos, event.getState(), event.getEntity(), event.getNewSpeed());
             if (speed == -1f) {
                 return true;
             }
             event.setNewSpeed(speed);
             return false;
         }).orElse(false));
-        bindCancelable(BlockCallback.Break.EVENT, BlockEvent.BreakEvent.class, (event, it) -> {
+        bindCancelable(BlockCallback.Break.Before.EVENT, BlockEvent.BreakEvent.class, (event, it) -> {
             final var level = event.getLevel();
             final var blockEntity = level.getBlockEntity(event.getPos());
-            return it.handle(level, event.getPos(), event.getState(), blockEntity, event.getPlayer()).shouldSkipDefault();
+            return !it.allowBreak(level, event.getPos(), event.getState(), blockEntity, event.getPlayer());
         });
         bindCancelable(BlockCallback.Use.EVENT, PlayerInteractEvent.RightClickBlock.class, (event, it) -> {
             final var result = it.handle(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
             return result != InteractionResult.PASS;
         });
 
-        bindCancelable(CommandCallback.EVENT, CommandEvent.class, (event, it) -> it.handle(event.getParseResults()).shouldSkipDefault());
+        bindCancelable(CommandCallback.Before.EVENT, CommandEvent.class, (event, it) -> !it.allowCommand(event.getParseResults()));
 
         ConfigCallback.Loaded.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_LOADED::register);
         ConfigCallback.Reloaded.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
 
-        bindSimple(CropCallback.Grow.BEFORE, CropGrowEvent.Pre.class, (event, it) -> {
-            if (it.handle(event.getLevel(), event.getPos(), event.getState()).shouldSkipDefault()) {
-                event.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
-            }
+        bindSimple(CropCallback.Grow.Before.EVENT, CropGrowEvent.Pre.class, (event, it) -> {
+            final var result = it.beforeGrow(event.getLevel(), event.getPos(), event.getState());
+            event.setResult(switch (result) {
+                case DO_NOT_GROW -> CropGrowEvent.Pre.Result.DO_NOT_GROW;
+                case GROW -> CropGrowEvent.Pre.Result.GROW;
+                default -> CropGrowEvent.Pre.Result.DEFAULT;
+            });
         });
-        bindSimple(CropCallback.Grow.AFTER, CropGrowEvent.Post.class, (event, it) -> it.handle(event.getLevel(), event.getPos(), event.getState()));
+        bindSimple(CropCallback.Grow.After.EVENT, CropGrowEvent.Post.class, (event, it) -> it.afterGrow(event.getLevel(), event.getPos(), event.getState()));
 
         bindSimple(EntityCallback.Add.EVENT, EntityJoinLevelEvent.class, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
 
@@ -106,22 +109,20 @@ public class NeoForgeBalmEventMappings {
             return result != InteractionResult.PASS;
         });
         bindSimple(ItemCallback.Tooltip.EVENT, ItemTooltipEvent.class, (event, it) -> it.handle(event.getItemStack(), event.getToolTip(), event.getFlags()));
-        bindSimple(ItemCallback.Craft.EVENT, PlayerEvent.ItemCraftedEvent.class, (event, it) -> it.handle(event.getEntity(), event.getCrafting(), event.getInventory()));
-        bindCancelable(ItemCallback.Toss.EVENT, ItemTossEvent.class, (event, it) -> it.handle(event.getPlayer(), event.getEntity().getItem()).shouldSkipDefault());
+        bindSimple(ItemCallback.Craft.After.EVENT, PlayerEvent.ItemCraftedEvent.class, (event, it) -> it.afterCraft(event.getEntity(), event.getCrafting(), event.getInventory()));
+        bindCancelable(ItemCallback.Toss.Before.EVENT, ItemTossEvent.class, (event, it) -> !it.allowToss(event.getPlayer(), event.getEntity().getItem()));
 
         bindSimple(LevelCallback.LOAD, LevelEvent.Load.class, (event, it) -> it.handle(event.getLevel()));
         bindSimple(LevelCallback.UNLOAD, LevelEvent.Unload.class, (event, it) -> it.handle(event.getLevel()));
         bindSimple(LevelCallback.Chunk.LOAD, ChunkEvent.Load.class, (event, it) -> it.handle(event.getLevel(), event.getChunk(), event.getChunk().getPos()));
         bindSimple(LevelCallback.Chunk.UNLOAD, ChunkEvent.Unload.class, (event, it) -> it.handle(event.getLevel(), event.getChunk(), event.getChunk().getPos()));
 
-        bindSimple(LivingEntityCallback.Heal.EVENT, LivingHealEvent.class, (event, it) -> it.handle(event.getEntity(), event.getAmount()));
-        bindSimple(LivingEntityCallback.Fall.EVENT, LivingFallEvent.class, (event, it) -> it.handle(event.getEntity(), event.getDamageMultiplier()));
-        bindSimple(LivingEntityCallback.Death.BEFORE, LivingDeathEvent.class, (event, it) -> it.handle(event.getEntity(), event.getSource()));
-        // TODO no post event on Forge
-        bindSimple(LivingEntityCallback.Death.AFTER, LivingDeathEvent.class, (event, it) -> it.handle(event.getEntity(), event.getSource()));
-        bindSimple(LivingEntityCallback.Damage.EVENT, LivingDamageEvent.Pre.class, (event, it) -> it.handle(event.getEntity(), event.getSource(), event.getNewDamage()));
+        bindSimple(LivingEntityCallback.Heal.Before.EVENT, LivingHealEvent.class, (event, it) -> it.computeHeal(event.getEntity(), event.getAmount()));
+        bindSimple(LivingEntityCallback.Fall.Before.EVENT, LivingFallEvent.class, (event, it) -> it.computeFallDamage(event.getEntity(), event.getDamageMultiplier()));
+        bindCancelable(LivingEntityCallback.Death.Before.EVENT, LivingDeathEvent.class, (event, it) -> !it.allowDeath(event.getEntity(), event.getSource()));
+        bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingDamageEvent.Pre.class, (event, it) -> it.computeDamage(event.getEntity(), event.getSource(), event.getNewDamage()));
 
-        bindSimple(PlayerCallback.Attack.EVENT, AttackEntityEvent.class, (event, it) -> it.handle(event.getEntity(), event.getTarget()));
+        bindCancelable(PlayerCallback.Attack.Before.EVENT, AttackEntityEvent.class, (event, it) -> !it.allowAttack(event.getEntity(), event.getTarget()));
 
         ServerPlayerCallback.Connected.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.SERVER_PLAYER_CONNECTED::register);
         bindSimple(ServerPlayerCallback.Login.EVENT, PlayerEvent.PlayerLoggedInEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));

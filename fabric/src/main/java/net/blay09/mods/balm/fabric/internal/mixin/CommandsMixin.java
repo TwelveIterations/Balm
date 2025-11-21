@@ -13,9 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CommandsMixin {
     @Inject(method = "performCommand(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/commands/Commands;executeCommandInContext(Lnet/minecraft/commands/CommandSourceStack;Ljava/util/function/Consumer;)V"), cancellable = true)
     private void onCommandExecuted(ParseResults<CommandSourceStack> parseResults, String command, CallbackInfo ci) {
-        if (FabricBalmSupplementalEvents.COMMAND.invoker()
-                .handle(parseResults)
-                .shouldSkipDefault()) {
+        if (!FabricBalmSupplementalEvents.COMMAND.invoker().allowCommand(parseResults)) {
             ci.cancel();
         }
     }

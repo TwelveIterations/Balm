@@ -1,19 +1,31 @@
 package net.blay09.mods.balm.platform.event.callback;
 
 import net.blay09.mods.balm.platform.event.EventMapper;
-import net.blay09.mods.balm.platform.event.EventHandling;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface CropCallback {
-
-    @FunctionalInterface
     interface Grow {
-        EventHandling handle(LevelAccessor level, BlockPos pos, BlockState state);
+        @FunctionalInterface
+        interface Before {
+            enum Result {
+                DEFAULT,
+                DO_NOT_GROW,
+                GROW
+            }
 
-        EventMapper<Grow> BEFORE = EventMapper.createUnbound("CropCallback.Grow.Before");
-        EventMapper<Grow> AFTER = EventMapper.createUnbound("CropCallback.Grow.After");
+            Result beforeGrow(LevelAccessor level, BlockPos pos, BlockState state);
+
+            EventMapper<Before> EVENT = EventMapper.createUnbound("CropCallback.Grow.Before");
+        }
+
+        @FunctionalInterface
+        interface After {
+            void afterGrow(LevelAccessor level, BlockPos pos, BlockState state);
+
+            EventMapper<After> EVENT = EventMapper.createUnbound("CropCallback.Grow.After");
+        }
     }
 
 }
