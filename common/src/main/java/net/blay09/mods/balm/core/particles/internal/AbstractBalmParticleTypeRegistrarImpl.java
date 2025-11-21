@@ -6,6 +6,7 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -28,6 +29,13 @@ public abstract class AbstractBalmParticleTypeRegistrarImpl implements BalmParti
         final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.PARTICLE_TYPE, id);
         final var holder = registrar.register(key, constructor::apply);
+        return new BalmParticleTypeRegistrationImpl<>(holder);
+    }
+
+    public BalmParticleTypeRegistration<SimpleParticleType> register(String name, boolean overrideLimiter) {
+        final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
+        final var key = ResourceKey.create(Registries.PARTICLE_TYPE, identifier);
+        final var holder = registrar.register(key, (id) -> createSimple(overrideLimiter));
         return new BalmParticleTypeRegistrationImpl<>(holder);
     }
 

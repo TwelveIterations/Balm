@@ -9,6 +9,8 @@ import java.util.function.Function;
 
 public interface BalmParticleTypeRegistrar {
     <T extends ParticleOptions> BalmParticleTypeRegistration<T> register(String name, Function<Identifier, ParticleType<T>> constructor);
+    
+    BalmParticleTypeRegistration<SimpleParticleType> register(String name, boolean overrideLimiter);
 
     SimpleParticleType createSimple(boolean overrideLimiter);
 }

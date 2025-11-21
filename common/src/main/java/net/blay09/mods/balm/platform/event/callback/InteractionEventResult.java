@@ -14,7 +14,7 @@ public interface InteractionEventResult {
     InteractionEventResult FAIL = () -> Optional.of(InteractionResult.FAIL);
 
     /**
-     * @deprecated On Fabric, this result has no effect. Consider using {@link InteractionEventResult#DEFAULT} instead.
+     * @deprecated On Fabric, this result is treated the same as {@link InteractionEventResult#DEFAULT}, so you cannot reliably use it in a multi-loader context.
      */
     @Deprecated
     InteractionEventResult PASS = () -> Optional.of(InteractionResult.PASS);
