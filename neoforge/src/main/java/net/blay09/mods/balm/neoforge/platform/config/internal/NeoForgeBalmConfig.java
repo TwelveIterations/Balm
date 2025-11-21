@@ -8,8 +8,8 @@ import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.internal.AbstractBalmConfig;
 import net.blay09.mods.balm.platform.config.schema.*;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
+import net.blay09.mods.balm.platform.event.internal.BalmSupplementalEvents;
 import net.minecraft.resources.Identifier;
-import net.blay09.mods.balm.neoforge.platform.event.internal.NeoForgeBalmSupplementalEvents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -253,7 +253,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                 setActiveConfig(schema, wrappedConfig);
 
                 fireConfigLoadHandlers(schema, wrappedConfig);
-                NeoForgeBalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
+                BalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
             }
         });
         eventBus.addListener((ModConfigEvent.Reloading event) -> {
@@ -269,7 +269,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
                 setLocalConfig(schema, wrappedConfig);
                 updateActiveFromLocal(schema, wrappedConfig);
 
-                NeoForgeBalmSupplementalEvents.CONFIG_RELOADED.invoker().handle(schema);
+                BalmSupplementalEvents.CONFIG_RELOADED.invoker().handle(schema);
             }
         });
 

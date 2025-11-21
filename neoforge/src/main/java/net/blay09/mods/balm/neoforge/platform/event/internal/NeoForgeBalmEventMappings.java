@@ -88,8 +88,8 @@ public class NeoForgeBalmEventMappings {
 
         bindCancelable(CommandCallback.Before.EVENT, CommandEvent.class, (event, it) -> !it.allowCommand(event.getParseResults()));
 
-        ConfigCallback.Loaded.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_LOADED::register);
-        ConfigCallback.Reloaded.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.CONFIG_RELOADED::register);
+        ConfigCallback.Loaded.EVENT.configureMapping(BalmSupplementalEvents.CONFIG_LOADED::register);
+        ConfigCallback.Reloaded.EVENT.configureMapping(BalmSupplementalEvents.CONFIG_RELOADED::register);
 
         bindSimple(CropCallback.Grow.Before.EVENT, CropGrowEvent.Pre.class, (event, it) -> {
             final var result = it.beforeGrow(event.getLevel(), event.getPos(), event.getState());

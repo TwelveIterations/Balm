@@ -51,8 +51,8 @@ public class FabricBalmEventMappings {
         ServerLifecycleCallback.Reloading.EVENT.configureMapping(BalmSupplementalEvents.SERVER_RELOADING::register);
         ServerLifecycleCallback.Reloaded.EVENT.configureMapping(BalmSupplementalEvents.SERVER_RELOADED::register);
 
-        ConfigCallback.Loaded.EVENT.configureMapping(FabricBalmSupplementalEvents.CONFIG_LOADED::register);
-        ConfigCallback.Reloaded.EVENT.configureMapping(FabricBalmSupplementalEvents.CONFIG_RELOADED::register);
+        ConfigCallback.Loaded.EVENT.configureMapping(BalmSupplementalEvents.CONFIG_LOADED::register);
+        ConfigCallback.Reloaded.EVENT.configureMapping(BalmSupplementalEvents.CONFIG_RELOADED::register);
 
         ServerPlayerCallback.Join.EVENT.configureMapping((phase, it) -> ServerPlayerEvents.JOIN.register(mapPhase(phase), it::handle));
         ServerPlayerCallback.Leave.EVENT.configureMapping((phase, it) -> ServerPlayerEvents.LEAVE.register(mapPhase(phase), it::handle));

@@ -3,9 +3,22 @@ package net.blay09.mods.balm.platform.event.internal;
 import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventFactory;
 import net.blay09.mods.balm.platform.event.callback.BlockCallback;
+import net.blay09.mods.balm.platform.event.callback.ConfigCallback;
 import net.blay09.mods.balm.platform.event.callback.ServerLifecycleCallback;
 
 public class BalmSupplementalEvents {
+    public static final Event<ConfigCallback.Loaded> CONFIG_LOADED = EventFactory.createArrayBacked(ConfigCallback.Loaded.class, (listeners) -> (schema) -> {
+        for (final var listener : listeners) {
+            listener.handle(schema);
+        }
+    });
+
+    public static final Event<ConfigCallback.Reloaded> CONFIG_RELOADED = EventFactory.createArrayBacked(ConfigCallback.Reloaded.class, (listeners) -> (schema) -> {
+        for (final var listener : listeners) {
+            listener.handle(schema);
+        }
+    });
+
     public static final Event<ServerLifecycleCallback.Reloading> SERVER_RELOADING = EventFactory.createArrayBacked(ServerLifecycleCallback.Reloading.class, (listeners) -> (server, resources) -> {
         for (final var listener : listeners) {
             listener.handle(server, resources);

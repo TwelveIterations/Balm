@@ -32,18 +32,6 @@ public class FabricBalmSupplementalEvents {
         }
     });
 
-    public static final Event<ConfigCallback.Loaded> CONFIG_LOADED = EventFactory.createArrayBacked(ConfigCallback.Loaded.class, (listeners) -> (schema) -> {
-        for (final var listener : listeners) {
-            listener.handle(schema);
-        }
-    });
-
-    public static final Event<ConfigCallback.Reloaded> CONFIG_RELOADED = EventFactory.createArrayBacked(ConfigCallback.Reloaded.class, (listeners) -> (schema) -> {
-        for (final var listener : listeners) {
-            listener.handle(schema);
-        }
-    });
-
     public static final Event<ServerPlayerCallback.OpenMenu> SERVER_PLAYER_OPEN_MENU = EventFactory.createArrayBacked(ServerPlayerCallback.OpenMenu.class, (listeners) -> (player, menu) -> {
         for (final var listener : listeners) {
             listener.handle(player, menu);
