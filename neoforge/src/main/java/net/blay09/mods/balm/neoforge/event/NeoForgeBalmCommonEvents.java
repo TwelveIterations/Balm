@@ -303,6 +303,15 @@ public class NeoForgeBalmCommonEvents {
                 }
             });
         });
+
+        events.registerEvent(PlayerOpenMenuEvent.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (net.neoforged.neoforge.event.entity.player.PlayerContainerEvent.Open orig) -> {
+                if (orig.getEntity() instanceof ServerPlayer serverPlayer) {
+                    final PlayerOpenMenuEvent event = new PlayerOpenMenuEvent(serverPlayer, orig.getContainer());
+                    events.fireEventHandlers(priority, event);
+                }
+            });
+        });
     }
 
 }

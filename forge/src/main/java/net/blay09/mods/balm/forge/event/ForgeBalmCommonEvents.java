@@ -346,6 +346,15 @@ public class ForgeBalmCommonEvents {
             });
         });
 
+        events.registerEvent(PlayerOpenMenuEvent.class, priority -> {
+            MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (net.minecraftforge.event.entity.player.PlayerContainerEvent.Open orig) -> {
+                if (orig.getEntity() instanceof ServerPlayer serverPlayer) {
+                    final PlayerOpenMenuEvent event = new PlayerOpenMenuEvent(serverPlayer, orig.getContainer());
+                    events.fireEventHandlers(priority, event);
+                }
+            });
+        });
+
         events.registerEvent(ChunkLoadingEvent.Load.class, priority -> {
             MinecraftForge.EVENT_BUS.addListener(ForgeBalmEvents.toForge(priority), (net.minecraftforge.event.level.ChunkEvent.Load orig) -> {
                 final ChunkLoadingEvent.Load event = new ChunkLoadingEvent.Load(orig.getLevel(), orig.getChunk());
