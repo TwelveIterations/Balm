@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class ModBusEventRegisters {
 
@@ -34,7 +35,8 @@ public class ModBusEventRegisters {
                 modEventBus.register(instance);
             }
             return instance;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
@@ -45,6 +47,13 @@ public class ModBusEventRegisters {
             for (final var registrations : getByModId(modId)) {
                 modEventBus.register(registrations);
             }
+        }
+    }
+
+    public static void register(String modId, Consumer<IEventBus> initializer) {
+        final var modBus = modEventBuses.get(modId);
+        if (modBus != null) {
+            initializer.accept(modBus);
         }
     }
 

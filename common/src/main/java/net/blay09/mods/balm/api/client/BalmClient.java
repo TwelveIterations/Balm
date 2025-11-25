@@ -7,8 +7,11 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+
+import java.util.function.Consumer;
 
 public class BalmClient {
     private static final BalmClientRuntime<BalmRuntimeLoadContext> runtime = BalmClientRuntimeSpi.create();
@@ -43,6 +46,10 @@ public class BalmClient {
                 registerModule(module);
             }
         });
+    }
+
+    public static void initializeMod(String modId, BalmRuntimeLoadContext context, Consumer<BalmClientRegistrars> initializer) {
+        runtime.initializeMod(modId, context, () -> initializer.accept(new BalmClientRegistrars(runtime, modId)));
     }
 
     public static BalmRenderers getRenderers() {

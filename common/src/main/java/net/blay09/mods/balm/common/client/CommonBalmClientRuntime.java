@@ -3,6 +3,7 @@ package net.blay09.mods.balm.common.client;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.client.BalmClientRuntime;
 import net.blay09.mods.balm.api.client.module.BalmClientModule;
+import net.blay09.mods.balm.client.BalmClientRegistrars;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,12 @@ public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLo
 
     @Override
     public void registerModule(BalmClientModule module) {
+        modules.add(module);
+        initializeModule(module);
+    }
+
+    @Override
+    public void registerModule(BalmClientRegistrars registrars, BalmClientModule module) {
         modules.add(module);
         initializeModule(module);
     }

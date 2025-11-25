@@ -25,6 +25,22 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.BalmRegistrars;
+import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.item.BalmItemRegistrar;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
+import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -136,6 +152,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void registerModule(BalmModule module);
 
+    void registerModule(BalmRegistrars registrars, BalmModule module);
+
     BalmResources getResources();
 
     BalmEnvironment getEnvironment();
@@ -145,4 +163,35 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     Map<String, Path> lookupAllModPaths(String path);
 
     Optional<Path> lookupModPath(String modId, String path);
+
+    void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer);
+
+    void entityTypes(String namespace, Consumer<BalmEntityTypeRegistrar> initializer);
+
+    void particleTypes(String namespace, Consumer<BalmParticleTypeRegistrar> initializer);
+
+    void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer);
+
+    BalmRegistrar registrar();
+
+    default <T> BalmRegistrar.Scoped<T> registrar(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+        return registrar().scoped(registryKey, namespace);
+    }
+
+    void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer);
+
+    void items(String namespace, Consumer<BalmItemRegistrar> initializer);
+
+    void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer);
+
+    void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer);
+
+    void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer);
+
+    void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer);
+
+    void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer);
+
+    void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer);
+
 }

@@ -191,6 +191,7 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
 
         private final List<Class<?>> apiClasses = new ArrayList<>();
 
+        @SuppressWarnings("removal")
         @SubscribeEvent
         public void registerCapabilities(final RegisterCapabilitiesEvent event) {
             for (final var apiClass : apiClasses) {

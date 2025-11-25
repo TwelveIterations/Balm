@@ -28,6 +28,8 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
+import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
 import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
@@ -35,6 +37,8 @@ import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
 import net.blay09.mods.balm.forge.config.ForgeBalmConfig;
+import net.blay09.mods.balm.forge.core.ForgeBalmRegistrar;
+import net.blay09.mods.balm.forge.core.particles.ForgeBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.forge.entity.ForgeBalmEntities;
 import net.blay09.mods.balm.forge.event.ForgeBalmCommonEvents;
 import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
@@ -46,9 +50,23 @@ import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
 import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
+import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceConditionRegistrar;
+import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.forge.sound.ForgeBalmSounds;
+import net.blay09.mods.balm.forge.stats.ForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
+import net.blay09.mods.balm.forge.world.block.entity.ForgeBalmBlockEntityTypeRegistrar;
+import net.blay09.mods.balm.forge.world.entity.ForgeBalmEntityTypeRegistrar;
+import net.blay09.mods.balm.forge.world.inventory.ForgeBalmMenuTypeRegistrar;
+import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -69,6 +87,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("removal")
 public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> {
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
@@ -95,6 +114,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
+    private final BalmRegistrar registrar = new ForgeBalmRegistrar();
     private final BalmResources resources = new ForgeBalmResources();
 
     public ForgeBalmRuntime() {
@@ -291,5 +311,50 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
         final var modFile = ModList.get().getModFileById(modId);
         final var nioPath = modFile.getFile().findResource(path);
         return Files.exists(nioPath) ? Optional.of(nioPath) : Optional.empty();
+    }
+
+    @Override
+    public BalmRegistrar registrar() {
+        return registrar;
+    }
+
+    @Override
+    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmBlockEntityTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void entityTypes(String namespace, Consumer<BalmEntityTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmEntityTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
+        initializer.accept(new ForgeBalmCreativeModeTabRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmMenuTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
+        initializer.accept(new ForgeBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void particleTypes(String namespace, Consumer<BalmParticleTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmParticleTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
+        MinecraftForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> initializer.accept(new ForgeBalmResourceReloadListenerRegistrar(event)));
+    }
+
+    @Override
+    public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
+        initializer.accept(new ForgeBalmResourceConditionRegistrar(namespace));
     }
 }

@@ -25,6 +25,7 @@ import net.minecraftforge.items.IItemHandler;
 @Mod("balm")
 public class ForgeBalm {
 
+    @SuppressWarnings("removal")
     public ForgeBalm() {
         final var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         BalmLoadContexts.register("balm", new ForgeLoadContext(modEventBus));

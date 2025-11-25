@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ForgeBalmClientEvents {
 
+    @SuppressWarnings("removal")
     public static void registerEvents(ForgeBalmEvents events) {
         events.registerTickEvent(TickType.Client, TickPhase.Start, (ClientTickHandler handler) -> {
             MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent orig) -> {

@@ -25,6 +25,7 @@ import net.blay09.mods.balm.api.resources.BalmResources;
 import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -55,6 +56,10 @@ public class Balm {
 
     public static void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
         runtime.initializeMod(modId, context, initializer);
+    }
+
+    public static void initializeMod(String modId, BalmRuntimeLoadContext context, Consumer<BalmRegistrars> initializer) {
+        runtime.initializeMod(modId, context, () -> initializer.accept(new BalmRegistrars(runtime, modId)));
     }
 
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {

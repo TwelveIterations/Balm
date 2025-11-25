@@ -10,6 +10,7 @@ public class BalmInvWrapper extends InvWrapper {
         super(inv);
     }
 
+    @SuppressWarnings("removal")
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         if (getInv() instanceof ExtractionAwareContainer extractionAwareContainer) {

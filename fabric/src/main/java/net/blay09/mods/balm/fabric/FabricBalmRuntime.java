@@ -25,6 +25,8 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
+import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
 import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
@@ -32,6 +34,8 @@ import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.component.FabricBalmComponents;
 import net.blay09.mods.balm.fabric.config.FabricBalmConfig;
+import net.blay09.mods.balm.fabric.core.internal.FabricBalmRegistrar;
+import net.blay09.mods.balm.fabric.core.particles.internal.FabricBalmParticleTypeRegistrar;
 import net.blay09.mods.balm.fabric.entity.FabricBalmEntities;
 import net.blay09.mods.balm.fabric.event.FabricBalmCommonEvents;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
@@ -42,9 +46,23 @@ import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
+import net.blay09.mods.balm.fabric.server.packs.resources.internal.FabricBalmResourceConditionRegistrar;
+import net.blay09.mods.balm.fabric.server.packs.resources.internal.FabricBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.fabric.sound.FabricBalmSounds;
 import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
+import net.blay09.mods.balm.fabric.stats.internal.FabricBalmCustomStatRegistrar;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
+import net.blay09.mods.balm.fabric.world.entity.internal.FabricBalmEntityTypeRegistrar;
+import net.blay09.mods.balm.fabric.world.inventory.internal.FabricBalmMenuTypeRegistrar;
+import net.blay09.mods.balm.fabric.world.item.internal.FabricBalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.fabric.world.level.block.entity.internal.FabricBalmBlockEntityTypeRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
+import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
+import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -77,6 +95,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
     private final BalmHooks hooks = new FabricBalmHooks();
+    private final BalmRegistrar registrar = new FabricBalmRegistrar();
     private final BalmRegistries registries = new FabricBalmRegistries();
     private final BalmSounds sounds = new FabricBalmSounds();
     private final BalmEntities entities = new FabricBalmEntities();
@@ -293,5 +312,50 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     public Optional<Path> lookupModPath(String modId, String path) {
         return FabricLoader.getInstance().getModContainer(modId)
                 .flatMap(modContainer -> modContainer.findPath(path));
+    }
+
+    @Override
+    public BalmRegistrar registrar() {
+        return registrar;
+    }
+
+    @Override
+    public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
+        initializer.accept(new FabricBalmCreativeModeTabRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmBlockEntityTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmMenuTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmEntityTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void particleTypes(String namespace, Consumer<BalmParticleTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmParticleTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
+        initializer.accept(new FabricBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer) {
+        initializer.accept(new FabricBalmResourceReloadListenerRegistrar(namespace));
+    }
+
+    @Override
+    public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
+        initializer.accept(new FabricBalmResourceConditionRegistrar(namespace));
     }
 }

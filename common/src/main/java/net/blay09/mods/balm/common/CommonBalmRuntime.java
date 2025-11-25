@@ -10,12 +10,22 @@ import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.blay09.mods.balm.core.BalmRegistrars;
+import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.core.component.internal.BalmDataComponentTypeRegistrarImpl;
+import net.blay09.mods.balm.world.item.BalmItemRegistrar;
+import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
+import net.blay09.mods.balm.world.item.crafting.internal.BalmRecipeTypeRegistrarImpl;
+import net.blay09.mods.balm.world.item.internal.BalmItemRegistrarImpl;
+import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
+import net.blay09.mods.balm.world.level.block.internal.BalmBlockRegistrarImpl;
 import net.minecraft.SharedConstants;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadContext> implements BalmRuntime<TLoadContext> {
@@ -46,6 +56,12 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
 
     @Override
     public void registerModule(BalmModule module) {
+        modules.add(module);
+        initializeModule(module);
+    }
+
+    @Override
+    public void registerModule(BalmRegistrars registrars, BalmModule module) {
         modules.add(module);
         initializeModule(module);
     }
@@ -89,5 +105,26 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public boolean isDevelopmentEnvironment() {
         return SharedConstants.IS_RUNNING_IN_IDE;
+    }
+
+
+    @Override
+    public void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer) {
+        initializer.accept(new BalmBlockRegistrarImpl(registrar(), namespace));
+    }
+
+    @Override
+    public void items(String namespace, Consumer<BalmItemRegistrar> initializer) {
+        initializer.accept(new BalmItemRegistrarImpl(registrar(), namespace));
+    }
+
+    @Override
+    public void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer) {
+        initializer.accept(new BalmRecipeTypeRegistrarImpl(registrar(), namespace));
+    }
+
+    @Override
+    public void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer) {
+        initializer.accept(new BalmDataComponentTypeRegistrarImpl(registrar(), namespace));
     }
 }

@@ -115,6 +115,7 @@ public record ForgeBalmRenderers(NamespaceResolver namespaceResolver) implements
         public final List<ParticleProviderRegistration<?>> particleProviders = new ArrayList<>();
         public final List<BlockRenderTypeRegistration> blockRenderTypes = new ArrayList<>();
 
+        @SuppressWarnings("removal")
         @SubscribeEvent
         public void setupClient(FMLClientSetupEvent event) {
             event.enqueueWork(() -> blockRenderTypes.forEach(blockRenderType -> ItemBlockRenderTypes.setRenderLayer(blockRenderType.blockSupplier.get(),
