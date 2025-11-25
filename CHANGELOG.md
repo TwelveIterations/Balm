@@ -1,2 +1,1 @@
-- Fixed possible race condition crash during config loading on NeoForge
-- Fixed NoSuchFileExceptions in lookupAllModPaths/lookupModPath
+- Fixed PlayerOpenMenuEvent not firing on Neo/Forge
