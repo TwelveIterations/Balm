@@ -44,7 +44,7 @@ public interface BalmRenderers {
     void registerItemColorHandler(ItemColor color, Supplier<ItemLike[]> items);
 
     /**
-     * @deprecated No-op on Forge. Specify "render_type" in your model as a workaround.
+     * @apiNote No-op on Forge. Specify "render_type" in your model as a workaround.
      */
     void setBlockRenderType(Supplier<Block> block, RenderType renderType);
 
@@ -59,31 +59,31 @@ public interface BalmRenderers {
     /**
      * @deprecated Use {@link #registerEntityRenderer(ResourceLocation, Supplier, EntityRendererProvider)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
 
     /**
      * @deprecated Use {@link #registerBlockEntityRenderer(ResourceLocation, Supplier, BlockEntityRendererProvider)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
 
     /**
      * @deprecated Use {@link #registerBlockColorHandler(ResourceLocation, BlockColor, Supplier)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks);
 
     /**
      * @deprecated Use {@link #registerParticleProvider(ResourceLocation, Supplier, ParticleProvider)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
     /**
      * @deprecated Use {@link #registerParticleProvider(ResourceLocation, Supplier, Function)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 
     BalmRenderers scoped(String modId);

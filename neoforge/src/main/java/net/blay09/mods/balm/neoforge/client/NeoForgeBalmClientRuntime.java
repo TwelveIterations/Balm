@@ -29,7 +29,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmRenderers renderers = new NeoForgeBalmRenderers(legacyNamespaceResolver);
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     private final BalmTextures textures = new NeoForgeBalmTextures();
     private final BalmScreens screens = new NeoForgeBalmScreens(legacyNamespaceResolver);
     private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings(legacyNamespaceResolver);
@@ -45,7 +45,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     }
 
     @Override
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     public BalmTextures getTextures() {
         return textures;
     }

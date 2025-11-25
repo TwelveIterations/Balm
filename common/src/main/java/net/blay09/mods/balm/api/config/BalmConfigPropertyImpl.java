@@ -2,7 +2,7 @@ package net.blay09.mods.balm.api.config;
 
 import java.lang.reflect.Field;
 
-@Deprecated(forRemoval = true, since = "1.21.5")
+@Deprecated(since = "1.21.5")
 public class BalmConfigPropertyImpl<T> implements BalmConfigProperty<T> {
     private final BalmConfigData configData;
     private final Field categoryField;

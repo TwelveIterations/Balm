@@ -18,12 +18,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface BalmConfig {
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     private static BalmConfigProperty<?> createConfigProperty(BalmConfigData configData, Field categoryField, Field propertyField, BalmConfigData defaultConfig) {
         return new BalmConfigPropertyImpl<String>(configData, categoryField, propertyField, defaultConfig);
     }
 
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     private static boolean isPropertyType(Class<?> type) {
         return type.isPrimitive()
                 || type == String.class
@@ -37,7 +37,7 @@ public interface BalmConfig {
                 || Enum.class.isAssignableFrom(type);
     }
 
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     private static <T> T createConfigDataInstance(Class<T> clazz) {
         try {
             return clazz.newInstance();
@@ -106,7 +106,7 @@ public interface BalmConfig {
     /**
      * @deprecated Use {@link #registerConfig(Class)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends BalmConfigData> T initializeBackingConfig(Class<T> clazz) {
         registerConfig(clazz);
         return getBackingConfig(clazz);
@@ -115,7 +115,7 @@ public interface BalmConfig {
     /**
      * @deprecated Use {@link #getLocalConfig(BalmConfigSchema)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends BalmConfigData> T getBackingConfig(Class<T> clazz) {
         final var schema = getSchema(clazz);
         final var localConfig = getLocalConfig(schema);
@@ -126,7 +126,7 @@ public interface BalmConfig {
     /**
      * @deprecated Use {@link #updateLocalConfig(Class, Consumer)} or {@link #saveLocalConfig(BalmConfigSchema)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends BalmConfigData> void saveBackingConfig(Class<T> clazz) {
         saveLocalConfig(getSchema(clazz));
     }
@@ -134,7 +134,7 @@ public interface BalmConfig {
     /**
      * @deprecated Use {@link #getActiveConfig(Class)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends BalmConfigData> T getActive(Class<T> clazz) {
         return getActiveConfig(clazz);
     }
@@ -149,7 +149,7 @@ public interface BalmConfig {
     /**
      * @deprecated Use {@link #registerConfig(Class)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends BalmConfigData> void registerConfig(Class<T> clazz, Function<T, SyncConfigMessage<T>> syncMessageFactory) {
         registerConfig(clazz);
     }
@@ -157,7 +157,7 @@ public interface BalmConfig {
     /**
      * Use {@link #updateLocalConfig(Class, Consumer)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends BalmConfigData> void updateConfig(Class<T> clazz, Consumer<T> consumer) {
         updateLocalConfig(clazz, consumer);
     }
@@ -165,21 +165,21 @@ public interface BalmConfig {
     /**
      * @deprecated Internal method. No-ops.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends BalmConfigData> void resetToBackingConfig(Class<T> clazz) {
     }
 
     /**
      * @deprecated Internal method. No-ops.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default void resetToBackingConfigs() {
     }
 
     /**
      * @deprecated Use {@link #getConfigFile(BalmConfigSchema)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default File getConfigFile(String configName) {
         return new File(getConfigDir(), configName + "-common.toml");
     }
@@ -209,7 +209,7 @@ public interface BalmConfig {
     /**
      * @deprecated Use {@link #getSchema(Class)} and {@link BalmConfigSchema#identifier()} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends BalmConfigData> String getConfigName(Class<T> clazz) {
         return ConfigReflection.getIdentifier(clazz).getNamespace();
     }
@@ -217,7 +217,7 @@ public interface BalmConfig {
     /**
      * @deprecated Use {@link #getSchemasByNamespace(String)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default List<? extends BalmConfigData> getConfigsByMod(String modId) {
         return getSchemasByNamespace(modId).stream()
                 .map(this::getActiveConfig)

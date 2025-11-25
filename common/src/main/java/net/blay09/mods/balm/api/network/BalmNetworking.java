@@ -47,7 +47,7 @@ public interface BalmNetworking {
     /**
      * @deprecated Use {@link #registerClientboundPacket(CustomPacketPayload.Type, Class, StreamCodec, BiConsumer)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<Player, T> handler) {
         registerClientboundPacket(type, clazz, StreamCodec.of(encodeFunc::accept, decodeFunc::apply), handler);
     }
@@ -55,7 +55,7 @@ public interface BalmNetworking {
     /**
      * @deprecated Use {@link #registerServerboundPacket(CustomPacketPayload.Type, Class, StreamCodec, BiConsumer)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default <T extends CustomPacketPayload> void registerServerboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, BiConsumer<RegistryFriendlyByteBuf, T> encodeFunc, Function<RegistryFriendlyByteBuf, T> decodeFunc, BiConsumer<ServerPlayer, T> handler) {
         registerServerboundPacket(type, clazz, StreamCodec.of(encodeFunc::accept, decodeFunc::apply), handler);
     }
@@ -63,7 +63,7 @@ public interface BalmNetworking {
     /**
      * @deprecated Use {@link #openMenu(Player, MenuProvider)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default void openGui(Player player, MenuProvider menuProvider) {
         openMenu(player, menuProvider);
     }

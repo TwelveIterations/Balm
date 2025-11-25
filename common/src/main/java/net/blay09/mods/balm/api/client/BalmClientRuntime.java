@@ -43,6 +43,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     /**
      * @deprecated No more purpose. Register textures to atlases via resource pack instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     BalmTextures getTextures();
 }

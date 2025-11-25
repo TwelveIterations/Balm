@@ -24,7 +24,7 @@ public class BalmClient {
     /**
      * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.22")
+    @Deprecated(since = "1.22")
     public static <T extends BalmRuntimeLoadContext> void initialize(String modId, T context, Runnable initializer) {
         initializeMod(modId, context, initializer);
     }
@@ -72,7 +72,7 @@ public class BalmClient {
     /**
      * @deprecated No functionality left here.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     public static BalmTextures getTextures() {
         return runtime.getTextures();
     }
