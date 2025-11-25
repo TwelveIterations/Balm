@@ -16,11 +16,13 @@ public class BalmConfigPropertyImpl<T> implements BalmConfigProperty<T> {
         this.defaultConfig = defaultConfig;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Class<T> getType() {
         return (Class<T>) propertyField.getType();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Class<T> getInnerType() {
         var expectedTypeAnnotation = propertyField.getAnnotation(ExpectedType.class);
@@ -30,6 +32,7 @@ public class BalmConfigPropertyImpl<T> implements BalmConfigProperty<T> {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T getValue() {
         try {
@@ -51,6 +54,7 @@ public class BalmConfigPropertyImpl<T> implements BalmConfigProperty<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T getDefaultValue() {
         try {

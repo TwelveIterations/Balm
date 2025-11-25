@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("removal")
 public class SubContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
     private final Container container;
     private final int minSlot;

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("removal")
 public class CombinedContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
     private final Container[] containers;
     private final int[] baseIndex;

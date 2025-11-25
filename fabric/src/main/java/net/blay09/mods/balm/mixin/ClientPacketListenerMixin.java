@@ -21,6 +21,7 @@ public class ClientPacketListenerMixin {
     @Shadow
     private RecipeManager recipeManager;
 
+    @SuppressWarnings("removal")
     @Inject(method = "handleUpdateRecipes(Lnet/minecraft/network/protocol/game/ClientboundUpdateRecipesPacket;)V", at = @At("RETURN"))
     void handleUpdateRecipes(ClientboundUpdateRecipesPacket packet, CallbackInfo callbackInfo) {
         RegistryAccess registryAccess = Minecraft.getInstance().level.registryAccess(); // same way that Minecraft does it in the packet handler

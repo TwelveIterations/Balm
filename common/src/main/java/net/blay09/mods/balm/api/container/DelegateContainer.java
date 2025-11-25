@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.function.Predicate;
 
+@SuppressWarnings("removal")
 public class DelegateContainer implements Container, WorldlyContainer, ExtractionAwareContainer {
     private final Container delegate;
 

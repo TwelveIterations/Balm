@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class ContainerUtils {
+    @SuppressWarnings("removal")
     public static ItemStack extractItem(Container container, int slot, int amount, boolean simulate) {
         if (container instanceof ExtractionAwareContainer extractionAwareContainer && !extractionAwareContainer.canExtractItem(slot)) {
             return ItemStack.EMPTY;

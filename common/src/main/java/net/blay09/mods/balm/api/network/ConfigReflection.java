@@ -29,7 +29,7 @@ public class ConfigReflection {
             if (commentAnnotation != null) {
                 category.comment(commentAnnotation.value());
             } else {
-                final var legacyCommentAnnotation = categoryField.getAnnotation(net.blay09.mods.balm.api.config.Comment.class);
+                @SuppressWarnings("deprecation") final var legacyCommentAnnotation = categoryField.getAnnotation(net.blay09.mods.balm.api.config.Comment.class);
                 if (legacyCommentAnnotation != null) {
                     category.comment(legacyCommentAnnotation.value());
                 }
@@ -39,7 +39,7 @@ public class ConfigReflection {
         return schema;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecation"})
     private static void buildFieldsIntoSchema(PropertyHolderBuilder builder, Class<?> clazz, List<Field> fields) {
         final var defaults = createInstance(clazz);
         for (final var field : fields) {
@@ -135,6 +135,7 @@ public class ConfigReflection {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static boolean isConfigDataField(Field field) {
         return !Modifier.isFinal(field.getModifiers())
                 && !Modifier.isStatic(field.getModifiers())
@@ -151,6 +152,7 @@ public class ConfigReflection {
                 .isEnum() && field.getType() != String.class && field.getType() != List.class && field.getType() != Set.class && field.getType() != ResourceLocation.class;
     }
 
+    @SuppressWarnings("deprecation")
     public static ResourceLocation getIdentifier(Class<?> configDataClass) {
         final var configAnnotation = configDataClass.getAnnotation(Config.class);
         if (configAnnotation == null) {
@@ -193,6 +195,7 @@ public class ConfigReflection {
         return hasSyncedAnnotation || isObject;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Deprecated(since = "1.21.5")
     public static Object deepCopy(Object from, Object to) {
         Field[] fields = from.getClass().getFields();
