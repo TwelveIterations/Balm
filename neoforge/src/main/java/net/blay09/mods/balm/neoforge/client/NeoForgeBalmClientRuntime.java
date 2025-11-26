@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -23,6 +24,7 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.color.block.internal.NeoForgeBalmBlockColorRegistrar;
+import net.blay09.mods.balm.neoforge.client.color.item.internal.NeoForgeBalmItemColorRegistrar;
 import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.internal.NeoForgeBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
@@ -171,6 +173,15 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
                 modBus.addListener((RegisterColorHandlersEvent.Block event) -> initializer.accept(new NeoForgeBalmBlockColorRegistrar(event)));
+            }
+        });
+    }
+
+    @Override
+    public void itemColors(String namespace, Consumer<BalmItemColorRegistrar> initializer) {
+        BalmLoadContexts.get(namespace).ifPresent(context -> {
+            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+                modBus.addListener((RegisterColorHandlersEvent.Item event) -> initializer.accept(new NeoForgeBalmItemColorRegistrar(event)));
             }
         });
     }

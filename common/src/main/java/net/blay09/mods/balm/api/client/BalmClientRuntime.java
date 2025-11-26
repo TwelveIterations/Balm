@@ -11,6 +11,7 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -54,6 +55,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         keyMappings(modId, module::registerKeyMappings);
         resourceReloadListeners(modId, module::registerClientReloadListeners);
         blockColors(modId, module::registerBlockColors);
+        itemColors(modId, module::registerItemColors);
         blockRenderTypes(modId, module::registerBlockRenderTypes);
         blockEntityRenderers(modId, module::registerBlockEntityRenderers);
         entityRenderers(modId, module::registerEntityRenderers);
@@ -93,6 +95,8 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer);
 
     void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer);
+
+    void itemColors(String namespace, Consumer<BalmItemColorRegistrar> initializer);
 
     void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer);
 

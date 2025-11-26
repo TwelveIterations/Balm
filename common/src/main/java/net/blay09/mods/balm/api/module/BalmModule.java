@@ -91,6 +91,7 @@ public interface BalmModule {
     /**
      * @deprecated Use {@link #registerItems(BalmItemRegistrar)} and {@link #registerCreativeModeTabs(BalmCreativeModeTabRegistrar)} instead.
      */
+    @Deprecated
     default void registerItems(BalmItems items) {
     }
 

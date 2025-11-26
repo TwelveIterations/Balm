@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -54,6 +55,9 @@ public interface BalmClientModule {
     }
 
     default void registerBlockColors(BalmBlockColorRegistrar blockColors) {
+    }
+
+    default void registerItemColors(BalmItemColorRegistrar blockColors) {
     }
 
     default void registerParticleProviders(BalmParticleProviderRegistrar particles) {

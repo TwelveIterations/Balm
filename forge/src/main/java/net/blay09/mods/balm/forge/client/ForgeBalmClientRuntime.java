@@ -10,6 +10,7 @@ import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -24,6 +25,7 @@ import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.color.block.ForgeBalmBlockColorRegistrar;
+import net.blay09.mods.balm.forge.client.color.item.ForgeBalmItemColorRegistrar;
 import net.blay09.mods.balm.forge.client.gui.screens.inventory.ForgeBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.model.geom.ForgeBalmModelLayerRegistrar;
@@ -169,6 +171,13 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
         ModBusEventRegisters.register(namespace, (bus)
                 -> bus.addListener((RegisterColorHandlersEvent.Block event)
                 -> initializer.accept(new ForgeBalmBlockColorRegistrar(event))));
+    }
+
+    @Override
+    public void itemColors(String namespace, Consumer<BalmItemColorRegistrar> initializer) {
+        ModBusEventRegisters.register(namespace, (bus)
+                -> bus.addListener((RegisterColorHandlersEvent.Item event)
+                -> initializer.accept(new ForgeBalmItemColorRegistrar(event))));
     }
 
     @Override
