@@ -103,7 +103,11 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     <TProxy> SidedProxy<TProxy> sidedProxy(String commonName, String clientName);
 
-    void initializeMod(String modId, TLoadContext context, Runnable initializer);
+    default void initializeMod(String modId, TLoadContext context, Runnable initializer) {
+        initializeMod(modId, context, (registrars) -> initializer.run());
+    }
+
+    void initializeMod(String modId, TLoadContext context, Consumer<BalmRegistrars> initializer);
 
     void initializeIfLoaded(String modId, String className);
 

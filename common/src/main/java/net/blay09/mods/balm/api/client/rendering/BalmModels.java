@@ -17,10 +17,15 @@ import org.joml.Matrix4f;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface BalmModels {
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockStateModels(Consumer)} instead.
+     */
+    @Deprecated
     DeferredObject<BakedModel> loadModel(ResourceLocation identifier);
 
     DeferredObject<BakedModel> bakeModel(ModelResourceLocation identifier, UnbakedModel model);
@@ -63,5 +68,6 @@ public interface BalmModels {
 
     ModelBaker createBaker(ModelResourceLocation location, ModelBakery.TextureGetter textureGetter);
 
+    @Deprecated
     BalmModels scoped(String modId);
 }

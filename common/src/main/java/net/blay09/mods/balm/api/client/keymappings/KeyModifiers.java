@@ -7,6 +7,10 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+/**
+ * @deprecated Use Kuma instead.
+ */
+@Deprecated
 public class KeyModifiers {
     private final EnumSet<KeyModifier> modifiers = EnumSet.noneOf(KeyModifier.class);
     private final List<InputConstants.Key> customModifiers = new ArrayList<>();

@@ -27,14 +27,22 @@ import java.util.function.Consumer;
 public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmRenderers getRenderers();
 
+    @Deprecated
     BalmScreens getScreens();
 
     BalmModels getModels();
 
+    @Deprecated
     BalmKeyMappings getKeyMappings();
 
-    void initializeMod(String modId, TLoadContext context, Runnable initializer);
+    @Deprecated
+    default void initializeMod(String modId, TLoadContext context, Runnable initializer) {
+        initializeMod(modId, context, (registrars) -> initializer.run());
+    }
 
+    void initializeMod(String modId, TLoadContext context, Consumer<BalmClientRegistrars> initializer);
+
+    @SuppressWarnings("deprecation")
     default void initializeModule(BalmClientModule module) {
         final var modId = module.getId().getNamespace();
         module.registerEvents(Balm.getEvents());
@@ -49,15 +57,16 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
 
     void onRuntimeAvailable(Runnable callback);
 
-    void registerModule(BalmClientModule module);
+    @Deprecated
+    default void registerModule(BalmClientModule module) {
+        registerModule(new BalmClientRegistrars(this, module.getId().getNamespace()), module);
+    }
 
     void registerModule(BalmClientRegistrars registrars, BalmClientModule module);
 
+    @Deprecated
     void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
 
-    /**
-     * @deprecated No more purpose. Register textures to atlases via resource pack instead.
-     */
     @Deprecated(since = "1.21.5")
     BalmTextures getTextures();
 

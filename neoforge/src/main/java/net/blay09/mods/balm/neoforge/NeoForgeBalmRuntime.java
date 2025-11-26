@@ -26,6 +26,7 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
@@ -73,7 +74,6 @@ import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforgespi.language.IModInfo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -86,29 +86,40 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new NeoForgeBalmWorldGen();
+    @Deprecated
     private final BalmItems items = new NeoForgeBalmItems(legacyNamespaceResolver);
+    @Deprecated
     private final BalmBlocks blocks = new NeoForgeBalmBlocks(legacyNamespaceResolver, items);
+    @Deprecated
     private final BalmBlockEntities blockEntities = new NeoForgeBalmBlockEntities();
     private final NeoForgeBalmEvents events = new NeoForgeBalmEvents();
+    @Deprecated
     private final BalmMenus menus = new NeoForgeBalmMenus();
     private final BalmNetworking networking = new NeoForgeBalmNetworking(legacyNamespaceResolver);
     private final BalmConfig config = new NeoForgeBalmConfig();
     private final BalmHooks hooks = new NeoForgeBalmHooks();
     private final BalmRegistries registries = new NeoForgeBalmRegistries();
+    @Deprecated
     private final BalmSounds sounds = new NeoForgeBalmSounds();
+    @Deprecated
     private final BalmEntities entities = new NeoForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities(legacyNamespaceResolver);
     @Deprecated(since = "1.21.5")
     private final BalmProviders providers = new NeoForgeBalmProviders();
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
+    @Deprecated
     private final BalmStats stats = new NeoForgeBalmStats(legacyNamespaceResolver);
+    @Deprecated
     private final BalmRecipes recipes = new NeoForgeBalmRecipes();
+    @Deprecated
     private final BalmComponents components = new NeoForgeBalmComponents();
     private final BalmModSupport modSupport = new NeoForgeBalmModSupport(this);
+    @Deprecated
     private final BalmParticles particles = new NeoForgeBalmParticles();
     private final BalmPermissions permissions = new NeoForgeBalmPermissions();
     private final BalmRegistrar registrar = new NeoForgeBalmRegistrar();
+    @Deprecated
     private final BalmResources resources = new NeoForgeBalmResources();
 
     public NeoForgeBalmRuntime() {
@@ -131,21 +142,25 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmBlocks getBlocks() {
         return blocks;
     }
 
     @Override
+    @Deprecated
     public BalmBlockEntities getBlockEntities() {
         return blockEntities;
     }
 
     @Override
+    @Deprecated
     public BalmItems getItems() {
         return items;
     }
 
     @Override
+    @Deprecated
     public BalmMenus getMenus() {
         return menus;
     }
@@ -166,11 +181,13 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmSounds getSounds() {
         return sounds;
     }
 
     @Override
+    @Deprecated
     public BalmEntities getEntities() {
         return entities;
     }
@@ -197,11 +214,13 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmStats getStats() {
         return stats;
     }
 
     @Override
+    @Deprecated
     public BalmRecipes getRecipes() {
         return recipes;
     }
@@ -217,10 +236,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, NeoForgeLoadContext context, Consumer<BalmRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.run();
+        initializer.accept(new BalmRegistrars(this, modId));
 
         final var modBus = context.modBus();
         DeferredRegisters.register(modId, modBus);
@@ -238,6 +257,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmComponents getComponents() {
         return components;
     }
@@ -248,6 +268,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmParticles getParticles() {
         return particles;
     }
@@ -263,6 +284,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmResources getResources() {
         return resources;
     }

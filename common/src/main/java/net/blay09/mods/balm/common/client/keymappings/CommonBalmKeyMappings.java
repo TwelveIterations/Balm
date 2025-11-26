@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("deprecation")
 public abstract class CommonBalmKeyMappings implements BalmKeyMappings {
 
     protected final NamespaceResolver namespaceResolver;

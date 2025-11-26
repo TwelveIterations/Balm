@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
@@ -56,7 +57,9 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     private final BalmRenderers renderers = new NeoForgeBalmRenderers(legacyNamespaceResolver);
     @Deprecated(since = "1.21.5")
     private final BalmTextures textures = new NeoForgeBalmTextures();
+    @Deprecated
     private final BalmScreens screens = new NeoForgeBalmScreens(legacyNamespaceResolver);
+    @Deprecated
     private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings(legacyNamespaceResolver);
     private final BalmModels models = new NeoForgeBalmModels(legacyNamespaceResolver);
 
@@ -76,6 +79,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     }
 
     @Override
+    @Deprecated
     public BalmScreens getScreens() {
         return screens;
     }
@@ -86,15 +90,16 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     }
 
     @Override
+    @Deprecated
     public BalmKeyMappings getKeyMappings() {
         return keyMappings;
     }
 
     @Override
-    public void initializeMod(String modId, NeoForgeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, NeoForgeLoadContext context, Consumer<BalmClientRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.run();
+        initializer.accept(new BalmClientRegistrars(this, modId));
 
         final var modEventBus = context.modBus();
         ModBusEventRegisters.register(modId, modEventBus);

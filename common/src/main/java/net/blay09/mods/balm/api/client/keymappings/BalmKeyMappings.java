@@ -4,7 +4,12 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#keyMappings(Consumer)} instead.
+ */
+@Deprecated
 public interface BalmKeyMappings {
     default KeyMapping registerKeyMapping(String name, int keyCode, String category) {
         return registerKeyMapping(name, InputConstants.Type.KEYSYM, keyCode, category);

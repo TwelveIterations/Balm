@@ -7,8 +7,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blockEntityTypes(Consumer)} instead.
+ */
+@Deprecated
 public interface BalmBlockEntities {
     <T extends BlockEntity> DeferredObject<BlockEntityType<T>> registerBlockEntity(ResourceLocation identifier, BalmBlockEntityFactory<T> factory, Supplier<Block[]> blocks);
 

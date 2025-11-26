@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
@@ -55,7 +56,9 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmRenderers renderers = new ForgeBalmRenderers(legacyNamespaceResolver);
+    @Deprecated
     private final BalmScreens screens = new ForgeBalmScreens(legacyNamespaceResolver);
+    @Deprecated
     private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings(legacyNamespaceResolver);
     private final BalmModels models = new ForgeBalmModels(legacyNamespaceResolver);
 
@@ -78,6 +81,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
     }
 
     @Override
+    @Deprecated
     public BalmScreens getScreens() {
         return screens;
     }
@@ -88,13 +92,14 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
     }
 
     @Override
+    @Deprecated
     public BalmKeyMappings getKeyMappings() {
         return keyMappings;
     }
 
     @SuppressWarnings("removal")
     @Override
-    public void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, BalmRuntimeLoadContext context, Consumer<BalmClientRegistrars> initializer) {
         ForgeLoadContext forgeLoadContext;
         if (context instanceof ForgeLoadContext) {
             forgeLoadContext = (ForgeLoadContext) context;
@@ -103,7 +108,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
         }
         BalmLoadContexts.register(modId, forgeLoadContext);
 
-        initializer.run();
+        initializer.accept(new BalmClientRegistrars(this, modId));
 
         final var modEventBus = forgeLoadContext.modEventBus();
         ModBusEventRegisters.register(modId, modEventBus);

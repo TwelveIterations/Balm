@@ -26,6 +26,7 @@ import net.blay09.mods.balm.api.sound.BalmSounds;
 import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrars;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -38,10 +39,18 @@ import java.util.function.Consumer;
 public class Balm {
     private static final BalmRuntime<BalmRuntimeLoadContext> runtime = BalmRuntimeSpi.create();
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registerModule(BalmModule)} instead.
+     */
+    @Deprecated
     public static void registerModule(BalmModule module) {
         runtime.registerModule(module);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.Balmstrap#onRuntimeAvailable(Runnable)} instead.
+     */
+    @Deprecated
     public static void onRuntimeAvailable(Runnable callback) {
         runtime.onRuntimeAvailable(callback);
     }
@@ -54,22 +63,59 @@ public class Balm {
         initializeMod(modId, context, initializer);
     }
 
+    /**
+     * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Consumer)} instead.
+     */
+    @Deprecated
     public static void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
         runtime.initializeMod(modId, context, initializer);
     }
 
+    /**
+     * You must call this or any of its overloads in each of your mod's entry points. Provide a load context specific to each mod loader.
+     * Everything else you do in Balm should happen inside the initializer, which runs at a time that Balm has
+     * initialized the runtime for your mod.
+     *
+     * @param modId       The mod id for your mod.
+     * @param context     The load context for the mod loader you are using, e.g. NeoForgeLoadContext.
+     * @param initializer Callback that runs when Balm is ready, at which point you can use its methods to set up your mod.
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule...)
+     */
     public static void initializeMod(String modId, BalmRuntimeLoadContext context, Consumer<BalmRegistrars> initializer) {
-        runtime.initializeMod(modId, context, () -> initializer.accept(new BalmRegistrars(runtime, modId)));
+        runtime.initializeMod(modId, context, initializer);
     }
 
+    /**
+     * You must call this or any of its overloads in each of your mod's entry points. Provide a load context specific to each mod loader.
+     * Everything else you do in Balm should happen inside the module, whose methods are called at a time that Balm has
+     * initialized the runtime for your mod.
+     *
+     * @param modId   the mod id for your mod.
+     * @param context the load context for the mod loader you are using, e.g. NeoForgeLoadContext.
+     * @param module  an implementation of {@link BalmModule} within which you can set up your mod.
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, Consumer)
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule...)
+     */
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule module) {
-        runtime.initializeMod(modId, context, () -> registerModule(module));
+        runtime.initializeMod(modId, context, (registrars) -> registrars.registerModule(module));
     }
 
+    /**
+     * You must call this or any of its overloads in each of your mod's entry points. Provide a load context specific to each mod loader.
+     * Everything else you do in Balm should happen inside the module, whose methods are called at a time that Balm has
+     * initialized the runtime for your mod.
+     *
+     * @param modId   the mod id for your mod.
+     * @param context the load context for the mod loader you are using, e.g. NeoForgeLoadContext.
+     * @param modules one or more implementations of {@link BalmModule} within which you can set up your mod.
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, Consumer)
+     * @see Balm#initializeMod(String, BalmRuntimeLoadContext, BalmModule)
+     */
     public static <T extends BalmRuntimeLoadContext> void initializeMod(String modId, T context, BalmModule... modules) {
-        runtime.initializeMod(modId, context, () -> {
+        runtime.initializeMod(modId, context, (registrars) -> {
             for (final var module : modules) {
-                registerModule(module);
+                registrars.registerModule(module);
             }
         });
     }
@@ -98,10 +144,18 @@ public class Balm {
         runtime.initializeIfLoaded(modId, className);
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#resourceReloadListeners(Consumer)} instead.
+     */
+    @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener) {
         runtime.addServerReloadListener(identifier, reloadListener);
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#resourceReloadListeners(Consumer)} instead.
+     */
+    @Deprecated
     public static void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener) {
         runtime.addServerReloadListener(identifier, reloadListener);
     }
@@ -126,22 +180,42 @@ public class Balm {
         return runtime.getWorldGen();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#blocks(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmBlocks getBlocks() {
         return runtime.getBlocks();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#blockEntityTypes(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmBlockEntities getBlockEntities() {
         return runtime.getBlockEntities();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#items(Consumer)} and {@link BalmRegistrars#creativeModeTabs(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmItems getItems() {
         return runtime.getItems();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#dataComponentTypes(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmComponents getComponents() {
         return runtime.getComponents();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#menuTypes(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmMenus getMenus() {
         return runtime.getMenus();
     }
@@ -150,6 +224,10 @@ public class Balm {
         return runtime.getHooks();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#recipeTypes(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmRecipes getRecipes() {
         return runtime.getRecipes();
     }
@@ -158,10 +236,18 @@ public class Balm {
         return runtime.getRegistries();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#registrar(ResourceKey)} with {@link net.minecraft.core.registries.Registries#SOUND_EVENT} instead.
+     */
+    @Deprecated
     public static BalmSounds getSounds() {
         return runtime.getSounds();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#entityTypes(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmEntities getEntities() {
         return runtime.getEntities();
     }
@@ -178,6 +264,10 @@ public class Balm {
         return runtime.getLootTables();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#customStats(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmStats getStats() {
         return runtime.getStats();
     }
@@ -186,6 +276,10 @@ public class Balm {
         return runtime.getModSupport();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#particleTypes(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmParticles getParticles() {
         return runtime.getParticles();
     }
@@ -194,6 +288,10 @@ public class Balm {
         return runtime.getPermissions();
     }
 
+    /**
+     * @deprecated Use {@link BalmRegistrars#resourceConditions(Consumer)} instead.
+     */
+    @Deprecated
     public static BalmResources getResources() {
         return runtime.getResources();
     }
@@ -206,6 +304,10 @@ public class Balm {
         return runtime.getEnvironment();
     }
 
+    /**
+     * For internal use. Provides access to the runtime powering mod-loader specific functions.
+     * Generally, you should not need to access the runtime directly, as all its methods are exposed on {@link Balm}.
+     */
     public static BalmRuntime<? extends BalmRuntimeLoadContext> getRuntime() {
         return runtime;
     }

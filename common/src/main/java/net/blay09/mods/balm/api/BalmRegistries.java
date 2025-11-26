@@ -3,6 +3,7 @@ package net.blay09.mods.balm.api;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
@@ -117,5 +118,9 @@ public interface BalmRegistries {
 
     Fluid getMilkFluid();
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#registrar(ResourceKey)} instead.
+     */
+    @Deprecated
     <T> DeferredObject<T> register(Registry<T> registryId, Function<ResourceLocation, T> supplier, ResourceLocation identifier);
 }

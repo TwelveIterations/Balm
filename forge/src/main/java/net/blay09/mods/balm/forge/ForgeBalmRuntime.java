@@ -29,6 +29,7 @@ import net.blay09.mods.balm.api.stats.BalmStats;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
 import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
@@ -78,7 +79,6 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.forgespi.language.IModInfo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -92,29 +92,40 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
 
     private final NamespaceResolver legacyNamespaceResolver = new LegacyNamespaceResolver(() -> ModLoadingContext.get().getActiveNamespace());
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
+    @Deprecated
     private final BalmItems items = new ForgeBalmItems(legacyNamespaceResolver);
+    @Deprecated
     private final BalmBlocks blocks = new ForgeBalmBlocks(legacyNamespaceResolver, items);
+    @Deprecated
     private final BalmBlockEntities blockEntities = new ForgeBalmBlockEntities();
     private final ForgeBalmEvents events = new ForgeBalmEvents();
+    @Deprecated
     private final BalmMenus menus = new ForgeBalmMenus();
     private final BalmNetworking networking = new ForgeBalmNetworking();
     private final BalmConfig config = new ForgeBalmConfig();
     private final BalmHooks hooks = new ForgeBalmHooks();
     private final BalmRegistries registries = new ForgeBalmRegistries();
+    @Deprecated
     private final BalmSounds sounds = new ForgeBalmSounds();
+    @Deprecated
     private final BalmEntities entities = new ForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new ForgeBalmCapabilities(legacyNamespaceResolver);
     @Deprecated(since = "1.21.5")
     private final BalmProviders providers = new ForgeBalmProviders();
     private final BalmCommands commands = new ForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
+    @Deprecated
     private final BalmStats stats = new ForgeBalmStats(legacyNamespaceResolver);
+    @Deprecated
     private final BalmRecipes recipes = new ForgeBalmRecipes();
+    @Deprecated
     private final BalmComponents components = new ForgeBalmComponents();
     private final BalmModSupport modSupport = new ForgeBalmModSupport(this);
+    @Deprecated
     private final BalmParticles particles = new ForgeBalmParticles();
     private final BalmPermissions permissions = new ForgeBalmPermissions();
     private final BalmRegistrar registrar = new ForgeBalmRegistrar();
+    @Deprecated
     private final BalmResources resources = new ForgeBalmResources();
 
     public ForgeBalmRuntime() {
@@ -137,21 +148,25 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmBlocks getBlocks() {
         return blocks;
     }
 
     @Override
+    @Deprecated
     public BalmBlockEntities getBlockEntities() {
         return blockEntities;
     }
 
     @Override
+    @Deprecated
     public BalmItems getItems() {
         return items;
     }
 
     @Override
+    @Deprecated
     public BalmMenus getMenus() {
         return menus;
     }
@@ -172,11 +187,13 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmSounds getSounds() {
         return sounds;
     }
 
     @Override
+    @Deprecated
     public BalmEntities getEntities() {
         return entities;
     }
@@ -203,11 +220,13 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmStats getStats() {
         return stats;
     }
 
     @Override
+    @Deprecated
     public BalmRecipes getRecipes() {
         return recipes;
     }
@@ -228,7 +247,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     }
 
     @Override
-    public void initializeMod(String modId, BalmRuntimeLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, BalmRuntimeLoadContext context, Consumer<BalmRegistrars> initializer) {
         ForgeLoadContext forgeLoadContext;
         if (context instanceof ForgeLoadContext) {
             forgeLoadContext = (ForgeLoadContext) context;
@@ -237,7 +256,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
         }
         BalmLoadContexts.register(modId, forgeLoadContext);
 
-        initializer.run();
+        initializer.accept(new BalmRegistrars(this, modId));
 
         final var modEventBus = forgeLoadContext.modEventBus();
         DeferredRegisters.register(modId, modEventBus);
@@ -255,6 +274,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmComponents getComponents() {
         return components;
     }
@@ -265,6 +285,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmParticles getParticles() {
         return particles;
     }
@@ -281,6 +302,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     }
 
     @Override
+    @Deprecated
     public BalmResources getResources() {
         return resources;
     }

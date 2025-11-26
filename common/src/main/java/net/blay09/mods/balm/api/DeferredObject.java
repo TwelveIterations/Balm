@@ -4,6 +4,10 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars} instead.
+ */
+@Deprecated
 public class DeferredObject<T> {
     private final ResourceLocation id;
     private final Supplier<T> supplier;

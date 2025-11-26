@@ -11,9 +11,14 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#blocks(Consumer)} instead.
+ */
+@Deprecated
 public interface BalmBlocks {
 
     static BlockBehaviour.Properties blockProperties(ResourceLocation identifier) {

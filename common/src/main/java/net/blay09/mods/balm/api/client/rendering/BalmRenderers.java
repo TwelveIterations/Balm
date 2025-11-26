@@ -19,24 +19,45 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface BalmRenderers {
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#modelLayers(Consumer)} instead.
+     */
+    @Deprecated
     default ModelLayerLocation registerModel(ResourceLocation location, Supplier<LayerDefinition> layerDefinition) {
         return registerModel(location, "main", layerDefinition);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#modelLayers(Consumer)} instead.
+     */
+    @Deprecated
     ModelLayerLocation registerModel(ResourceLocation location, String layer, Supplier<LayerDefinition> layerDefinition);
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#entityRenderers(Consumer)} instead.
+     */
+    @Deprecated
     default <T extends Entity> void registerEntityRenderer(ResourceLocation identifier, Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider) {
         registerEntityRenderer(type, provider);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockEntityRenderers(Consumer)} instead.
+     */
+    @Deprecated
     default <T extends BlockEntity> void registerBlockEntityRenderer(ResourceLocation identifier, Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider) {
         registerBlockEntityRenderer(type, provider);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockColors(Consumer)} instead.
+     */
+    @Deprecated
     default void registerBlockColorHandler(ResourceLocation identifier, BlockColor color, Supplier<Block[]> blocks) {
         registerBlockColorHandler(color, blocks);
     }
@@ -44,14 +65,23 @@ public interface BalmRenderers {
     void registerItemColorHandler(ItemColor color, Supplier<ItemLike[]> items);
 
     /**
-     * @apiNote No-op on Forge. Specify "render_type" in your model as a workaround.
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#blockRenderTypes(Consumer)} instead.
      */
+    @Deprecated
     void setBlockRenderType(Supplier<Block> block, RenderType renderType);
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#particleProviders(Consumer)} instead.
+     */
+    @Deprecated
     default <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
         registerParticleProvider(particleType, factory);
     }
 
+    /**
+     * @deprecated Use {@link net.blay09.mods.balm.client.BalmClientRegistrars#particleProviders(Consumer)} instead.
+     */
+    @Deprecated
     default <T extends ParticleOptions> void registerParticleProvider(ResourceLocation identifier, Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider) {
         registerParticleProvider(particleType, provider);
     }
@@ -86,5 +116,6 @@ public interface BalmRenderers {
     @Deprecated(since = "1.21.5")
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 
+    @Deprecated
     BalmRenderers scoped(String modId);
 }

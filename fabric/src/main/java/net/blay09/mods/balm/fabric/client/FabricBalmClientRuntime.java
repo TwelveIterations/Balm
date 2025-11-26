@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
+import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
@@ -63,7 +64,9 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     private final BalmRenderers renderers = new FabricBalmRenderers(legacyNamespaceResolver);
     @Deprecated(since = "1.21.5")
     private final BalmTextures textures = new FabricBalmTextures();
+    @Deprecated
     private final BalmScreens screens = new FabricBalmScreens(legacyNamespaceResolver);
+    @Deprecated
     private final BalmKeyMappings keyMappings = createKeyMappingsBindings();
     private final BalmModels models = new FabricBalmModels(legacyNamespaceResolver);
 
@@ -71,13 +74,14 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
     }
 
+    @Deprecated
     private static BalmKeyMappings createKeyMappingsBindings() {
         if (Balm.isModLoaded("amecs")) {
             try {
                 Class.forName("de.siphalor.amecs.api.AmecsKeyBinding");
                 try {
                     Class<?> amecs = Class.forName("net.blay09.mods.balm.fabric.compat.AmecsBalmKeyMappings");
-                    return (BalmKeyMappings) amecs.getConstructor().newInstance();
+                    return (BalmKeyMappings) amecs.getConstructor(NamespaceResolver.class).newInstance(legacyNamespaceResolver);
                 } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     logger.error("Failed to initialize amecs key mappings for Balm", e);
                 }
@@ -100,11 +104,13 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     }
 
     @Override
+    @Deprecated
     public BalmScreens getScreens() {
         return screens;
     }
 
     @Override
+    @Deprecated
     public BalmKeyMappings getKeyMappings() {
         return keyMappings;
     }
@@ -115,10 +121,10 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     }
 
     @Override
-    public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, EmptyLoadContext context, Consumer<BalmClientRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.run();
+        initializer.accept(new BalmClientRegistrars(this, modId));
     }
 
     @Override
@@ -149,9 +155,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
 
     @Override
     public void blockStateModels(String namespace, Consumer<BalmBlockStateModelRegistrar> initializer) {
-        ModelLoadingPlugin.register(context -> {
-            initializer.accept(new FabricBalmBlockStateModelRegistrar(context));
-        });
+        ModelLoadingPlugin.register(context -> initializer.accept(new FabricBalmBlockStateModelRegistrar(context)));
     }
 
     @Override

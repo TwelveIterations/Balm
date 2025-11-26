@@ -17,6 +17,8 @@ import net.minecraft.client.gui.screens.Screen;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Deprecated
+@SuppressWarnings("deprecation")
 public class AmecsBalmKeyMappings extends CommonBalmKeyMappings {
 
     private static final Map<KeyMapping, KeyConflictContext> contextAwareKeyMappings = new ConcurrentHashMap<>();

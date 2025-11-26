@@ -26,6 +26,7 @@ import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.common.*;
 import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
@@ -87,32 +88,43 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
         throw new UnsupportedOperationException("No default namespace available");
     });
     private final BalmWorldGen worldGen = new FabricBalmWorldGen();
+    @Deprecated
     private final BalmItems items = new FabricBalmItems(legacyNamespaceResolver);
+    @Deprecated
     private final BalmBlocks blocks = new FabricBalmBlocks(legacyNamespaceResolver, items);
+    @Deprecated
     private final BalmBlockEntities blockEntities = new FabricBalmBlockEntities();
     private final FabricBalmEvents events = new FabricBalmEvents();
+    @Deprecated
     private final BalmMenus menus = new FabricBalmMenus();
     private final BalmNetworking networking = new FabricBalmNetworking();
     private final BalmConfig config = new FabricBalmConfig();
     private final BalmHooks hooks = new FabricBalmHooks();
     private final BalmRegistrar registrar = new FabricBalmRegistrar();
     private final BalmRegistries registries = new FabricBalmRegistries();
+    @Deprecated
     private final BalmSounds sounds = new FabricBalmSounds();
+    @Deprecated
     private final BalmEntities entities = new FabricBalmEntities();
     private final BalmCapabilities capabilities = new FabricBalmCapabilities();
     @Deprecated(since = "1.21.5")
     private final BalmProviders providers = new FabricBalmProviders();
     private final BalmCommands commands = new FabricBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
+    @Deprecated
     private final BalmStats stats = new FabricBalmStats();
+    @Deprecated
     private final BalmRecipes recipes = new FabricBalmRecipes();
+    @Deprecated
     private final BalmComponents components = new FabricBalmComponents();
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
+    @Deprecated
     private final BalmParticles particles = new FabricBalmParticles();
     private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy()
             .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
             .buildLazily();
+    @Deprecated
     private final BalmResources resources = new FabricBalmResources();
 
     public FabricBalmRuntime() {
@@ -135,21 +147,25 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    @Deprecated
     public BalmBlocks getBlocks() {
         return blocks;
     }
 
     @Override
+    @Deprecated
     public BalmBlockEntities getBlockEntities() {
         return blockEntities;
     }
 
     @Override
+    @Deprecated
     public BalmItems getItems() {
         return items;
     }
 
     @Override
+    @Deprecated
     public BalmMenus getMenus() {
         return menus;
     }
@@ -170,11 +186,13 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    @Deprecated
     public BalmSounds getSounds() {
         return sounds;
     }
 
     @Override
+    @Deprecated
     public BalmEntities getEntities() {
         return entities;
     }
@@ -201,11 +219,13 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    @Deprecated
     public BalmStats getStats() {
         return stats;
     }
 
     @Override
+    @Deprecated
     public BalmRecipes getRecipes() {
         return recipes;
     }
@@ -221,10 +241,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
-    public void initializeMod(String modId, EmptyLoadContext context, Runnable initializer) {
+    public void initializeMod(String modId, EmptyLoadContext context, Consumer<BalmRegistrars> initializer) {
         BalmLoadContexts.register(modId, context);
 
-        initializer.run();
+        initializer.accept(new BalmRegistrars(this, modId));
     }
 
     @Override
@@ -258,6 +278,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    @Deprecated
     public BalmComponents getComponents() {
         return components;
     }
@@ -268,6 +289,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    @Deprecated
     public BalmParticles getParticles() {
         return particles;
     }
@@ -283,6 +305,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     }
 
     @Override
+    @Deprecated
     public BalmResources getResources() {
         return resources;
     }
