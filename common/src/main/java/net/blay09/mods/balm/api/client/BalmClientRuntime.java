@@ -48,8 +48,18 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         module.registerEvents(Balm.getEvents());
         module.registerRenderers(getRenderers().scoped(modId));
         module.registerScreens(getScreens().scoped(modId));
+        menuScreens(modId, module::registerMenuScreens);
         module.registerModels(getModels().scoped(modId));
         module.registerKeyMappings(getKeyMappings().scoped(modId));
+        keyMappings(modId, module::registerKeyMappings);
+        resourceReloadListeners(modId, module::registerClientReloadListeners);
+        blockColors(modId, module::registerBlockColors);
+        blockRenderTypes(modId, module::registerBlockRenderTypes);
+        blockEntityRenderers(modId, module::registerBlockEntityRenderers);
+        entityRenderers(modId, module::registerEntityRenderers);
+        particleProviders(modId, module::registerParticleProviders);
+        modelLayers(modId, module::registerModelLayers);
+        blockStateModels(modId, module::registerBlockStateModels);
         module.initialize();
     }
 
