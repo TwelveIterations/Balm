@@ -189,7 +189,7 @@ public class ClothConfigUtils {
     /**
      * @deprecated Use {@link #getConfigScreen(String)} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public static <T extends BalmConfigData> ConfigScreenFactory<?> getConfigScreen(Class<T> clazz) {
         return getConfigScreen(ConfigReflection.getIdentifier(clazz).getNamespace());
     }

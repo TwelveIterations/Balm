@@ -323,7 +323,7 @@ public class Balm {
     /**
      * @deprecated Use {@link #getCapabilities()} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public static BalmProviders getProviders() {
         return runtime.getProviders();
     }

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * @deprecated Use {@link net.blay09.mods.balm.api.config.reflection.NestedType} instead.
  */
-@Deprecated(since = "1.21.5")
+@Deprecated
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExpectedType {

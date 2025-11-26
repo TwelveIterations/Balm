@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Deprecated(since = "1.21.5")
+@Deprecated
 public class SyncConfigMessage<TData> implements CustomPacketPayload {
 
     private final Type<? extends CustomPacketPayload> type;

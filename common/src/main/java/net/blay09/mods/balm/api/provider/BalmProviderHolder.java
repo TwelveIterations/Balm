@@ -9,12 +9,12 @@ import java.util.List;
 /**
  * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities} instead.
  */
-@Deprecated(since = "1.21.5")
+@Deprecated
 public interface BalmProviderHolder {
     /**
      * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     default List<BalmProvider<?>> getProviders() {
         return Collections.emptyList();
     }
@@ -22,7 +22,7 @@ public interface BalmProviderHolder {
     /**
      * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     default List<Pair<Direction, BalmProvider<?>>> getSidedProviders() {
         return Collections.emptyList();
     }

@@ -67,7 +67,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     @Deprecated
     void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
 
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     BalmTextures getTextures();
 
     void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer);

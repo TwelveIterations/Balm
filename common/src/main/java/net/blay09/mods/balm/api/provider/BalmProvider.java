@@ -3,7 +3,7 @@ package net.blay09.mods.balm.api.provider;
 /**
  * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities} instead.
  */
-@Deprecated(since = "1.21.5")
+@Deprecated
 public class BalmProvider<T> {
     private final Class<T> providerClass;
     private final T instance;

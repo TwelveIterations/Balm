@@ -62,7 +62,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
     private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings(legacyNamespaceResolver);
     private final BalmModels models = new ForgeBalmModels(legacyNamespaceResolver);
 
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     private final BalmTextures textures = new ForgeBalmTextures();
 
     public ForgeBalmClientRuntime() {
@@ -75,7 +75,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
     }
 
     @Override
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public BalmTextures getTextures() {
         return textures;
     }

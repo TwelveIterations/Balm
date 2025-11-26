@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 /**
  * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities} instead.
  */
-@Deprecated(since = "1.21.5")
+@Deprecated
 public interface BalmProviders {
     <T> T getProvider(BlockEntity blockEntity, Class<T> clazz);
 

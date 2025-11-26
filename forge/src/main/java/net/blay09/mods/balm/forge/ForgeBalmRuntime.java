@@ -110,7 +110,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     @Deprecated
     private final BalmEntities entities = new ForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new ForgeBalmCapabilities(legacyNamespaceResolver);
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     private final BalmProviders providers = new ForgeBalmProviders();
     private final BalmCommands commands = new ForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -204,7 +204,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     }
 
     @Override
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public BalmProviders getProviders() {
         return providers;
     }

@@ -62,7 +62,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
         throw new UnsupportedOperationException("No default namespace available");
     });
     private final BalmRenderers renderers = new FabricBalmRenderers(legacyNamespaceResolver);
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     private final BalmTextures textures = new FabricBalmTextures();
     @Deprecated
     private final BalmScreens screens = new FabricBalmScreens(legacyNamespaceResolver);
@@ -98,7 +98,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     }
 
     @Override
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public BalmTextures getTextures() {
         return textures;
     }

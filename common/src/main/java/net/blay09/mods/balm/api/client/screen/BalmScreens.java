@@ -30,7 +30,7 @@ public interface BalmScreens {
     /**
      * @deprecated Use {@link #registerScreen(ResourceLocation, Supplier, BalmScreenFactory)} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     <T extends AbstractContainerMenu, S extends Screen & MenuAccess<T>> void registerScreen(Supplier<MenuType<? extends T>> type, BalmScreenFactory<T, S> screenFactory);
 
     @Deprecated

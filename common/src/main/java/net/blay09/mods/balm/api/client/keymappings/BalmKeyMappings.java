@@ -20,31 +20,31 @@ public interface BalmKeyMappings {
     /**
      * @deprecated Use Kuma instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     KeyMapping registerKeyMapping(String name, KeyConflictContext conflictContext, KeyModifier modifier, int keyCode, String category);
 
     /**
      * @deprecated Use Kuma instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     KeyMapping registerKeyMapping(String name, KeyConflictContext conflictContext, KeyModifiers modifiers, int keyCode, String category);
 
     /**
      * @deprecated Use Kuma instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     KeyMapping registerKeyMapping(String name, KeyConflictContext conflictContext, KeyModifier modifier, InputConstants.Type type, int keyCode, String category);
 
     /**
      * @deprecated Use Kuma instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     KeyMapping registerKeyMapping(String name, KeyConflictContext conflictContext, KeyModifiers modifiers, InputConstants.Type type, int keyCode, String category);
 
     /**
      * @deprecated Use Kuma or KeyMapping's native methods instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     default boolean isActiveAndMatches(KeyMapping keyMapping, int keyCode, int scanCode) {
         return isActiveAndMatches(keyMapping, InputConstants.getKey(keyCode, scanCode));
     }
@@ -52,7 +52,7 @@ public interface BalmKeyMappings {
     /**
      * @deprecated Use Kuma or KeyMapping's native methods instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     default boolean isActiveAndMatches(KeyMapping keyMapping, InputConstants.Type type, int keyCode, int scanCode) {
         return isActiveAndMatches(keyMapping, type.getOrCreate(type == InputConstants.Type.SCANCODE ? scanCode : keyCode));
     }
@@ -60,43 +60,43 @@ public interface BalmKeyMappings {
     /**
      * @deprecated Use Kuma or KeyMapping's native methods instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     boolean isActiveAndMatches(KeyMapping keyMapping, InputConstants.Key input);
 
     /**
      * @deprecated Use Kuma or KeyMapping's native methods instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     boolean isActiveAndWasPressed(KeyMapping keyMapping);
 
     /**
      * @deprecated Use Kuma or KeyMapping's native methods instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     boolean isKeyDownIgnoreContext(KeyMapping keyMapping);
 
     /**
      * @deprecated Use Kuma or KeyMapping's native methods instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     boolean isActiveAndKeyDown(KeyMapping keyMapping);
 
     /**
      * @deprecated No longer in use.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     Optional<Boolean> conflictsWith(KeyMapping first, KeyMapping second);
 
     /**
      * @deprecated No longer in use. Has no effect.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     void ignoreConflicts(KeyMapping keyMapping);
 
     /**
      * @deprecated No longer in use.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     boolean shouldIgnoreConflicts(KeyMapping keyMapping);
 
     BalmKeyMappings scoped(String modId);

@@ -89,31 +89,31 @@ public interface BalmRenderers {
     /**
      * @deprecated Use {@link #registerEntityRenderer(ResourceLocation, Supplier, EntityRendererProvider)} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     <T extends Entity> void registerEntityRenderer(Supplier<EntityType<T>> type, EntityRendererProvider<? super T> provider);
 
     /**
      * @deprecated Use {@link #registerBlockEntityRenderer(ResourceLocation, Supplier, BlockEntityRendererProvider)} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<? super T> provider);
 
     /**
      * @deprecated Use {@link #registerBlockColorHandler(ResourceLocation, BlockColor, Supplier)} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     void registerBlockColorHandler(BlockColor color, Supplier<Block[]> blocks);
 
     /**
      * @deprecated Use {@link #registerParticleProvider(ResourceLocation, Supplier, ParticleProvider)} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory);
 
     /**
      * @deprecated Use {@link #registerParticleProvider(ResourceLocation, Supplier, Function)} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     <T extends ParticleOptions> void registerParticleProvider(Supplier<ParticleType<T>> particleType, ParticleProvider<T> provider);
 
     @Deprecated

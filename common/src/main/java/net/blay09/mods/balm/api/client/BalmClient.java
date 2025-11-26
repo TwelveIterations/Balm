@@ -140,7 +140,7 @@ public class BalmClient {
     /**
      * @deprecated No functionality left here.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public static BalmTextures getTextures() {
         return runtime.getTextures();
     }

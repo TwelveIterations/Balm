@@ -104,7 +104,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Deprecated
     private final BalmEntities entities = new NeoForgeBalmEntities(legacyNamespaceResolver);
     private final BalmCapabilities capabilities = new NeoForgeBalmCapabilities(legacyNamespaceResolver);
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     private final BalmProviders providers = new NeoForgeBalmProviders();
     private final BalmCommands commands = new NeoForgeBalmCommands();
     private final BalmLootTables lootTables = new CommonBalmLootTables();
@@ -198,7 +198,7 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     }
 
     @Override
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public BalmProviders getProviders() {
         return providers;
     }

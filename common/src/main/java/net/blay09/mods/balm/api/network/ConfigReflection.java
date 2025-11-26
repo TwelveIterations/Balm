@@ -175,7 +175,7 @@ public class ConfigReflection {
         return config;
     }
 
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public static List<Field> getSyncedFields(Class<?> clazz) {
         List<Field> syncedFields = new ArrayList<>();
         Field[] fields = clazz.getFields();
@@ -187,7 +187,7 @@ public class ConfigReflection {
         return syncedFields;
     }
 
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public static boolean isSyncedFieldOrObject(Field field) {
         boolean hasSyncedAnnotation = field.getAnnotation(Synced.class) != null;
         boolean isObject = !field.getType().isPrimitive() && !field.getType()
@@ -196,7 +196,7 @@ public class ConfigReflection {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     public static Object deepCopy(Object from, Object to) {
         Field[] fields = from.getClass().getFields();
         for (Field field : fields) {

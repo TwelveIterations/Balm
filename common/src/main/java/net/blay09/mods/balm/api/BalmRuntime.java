@@ -80,7 +80,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     /**
      * @deprecated Use {@link #getCapabilities()} instead.
      */
-    @Deprecated(since = "1.21.5")
+    @Deprecated
     BalmProviders getProviders();
 
     BalmCommands getCommands();

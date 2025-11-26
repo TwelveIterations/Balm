@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * @deprecated Use {@link net.blay09.mods.balm.api.config.reflection.Config} instead.
  */
-@Deprecated(since = "1.21.5")
+@Deprecated
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Config {
