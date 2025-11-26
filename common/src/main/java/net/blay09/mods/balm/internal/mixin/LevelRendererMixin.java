@@ -27,10 +27,10 @@ public class LevelRendererMixin {
     private Minecraft minecraft;
 
     @Inject(method = "renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;IF)V", at = @At("HEAD"), cancellable = true)
-    public void renderHitOutline(PoseStack poseStack, VertexConsumer vertexConsumer, double x, double y, double z, BlockOutlineRenderState state, int color, float f, CallbackInfo callbackInfo) {
+    public void renderHitOutline(PoseStack poseStack, VertexConsumer vertexConsumer, double x, double y, double z, BlockOutlineRenderState state, int color, float lineWidth, CallbackInfo callbackInfo) {
         if (minecraft.hitResult instanceof BlockHitResult blockHitResult) {
             if (!BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT.invoker()
-                    .shouldRender(blockHitResult, poseStack, renderBuffers.bufferSource(), minecraft.gameRenderer.getMainCamera())) {
+                    .shouldRender(blockHitResult, poseStack, renderBuffers.bufferSource(), minecraft.gameRenderer.getMainCamera(), color, lineWidth)) {
                 callbackInfo.cancel();
             }
         }

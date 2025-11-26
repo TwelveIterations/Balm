@@ -21,7 +21,7 @@ public interface RenderCallback {
 
     @FunctionalInterface
     interface BlockHighlight {
-        boolean shouldRender(BlockHitResult hitResult, PoseStack poseStack, MultiBufferSource multiBufferSource, Camera camera);
+        boolean shouldRender(BlockHitResult hitResult, PoseStack poseStack, MultiBufferSource multiBufferSource, Camera camera, int color, float lineWidth);
 
         EventMapper<BlockHighlight> EVENT = EventMapper.createUnbound("RenderCallback.BlockHighlight");
     }
