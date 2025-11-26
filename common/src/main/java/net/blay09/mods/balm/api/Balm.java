@@ -208,7 +208,7 @@ public class Balm {
      * @deprecated Use {@link BalmRegistrars#dataComponentTypes(Consumer)} instead.
      */
     @Deprecated
-    public static BalmComponents getCompoBnents() {
+    public static BalmComponents getComponents() {
         return runtime.getComponents();
     }
 
