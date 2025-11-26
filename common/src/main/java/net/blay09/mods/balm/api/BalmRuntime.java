@@ -40,6 +40,7 @@ import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -50,6 +51,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+@SuppressWarnings("DeprecatedIsStillUsed")
 public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     BalmConfig getConfig();
 
@@ -57,12 +59,16 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmWorldGen getWorldGen();
 
+    @Deprecated
     BalmBlocks getBlocks();
 
+    @Deprecated
     BalmBlockEntities getBlockEntities();
 
+    @Deprecated
     BalmItems getItems();
 
+    @Deprecated
     BalmMenus getMenus();
 
     BalmNetworking getNetworking();
@@ -71,8 +77,10 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmRegistries getRegistries();
 
+    @Deprecated
     BalmSounds getSounds();
 
+    @Deprecated
     BalmEntities getEntities();
 
     BalmCapabilities getCapabilities();
@@ -87,12 +95,15 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     BalmLootTables getLootTables();
 
+    @Deprecated
     BalmStats getStats();
 
+    @Deprecated
     BalmRecipes getRecipes();
 
     BalmModSupport getModSupport();
 
+    @Deprecated
     BalmParticles getParticles();
 
     BalmPermissions getPermissions();
@@ -115,6 +126,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void addServerReloadListener(ResourceLocation identifier, Consumer<ResourceManager> reloadListener);
 
+    @Deprecated
     BalmComponents getComponents();
 
     <T> PlatformProxy<T> platformProxy();
@@ -123,27 +135,42 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     String getPlatform();
 
+    @SuppressWarnings("deprecation")
     default void initializeModule(BalmModule module) {
         final var modId = module.getId().getNamespace();
         module.registerConfig(getConfig());
         module.registerResources(getResources());
+        resourceConditions(modId, module::registerResourceConditions);
         module.registerAdditional(getRegistries());
+        module.registerAdditional(registrar());
         module.registerComponents(getComponents());
+        dataComponentTypes(modId, module::registerDataComponentTypes);
         module.registerBlocks(getBlocks().scoped(modId));
+        blocks(modId, module::registerBlocks);
         module.registerBlockEntities(getBlockEntities());
+        blockEntityTypes(modId, module::registerBlockEntityTypes);
         module.registerItems(getItems().scoped(modId));
+        items(modId, module::registerItems);
+        creativeModeTabs(modId, module::registerCreativeModeTabs);
         module.registerEntities(getEntities());
+        entityTypes(modId, module::registerEntityTypes);
         module.registerWorldGen(getWorldGen());
         module.registerNetworking(getNetworking());
         module.registerMenus(getMenus());
+        menuTypes(modId, module::registerMenuTypes);
         module.registerCapabilities(getCapabilities());
         module.registerCommands(getCommands());
         module.registerRecipes(getRecipes());
+        recipeTypes(modId, module::registerRecipeTypes);
         module.registerLootTables(getLootTables());
         module.registerStats(getStats());
+        customStats(modId, module::registerCustomStats);
         module.registerSounds(getSounds());
+        module.registerSoundEvents(registrar(Registries.SOUND_EVENT, modId));
         module.registerPermissions(getPermissions());
         module.registerParticles(getParticles());
+        particleTypes(modId, module::registerParticleTypes);
+        resourceReloadListeners(modId, module::registerReloadListeners);
         module.registerEvents(getEvents());
         module.initialize();
     }
@@ -158,6 +185,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void registerModule(BalmRegistrars registrars, BalmModule module);
 
+    @Deprecated
     BalmResources getResources();
 
     BalmEnvironment getEnvironment();
