@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.fabric.platform.compatibility.internal;
 
+import net.blay09.mods.balm.platform.compatibility.recipeviewer.BalmModSupportRecipeViewer;
+import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.CommonBalmModSupportRecipeViewer;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
 import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.BalmModSupportHudInfo;
@@ -15,6 +17,7 @@ import java.util.function.Supplier;
 public class FabricBalmModSupport implements BalmModSupport {
     private final Supplier<BalmModSupportTrinkets> trinkets;
     private final CommonBalmModSupportHudInfo hudInfo = new CommonBalmModSupportHudInfo();
+    private final CommonBalmModSupportRecipeViewer recipeViewers = new CommonBalmModSupportRecipeViewer();
     private final BalmModSupportMilkFluid milkFluid = new FabricModSupportMilkFluid();
 
     public FabricBalmModSupport(BalmRuntime<?> runtime) {
@@ -38,5 +41,10 @@ public class FabricBalmModSupport implements BalmModSupport {
     @Override
     public BalmModSupportHudInfo hudInfo() {
         return hudInfo;
+    }
+
+    @Override
+    public BalmModSupportRecipeViewer recipeViewers() {
+        return recipeViewers;
     }
 }

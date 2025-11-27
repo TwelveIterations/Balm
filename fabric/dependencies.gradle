@@ -12,6 +12,8 @@ dependencies {
 
     modCompileOnly "maven.modrinth:modmenu:$modmenu_version"
     // modLocalRuntime "maven.modrinth:modmenu:$modmenu_version"
+    modCompileOnly "mezz.jei:jei-1.21.10-common-api:26.1.1.25"
+    modLocalRuntime "mezz.jei:jei-1.21.10-fabric:26.1.1.25"
 
     modCompileOnly "me.shedaniel.cloth:cloth-config-fabric:19.0.147"
 

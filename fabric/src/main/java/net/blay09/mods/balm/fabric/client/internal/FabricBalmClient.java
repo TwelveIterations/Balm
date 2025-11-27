@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric.client.internal;
 
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.client.platform.internal.BalmClientSafeClientAccess;
 import net.blay09.mods.balm.fabric.client.internal.platform.runtime.internal.FabricBalmClientRuntime;
 import net.blay09.mods.balm.fabric.network.internal.FabricBalmNetworking;
 import net.blay09.mods.balm.platform.BalmEnvironment;
@@ -10,6 +11,8 @@ import net.blay09.mods.balm.network.protocol.common.custom.internal.ServerboundM
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEvent;
+import net.minecraft.world.item.crafting.RecipeMap;
 
 import java.util.HashMap;
 
@@ -28,6 +31,12 @@ public class FabricBalmClient implements ClientModInitializer {
                         .ifPresent(clientVersions -> modVersions.put(modId, clientVersions));
             }
             Balm.networking().sendToServer(new ServerboundModListMessage(modVersions));
+        });
+
+        ClientRecipeSynchronizedEvent.EVENT.register((client, synchronizedRecipes) -> {
+            if (Balm.safeClientAccess() instanceof BalmClientSafeClientAccess clientProxy) {
+                clientProxy.setSyncedRecipes(RecipeMap.create(synchronizedRecipes.recipes()));
+            }
         });
     }
 }

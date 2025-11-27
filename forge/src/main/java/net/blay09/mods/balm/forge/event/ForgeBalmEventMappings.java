@@ -4,7 +4,7 @@ import net.blay09.mods.balm.event.BalmSupplementalEvents;
 import net.blay09.mods.balm.event.EventMapper;
 import net.blay09.mods.balm.event.EventPhases;
 import net.blay09.mods.balm.event.callback.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -36,7 +36,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 public class ForgeBalmEventMappings {
-    private static final Map<ResourceLocation, Byte> PRIORITIES = Map.of(
+    private static final Map<Identifier, Byte> PRIORITIES = Map.of(
             EventPhases.LOWEST, Priority.LOWEST,
             EventPhases.LOW, Priority.LOW,
             EventPhases.DEFAULT, Priority.NORMAL,
@@ -146,7 +146,7 @@ public class ForgeBalmEventMappings {
         }));
     }
 
-    public static byte mapPriority(ResourceLocation phase) {
+    public static byte mapPriority(Identifier phase) {
         return PRIORITIES.getOrDefault(phase, Priority.NORMAL);
     }
 }

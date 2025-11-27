@@ -16,7 +16,6 @@ import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
 import net.blay09.mods.balm.fabric.platform.fluid.internal.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.platform.internal.FabricBalmPlatform;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEvent;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -31,7 +30,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,12 +60,6 @@ public class FabricBalm implements ModInitializer {
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmDataHolder) oldPlayer).balm$getFabricBalmData();
             ((BalmDataHolder) newPlayer).balm$setFabricBalmData(data);
-        });
-
-        ClientRecipeSynchronizedEvent.EVENT.register((client, synchronizedRecipes) -> {
-            if (Balm.safeClientAccess() instanceof BalmClientProxy clientProxy) {
-                clientProxy.setSyncedRecipes(RecipeMap.create(synchronizedRecipes.recipes()));
-            }
         });
 
         ItemStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
