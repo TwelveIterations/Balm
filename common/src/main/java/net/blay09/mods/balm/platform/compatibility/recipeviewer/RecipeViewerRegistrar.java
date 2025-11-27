@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.platform.compatibility.recipeviewer;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.Recipe;
@@ -18,7 +19,7 @@ public interface RecipeViewerRegistrar {
     void registerGlobalScreenOcclusion(RecipeViewerOcclusionProvider<AbstractContainerScreen<?>> provider);
 
     <T extends AbstractContainerMenu> void registerRecipeTransferHandler(Class<T> menuClass,
-                                                                         MenuType<T> menuType,
+                                                                         Holder<MenuType<T>> menuType,
                                                                          RecipeType<?> recipeType,
                                                                          int recipeSlotStart,
                                                                          int recipeSlotCount,
