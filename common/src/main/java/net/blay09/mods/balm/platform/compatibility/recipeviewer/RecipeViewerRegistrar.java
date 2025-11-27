@@ -11,4 +11,6 @@ public interface RecipeViewerRegistrar {
     <TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> RecipeViewerVanillaRecipeTypeRegistration<TRecipeInput, TRecipe> registerRecipeType(Identifier identifier, Class<TRecipe> recipeClass);
 
     <T extends AbstractContainerScreen<?>> void registerScreenOcclusion(Class<T> screenClass, RecipeViewerOcclusionProvider<T> provider);
+
+    void registerGlobalScreenOcclusion(RecipeViewerOcclusionProvider<AbstractContainerScreen<?>> provider);
 }
