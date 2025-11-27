@@ -22,6 +22,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -46,6 +48,12 @@ public class NeoForgeBalm {
 
         NeoForgeBalmWorldGen.initializeBalmBiomeModifiers(modBus);
         modBus.addListener(this::enqueueIMC);
+
+        NeoForge.EVENT_BUS.addListener(RecipesReceivedEvent.class, event -> {
+            if (Balm.safeClientAccess() instanceof BalmClientProxy clientProxy) {
+                clientProxy.setSyncedRecipes(event.getRecipeMap());
+            }
+        });
 
         NeoForgeBalmCapabilities capabilities = (NeoForgeBalmCapabilities) Balm.capabilities();
         final var nativeItemHandler = capabilities.addExistingType(Identifier.fromNamespaceAndPath("neoforge", "item_handler"),

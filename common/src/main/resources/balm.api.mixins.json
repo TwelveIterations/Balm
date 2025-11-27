@@ -13,7 +13,8 @@
     "ImageButtonAccessor",
     "KeyMappingAccessor",
     "MouseHandlerAccessor",
-    "ScreenAccessor"
+    "ScreenAccessor",
+    "RecipeManagerAccessor"
   ],
   "server": [
   ],

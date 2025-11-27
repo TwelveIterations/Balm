@@ -1,7 +1,12 @@
 package net.blay09.mods.balm.platform;
 
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.mixin.RecipeManagerAccessor;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.crafting.RecipeMap;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Optional;
 
 public class BalmSafeClientAccess {
     @Nullable
@@ -35,5 +40,14 @@ public class BalmSafeClientAccess {
 
     public boolean isAltDown() {
         return false;
+    }
+
+    public Optional<RecipeMap> getRecipeMap() {
+        final var server = Balm.platform().server();
+        if (server != null) {
+            return Optional.of(((RecipeManagerAccessor) server.getRecipeManager()).balm$getRecipeMap());
+        }
+
+        return Optional.empty();
     }
 }

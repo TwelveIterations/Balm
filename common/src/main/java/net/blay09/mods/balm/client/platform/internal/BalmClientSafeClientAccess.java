@@ -4,9 +4,16 @@ import net.blay09.mods.balm.platform.BalmSafeClientAccess;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.crafting.RecipeMap;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Optional;
+
 public class BalmClientSafeClientAccess extends BalmSafeClientAccess {
+
+    @Nullable
+    private RecipeMap syncedRecipes;
+
     @Override
     public @Nullable Player getClientPlayer() {
         return Minecraft.getInstance().player;
@@ -51,5 +58,19 @@ public class BalmClientSafeClientAccess extends BalmSafeClientAccess {
     @Override
     public boolean isAltDown() {
         return Kuma.hasAltDown();
+    }
+
+    @Override
+    public Optional<RecipeMap> getRecipeMap() {
+        final var serverRecipeMap = super.getRecipeMap();
+        if (serverRecipeMap.isPresent()) {
+            return serverRecipeMap;
+        }
+
+        return Optional.ofNullable(syncedRecipes);
+    }
+
+    public void setSyncedRecipes(@Nullable RecipeMap syncedRecipes) {
+        this.syncedRecipes = syncedRecipes;
     }
 }
