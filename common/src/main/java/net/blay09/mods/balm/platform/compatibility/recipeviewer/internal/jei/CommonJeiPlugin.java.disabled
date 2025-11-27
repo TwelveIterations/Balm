@@ -7,12 +7,14 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.CommonBalmModSupportRecipeViewer;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.ScreenOcclusionRegistration;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.List;
 
@@ -71,6 +73,22 @@ public class CommonJeiPlugin implements IModPlugin {
 
         for (final var entry : registrar.getScreenOcclusions()) {
             registerScreenOcclusion(registration, entry);
+        }
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        ensureInitialized();
+
+        for (final var entry : registrar.getSimpleTransferRegistrations()) {
+            registration.addRecipeTransferHandler(
+                    entry.menuType(),
+                    entry.menuType(),
+                    entry.recipeType(),
+                    entry.recipeSlotStart(),
+                    entry.recipeSlotCount(),
+                    entry.inventorySlotStart(),
+                    entry.inventorySlotCount());
         }
     }
 
