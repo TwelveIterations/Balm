@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
@@ -116,6 +117,15 @@ public class BalmRegistrars {
      */
     public void dataComponentTypes(Consumer<BalmDataComponentTypeRegistrar> initializer) {
         runtime.dataComponentTypes(namespace, initializer);
+    }
+
+    /**
+     * Use this to register data attachment types using the registrar provided in the consumer callback.
+     *
+     * @param initializer Callback that receives a scoped registrar for registering data attachment types.
+     */
+    public void dataAttachmentTypes(Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
+        runtime.dataAttachmentTypes(namespace, initializer);
     }
 
     /**

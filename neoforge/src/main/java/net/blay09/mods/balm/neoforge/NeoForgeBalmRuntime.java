@@ -44,6 +44,7 @@ import net.blay09.mods.balm.neoforge.item.NeoForgeBalmItems;
 import net.blay09.mods.balm.neoforge.menu.NeoForgeBalmMenus;
 import net.blay09.mods.balm.neoforge.network.NeoForgeBalmNetworking;
 import net.blay09.mods.balm.neoforge.particle.NeoForgeBalmParticles;
+import net.blay09.mods.balm.neoforge.platform.attachment.internal.NeoForgeBalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.neoforge.permission.NeoForgeBalmPermissions;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.balm.neoforge.recipe.NeoForgeBalmRecipes;
@@ -57,6 +58,7 @@ import net.blay09.mods.balm.neoforge.world.entity.npc.villager.internal.NeoForge
 import net.blay09.mods.balm.neoforge.world.inventory.internal.NeoForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.neoforge.world.item.internal.NeoForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.neoforge.world.level.block.entity.internal.NeoForgeBalmBlockEntityTypeRegistrar;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.internal.NeoForgeBalmResourceConditionRegistrar;
@@ -363,5 +365,10 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
         initializer.accept(new NeoForgeBalmResourceConditionRegistrar(namespace));
+    }
+
+    @Override
+    public void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
+        initializer.accept(new NeoForgeBalmDataAttachmentTypeRegistrar(registrar(), namespace));
     }
 }

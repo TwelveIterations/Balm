@@ -44,6 +44,7 @@ import net.blay09.mods.balm.fabric.item.FabricBalmItems;
 import net.blay09.mods.balm.fabric.menu.FabricBalmMenus;
 import net.blay09.mods.balm.fabric.network.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.particle.FabricBalmParticles;
+import net.blay09.mods.balm.fabric.platform.attachment.internal.FabricBalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.fabric.provider.FabricBalmProviders;
 import net.blay09.mods.balm.fabric.recipe.FabricBalmRecipes;
 import net.blay09.mods.balm.fabric.resources.FabricBalmResources;
@@ -58,6 +59,7 @@ import net.blay09.mods.balm.fabric.world.entity.npc.villager.internal.FabricBalm
 import net.blay09.mods.balm.fabric.world.inventory.internal.FabricBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.fabric.world.item.internal.FabricBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.fabric.world.level.block.entity.internal.FabricBalmBlockEntityTypeRegistrar;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
@@ -387,5 +389,10 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
         initializer.accept(new FabricBalmResourceConditionRegistrar(namespace));
+    }
+
+    @Override
+    public void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmDataAttachmentTypeRegistrar(namespace));
     }
 }

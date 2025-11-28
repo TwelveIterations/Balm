@@ -23,6 +23,7 @@ import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
@@ -182,6 +183,9 @@ public interface BalmModule {
     }
 
     default void registerDataComponentTypes(BalmDataComponentTypeRegistrar dataComponentTypes) {
+    }
+
+    default void registerDataAttachmentTypes(BalmDataAttachmentTypeRegistrar dataAttachmentTypes) {
     }
 
     default void registerAdditional(BalmRegistrar registrar) {

@@ -48,6 +48,7 @@ import net.blay09.mods.balm.forge.menu.ForgeBalmMenus;
 import net.blay09.mods.balm.forge.network.ForgeBalmNetworking;
 import net.blay09.mods.balm.forge.particle.ForgeBalmParticles;
 import net.blay09.mods.balm.forge.permission.ForgeBalmPermissions;
+import net.blay09.mods.balm.forge.platform.attachment.internal.ForgeBalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.balm.forge.recipe.ForgeBalmRecipes;
 import net.blay09.mods.balm.forge.resources.ForgeBalmResources;
@@ -62,6 +63,7 @@ import net.blay09.mods.balm.forge.world.entity.ForgeBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.forge.world.entity.npc.villager.internal.ForgeBalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.forge.world.inventory.ForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
@@ -341,6 +343,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     @Override
     public BalmRegistrar registrar() {
         return registrar;
+    }
+
+    @Override
+    public void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmDataAttachmentTypeRegistrar(registrar(), namespace));
     }
 
     @Override
