@@ -45,6 +45,8 @@ import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistra
 import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
 import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
+import net.blay09.mods.balm.neoforge.platform.attachment.internal.NeoForgeBalmDataAttachmentTypeRegistrar;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
@@ -172,6 +174,11 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
         initializer.accept(new NeoForgeBalmResourceConditionRegistrar(namespace));
+    }
+
+    @Override
+    public void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
+        initializer.accept(new NeoForgeBalmDataAttachmentTypeRegistrar(registrar(), namespace));
     }
 
 }

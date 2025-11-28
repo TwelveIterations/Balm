@@ -44,6 +44,8 @@ import net.blay09.mods.balm.platform.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
+import net.blay09.mods.balm.fabric.platform.attachment.internal.FabricBalmDataAttachmentTypeRegistrar;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -169,6 +171,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
     @Override
     public void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer) {
         initializer.accept(new FabricBalmResourceConditionRegistrar(namespace));
+    }
+
+    @Override
+    public void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmDataAttachmentTypeRegistrar(namespace));
     }
 
 }

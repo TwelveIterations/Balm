@@ -29,6 +29,7 @@ import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.core.Registry;
@@ -79,6 +80,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerConfig(getConfig());
 
         resourceConditions(modId, module::registerResourceConditions);
+        dataAttachmentTypes(modId, module::registerDataAttachmentTypes);
         dataComponentTypes(modId, module::registerDataComponentTypes);
         blocks(modId, module::registerBlocks);
         blockEntityTypes(modId, module::registerBlockEntityTypes);
@@ -123,6 +125,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer);
 
     void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer);
+
+    void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer);
 
     void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer);
 

@@ -10,6 +10,7 @@ import net.blay09.mods.balm.network.BalmNetworking;
 import net.blay09.mods.balm.platform.permissions.BalmPermissions;
 import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
@@ -89,6 +90,9 @@ public interface BalmModule {
     }
 
     default void registerDataComponentTypes(BalmDataComponentTypeRegistrar dataComponentTypes) {
+    }
+
+    default void registerDataAttachmentTypes(BalmDataAttachmentTypeRegistrar dataAttachmentTypes) {
     }
 
     default void registerAdditional(BalmRegistrar registrar) {
