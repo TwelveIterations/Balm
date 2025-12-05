@@ -1,32 +1,12 @@
-repositories {
-    maven {
-        url "https://maven.siphalor.de/"
-        content {
-            includeGroup "de.siphalor"
-        }
-    }
-}
-
 dependencies {
-    include modApi("net.blay09.mods:kuma-api-fabric:$kuma_version")
-
-    modCompileOnly "maven.modrinth:modmenu:$modmenu_version"
-    // modLocalRuntime "maven.modrinth:modmenu:$modmenu_version"
-    modCompileOnly "mezz.jei:jei-1.21.10-common-api:26.1.1.25"
-    modLocalRuntime "mezz.jei:jei-1.21.10-fabric:26.1.1.25"
-
-    modCompileOnly "me.shedaniel.cloth:cloth-config-fabric:19.0.147"
-
-    modCompileOnly 'teamreborn:energy:4.2.0'
-
-    modCompileOnly "curse.maven:configured-457570:6802489"
-    // runtimeOnly 'com.electronwill.night-config:core:3.8.1'
-    // runtimeOnly 'com.electronwill.night-config:toml:3.8.1'
-
-    modCompileOnly "dev.emi:trinkets:3.10.0"
-    modCompileOnly "mcp.mobius.waila:wthit:fabric-$wthit_version"
-    modCompileOnly "curse.maven:jade-324717:$jade_fabric_version"
-    //modImplementation "curse.maven:jade-324717:$jade_fabric_version"
-
-    modCompileOnly 'me.lucko:fabric-permissions-api:0.4.0'
+    include modApi(libs.kumaFabric.get())
+    modCompileOnly libs.modMenu
+    modCompileOnly libs.jeiCommon
+    modCompileOnly libs.wthitFabric
+    modCompileOnly libs.jadeFabric
+    modCompileOnly libs.trinkets
+    modCompileOnly libs.fabricPermissionsApi
+    modCompileOnly libs.rebornEnergy
+    modCompileOnly libs.clothConfigFabric
+    modCompileOnly libs.configuredFabric
 }

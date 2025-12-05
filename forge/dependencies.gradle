@@ -1,14 +1,10 @@
 dependencies {
-    api "net.blay09.mods:kuma-api-forge:$kuma_version"
+    api libs.kumaForge
     jarJar(group: "net.blay09.mods", name: "kuma-api-forge", version: kuma_version_range) {
         jarJar.pin(it, kuma_version)
         transitive = false
     }
-    compileOnly("mezz.jei:jei-$jei_minecraft_version-common-api:$jei_version")
-    if (jei_minecraft_version == minecraft_version) {
-        runtimeOnly("mezz.jei:jei-$jei_minecraft_version-forge:$jei_version")
-    }
-
-    compileOnly("top.theillusivec4.curios:curios-forge:5.11.1+1.20.1:api")
-    compileOnly fg.deobf("mcp.mobius.waila:wthit:forge-$wthit_version")
+    compileOnly jeiCommon
+    compileOnly curiosForge
+    compileOnly wthitForge
 }

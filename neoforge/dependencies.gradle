@@ -1,14 +1,18 @@
 dependencies {
-    api "net.blay09.mods:kuma-api-neoforge:$kuma_version"
+    api libs.kumaNeoForge
     jarJar("net.blay09.mods:kuma-api-neoforge") {
         version {
             strictly kuma_version_range
-            prefer kuma_version
+            prefer libs.kumaNeoForge.get().version
         }
     }
-    compileOnly "mezz.jei:jei-1.21.10-common-api:26.1.1.25"
-    compileOnly("top.theillusivec4.curios:curios-neoforge:9.2.2+1.21.1:api")
-    compileOnly("curse.maven:jade-324717:$jade_neoforge_version")
-    compileOnly("mcp.mobius.waila:wthit:neo-$wthit_version")
-    compileOnly("curse.maven:the-one-probe-245211:6106996")
+    compileOnly libs.jeiCommon
+    compileOnly(libs.curios) {
+        artifact {
+            classifier = "api"
+        }
+    }
+    compileOnly libs.jadeNeoForge
+    compileOnly libs.wthitNeoForge
+    compileOnly libs.theOneProbe
 }
