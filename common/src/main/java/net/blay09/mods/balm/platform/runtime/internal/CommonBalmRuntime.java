@@ -14,6 +14,8 @@ import net.blay09.mods.balm.platform.event.BidirectionalEventMapper;
 import net.blay09.mods.balm.platform.event.EventFactory;
 import net.blay09.mods.balm.platform.event.internal.EventMapperImpl;
 import net.blay09.mods.balm.platform.module.internal.InternalsModule;
+import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
+import net.blay09.mods.balm.world.entity.ai.village.poi.internal.BalmPoiTypeRegistrarImpl;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.internal.BalmItemRegistrarImpl;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
@@ -121,6 +123,11 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer) {
         initializer.accept(new BalmDataComponentTypeRegistrarImpl(registrar(), namespace));
+    }
+
+    @Override
+    public void poiTypes(String namespace, Consumer<BalmPoiTypeRegistrar> initializer) {
+        initializer.accept(new BalmPoiTypeRegistrarImpl(registrar(), namespace));
     }
 
     @Override

@@ -19,6 +19,7 @@ import net.blay09.mods.balm.platform.config.BalmConfig;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.fabric.server.packs.resources.internal.FabricBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.fabric.world.entity.internal.FabricBalmEntityTypeRegistrar;
+import net.blay09.mods.balm.fabric.world.entity.ai.village.poi.internal.FabricBalmPoiTypeRegistrar;
 import net.blay09.mods.balm.platform.runtime.internal.CommonBalmRuntime;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
@@ -46,6 +47,7 @@ import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistra
 import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
 import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.fabric.platform.attachment.internal.FabricBalmDataAttachmentTypeRegistrar;
+import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -144,8 +146,13 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
     }
 
     @Override
-    public void entityTypes(String namespace, java.util.function.Consumer<BalmEntityTypeRegistrar> initializer) {
+    public void entityTypes(String namespace, Consumer<BalmEntityTypeRegistrar> initializer) {
         initializer.accept(new FabricBalmEntityTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void poiTypes(String namespace, Consumer<BalmPoiTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmPoiTypeRegistrar(registrar(), namespace));
     }
 
     @Override

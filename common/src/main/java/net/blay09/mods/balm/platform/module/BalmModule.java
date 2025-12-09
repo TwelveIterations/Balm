@@ -5,6 +5,7 @@ import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.platform.config.BalmConfig;
+import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
 import net.blay09.mods.balm.network.BalmNetworking;
 import net.blay09.mods.balm.platform.permissions.BalmPermissions;
@@ -69,6 +70,9 @@ public interface BalmModule {
     }
 
     default void registerBlockEntityTypes(BalmBlockEntityTypeRegistrar blockEntityTypes) {
+    }
+
+    default void registerPoiTypes(BalmPoiTypeRegistrar poiTypes) {
     }
 
     default void registerWorldGen(BalmWorldGen worldGen) {

@@ -10,6 +10,7 @@ import net.blay09.mods.balm.platform.event.BidirectionalEventMapper;
 import net.blay09.mods.balm.platform.BalmHooks;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.platform.module.BalmModule;
@@ -88,6 +89,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         creativeModeTabs(modId, module::registerCreativeModeTabs);
         entityTypes(modId, module::registerEntityTypes);
         module.registerWorldGen(getWorldGen());
+        poiTypes(modId, module::registerPoiTypes);
         module.registerNetworking(getNetworking());
         menuTypes(modId, module::registerMenuTypes);
         module.registerCapabilities(getCapabilities());
@@ -127,6 +129,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void dataComponentTypes(String namespace, Consumer<BalmDataComponentTypeRegistrar> initializer);
 
     void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer);
+
+    void poiTypes(String namespace, Consumer<BalmPoiTypeRegistrar> initializer);
 
     void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer);
 
