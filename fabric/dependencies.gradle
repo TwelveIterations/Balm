@@ -1,5 +1,6 @@
 dependencies {
-    include modApi(libs.kumaFabric.get())
+    modApi(libs.kumaFabric)
+    include(libs.kumaFabric)
     modCompileOnly libs.modMenu
     modCompileOnly libs.jeiCommon
     modCompileOnly libs.wthitFabric
