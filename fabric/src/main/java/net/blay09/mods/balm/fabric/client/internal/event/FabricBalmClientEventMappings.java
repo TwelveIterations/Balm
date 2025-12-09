@@ -70,37 +70,37 @@ public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
                 -> ScreenEvents.afterRender(initScreen).register(mapPhase(phase), it::render)));
         ScreenCallback.KeyPress.Before.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
-                -> ScreenKeyboardEvents.allowKeyPress(initScreen).register(mapPhase(phase), it::keyPressed)));
+                -> ScreenKeyboardEvents.allowKeyPress(initScreen).register(mapPhase(phase), (screen1, event1) -> !it.keyPressed(screen1, event1))));
         ScreenCallback.KeyPress.After.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
                 -> ScreenKeyboardEvents.afterKeyPress(initScreen).register(mapPhase(phase), it::afterKeyPressed)));
         ScreenCallback.KeyRelease.Before.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
-                -> ScreenKeyboardEvents.allowKeyRelease(initScreen).register(mapPhase(phase), it::keyReleased)));
+                -> ScreenKeyboardEvents.allowKeyRelease(initScreen).register(mapPhase(phase), (screen1, event1) -> !it.keyReleased(screen1, event1))));
         ScreenCallback.KeyRelease.After.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
                 -> ScreenKeyboardEvents.afterKeyRelease(initScreen).register(mapPhase(phase), it::afterKeyReleased)));
         ScreenCallback.MousePress.Before.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
-                -> ScreenMouseEvents.allowMouseClick(initScreen).register(mapPhase(phase), it::mousePressed)));
+                -> ScreenMouseEvents.allowMouseClick(initScreen).register(mapPhase(phase), (screen1, event1) -> !it.mousePressed(screen1, event1))));
         ScreenCallback.MousePress.After.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
                 -> ScreenMouseEvents.afterMouseClick(initScreen).register(mapPhase(phase), it::afterMousePressed)));
         ScreenCallback.MouseRelease.Before.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
-                -> ScreenMouseEvents.allowMouseRelease(initScreen).register(mapPhase(phase), (screen, event) -> it.mouseReleased(screen, event.x(), event.y(), event.button()))));
+                -> ScreenMouseEvents.allowMouseRelease(initScreen).register(mapPhase(phase), (screen, event) -> !it.mouseReleased(screen, event.x(), event.y(), event.button()))));
         ScreenCallback.MouseRelease.After.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
                 -> ScreenMouseEvents.afterMouseRelease(initScreen).register(mapPhase(phase), (screen, event, consumed) -> it.afterMouseReleased(screen, event.x(), event.y(), event.button(), consumed))));
         ScreenCallback.MouseScroll.Before.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
-                -> ScreenMouseEvents.allowMouseScroll(initScreen).register(mapPhase(phase), it::mouseScrolled)));
+                -> ScreenMouseEvents.allowMouseScroll(initScreen).register(mapPhase(phase), (screen1, mouseX, mouseY, horizontalAmount1, verticalAmount1) -> !it.mouseScrolled(screen1, mouseX, mouseY, horizontalAmount1, verticalAmount1))));
         ScreenCallback.MouseScroll.After.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
                 -> ScreenMouseEvents.afterMouseScroll(initScreen).register(mapPhase(phase), it::afterMouseScrolled)));
         ScreenCallback.MouseDrag.Before.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
-                -> ScreenMouseEvents.allowMouseDrag(initScreen).register(mapPhase(phase), (screen, event, horizontalAmount, verticalAmount) -> it.mouseDragged(screen, event.x(), event.y(), event.button(), horizontalAmount, verticalAmount))));
+                -> ScreenMouseEvents.allowMouseDrag(initScreen).register(mapPhase(phase), (screen, event, horizontalAmount, verticalAmount) -> !it.mouseDragged(screen, event.x(), event.y(), event.button(), horizontalAmount, verticalAmount))));
         ScreenCallback.MouseDrag.After.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
                 -> ScreenMouseEvents.afterMouseDrag(initScreen).register(mapPhase(phase), (screen, event, horizontalAmount, verticalAmount, consumed) -> it.afterMouseDragged(screen, event.x(), event.y(), event.button(), horizontalAmount, verticalAmount, consumed))));
