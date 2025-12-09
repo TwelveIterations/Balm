@@ -70,7 +70,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         projectId != null
     }
     if (projectId) {
-        def mainFile = upload(findProperty("curseforge_project_id"), jar.archiveFile.get().asFile)
+        def mainFile = upload(findProperty("curseforge_project_id"), remapJar.archiveFile.get().asFile)
         mainFile.changelog = rootProject.file('CHANGELOG.md').text
         mainFile.addRequirement("fabric-api")
         mainFile.addGameVersion(libs.minecraft.get().version)
