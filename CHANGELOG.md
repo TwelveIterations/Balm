@@ -1,2 +1,3 @@
+- Fixed modifier checks for Kuma keybinds being inverted
 - Fixed items being deleted when trying to drop them using the keybind
 - Rebuilt with older Loom 1.13 to support older Gradle versions for the time being
