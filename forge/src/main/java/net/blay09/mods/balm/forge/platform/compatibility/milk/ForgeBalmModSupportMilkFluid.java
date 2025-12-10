@@ -1,0 +1,17 @@
+package net.blay09.mods.balm.forge.platform.compatibility.milk;
+
+import net.blay09.mods.balm.platform.compatibility.milk.BalmModSupportMilkFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.ForgeMod;
+
+public class ForgeBalmModSupportMilkFluid implements BalmModSupportMilkFluid {
+    @Override
+    public void enable() {
+        ForgeMod.enableMilkFluid();
+    }
+
+    @Override
+    public Fluid get() {
+        return ForgeMod.MILK.get();
+    }
+}
