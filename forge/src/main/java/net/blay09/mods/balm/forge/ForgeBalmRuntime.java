@@ -1,18 +1,6 @@
 package net.blay09.mods.balm.forge;
 
-import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.capability.BalmCapabilities;
-import net.blay09.mods.balm.api.command.BalmCommands;
-import net.blay09.mods.balm.api.compat.BalmModSupport;
-import net.blay09.mods.balm.api.config.BalmConfig;
-import net.blay09.mods.balm.api.event.BalmEvents;
-import net.blay09.mods.balm.api.loot.BalmLootTables;
-import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.permission.BalmPermissions;
-import net.blay09.mods.balm.api.world.BalmWorldGen;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.CommonBalmLootTables;
-import net.blay09.mods.balm.common.CommonBalmRuntime;
+import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
@@ -34,7 +22,16 @@ import net.blay09.mods.balm.forge.world.block.entity.ForgeBalmBlockEntityTypeReg
 import net.blay09.mods.balm.forge.world.entity.ForgeBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.forge.world.inventory.ForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.network.BalmNetworking;
+import net.blay09.mods.balm.platform.BalmHooks;
 import net.blay09.mods.balm.platform.BalmPlatform;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
+import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
+import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
+import net.blay09.mods.balm.platform.config.BalmConfig;
+import net.blay09.mods.balm.platform.permissions.BalmPermissions;
+import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
+import net.blay09.mods.balm.platform.runtime.internal.CommonBalmRuntime;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
@@ -42,6 +39,9 @@ import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
+import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
+import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
+import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
 import net.minecraftforge.event.AddReloadListenerEvent;
 
 import java.util.function.Consumer;
@@ -49,7 +49,6 @@ import java.util.function.Consumer;
 public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
     private final BalmWorldGen worldGen = new ForgeBalmWorldGen();
-    private final ForgeBalmEvents events = new ForgeBalmEvents();
     private final BalmNetworking networking = new ForgeBalmNetworking();
     private final BalmConfig config = new ForgeBalmConfig();
     private final BalmHooks hooks = new ForgeBalmHooks();
@@ -62,18 +61,12 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     private final BalmPlatform platform = new ForgeBalmPlatform();
 
     public ForgeBalmRuntime() {
-        ForgeBalmCommonEvents.registerEvents(events);
         ForgeBalmEventMappings.bind();
     }
 
     @Override
     public BalmConfig getConfig() {
         return config;
-    }
-
-    @Override
-    public BalmEvents getEvents() {
-        return events;
     }
 
     @Override
@@ -133,6 +126,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     }
 
     @Override
+    public void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
+        throw new UnsupportedOperationException("Data Attachments are not currently supported on Forge.");
+    }
+
+    @Override
     public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
         initializer.accept(new ForgeBalmBlockEntityTypeRegistrar(registrar(), namespace));
     }
@@ -165,11 +163,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public BalmPlatform platform() {
         return platform;
-    }
-
-    @Override
-    public BalmParticleTypeRegistrar particleTypes(String namespace) {
-        return new ForgeBalmParticleTypeRegistrar(registrar(), namespace);
     }
 
     @Override

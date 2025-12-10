@@ -1,11 +1,11 @@
 package net.blay09.mods.balm.forge.config;
 
 import com.google.common.collect.Table;
-import net.blay09.mods.balm.api.config.LoadedTableConfig;
-import net.blay09.mods.balm.api.config.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.PropertyAwareConfig;
-import net.blay09.mods.balm.api.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.api.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
+import net.blay09.mods.balm.platform.config.PropertyAwareConfig;
+import net.blay09.mods.balm.platform.config.internal.LoadedTableConfig;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 

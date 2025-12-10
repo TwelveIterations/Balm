@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.forge.capability;
 
-import net.blay09.mods.balm.api.capability.BalmCapabilities;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
-import net.blay09.mods.balm.api.fluid.FluidTank;
-import net.blay09.mods.balm.api.module.BalmModule;
+import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
+import net.blay09.mods.balm.platform.energy.EnergyStorage;
+import net.blay09.mods.balm.platform.fluid.FluidTank;
+import net.blay09.mods.balm.platform.module.BalmModule;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraftforge.common.capabilities.CapabilityManager;

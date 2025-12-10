@@ -1,17 +1,15 @@
 package net.blay09.mods.balm.forge;
 
-import net.blay09.mods.balm.api.BalmHooks;
-import net.blay09.mods.balm.api.entity.BalmEntity;
+import net.blay09.mods.balm.nbt.BalmDataHolder;
+import net.blay09.mods.balm.platform.BalmHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
@@ -26,8 +24,6 @@ import net.minecraftforge.common.util.Result;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -74,11 +70,11 @@ public class ForgeBalmHooks implements BalmHooks {
         CompoundTag balmData = persistentData.getCompoundOrEmpty("BalmData");
         if (balmData.isEmpty()) {
             // If we have no data, try to import from Fabric in case the world was migrated
-            balmData = ((BalmEntity) entity).getFabricBalmData();
+            balmData = ((BalmDataHolder) entity).balm$getFabricBalmData();
         }
         if (balmData.isEmpty()) {
             // If we still have no data, try to import from NeoForge in case the world was migrated
-            balmData = ((BalmEntity) entity).getNeoForgeBalmData();
+            balmData = ((BalmDataHolder) entity).balm$getNeoForgeBalmData();
         }
         if (!balmData.isEmpty()) {
             persistentData.put("BalmData", balmData);

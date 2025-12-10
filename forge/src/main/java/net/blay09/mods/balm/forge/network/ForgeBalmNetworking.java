@@ -1,11 +1,11 @@
 package net.blay09.mods.balm.forge.network;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.menu.BalmMenuProvider;
-import net.blay09.mods.balm.api.network.BalmNetworking;
-import net.blay09.mods.balm.api.network.ClientboundMessageRegistration;
-import net.blay09.mods.balm.api.network.MessageRegistration;
-import net.blay09.mods.balm.api.network.ServerboundMessageRegistration;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.network.BalmNetworking;
+import net.blay09.mods.balm.network.protocol.common.custom.ClientboundMessageRegistration;
+import net.blay09.mods.balm.network.protocol.common.custom.ServerboundMessageRegistration;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.MessageRegistration;
+import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -119,7 +119,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
-        if (!Balm.getProxy().isConnected()) {
+        if (!Balm.safeClientAccess().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
             return;
         }
@@ -148,7 +148,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
         SimpleChannel channel = NetworkChannels.get(type.id().getNamespace());
         channel.messageBuilder(clazz, nextDiscriminator(type.id().getNamespace()), NetworkDirection.PLAY_TO_CLIENT)
                 .codec(codec)
-                .consumerMainThread((packet, context) -> handler.accept(Balm.getProxy().getClientPlayer(), packet))
+                .consumerMainThread((packet, context) -> handler.accept(Balm.safeClientAccess().getClientPlayer(), packet))
                 .add();
     }
 

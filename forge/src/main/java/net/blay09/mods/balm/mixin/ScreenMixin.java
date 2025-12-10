@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.client.screen.ScreenInitEvent;
 import net.blay09.mods.balm.forge.client.event.ForgeBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,28 +10,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
-    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
-    private void beforeInit(Minecraft client, int width, int height, CallbackInfo ci) {
-        Balm.events().fireEvent(new ScreenInitEvent.Pre((Screen) (Object) this));
-        ForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE.invoker().handle((Screen) (Object) this);
+    @Inject(method = "init(II)V", at = @At("HEAD"))
+    private void beforeInit(int width, int height, CallbackInfo ci) {
+        ForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE.invoker().beforeInit((Screen) (Object) this);
     }
 
-    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("TAIL"))
-    private void afterInit(Minecraft client, int width, int height, CallbackInfo ci) {
-        Balm.events().fireEvent(new ScreenInitEvent.Post((Screen) (Object) this));
-        ForgeBalmSupplementalClientEvents.SCREEN_INIT_POST.invoker().handle((Screen) (Object) this);
+    @Inject(method = "init(II)V", at = @At("TAIL"))
+    private void afterInit(int width, int height, CallbackInfo ci) {
+        ForgeBalmSupplementalClientEvents.SCREEN_INIT_POST.invoker().afterInit((Screen) (Object) this);
     }
 
-    @Inject(method = "resize(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
-    private void beforeResize(Minecraft client, int width, int height, CallbackInfo ci) {
-        Balm.events().fireEvent(new ScreenInitEvent.Pre((Screen) (Object) this));
-        ForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE.invoker().handle((Screen) (Object) this);
+    @Inject(method = "resize(II)V", at = @At("HEAD"))
+    private void beforeResize(int width, int height, CallbackInfo ci) {
+        ForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE.invoker().beforeInit((Screen) (Object) this);
     }
 
-    @Inject(method = "resize(Lnet/minecraft/client/Minecraft;II)V", at = @At("TAIL"))
-    private void afterResize(Minecraft client, int width, int height, CallbackInfo ci) {
-        Balm.events().fireEvent(new ScreenInitEvent.Post((Screen) (Object) this));
-        ForgeBalmSupplementalClientEvents.SCREEN_INIT_POST.invoker().handle((Screen) (Object) this);
+    @Inject(method = "resize(II)V", at = @At("TAIL"))
+    private void afterResize(int width, int height, CallbackInfo ci) {
+        ForgeBalmSupplementalClientEvents.SCREEN_INIT_POST.invoker().afterInit((Screen) (Object) this);
     }
 
 }

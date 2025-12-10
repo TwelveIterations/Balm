@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.forge.client;
 
-import net.blay09.mods.balm.api.client.BalmClient;
+import net.blay09.mods.balm.client.BalmClient;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ForgeBalmClient {

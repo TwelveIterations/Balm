@@ -1,17 +1,19 @@
 package net.blay09.mods.balm.forge;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
-import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.CommonCapabilities;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.Balmstrap;
+import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.capability.ForgeCommonCapabilities;
 import net.blay09.mods.balm.forge.client.ForgeBalmClient;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
+import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
+import net.blay09.mods.balm.platform.energy.BalmEnergyStorageProvider;
+import net.blay09.mods.balm.platform.fluid.BalmFluidTankProvider;
+import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
+import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,7 +35,7 @@ public class ForgeBalm {
         final var modBusGroup = context.getModBusGroup();
         BalmLoadContexts.register("balm", new ForgeLoadContext(modBusGroup));
 
-        Balm.registerModule(new ForgeCommonCapabilities());
+        Balm.getRuntime().registerModule(new BalmRegistrars(Balm.getRuntime(), "balm"), new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         DeferredRegisters.register("balm", modBusGroup);
@@ -42,7 +44,7 @@ public class ForgeBalm {
         ForgeBalmWorldGen.initializeBalmBiomeModifiers(modBusGroup);
         FMLClientSetupEvent.getBus(modBusGroup).addListener(ForgeBalmClient::onInitializeClient);
 
-        final var capabilities = (ForgeBalmCapabilities) Balm.getCapabilities();
+        final var capabilities = (ForgeBalmCapabilities) Balm.capabilities();
         final var nativeItemHandler = capabilities.addExistingType(Identifier.fromNamespaceAndPath("forge", "item_handler"), IItemHandler.class, ForgeCapabilities.ITEM_HANDLER);
         final var nativeFluidHandler = capabilities.addExistingType(Identifier.fromNamespaceAndPath("forge", "fluid_handler"), IFluidHandler.class, ForgeCapabilities.FLUID_HANDLER);
         final var nativeEnergyStorage = capabilities.addExistingType(Identifier.fromNamespaceAndPath("forge", "energy_storage"), IEnergyStorage.class, ForgeCapabilities.ENERGY);
@@ -65,7 +67,7 @@ public class ForgeBalm {
                             }
                         } else if (blockEntity != null) {
                             running = true;
-                            final var container = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
+                            final var container = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.CONTAINER);
                             running = false;
                             if (container != null) {
                                 return new InvWrapper(container);
@@ -94,7 +96,7 @@ public class ForgeBalm {
                             }
                         } else if (blockEntity != null) {
                             running = true;
-                            final var fluidTank = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.FLUID_TANK);
+                            final var fluidTank = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.FLUID_TANK);
                             running = false;
                             if (fluidTank != null) {
                                 return new ForgeFluidTank(fluidTank);
@@ -123,7 +125,7 @@ public class ForgeBalm {
                             }
                         } else if (blockEntity != null) {
                             running = true;
-                            final var energyStorage = Balm.getCapabilities().getCapability(blockEntity, direction, CommonCapabilities.ENERGY_STORAGE);
+                            final var energyStorage = Balm.capabilities().getCapability(blockEntity, direction, CommonCapabilities.ENERGY_STORAGE);
                             running = false;
                             if (energyStorage != null) {
                                 return new ForgeEnergyStorage(energyStorage);

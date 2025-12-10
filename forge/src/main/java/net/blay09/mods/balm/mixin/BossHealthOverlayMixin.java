@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.client.GuiDrawEvent;
 import net.blay09.mods.balm.forge.client.event.ForgeBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,23 +20,14 @@ public class BossHealthOverlayMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
     public void renderPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.BOSS_INFO);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
+        if (!ForgeBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
-        } else {
-            if (ForgeBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_PRE.invoker()
-                    .handle(guiGraphics, minecraft.getWindow())
-                    .shouldSkipDefault()) {
-                callbackInfo.cancel();
-            }
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        Balm.events().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.BOSS_INFO));
-        ForgeBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_POST.invoker().handle(guiGraphics, minecraft.getWindow());
+        ForgeBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 
 }

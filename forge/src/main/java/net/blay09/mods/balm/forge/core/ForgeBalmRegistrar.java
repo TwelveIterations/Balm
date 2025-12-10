@@ -9,14 +9,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ForgeBalmRegistrar implements BalmRegistrar {
 
     @Override
     public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
-        final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.location().getNamespace());
-        deferredRegister.register(resourceKey.location().getPath(), () -> resourceFunction.apply(resourceKey.location()));
+        final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.identifier().getNamespace());
+        deferredRegister.register(resourceKey.identifier().getPath(), () -> resourceFunction.apply(resourceKey.identifier()));
         return new DeferredHolder<>(resourceKey);
     }
 

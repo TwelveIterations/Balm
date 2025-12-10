@@ -1,22 +1,16 @@
 package net.blay09.mods.balm.forge.client;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.client.rendering.BalmModels;
-import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
+import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.LegacyNamespaceResolver;
-import net.blay09.mods.balm.common.NamespaceResolver;
-import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.color.block.ForgeBalmBlockColorRegistrar;
@@ -28,17 +22,10 @@ import net.blay09.mods.balm.forge.client.renderer.block.model.ForgeBalmBlockStat
 import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.chunk.ForgeBalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.entity.ForgeBalmEntityRendererRegistrar;
-import net.blay09.mods.balm.forge.event.ForgeBalmClientEvents;
-import net.blay09.mods.balm.forge.event.ForgeBalmEventMappings;
-import net.blay09.mods.balm.forge.event.ForgeBalmEvents;
 import net.blay09.mods.balm.forge.server.packs.resources.ForgeBalmClientResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.function.Consumer;
@@ -46,7 +33,6 @@ import java.util.function.Consumer;
 public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadContext> {
 
     public ForgeBalmClientRuntime() {
-        ForgeBalmClientEvents.registerEvents(((ForgeBalmEvents) Balm.events()));
         ForgeBalmClientEventMappings.bind();
     }
 
@@ -57,13 +43,6 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
         initializer.accept(new BalmClientRegistrars(this, modId));
 
         ModBusEventRegisters.register(modId, context.modBusGroup());
-    }
-
-    @Override
-    public void addResourceReloadListener(Identifier identifier, PreparableReloadListener reloadListener) {
-        if (Minecraft.getInstance().getResourceManager() instanceof ReloadableResourceManager reloadableResourceManager) {
-            reloadableResourceManager.registerReloadListener(reloadListener);
-        }
     }
 
     @Override

@@ -1,11 +1,10 @@
 package net.blay09.mods.balm.forge.client.event;
 
-import net.blay09.mods.balm.client.event.callback.ClientLifecycleCallback;
-import net.blay09.mods.balm.client.event.callback.RenderCallback;
-import net.blay09.mods.balm.client.event.callback.ScreenCallback;
-import net.blay09.mods.balm.event.Event;
-import net.blay09.mods.balm.event.EventFactory;
-import net.blay09.mods.balm.event.EventHandling;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.RenderCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ScreenCallback;
+import net.blay09.mods.balm.platform.event.Event;
+import net.blay09.mods.balm.platform.event.EventFactory;
 
 public class ForgeBalmSupplementalClientEvents {
     public static final Event<ClientLifecycleCallback.Started> CLIENT_STARTED = EventFactory.createArrayBacked(ClientLifecycleCallback.Started.class, (listeners) -> (client) -> {
@@ -14,125 +13,90 @@ public class ForgeBalmSupplementalClientEvents {
         }
     });
 
-    public static final Event<ScreenCallback.Init> SCREEN_INIT_PRE = EventFactory.createArrayBacked(ScreenCallback.Init.class, (listeners) -> (screen) -> {
+    public static final Event<ScreenCallback.Init.Before> SCREEN_INIT_PRE = EventFactory.createArrayBacked(ScreenCallback.Init.Before.class, (listeners) -> (screen) -> {
         for (final var listener : listeners) {
-            listener.handle(screen);
+            listener.beforeInit(screen);
         }
     });
 
-    public static final Event<ScreenCallback.Init> SCREEN_INIT_POST = EventFactory.createArrayBacked(ScreenCallback.Init.class, (listeners) -> (screen) -> {
+    public static final Event<ScreenCallback.Init.After> SCREEN_INIT_POST = EventFactory.createArrayBacked(ScreenCallback.Init.After.class, (listeners) -> (screen) -> {
         for (final var listener : listeners) {
-            listener.handle(screen);
+            listener.afterInit(screen);
         }
     });
 
-    public static final Event<RenderCallback.Gui.BossInfo> RENDER_GUI_BOSS_INFO_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.BossInfo.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
+            if (!listener.shouldRender(guiGraphics, window)) {
+                return false;
             }
         }
-        return handling;
+        return true;
     });
 
-    public static final Event<RenderCallback.Gui.BossInfo> RENDER_GUI_BOSS_INFO_POST = EventFactory.createArrayBacked(RenderCallback.Gui.BossInfo.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
+            listener.afterRender(guiGraphics, window);
         }
-        return handling;
     });
 
-    public static final Event<RenderCallback.Gui.Chat> RENDER_GUI_CHAT_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Chat.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_HEALTH_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
+            if (!listener.shouldRender(guiGraphics, window)) {
+                return false;
             }
         }
-        return handling;
+        return true;
     });
 
-    public static final Event<RenderCallback.Gui.Chat> RENDER_GUI_CHAT_POST = EventFactory.createArrayBacked(RenderCallback.Gui.Chat.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_HEALTH_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
+            listener.afterRender(guiGraphics, window);
         }
-        return handling;
     });
 
-    public static final Event<RenderCallback.Gui.PlayerList> RENDER_GUI_PLAYER_LIST_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.PlayerList.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_CHAT_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
+            if (!listener.shouldRender(guiGraphics, window)) {
+                return false;
             }
         }
-        return handling;
+        return true;
     });
 
-    public static final Event<RenderCallback.Gui.PlayerList> RENDER_GUI_PLAYER_LIST_POST = EventFactory.createArrayBacked(RenderCallback.Gui.PlayerList.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_CHAT_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
+            listener.afterRender(guiGraphics, window);
         }
-        return handling;
     });
 
-    public static final Event<RenderCallback.Gui.Health> RENDER_GUI_HEALTH_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Health.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_BOSS_INFO_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
+            if (!listener.shouldRender(guiGraphics, window)) {
+                return false;
             }
         }
-        return handling;
+        return true;
     });
 
-    public static final Event<RenderCallback.Gui.Health> RENDER_GUI_HEALTH_POST = EventFactory.createArrayBacked(RenderCallback.Gui.Health.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_BOSS_INFO_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
+            listener.afterRender(guiGraphics, window);
         }
-        return handling;
     });
 
-    public static final Event<RenderCallback.Gui> RENDER_GUI_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.Before> RENDER_GUI_PLAYER_LIST_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
+            if (!listener.shouldRender(guiGraphics, window)) {
+                return false;
             }
         }
-        return handling;
+        return true;
     });
 
-    public static final Event<RenderCallback.Gui> RENDER_GUI_POST = EventFactory.createArrayBacked(RenderCallback.Gui.class, (listeners) -> (guiGraphics, window) -> {
-        var handling = EventHandling.RESUME;
+    public static final Event<RenderCallback.Gui.After> RENDER_GUI_PLAYER_LIST_POST = EventFactory.createArrayBacked(RenderCallback.Gui.After.class, (listeners) -> (guiGraphics, window) -> {
         for (final var listener : listeners) {
-            handling = handling.merge(listener.handle(guiGraphics, window));
-            if (handling.shouldSkipListeners()) {
-                break;
-            }
+            listener.afterRender(guiGraphics, window);
         }
-        return handling;
     });
 }

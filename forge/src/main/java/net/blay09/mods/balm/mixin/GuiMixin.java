@@ -1,7 +1,5 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.client.GuiDrawEvent;
 import net.blay09.mods.balm.forge.client.event.ForgeBalmSupplementalClientEvents;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -23,43 +21,25 @@ public class GuiMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V", at = @At("HEAD"), cancellable = true)
     public void renderAllPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo callbackInfo) {
-        GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.ALL);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
+        if (!ForgeBalmSupplementalClientEvents.RENDER_GUI_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
-        } else {
-            if (ForgeBalmSupplementalClientEvents.RENDER_GUI_PRE.invoker()
-                    .handle(guiGraphics, minecraft.getWindow())
-                    .shouldSkipDefault()) {
-                callbackInfo.cancel();
-            }
         }
     }
 
     @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V", at = @At("TAIL"))
     public void renderAllPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo callbackInfo) {
-        Balm.events().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.ALL));
-        ForgeBalmSupplementalClientEvents.RENDER_GUI_POST.invoker().handle(guiGraphics, minecraft.getWindow());
+        ForgeBalmSupplementalClientEvents.RENDER_GUI_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 
     @Inject(method = "renderPlayerHealth(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
     public void renderPlayerHealthPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        GuiDrawEvent.Pre event = new GuiDrawEvent.Pre(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.HEALTH);
-        Balm.events().fireEvent(event);
-        if (event.isCanceled()) {
+        if (!ForgeBalmSupplementalClientEvents.RENDER_GUI_HEALTH_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
-        } else {
-            if (ForgeBalmSupplementalClientEvents.RENDER_GUI_HEALTH_PRE.invoker()
-                    .handle(guiGraphics, minecraft.getWindow())
-                    .shouldSkipDefault()) {
-                callbackInfo.cancel();
-            }
         }
     }
 
     @Inject(method = "renderPlayerHealth(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
     public void renderPlayerHealthPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
-        Balm.events().fireEvent(new GuiDrawEvent.Post(minecraft.getWindow(), guiGraphics, GuiDrawEvent.Element.HEALTH));
-        ForgeBalmSupplementalClientEvents.RENDER_GUI_HEALTH_POST.invoker().handle(guiGraphics, minecraft.getWindow());
+        ForgeBalmSupplementalClientEvents.RENDER_GUI_HEALTH_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 }

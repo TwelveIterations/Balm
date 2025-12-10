@@ -1,12 +1,12 @@
 package net.blay09.mods.balm.forge.loader;
 
-import net.blay09.mods.balm.api.BalmEnvironment;
-import net.blay09.mods.balm.api.proxy.LoaderPlatforms;
-import net.blay09.mods.balm.api.resources.ModResource;
-import net.blay09.mods.balm.api.resources.ModResourceVisitor;
-import net.blay09.mods.balm.api.resources.PathModResource;
+import net.blay09.mods.balm.platform.BalmEnvironment;
 import net.blay09.mods.balm.platform.BalmPlatform;
+import net.blay09.mods.balm.platform.LoaderPlatforms;
 import net.blay09.mods.balm.platform.ModInfo;
+import net.blay09.mods.balm.platform.resources.ModResource;
+import net.blay09.mods.balm.platform.resources.ModResourceVisitor;
+import net.blay09.mods.balm.platform.resources.internal.PathModResource;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.ModList;
@@ -24,11 +24,6 @@ public class ForgeBalmPlatform implements BalmPlatform {
     @Override
     public boolean isModLoaded(String modId) {
         return ModList.get().isLoaded(modId);
-    }
-
-    @Override
-    public String getModName(String modId) {
-        return ModList.get().getModContainerById(modId).map(it -> it.getModInfo().getDisplayName()).orElse(modId);
     }
 
     @Override

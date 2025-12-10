@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.mixin;
 
-import net.blay09.mods.balm.api.entity.BalmEntity;
+import net.blay09.mods.balm.nbt.BalmDataHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.ValueInput;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public class EntityMixin implements BalmEntity {
+public class EntityMixin implements BalmDataHolder {
 
     private CompoundTag fabricBalmData = new CompoundTag();
     private CompoundTag neoforgeBalmData = new CompoundTag();
@@ -25,32 +25,32 @@ public class EntityMixin implements BalmEntity {
     }
 
     @Override
-    public CompoundTag getFabricBalmData() {
+    public CompoundTag balm$getFabricBalmData() {
         return fabricBalmData;
     }
 
     @Override
-    public void setFabricBalmData(CompoundTag tag) {
+    public void balm$setFabricBalmData(CompoundTag tag) {
         this.fabricBalmData = tag;
     }
 
     @Override
-    public CompoundTag getForgeBalmData() {
+    public CompoundTag balm$getForgeBalmData() {
         throw new UnsupportedOperationException("This method should not have been called. Report this issue to Balm.");
     }
 
     @Override
-    public void setForgeBalmData(CompoundTag tag) {
+    public void balm$setForgeBalmData(CompoundTag tag) {
         throw new UnsupportedOperationException("This method should not have been called. Report this issue to Balm.");
     }
 
     @Override
-    public CompoundTag getNeoForgeBalmData() {
+    public CompoundTag balm$getNeoForgeBalmData() {
         return neoforgeBalmData;
     }
 
     @Override
-    public void setNeoForgeBalmData(CompoundTag tag) {
+    public void balm$setNeoForgeBalmData(CompoundTag tag) {
         this.neoforgeBalmData = tag;
     }
 }

@@ -18,12 +18,12 @@ public class ForgeBalmParticleProviderRegistrar implements BalmParticleProviderR
     }
 
     @Override
-    public <T extends ParticleOptions> void register(Holder<ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
+    public <T extends ParticleOptions> void register(Holder<? extends ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
         event.registerSpriteSet(particleType.value(), factory::apply);
     }
 
     @Override
-    public <T extends ParticleOptions> void register(Holder<ParticleType<T>> particleType, ParticleProvider<T> provider) {
+    public <T extends ParticleOptions> void register(Holder<? extends ParticleType<T>> particleType, ParticleProvider<T> provider) {
         event.registerSpriteSet(particleType.value(), spriteSet -> provider);
     }
 }

@@ -2,8 +2,8 @@ package net.blay09.mods.balm.forge.resources;
 
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
-import net.blay09.mods.balm.api.resources.BalmResourceCondition;
-import net.blay09.mods.balm.common.resources.ResourceConditionContextImpl;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceCondition;
+import net.blay09.mods.balm.server.packs.resources.internal.ResourceConditionContextImpl;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 

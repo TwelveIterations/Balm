@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.forge.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.blay09.mods.balm.api.command.BalmCommands;
+import net.blay09.mods.balm.commands.BalmCommands;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 

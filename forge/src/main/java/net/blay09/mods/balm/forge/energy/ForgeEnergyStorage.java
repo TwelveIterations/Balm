@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.forge.energy;
 
-import net.blay09.mods.balm.api.energy.EnergyStorage;
+import net.blay09.mods.balm.platform.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class ForgeEnergyStorage implements IEnergyStorage {

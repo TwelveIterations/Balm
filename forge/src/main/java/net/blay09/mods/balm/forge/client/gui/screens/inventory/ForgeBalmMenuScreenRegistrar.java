@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.forge.client.gui.screens.inventory;
 
-import net.blay09.mods.balm.api.client.screen.BalmScreenFactory;
+import net.blay09.mods.balm.client.gui.screens.BalmScreenFactory;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;

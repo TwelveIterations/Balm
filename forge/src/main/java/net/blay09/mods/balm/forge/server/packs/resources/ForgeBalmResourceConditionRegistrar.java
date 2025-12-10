@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.forge.server.packs.resources;
 
 import com.mojang.serialization.MapCodec;
-import net.blay09.mods.balm.api.resources.BalmResourceCondition;
 import net.blay09.mods.balm.forge.DeferredRegisters;
 import net.blay09.mods.balm.forge.resources.ForgeBalmResourceCondition;
+import net.blay09.mods.balm.server.packs.resources.BalmResourceCondition;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.registries.ForgeRegistries;

@@ -17,12 +17,12 @@ public class ForgeBalmEntityRendererRegistrar implements BalmEntityRendererRegis
     }
 
     @Override
-    public <T extends Entity> void register(Holder<EntityType<T>> entityTypeHolder, EntityRendererProvider<? super T> provider) {
+    public <T extends Entity> void register(Holder<? extends EntityType<? extends T>> entityTypeHolder, EntityRendererProvider<? super T> provider) {
         event.registerEntityRenderer(entityTypeHolder.value(), provider);
     }
 
     @Override
-    public <T extends Entity> void register(String name, Supplier<EntityType<T>> entityTypeSupplier, EntityRendererProvider<? super T> provider) {
+    public <T extends Entity> void register(String name, Supplier<? extends EntityType<? extends T>> entityTypeSupplier, EntityRendererProvider<? super T> provider) {
         event.registerEntityRenderer(entityTypeSupplier.get(), provider);
     }
 }

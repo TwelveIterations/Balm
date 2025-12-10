@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.forge.world;
 
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.world.BiomeModificationBuilder;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.world.level.biome.BiomeModificationBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.GenerationStep;

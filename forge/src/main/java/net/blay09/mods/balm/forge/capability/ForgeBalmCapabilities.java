@@ -2,10 +2,10 @@ package net.blay09.mods.balm.forge.capability;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import net.blay09.mods.balm.api.capability.BalmCapabilities;
-import net.blay09.mods.balm.api.capability.CapabilityType;
 import net.blay09.mods.balm.forge.ModBusEventRegister;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
+import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
+import net.blay09.mods.balm.platform.capabilities.CapabilityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -18,6 +18,7 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

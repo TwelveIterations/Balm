@@ -4,17 +4,14 @@ import com.electronwill.nightconfig.core.EnumGetMethod;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.config.MutableLoadedConfig;
-import net.blay09.mods.balm.api.config.schema.*;
-import net.blay09.mods.balm.api.event.ConfigLoadedEvent;
-import net.blay09.mods.balm.api.event.ConfigReloadedEvent;
-import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.config.AbstractBalmConfig;
-import net.blay09.mods.balm.common.config.ConfigLocalization;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
+import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
+import net.blay09.mods.balm.platform.config.internal.AbstractBalmConfig;
+import net.blay09.mods.balm.platform.config.schema.*;
+import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
+import net.blay09.mods.balm.platform.event.internal.BalmSupplementalEvents;
+import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.minecraft.resources.Identifier;
-import net.blay09.mods.balm.forge.event.ForgeBalmSupplementalEvents;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
@@ -66,7 +63,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
     public static Object mapConfigValueToNeoForge(Object value) {
         return switch (value) {
-            case identifier identifier -> identifier.toString();
+            case Identifier identifier -> identifier.toString();
             case Float floatValue -> floatValue.doubleValue();
             case Set<?> setValue -> mapConfigCollectionToNeoForge(setValue);
             case List<?> listValue -> mapConfigCollectionToNeoForge(listValue);
@@ -213,8 +210,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 setActiveConfig(schema, wrappedConfig);
 
                 fireConfigLoadHandlers(schema, wrappedConfig);
-                Balm.events().fireEvent(new ConfigLoadedEvent(schema));
-                ForgeBalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
+                BalmSupplementalEvents.CONFIG_LOADED.invoker().handle(schema);
             }
         });
         ModConfigEvent.Reloading.getBus(modBusGroup).addListener((event) -> {
@@ -230,8 +226,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
                 setLocalConfig(schema, wrappedConfig);
                 updateActiveFromLocal(schema, wrappedConfig);
 
-                Balm.events().fireEvent(new ConfigReloadedEvent(schema));
-                ForgeBalmSupplementalEvents.CONFIG_RELOADED.invoker().handle(schema);
+                BalmSupplementalEvents.CONFIG_RELOADED.invoker().handle(schema);
             }
         });
 

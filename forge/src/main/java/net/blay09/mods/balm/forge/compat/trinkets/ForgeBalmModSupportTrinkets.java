@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.forge.compat.trinkets;
 
-import net.blay09.mods.balm.api.compat.trinkets.BalmModSupportTrinkets;
+import net.blay09.mods.balm.platform.compatibility.trinkets.BalmModSupportTrinkets;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 

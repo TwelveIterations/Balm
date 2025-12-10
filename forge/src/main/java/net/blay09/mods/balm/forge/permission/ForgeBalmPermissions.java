@@ -1,9 +1,9 @@
 package net.blay09.mods.balm.forge.permission;
 
-import net.blay09.mods.balm.api.permission.PermissionContext;
-import net.blay09.mods.balm.common.permission.CommonBalmPermissions;
-import net.blay09.mods.balm.common.permission.OfflinePermissionContext;
-import net.blay09.mods.balm.common.permission.PlayerPermissionContext;
+import net.blay09.mods.balm.platform.permissions.PermissionContext;
+import net.blay09.mods.balm.platform.permissions.internal.CommonBalmPermissions;
+import net.blay09.mods.balm.platform.permissions.internal.OfflinePermissionContext;
+import net.blay09.mods.balm.platform.permissions.internal.PlayerPermissionContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
