@@ -4,6 +4,7 @@ import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
+import net.blay09.mods.balm.forge.platform.attachment.internal.ForgeBalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.forge.platform.runtime.ForgeLoadContext;
 import net.blay09.mods.balm.forge.platform.event.internal.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.core.internal.DeferredRegisters;
@@ -131,7 +132,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
 
     @Override
     public void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
-        throw new UnsupportedOperationException("Data Attachments are not currently supported on Forge.");
+        initializer.accept(new ForgeBalmDataAttachmentTypeRegistrar(registrar(), namespace));
     }
 
     @Override
