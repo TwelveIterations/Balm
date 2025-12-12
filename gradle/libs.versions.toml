@@ -42,7 +42,7 @@ theOneProbe = { module = "curse.maven:the-one-probe-245211", version = "6106996"
 
 [plugins]
 fabricLoom = { id = "fabric-loom", version = "1.13-SNAPSHOT" }
-modDevGradle = { id = "net.neoforged.moddev", version = "2.0.122" }
+modDevGradle = { id = "net.neoforged.moddev", version = "2.0.124" }
 forgeGradle = { id = "net.minecraftforge.gradle", version = "[6.0.25,6.2)" }
 mixin = { id = "org.spongepowered.mixin", version = "0.7-SNAPSHOT" }
 curseForgeGradle = { id = "net.darkhax.curseforgegradle", version = "1.1.26" }

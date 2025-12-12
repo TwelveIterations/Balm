@@ -8,7 +8,11 @@ plugins {
 }
 
 neoForge {
-    version = libs.neoForge.get().version
+    enable {
+        version = libs.neoForge.get().version
+        disableRecompilation = System.getenv("CI") == "true"
+    }
+
     // Automatically enable neoforge AccessTransformers if the file exists
     def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {
