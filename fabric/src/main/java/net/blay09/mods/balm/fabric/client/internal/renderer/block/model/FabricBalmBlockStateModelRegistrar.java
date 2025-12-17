@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.fabric.client.renderer.block.model;
+package net.blay09.mods.balm.fabric.client.internal.renderer.block.model;
 
 import net.blay09.mods.balm.client.renderer.block.model.DeferredBlockStateModel;
 import net.blay09.mods.balm.client.renderer.block.model.internal.AbstractBalmBlockStateModelRegistrar;
@@ -25,17 +25,20 @@ public class FabricBalmBlockStateModelRegistrar extends AbstractBalmBlockStateMo
         context.addModel(extraModelKey, new SimpleUnbakedExtraModel<>(identifier, (model, baker) -> {
             final var textureSlots = model.getTopTextureSlots();
             final var ambientOcclusion = model.getTopAmbientOcclusion();
-            final var quadCollection = model.bakeTopGeometry(textureSlots, baker, BlockModelRotation.X0_Y0);
+            final var quadCollection = model.bakeTopGeometry(textureSlots, baker, BlockModelRotation.IDENTITY);
             final var particleSprite = model.resolveParticleSprite(textureSlots, baker);
             return new SingleVariant(new SimpleModelWrapper(quadCollection, ambientOcclusion, particleSprite));
         }));
         return new FabricDeferredBlockStateModel(extraModelKey);
     }
 
-    public record FabricDeferredBlockStateModel(ExtraModelKey<BlockStateModel> extraModelKey) implements DeferredBlockStateModel {
+    public record FabricDeferredBlockStateModel(
+            ExtraModelKey<BlockStateModel> extraModelKey) implements DeferredBlockStateModel {
         @Override
         public BlockStateModel asBlockStateModel() {
-            return Minecraft.getInstance().getModelManager().getModel(extraModelKey);
+            final var modelManager = Minecraft.getInstance().getModelManager();
+            final var model = modelManager.getModel(extraModelKey);
+            return model != null ? model : modelManager.getMissingBlockStateModel();
         }
     }
 }
