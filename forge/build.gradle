@@ -113,7 +113,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         projectId != null
     }
     if (projectId) {
-        def mainFile = upload(findProperty("curseforge_project_id"), file("${project.buildDir}/libs/${base.archivesName}-${version}-all.jar"))
+        def mainFile = upload(findProperty("curseforge_project_id"), tasks.jarJar.archiveFile.get().asFile)
         mainFile.changelog = rootProject.file('CHANGELOG.md').text
         mainFile.addGameVersion(libs.minecraft.get().version)
         mainFile.releaseType = "release"
