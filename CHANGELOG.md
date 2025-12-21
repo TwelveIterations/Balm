@@ -1,3 +1,5 @@
+- Updated Kuma to 21.11.9
+  - Even complex key mappings in mods using Balm (e.g. Inventory Essentials) should now be remappable
 - Updated to Fabric 0.140.0+1.21.11, re-added model loading support on Fabric
 - Fixed `RenderCallback.ComputeFov` ignoring FOV Effects accesibility setting
   - This is a breaking change for mods using this event. Update Waystones and Hardcore Revival as well if you use them.
