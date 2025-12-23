@@ -1,1 +1,2 @@
 - Fixed NoSuchFileExceptions in lookupAllModPaths/lookupModPath
+- Fixed `/balm export icons` not working sometimes
