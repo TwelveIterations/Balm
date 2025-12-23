@@ -57,19 +57,6 @@ minecraft {
                 }
             }
         }
-
-        data {
-            workingDirectory file('runs/data')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            taskName "Data"
-
-            mods {
-                modDataRun {
-                    source sourceSets.main
-                }
-            }
-        }
     }
 }
 
