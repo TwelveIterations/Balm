@@ -3,8 +3,11 @@ package net.blay09.mods.balm.fabric.world;
 import net.blay09.mods.balm.api.DeferredObject;
 import net.blay09.mods.balm.api.world.BalmWorldGen;
 import net.blay09.mods.balm.api.world.BiomePredicate;
+import net.blay09.mods.balm.fabric.world.level.biome.internal.FabricBiomeModificationBuilder;
 import net.blay09.mods.balm.mixin.PoiTypesAccessor;
+import net.blay09.mods.balm.world.level.biome.BiomeModifier;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -52,5 +55,13 @@ public class FabricBalmWorldGen implements BalmWorldGen {
     public void addFeatureToBiomes(BiomePredicate biomePredicate, GenerationStep.Decoration step, ResourceLocation placedFeatureIdentifier) {
         BiomeModifications.addFeature(it -> biomePredicate.test(it.getBiomeKey().location(), it.getBiomeRegistryEntry()),
                 step, ResourceKey.create(Registries.PLACED_FEATURE, placedFeatureIdentifier));
+    }
+
+    @Override
+    public void modifyBiome(ResourceLocation id, BiomePredicate predicate, BiomeModifier modifier) {
+        BiomeModifications.create(id)
+                .add(ModificationPhase.ADDITIONS,
+                        it -> predicate.test(id, it.getBiomeRegistryEntry()),
+                        (selectionContext, modificationContext) -> modifier.modifyBiome(selectionContext.getBiomeRegistryEntry(), new FabricBiomeModificationBuilder(modificationContext)));
     }
 }
