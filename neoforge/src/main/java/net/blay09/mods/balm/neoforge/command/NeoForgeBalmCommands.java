@@ -7,12 +7,13 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class NeoForgeBalmCommands implements BalmCommands {
 
-    private final List<Consumer<CommandDispatcher<CommandSourceStack>>> commands = new ArrayList<>();
+    private final List<Consumer<CommandDispatcher<CommandSourceStack>>> commands = Collections.synchronizedList(new ArrayList<>());
 
     public NeoForgeBalmCommands() {
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {

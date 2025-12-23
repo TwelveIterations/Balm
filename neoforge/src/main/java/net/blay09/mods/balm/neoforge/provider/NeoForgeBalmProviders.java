@@ -2,6 +2,7 @@ package net.blay09.mods.balm.neoforge.provider;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import net.blay09.mods.balm.api.provider.BalmProviders;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -12,16 +13,16 @@ import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
 public class NeoForgeBalmProviders implements BalmProviders {
 
-    private final Multimap<Class<?>, BiFunction<BlockEntity, Direction, ?>> fallbackBlockCapabilities = ArrayListMultimap.create();
-    private final Map<Class<?>, BaseCapability<?, ?>> blockCapabilities = new HashMap<>();
-    private final Map<Class<?>, ItemCapability<?, ?>> itemCapabilities = new HashMap<>();
-    private final Map<Class<?>, EntityCapability<?, ?>> entityCapabilities = new HashMap<>();
+    private final Multimap<Class<?>, BiFunction<BlockEntity, Direction, ?>> fallbackBlockCapabilities = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    private final Map<Class<?>, BaseCapability<?, ?>> blockCapabilities = new ConcurrentHashMap<>();
+    private final Map<Class<?>, ItemCapability<?, ?>> itemCapabilities = new ConcurrentHashMap<>();
+    private final Map<Class<?>, EntityCapability<?, ?>> entityCapabilities = new ConcurrentHashMap<>();
 
     @Override
     public <T> T getProvider(BlockEntity blockEntity, Class<T> clazz) {

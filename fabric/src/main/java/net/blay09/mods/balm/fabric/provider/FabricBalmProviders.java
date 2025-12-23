@@ -8,12 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FabricBalmProviders implements BalmProviders {
 
-    private final Map<Class<?>, ResourceLocation> lookupIds = new HashMap<>();
+    private final Map<Class<?>, ResourceLocation> lookupIds = new ConcurrentHashMap<>();
 
     @Override
     public <T> T getProvider(BlockEntity blockEntity, Class<T> clazz) {

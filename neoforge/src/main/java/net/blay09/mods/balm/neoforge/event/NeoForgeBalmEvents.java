@@ -3,6 +3,7 @@ package net.blay09.mods.balm.neoforge.event;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.common.collect.Tables;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.event.EventPriority;
 import net.blay09.mods.balm.api.event.TickPhase;
@@ -12,17 +13,17 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class NeoForgeBalmEvents implements BalmEvents {
 
-    private final Table<Class<?>, EventPriority, Consumer<EventPriority>> eventInitializers = HashBasedTable.create();
-    private final Map<Class<?>, Consumer<?>> eventDispatchers = new HashMap<>();
-    private final Table<Class<?>, EventPriority, List<Consumer<?>>> eventHandlers = HashBasedTable.create();
-    private final Table<TickType<?>, TickPhase, Consumer<?>> tickEventInitializers = HashBasedTable.create();
+    private final Table<Class<?>, EventPriority, Consumer<EventPriority>> eventInitializers = Tables.synchronizedTable(HashBasedTable.create());
+    private final Map<Class<?>, Consumer<?>> eventDispatchers = new ConcurrentHashMap<>();
+    private final Table<Class<?>, EventPriority, List<Consumer<?>>> eventHandlers = Tables.synchronizedTable(HashBasedTable.create());
+    private final Table<TickType<?>, TickPhase, Consumer<?>> tickEventInitializers = Tables.synchronizedTable(HashBasedTable.create());
 
     public static net.neoforged.bus.api.EventPriority toForge(EventPriority priority) {
         return switch (priority) {

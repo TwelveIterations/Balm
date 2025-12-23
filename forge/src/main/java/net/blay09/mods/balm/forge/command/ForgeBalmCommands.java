@@ -7,12 +7,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ForgeBalmCommands implements BalmCommands {
 
-    private final List<Consumer<CommandDispatcher<CommandSourceStack>>> commands = new ArrayList<>();
+    private final List<Consumer<CommandDispatcher<CommandSourceStack>>> commands = Collections.synchronizedList(new ArrayList<>());
 
     public ForgeBalmCommands() {
         MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {

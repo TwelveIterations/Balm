@@ -29,12 +29,12 @@ import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NeoForgeBalmHooks implements BalmHooks {
 
-    public final Map<Item, Integer> burnTimes = new HashMap<>();
+    public final Map<Item, Integer> burnTimes = new ConcurrentHashMap<>();
 
     public NeoForgeBalmHooks() {
         NeoForge.EVENT_BUS.addListener(this::furnaceFuelBurnTime);

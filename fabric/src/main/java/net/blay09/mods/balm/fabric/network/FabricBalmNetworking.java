@@ -26,16 +26,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 public class FabricBalmNetworking implements BalmNetworking {
 
-    private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new HashMap<>();
+    private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new ConcurrentHashMap<>();
     private static PacketSender replyPacketSender;
     private final Set<String> registeredMods = Collections.synchronizedSet(new HashSet<>());
     private final Set<String> clientOnlyMods = Collections.synchronizedSet(new HashSet<>());
     private final Set<String> serverOnlyMods = Collections.synchronizedSet(new HashSet<>());
-    private final Map<String, String> networkVersions = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, String> networkVersions = new ConcurrentHashMap<>();
 
     public static void initializeClientHandlers() {
         for (final var messageRegistration : messagesByType.values()) {

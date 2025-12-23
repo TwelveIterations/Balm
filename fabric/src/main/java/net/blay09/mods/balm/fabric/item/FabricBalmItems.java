@@ -22,6 +22,7 @@ import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -29,7 +30,7 @@ public record FabricBalmItems(NamespaceResolver namespaceResolver) implements Ba
 
     private static final Set<ResourceLocation> managedCreativeTabs = Collections.synchronizedSet(new HashSet<>());
     private static final Multimap<ResourceLocation, ItemLike> creativeTabContents = Multimaps.synchronizedMultimap(ArrayListMultimap.create());
-    private static final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new HashMap<>();
+    private static final Map<ResourceLocation, Comparator<ItemLike>> creativeTabSorting = new ConcurrentHashMap<>();
 
     @Override
     public DeferredObject<Item> registerItem(Function<ResourceLocation, Item> supplier, ResourceLocation identifier, @Nullable ResourceLocation creativeTab) {

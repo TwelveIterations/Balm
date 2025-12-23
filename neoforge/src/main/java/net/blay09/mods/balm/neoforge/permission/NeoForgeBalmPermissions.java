@@ -13,13 +13,13 @@ import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
 import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class NeoForgeBalmPermissions extends CommonBalmPermissions {
 
-    private final Map<ResourceLocation, PermissionNode<?>> nodes = new HashMap<>();
+    private final Map<ResourceLocation, PermissionNode<?>> nodes = new ConcurrentHashMap<>();
 
     public NeoForgeBalmPermissions() {
         NeoForge.EVENT_BUS.addListener(this::registerNodes);

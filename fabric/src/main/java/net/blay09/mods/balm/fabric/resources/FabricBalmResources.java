@@ -7,11 +7,11 @@ import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditionType;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FabricBalmResources implements BalmResources {
-    private final Map<ResourceLocation, ResourceConditionType<?>> conditions = new HashMap<>();
+    private final Map<ResourceLocation, ResourceConditionType<?>> conditions = new ConcurrentHashMap<>();
 
     @Override
     public <T extends BalmResourceCondition> void registerResourceCondition(ResourceLocation identifier, MapCodec<T> codec) {

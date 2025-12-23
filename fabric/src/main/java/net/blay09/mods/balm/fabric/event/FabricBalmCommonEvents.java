@@ -16,15 +16,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FabricBalmCommonEvents {
 
-    private static final List<ServerPlayerTickHandler> playerTickStartHandlers = new ArrayList<>();
-    private static final List<ServerPlayerTickHandler> playerTickEndHandlers = new ArrayList<>();
-    private static final List<EntityTickHandler> entityTickStartHandlers = new ArrayList<>();
-    private static final List<EntityTickHandler> entityTickEndHandlers = new ArrayList<>();
+    private static final List<ServerPlayerTickHandler> playerTickStartHandlers = new CopyOnWriteArrayList<>();
+    private static final List<ServerPlayerTickHandler> playerTickEndHandlers = new CopyOnWriteArrayList<>();
+    private static final List<EntityTickHandler> entityTickStartHandlers = new CopyOnWriteArrayList<>();
+    private static final List<EntityTickHandler> entityTickEndHandlers = new CopyOnWriteArrayList<>();
     private static ServerTickEvents.StartTick serverTickPlayersStartListener = null;
     private static ServerTickEvents.EndTick serverTickPlayersEndListener = null;
     private static ServerTickEvents.StartTick serverTickEntitiesStartListener = null;

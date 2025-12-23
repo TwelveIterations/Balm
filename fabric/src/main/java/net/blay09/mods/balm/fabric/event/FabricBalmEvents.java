@@ -1,26 +1,23 @@
 package net.blay09.mods.balm.fabric.event;
 
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Table;
+import com.google.common.collect.*;
 import net.blay09.mods.balm.api.event.BalmEvents;
 import net.blay09.mods.balm.api.event.EventPriority;
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class FabricBalmEvents implements BalmEvents {
 
-    private final Map<Class<?>, Runnable> eventInitializers = new HashMap<>();
-    private final Map<Class<?>, Consumer<?>> eventDispatchers = new HashMap<>();
-    private final Multimap<Class<?>, Consumer<?>> eventHandlers = ArrayListMultimap.create();
-    private final Table<TickType<?>, TickPhase, Consumer<?>> tickEventInitializers = HashBasedTable.create();
+    private final Map<Class<?>, Runnable> eventInitializers = new ConcurrentHashMap<>();
+    private final Map<Class<?>, Consumer<?>> eventDispatchers = new ConcurrentHashMap<>();
+    private final Multimap<Class<?>, Consumer<?>> eventHandlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    private final Table<TickType<?>, TickPhase, Consumer<?>> tickEventInitializers = Tables.synchronizedTable(HashBasedTable.create());
 
     public void registerEvent(Class<?> eventClass, Runnable initializer) {
         registerEvent(eventClass, initializer, null);

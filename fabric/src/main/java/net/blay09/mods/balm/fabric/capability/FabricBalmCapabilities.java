@@ -12,15 +12,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class FabricBalmCapabilities implements BalmCapabilities {
 
-    private final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new HashMap<>();
+    private final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
 
     @Override
     @SuppressWarnings("unchecked")

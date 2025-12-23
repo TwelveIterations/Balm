@@ -2,6 +2,7 @@ package net.blay09.mods.balm.common.compat.hudinfo;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import net.blay09.mods.balm.api.compat.hudinfo.BalmModSupportHudInfo;
 import net.blay09.mods.balm.api.compat.hudinfo.BlockInfoProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -9,11 +10,12 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CommonBalmModSupportHudInfo implements BalmModSupportHudInfo {
 
-    private final List<BlockInfoProvider> globalBlockInfoProviders = new ArrayList<>();
-    private final Multimap<Block, BlockInfoProvider> blockInfoProviders = ArrayListMultimap.create();
+    private final List<BlockInfoProvider> globalBlockInfoProviders = new CopyOnWriteArrayList<>();
+    private final Multimap<Block, BlockInfoProvider> blockInfoProviders = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
     @Override
     public void registerGlobalBlockInfo(ResourceLocation identifier, BlockInfoProvider provider) {
