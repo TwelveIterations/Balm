@@ -7,9 +7,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -26,6 +27,8 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
     }
 
     protected abstract <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Supplier<AttributeSupplier.Builder> attributesFunction);
+
+    protected abstract <T extends Entity> void registerSpawnPlacement(Holder<EntityType<T>> entityType, SpawnPlacementType spawnPlacementType, Heightmap.Types heightmapType, Supplier<SpawnPlacements.SpawnPredicate<T>> attributesFunction);
 
     @Override
     public <T extends Entity> BalmEntityTypeRegistration<T> register(String name, Supplier<EntityType.Builder<T>> builder) {
@@ -57,6 +60,12 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
         @Override
         public BalmEntityTypeRegistration<T> withDefaultAttributes(Function<AttributeSupplier.Builder, AttributeSupplier.Builder> attributesFunction) {
             registerDefaultAttributes(holder, () -> attributesFunction.apply(AttributeSupplier.builder()));
+            return this;
+        }
+
+        @Override
+        public BalmEntityTypeRegistration<T> withSpawnPlacement(SpawnPlacementType spawnPlacementType, Heightmap.Types heightmapType, Supplier<SpawnPlacements.SpawnPredicate<T>> placement) {
+            registerSpawnPlacement(holder, spawnPlacementType, heightmapType, placement);
             return this;
         }
     }

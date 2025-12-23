@@ -4,14 +4,16 @@ import net.blay09.mods.balm.world.entity.internal.AbstractBalmEntityTypeRegistra
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.Holder;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -31,17 +33,34 @@ public class ForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegistra
         registrations.attributeSuppliers.put((Holder<EntityType<? extends LivingEntity>>) (Holder<?>) entityType, () -> attributes.get().build());
     }
 
+    @Override
+    protected <T extends Entity> void registerSpawnPlacement(Holder<EntityType<T>> entityType, SpawnPlacementType spawnPlacementType, Heightmap.Types heightmapType, Supplier<SpawnPlacements.SpawnPredicate<T>> attributesFunction) {
+        final var registrations = getActiveRegistrations();
+        registrations.spawnPlacements.add(new SpawnPlacementRegistration<>(entityType, spawnPlacementType, heightmapType, attributesFunction.get()));
+    }
+
     private Registrations getActiveRegistrations() {
         return ModBusEventRegisters.getRegistrations(namespace, Registrations.class);
     }
 
+    public record SpawnPlacementRegistration<T extends Entity>(Holder<EntityType<T>> entityType, SpawnPlacementType spawnPlacementType, Heightmap.Types heightmapType, SpawnPlacements.SpawnPredicate<? extends Entity> predicate) {
+    }
+
     public static class Registrations {
         public final Map<Holder<EntityType<? extends LivingEntity>>, Supplier<AttributeSupplier>> attributeSuppliers = new HashMap<>();
+        public final List<SpawnPlacementRegistration<? extends Entity>> spawnPlacements = new ArrayList<>();
 
         @SubscribeEvent
         public void registerAttributes(EntityAttributeCreationEvent event) {
             for (final var entry : attributeSuppliers.entrySet()) {
                 event.put(entry.getKey().value(), entry.getValue().get());
+            }
+        }
+
+        @SubscribeEvent
+        public void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
+            for (final var entry : spawnPlacements) {
+                event.register((EntityType<Mob>) entry.entityType.value(), entry.spawnPlacementType, entry.heightmapType, (SpawnPlacements.SpawnPredicate<Mob>) entry.predicate, SpawnPlacementRegisterEvent.Operation.REPLACE);
             }
         }
     }
