@@ -2,6 +2,7 @@ package net.blay09.mods.balm.common.config;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.config.LoadedConfig;
@@ -23,7 +24,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     private final Map<ResourceLocation, LoadedConfig> activeConfigs = new ConcurrentHashMap<>();
 
     private final Map<ResourceLocation, Object> activeReflectionConfigs = new ConcurrentHashMap<>();
-    private final Multimap<ResourceLocation, Consumer<MutableLoadedConfig>> configLoadHandlers = ArrayListMultimap.create();
+    private final Multimap<ResourceLocation, Consumer<MutableLoadedConfig>> configLoadHandlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
     @Override
     public void registerConfig(BalmConfigSchema schema) {
