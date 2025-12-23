@@ -23,13 +23,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class ForgeBalmWorldGen implements BalmWorldGen {
 
     public static final Codec<BalmBiomeModifier> BALM_BIOME_MODIFIER_CODEC = Codec.unit(BalmBiomeModifier.INSTANCE);
-    private static final List<BiomeModification> biomeModifications = new ArrayList<>();
+    private static final List<BiomeModification> biomeModifications = Collections.synchronizedList(new ArrayList<>());
 
     public ForgeBalmWorldGen() {
         MinecraftForge.EVENT_BUS.register(this);

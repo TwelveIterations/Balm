@@ -18,11 +18,12 @@ import net.minecraft.world.InteractionResultHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FabricBalmCommonEvents {
 
-    private static final List<ServerPlayerTickHandler> playerTickStartHandlers = new ArrayList<>();
-    private static final List<ServerPlayerTickHandler> playerTickEndHandlers = new ArrayList<>();
+    private static final List<ServerPlayerTickHandler> playerTickStartHandlers = new CopyOnWriteArrayList<>();
+    private static final List<ServerPlayerTickHandler> playerTickEndHandlers = new CopyOnWriteArrayList<>();
     private static ServerTickEvents.StartTick serverTickStartListener = null;
     private static ServerTickEvents.EndTick serverTickEndListener = null;
 

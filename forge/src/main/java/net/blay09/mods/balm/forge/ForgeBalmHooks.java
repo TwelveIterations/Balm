@@ -34,12 +34,12 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ForgeBalmHooks implements BalmHooks {
 
-    public final Map<Item, Integer> burnTimes = new HashMap<>();
+    public final Map<Item, Integer> burnTimes = new ConcurrentHashMap<>();
 
     public ForgeBalmHooks() {
         MinecraftForge.EVENT_BUS.addListener(this::furnaceFuelBurnTime);

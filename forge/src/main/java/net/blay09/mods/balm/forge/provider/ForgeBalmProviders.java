@@ -9,12 +9,12 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ForgeBalmProviders implements BalmProviders {
 
-    private final Map<Class<?>, Capability<?>> capabilities = new HashMap<>();
+    private final Map<Class<?>, Capability<?>> capabilities = new ConcurrentHashMap<>();
 
     @Override
     public <T> T getProvider(BlockEntity blockEntity, Class<T> clazz) {

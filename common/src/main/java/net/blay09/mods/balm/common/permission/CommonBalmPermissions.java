@@ -6,13 +6,13 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class CommonBalmPermissions implements BalmPermissions {
 
-    private final Map<ResourceLocation, Function<PermissionContext, Boolean>> resolvers = new HashMap<>();
+    private final Map<ResourceLocation, Function<PermissionContext, Boolean>> resolvers = new ConcurrentHashMap<>();
 
     @Override
     public void registerPermission(ResourceLocation permission, Function<PermissionContext, Boolean> defaultResolver) {

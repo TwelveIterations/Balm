@@ -22,27 +22,28 @@ import net.minecraft.client.gui.screens.Screen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 public class FabricBalmClientEvents {
 
-    private static final List<Consumer<Screen>> screenDrawPreInitializers = new ArrayList<>();
-    private static final List<Consumer<Screen>> screenDrawPostInitializers = new ArrayList<>();
+    private static final List<Consumer<Screen>> screenDrawPreInitializers = new CopyOnWriteArrayList<>();
+    private static final List<Consumer<Screen>> screenDrawPostInitializers = new CopyOnWriteArrayList<>();
 
-    private static final List<Consumer<Screen>> screenMousePressPreInitializers = new ArrayList<>();
-    private static final List<Consumer<Screen>> screenMousePressPostInitializers = new ArrayList<>();
+    private static final List<Consumer<Screen>> screenMousePressPreInitializers = new CopyOnWriteArrayList<>();
+    private static final List<Consumer<Screen>> screenMousePressPostInitializers = new CopyOnWriteArrayList<>();
 
-    private static final List<Consumer<Screen>> screenMouseReleasePreInitializers = new ArrayList<>();
-    private static final List<Consumer<Screen>> screenMouseReleasePostInitializers = new ArrayList<>();
+    private static final List<Consumer<Screen>> screenMouseReleasePreInitializers = new CopyOnWriteArrayList<>();
+    private static final List<Consumer<Screen>> screenMouseReleasePostInitializers = new CopyOnWriteArrayList<>();
 
-    private static final List<Consumer<Screen>> screenMouseClickPreInitializers = new ArrayList<>();
-    private static final List<Consumer<Screen>> screenMouseClickPostInitializers = new ArrayList<>();
+    private static final List<Consumer<Screen>> screenMouseClickPreInitializers = new CopyOnWriteArrayList<>();
+    private static final List<Consumer<Screen>> screenMouseClickPostInitializers = new CopyOnWriteArrayList<>();
 
-    private static final List<Consumer<Screen>> screenKeyPressPreInitializers = new ArrayList<>();
-    private static final List<Consumer<Screen>> screenKeyPressPostInitializers = new ArrayList<>();
+    private static final List<Consumer<Screen>> screenKeyPressPreInitializers = new CopyOnWriteArrayList<>();
+    private static final List<Consumer<Screen>> screenKeyPressPostInitializers = new CopyOnWriteArrayList<>();
 
-    private static final List<Consumer<Screen>> screenKeyReleasePreInitializers = new ArrayList<>();
-    private static final List<Consumer<Screen>> screenKeyReleasePostInitializers = new ArrayList<>();
+    private static final List<Consumer<Screen>> screenKeyReleasePreInitializers = new CopyOnWriteArrayList<>();
+    private static final List<Consumer<Screen>> screenKeyReleasePostInitializers = new CopyOnWriteArrayList<>();
 
     private static ScreenEvents.BeforeInit beforeInitListener = null;
 

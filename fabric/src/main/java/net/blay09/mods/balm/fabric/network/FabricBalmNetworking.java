@@ -25,15 +25,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class FabricBalmNetworking implements BalmNetworking {
 
-    private static final Map<Class<?>, MessageRegistration<?>> messagesByClass = new HashMap<>();
-    private static final Map<ResourceLocation, MessageRegistration<?>> messagesByIdentifier = new HashMap<>();
+    private static final Map<Class<?>, MessageRegistration<?>> messagesByClass = new ConcurrentHashMap<>();
+    private static final Map<ResourceLocation, MessageRegistration<?>> messagesByIdentifier = new ConcurrentHashMap<>();
 
-    private static final List<ClientboundMessageRegistration<?>> clientMessageRegistrations = new ArrayList<>();
+    private static final List<ClientboundMessageRegistration<?>> clientMessageRegistrations = new CopyOnWriteArrayList<>();
     private static Player replyPlayer;
     private final Set<String> registeredMods = Collections.synchronizedSet(new HashSet<>());
     private final Set<String> clientOnlyMods = Collections.synchronizedSet(new HashSet<>());
