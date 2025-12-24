@@ -12,17 +12,16 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 public class ForgeBalmEvents implements BalmEvents {
 
     private final Table<Class<?>, EventPriority, Consumer<EventPriority>> eventInitializers = Tables.synchronizedTable(HashBasedTable.create());
     private final Map<Class<?>, Consumer<?>> eventDispatchers = new ConcurrentHashMap<>();
-    private final Table<Class<?>, EventPriority, List<Consumer<?>>> eventHandlers = Tables.synchronizedTable(HashBasedTable.create());
+    private final Table<Class<?>, EventPriority, CopyOnWriteArrayList<Consumer<?>>> eventHandlers = Tables.synchronizedTable(HashBasedTable.create());
     private final Table<TickType<?>, TickPhase, Consumer<?>> tickEventInitializers = Tables.synchronizedTable(HashBasedTable.create());
 
     public static net.minecraftforge.eventbus.api.EventPriority toForge(EventPriority priority) {
@@ -50,7 +49,7 @@ public class ForgeBalmEvents implements BalmEvents {
     }
 
     public <T> void fireEventHandlers(EventPriority priority, T event) {
-        List<Consumer<?>> handlers = eventHandlers.get(event.getClass(), priority);
+        CopyOnWriteArrayList<Consumer<?>> handlers = eventHandlers.get(event.getClass(), priority);
         if (handlers != null) {
             handlers.forEach(handler -> fireEventHandler(handler, event));
         }
@@ -68,12 +67,14 @@ public class ForgeBalmEvents implements BalmEvents {
             initializer.accept(priority);
         }
 
-        List<Consumer<?>> consumers = eventHandlers.get(eventClass, priority);
-        if (consumers == null) {
-            consumers = new ArrayList<>();
-            eventHandlers.put(eventClass, priority, consumers);
+        synchronized (eventHandlers) {
+            CopyOnWriteArrayList<Consumer<?>> consumers = eventHandlers.get(eventClass, priority);
+            if (consumers == null) {
+                consumers = new CopyOnWriteArrayList<>();
+                eventHandlers.put(eventClass, priority, consumers);
+            }
+            consumers.add(handler);
         }
-        consumers.add(handler);
     }
 
     @Override
@@ -97,7 +98,9 @@ public class ForgeBalmEvents implements BalmEvents {
     @SuppressWarnings("unchecked")
     public <T> void onTickEvent(TickType<T> type, TickPhase phase, T handler) {
         Consumer<T> initializer = (Consumer<T>) tickEventInitializers.get(type, phase);
-        initializer.accept(handler);
+        if (initializer != null) {
+            initializer.accept(handler);
+        }
     }
 
     public <T> void registerTickEvent(TickType<?> type, TickPhase phase, Consumer<T> initializer) {

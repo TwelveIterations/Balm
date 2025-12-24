@@ -10,13 +10,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 public class FabricBalmEvents implements BalmEvents {
 
     private final Map<Class<?>, Runnable> eventInitializers = new ConcurrentHashMap<>();
     private final Map<Class<?>, Consumer<?>> eventDispatchers = new ConcurrentHashMap<>();
-    private final Multimap<Class<?>, Consumer<?>> eventHandlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    private final ListMultimap<Class<?>, Consumer<?>> eventHandlers = Multimaps.newListMultimap(new ConcurrentHashMap<>(), CopyOnWriteArrayList::new);
     private final Table<TickType<?>, TickPhase, Consumer<?>> tickEventInitializers = Tables.synchronizedTable(HashBasedTable.create());
 
     public void registerEvent(Class<?> eventClass, Runnable initializer) {
@@ -64,7 +65,9 @@ public class FabricBalmEvents implements BalmEvents {
     @SuppressWarnings("unchecked")
     public <T> void onTickEvent(TickType<T> type, TickPhase phase, T handler) {
         Consumer<T> initializer = (Consumer<T>) tickEventInitializers.get(type, phase);
-        initializer.accept(handler);
+        if (initializer != null) {
+            initializer.accept(handler);
+        }
     }
 
     public <T> void registerTickEvent(TickType<?> type, TickPhase phase, Consumer<T> initializer) {
