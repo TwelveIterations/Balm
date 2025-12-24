@@ -8,11 +8,12 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class CommonBalmPermissions implements BalmPermissions {
 
-    private final Map<Identifier, Function<PermissionContext, Boolean>> resolvers = new HashMap<>();
+    private final Map<Identifier, Function<PermissionContext, Boolean>> resolvers = new ConcurrentHashMap<>();
 
     @Override
     public void registerPermission(Identifier permission, Function<PermissionContext, Boolean> defaultResolver) {

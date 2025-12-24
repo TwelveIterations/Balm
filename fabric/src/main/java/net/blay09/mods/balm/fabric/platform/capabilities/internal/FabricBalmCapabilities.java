@@ -15,12 +15,13 @@ import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class FabricBalmCapabilities implements BalmCapabilities {
 
-    private final Map<Identifier, CapabilityType<?, ?, ?>> types = new HashMap<>();
+    private final Map<Identifier, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
 
     @Override
     @SuppressWarnings("unchecked")

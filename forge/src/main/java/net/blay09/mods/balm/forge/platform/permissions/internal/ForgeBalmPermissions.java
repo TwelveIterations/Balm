@@ -14,11 +14,12 @@ import net.minecraftforge.server.permission.nodes.PermissionTypes;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class ForgeBalmPermissions extends CommonBalmPermissions {
 
-    private final Map<Identifier, PermissionNode<?>> nodes = new HashMap<>();
+    private final Map<Identifier, PermissionNode<?>> nodes = new ConcurrentHashMap<>();
 
     public ForgeBalmPermissions() {
         PermissionGatherEvent.Nodes.BUS.addListener(this::registerNodes);

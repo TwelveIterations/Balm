@@ -6,9 +6,10 @@ import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CommonBalmLootTables implements BalmLootTables {
-    public final Map<Identifier, BalmLootModifier> lootModifiers = new HashMap<>();
+    public final Map<Identifier, BalmLootModifier> lootModifiers = new ConcurrentHashMap<>();
 
     @Override
     public void registerLootModifier(Identifier identifier, BalmLootModifier modifier) {

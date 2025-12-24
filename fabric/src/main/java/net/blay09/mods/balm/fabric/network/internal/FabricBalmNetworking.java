@@ -33,13 +33,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 public class FabricBalmNetworking implements BalmNetworking {
 
     private static final Logger logger = LoggerFactory.getLogger(FabricBalmNetworking.class);
 
-    private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new HashMap<>();
+    private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new ConcurrentHashMap<>();
     @Nullable
     private static PacketSender replyPacketSender;
     private final Set<String> registeredMods = Collections.synchronizedSet(new HashSet<>());

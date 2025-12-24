@@ -6,12 +6,13 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class FabricBalmCommands implements BalmCommands {
 
-    private final List<Consumer<CommandDispatcher<CommandSourceStack>>> commands = new ArrayList<>();
+    private final List<Consumer<CommandDispatcher<CommandSourceStack>>> commands = Collections.synchronizedList(new ArrayList<>());
 
     public FabricBalmCommands() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> commands.forEach(it -> it.accept(dispatcher)));
