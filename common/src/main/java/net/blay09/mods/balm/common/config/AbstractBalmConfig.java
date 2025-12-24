@@ -2,7 +2,6 @@ package net.blay09.mods.balm.common.config;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.config.BalmConfig;
 import net.blay09.mods.balm.api.config.LoadedConfig;
@@ -24,7 +23,7 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     private final Map<ResourceLocation, LoadedConfig> activeConfigs = new ConcurrentHashMap<>();
 
     private final Map<ResourceLocation, Object> activeReflectionConfigs = new ConcurrentHashMap<>();
-    private final Multimap<ResourceLocation, Consumer<MutableLoadedConfig>> configLoadHandlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    private final Multimap<ResourceLocation, Consumer<MutableLoadedConfig>> configLoadHandlers = ArrayListMultimap.create();
 
     @Override
     public void registerConfig(BalmConfigSchema schema) {
@@ -121,11 +120,15 @@ public abstract class AbstractBalmConfig implements BalmConfig {
         if (loaded != null) {
             handler.accept(loaded);
         } else {
-            configLoadHandlers.put(schema.identifier(), handler);
+            synchronized (configLoadHandlers) {
+                configLoadHandlers.put(schema.identifier(), handler);
+            }
         }
     }
 
     protected void fireConfigLoadHandlers(BalmConfigSchema schema, MutableLoadedConfig config) {
-        configLoadHandlers.get(schema.identifier()).forEach(handler -> handler.accept(config));
+        synchronized (configLoadHandlers) {
+            configLoadHandlers.get(schema.identifier()).forEach(handler -> handler.accept(config));
+        }
     }
 }
