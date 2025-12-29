@@ -1,0 +1,131 @@
+package net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.jei;
+
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.gui.handlers.IGlobalGuiHandler;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
+import mezz.jei.api.registration.*;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerOcclusionProvider;
+import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.CommonBalmModSupportRecipeViewer;
+import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.ScreenOcclusionRegistration;
+import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.SimpleRecipeTransferRegistration;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+
+import java.util.Collections;
+import java.util.List;
+
+@JeiPlugin
+public class CommonJeiPlugin implements IModPlugin {
+
+    private final JeiRecipeViewerRegistrar registrar = new JeiRecipeViewerRegistrar();
+    private boolean initialized;
+
+    private void ensureInitialized() {
+        if (!initialized) {
+            if (Balm.modSupport().recipeViewers() instanceof CommonBalmModSupportRecipeViewer recipeViewerSupport) {
+                for (final var provider : recipeViewerSupport.getProviders()) {
+                    provider.initialize(registrar);
+                }
+            }
+            initialized = true;
+        }
+    }
+
+    @Override
+    public Identifier getPluginUid() {
+        return Identifier.fromNamespaceAndPath("balm", "jei");
+    }
+
+    @Override
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        ensureInitialized();
+
+        for (final var recipeTypeRegistration : registrar.getRecipeTypes()) {
+            recipeTypeRegistration.registerCatalysts(registration);
+        }
+    }
+
+    @Override
+    public void registerRecipes(IRecipeRegistration registration) {
+        ensureInitialized();
+
+        for (final var recipeTypeRegistration : registrar.getRecipeTypes()) {
+            recipeTypeRegistration.registerRecipes(registration);
+        }
+    }
+
+    @Override
+    public void registerCategories(IRecipeCategoryRegistration registration) {
+        ensureInitialized();
+
+        for (final var recipeTypeRegistration : registrar.getRecipeTypes()) {
+            recipeTypeRegistration.registerCategories(registration);
+        }
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        ensureInitialized();
+
+        for (final var entry : registrar.getScreenOcclusions()) {
+            registerScreenOcclusion(registration, entry);
+        }
+
+        for (final var entry : registrar.getGlobalScreenOcclusions()) {
+            registerGlobalScreenOcclusion(registration, entry);
+        }
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        ensureInitialized();
+
+        for (final var entry : registrar.getTransferRegistrations()) {
+            registerRecipeTransferHandler(registration, entry);
+        }
+    }
+
+    private <TMenu extends AbstractContainerMenu> void registerRecipeTransferHandler(IRecipeTransferRegistration registration, SimpleRecipeTransferRegistration<TMenu> entry) {
+        registrar.getRecipeTypes().stream()
+                .filter(it -> entry.recipeTypePredicate().test(it))
+                .map(it -> it.jeiRecipeType)
+                .findFirst()
+                .ifPresent(recipeType -> registration.addRecipeTransferHandler(
+                        entry.menuClass(),
+                        entry.menuType().value(),
+                        recipeType,
+                        entry.recipeSlotStart(),
+                        entry.recipeSlotCount(),
+                        entry.inventorySlotStart(),
+                        entry.inventorySlotCount()));
+    }
+
+    private <T extends AbstractContainerScreen<?>> void registerScreenOcclusion(IGuiHandlerRegistration registration, ScreenOcclusionRegistration<T> entry) {
+        registration.addGuiContainerHandler(entry.containerScreenClass(), new IGuiContainerHandler<>() {
+            @Override
+            public List<Rect2i> getGuiExtraAreas(T containerScreen) {
+                return entry.provider().getOcclusions(containerScreen);
+            }
+        });
+    }
+
+    private <T extends AbstractContainerScreen<?>> void registerGlobalScreenOcclusion(IGuiHandlerRegistration registration, RecipeViewerOcclusionProvider<T> entry) {
+        registration.addGlobalGuiHandler(new IGlobalGuiHandler() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public List<Rect2i> getGuiExtraAreas() {
+                if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> containerScreen) {
+                    return entry.getOcclusions((T) containerScreen);
+                }
+
+                return Collections.emptyList();
+            }
+        });
+    }
+
+}
