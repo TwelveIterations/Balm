@@ -10,6 +10,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistra
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
@@ -142,6 +143,15 @@ public class BalmRegistrars {
      */
     public void blockEntityTypes(Consumer<BalmBlockEntityTypeRegistrar> initializer) {
         runtime.blockEntityTypes(namespace, initializer);
+    }
+
+    /**
+     * Use this to register villager trades using the registrar provided in the consumer callback.
+     *
+     * @param initializer Callback that receives a scoped registrar for registering villager trades.
+     */
+    public void villagerTrades(Consumer<BalmVillagerTradeRegistrar> initializer) {
+        runtime.villagerTrades(namespace, initializer);
     }
 
     /**

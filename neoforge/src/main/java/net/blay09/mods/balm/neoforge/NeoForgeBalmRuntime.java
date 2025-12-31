@@ -53,6 +53,7 @@ import net.blay09.mods.balm.neoforge.stats.NeoForgeBalmStats;
 import net.blay09.mods.balm.neoforge.stats.internal.NeoForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.entity.internal.NeoForgeBalmEntityTypeRegistrar;
+import net.blay09.mods.balm.neoforge.world.entity.npc.villager.internal.NeoForgeBalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.neoforge.world.inventory.internal.NeoForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.neoforge.world.item.internal.NeoForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.neoforge.world.level.block.entity.internal.NeoForgeBalmBlockEntityTypeRegistrar;
@@ -62,6 +63,7 @@ import net.blay09.mods.balm.server.packs.resources.internal.NeoForgeBalmResource
 import net.blay09.mods.balm.server.packs.resources.internal.NeoForgeBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
@@ -74,6 +76,7 @@ import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -344,6 +347,11 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new NeoForgeBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void villagerTrades(String namespace, Consumer<BalmVillagerTradeRegistrar> initializer) {
+        NeoForge.EVENT_BUS.addListener((VillagerTradesEvent event) -> initializer.accept(new NeoForgeBalmVillagerTradeRegistrar(event)));
     }
 
     @Override

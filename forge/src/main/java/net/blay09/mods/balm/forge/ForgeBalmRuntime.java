@@ -59,12 +59,14 @@ import net.blay09.mods.balm.forge.stats.ForgeBalmStats;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.blay09.mods.balm.forge.world.block.entity.ForgeBalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.forge.world.entity.ForgeBalmEntityTypeRegistrar;
+import net.blay09.mods.balm.forge.world.entity.npc.villager.internal.ForgeBalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.forge.world.inventory.ForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.forge.world.item.ForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
@@ -75,6 +77,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -363,6 +366,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new ForgeBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void villagerTrades(String namespace, Consumer<BalmVillagerTradeRegistrar> initializer) {
+        MinecraftForge.EVENT_BUS.addListener((VillagerTradesEvent event) -> initializer.accept(new ForgeBalmVillagerTradeRegistrar(event)));
     }
 
     @Override

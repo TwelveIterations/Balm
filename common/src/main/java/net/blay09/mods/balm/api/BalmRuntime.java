@@ -33,6 +33,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistra
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
@@ -203,6 +204,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void particleTypes(String namespace, Consumer<BalmParticleTypeRegistrar> initializer);
 
     void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer);
+
+    void villagerTrades(String namespace, Consumer<BalmVillagerTradeRegistrar> initializer);
 
     BalmRegistrar registrar();
 

@@ -54,6 +54,7 @@ import net.blay09.mods.balm.fabric.stats.FabricBalmStats;
 import net.blay09.mods.balm.fabric.stats.internal.FabricBalmCustomStatRegistrar;
 import net.blay09.mods.balm.fabric.world.FabricBalmWorldGen;
 import net.blay09.mods.balm.fabric.world.entity.internal.FabricBalmEntityTypeRegistrar;
+import net.blay09.mods.balm.fabric.world.entity.npc.villager.internal.FabricBalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.fabric.world.inventory.internal.FabricBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.fabric.world.item.internal.FabricBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.fabric.world.level.block.entity.internal.FabricBalmBlockEntityTypeRegistrar;
@@ -61,6 +62,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistra
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
@@ -370,6 +372,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new FabricBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void villagerTrades(String namespace, Consumer<BalmVillagerTradeRegistrar> initializer) {
+        initializer.accept(new FabricBalmVillagerTradeRegistrar());
     }
 
     @Override
