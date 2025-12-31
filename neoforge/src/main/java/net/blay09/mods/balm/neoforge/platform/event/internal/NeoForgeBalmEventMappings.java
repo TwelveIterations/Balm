@@ -120,7 +120,7 @@ public class NeoForgeBalmEventMappings {
         bindSimple(LevelCallback.Chunk.LOAD, ChunkEvent.Load.class, (event, it) -> it.handle(event.getLevel(), event.getChunk(), event.getChunk().getPos()));
         bindSimple(LevelCallback.Chunk.UNLOAD, ChunkEvent.Unload.class, (event, it) -> it.handle(event.getLevel(), event.getChunk(), event.getChunk().getPos()));
 
-        bindSimple(LivingEntityCallback.Heal.Before.EVENT, LivingHealEvent.class, (event, it) -> it.computeHeal(event.getEntity(), event.getAmount()));
+        bindSimple(LivingEntityCallback.Heal.Before.EVENT, LivingHealEvent.class, (event, it) -> event.setAmount(it.computeHeal(event.getEntity(), event.getAmount())));
         bindSimple(LivingEntityCallback.Fall.Before.EVENT, LivingFallEvent.class, (event, it) -> it.computeFallDamage(event.getEntity(), event.getDamageMultiplier()));
         bindCancelable(LivingEntityCallback.Death.Before.EVENT, LivingDeathEvent.class, (event, it) -> !it.allowDeath(event.getEntity(), event.getSource()));
         bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingDamageEvent.Pre.class, (event, it) -> it.computeDamage(event.getEntity(), event.getSource(), event.getNewDamage()));
