@@ -169,7 +169,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
 
     @Override
     public void villagerTrades(String namespace, Consumer<BalmVillagerTradeRegistrar> initializer) {
-        initializer.accept(new FabricBalmVillagerTradeRegistrar(namespace));
+        initializer.accept(new FabricBalmVillagerTradeRegistrar());
     }
 
     @Override
