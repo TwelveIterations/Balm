@@ -23,6 +23,7 @@ kumaNeoForge = { module = "net.blay09.mods:kuma-api-neoforge", version.ref = "ku
 kumaForge = { module = "net.blay09.mods:kuma-api-forge", version.ref = "kuma" }
 
 mixin = { module = "org.spongepowered:mixin", version = "0.8.7" }
+mixinExtras = { module = "io.github.llamalad7:mixinextras-common", version = "0.5.2" }
 
 wthitCommon = { module = "mcp.mobius.waila:wthit-api", version = "mojmap-16.0.1" }
 wthitFabric = { module = "mcp.mobius.waila:wthit", version = "fabric-16.0.1" }

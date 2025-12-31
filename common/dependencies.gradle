@@ -2,4 +2,5 @@ dependencies {
     api libs.kumaCommon
     compileOnly libs.wthitCommon
     compileOnly libs.jeiCommon
+    compileOnly libs.mixinExtras
 }
