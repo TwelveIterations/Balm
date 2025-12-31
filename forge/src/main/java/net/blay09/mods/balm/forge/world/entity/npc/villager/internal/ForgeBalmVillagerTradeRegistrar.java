@@ -2,8 +2,8 @@ package net.blay09.mods.balm.forge.world.entity.npc.villager.internal;
 
 import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.entity.npc.villager.VillagerProfession;
-import net.minecraft.world.entity.npc.villager.VillagerTrades;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 
 import java.util.ArrayList;
