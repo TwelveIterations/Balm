@@ -88,7 +88,7 @@ public class FabricBalmEventMappings {
                 -> ServerEntityEvents.ENTITY_UNLOAD.register(mapPhase(phase), (entity, level) -> it.handle(level, entity)));
 
         LivingEntityCallback.Damage.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_DAMAGE::register);
-        LivingEntityCallback.Fall.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_FALL::register);
+        LivingEntityCallback.Fall.Before.EVENT.configureMapping(BalmSupplementalEvents.LIVING_FALL::register);
         LivingEntityCallback.Heal.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_HEAL::register);
         LivingEntityCallback.Death.Before.EVENT.configureMapping((phase, it)
                 -> ServerLivingEntityEvents.ALLOW_DEATH.register((livingEntity, damageSource, damage) -> !it.allowDeath(livingEntity, damageSource)));

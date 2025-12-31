@@ -4,6 +4,7 @@ import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventFactory;
 import net.blay09.mods.balm.platform.event.callback.BlockCallback;
 import net.blay09.mods.balm.platform.event.callback.ConfigCallback;
+import net.blay09.mods.balm.platform.event.callback.LivingEntityCallback;
 import net.blay09.mods.balm.platform.event.callback.ServerLifecycleCallback;
 
 public class BalmSupplementalEvents {
@@ -37,5 +38,13 @@ public class BalmSupplementalEvents {
             newSpeed = listener.computeDigSpeed(blockGetter, pos, state, player, newSpeed);
         }
         return newSpeed;
+    });
+
+    public static final Event<LivingEntityCallback.Fall.Before> LIVING_FALL = EventFactory.createArrayBacked(LivingEntityCallback.Fall.Before.class, (listeners) -> (entity, fallDamage) -> {
+        float newDamage = fallDamage;
+        for (final var listener : listeners) {
+            newDamage = listener.computeFallDamage(entity, newDamage);
+        }
+        return newDamage;
     });
 }

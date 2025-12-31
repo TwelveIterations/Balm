@@ -115,7 +115,7 @@ public class ForgeBalmEventMappings {
         bindSimple(LevelCallback.Chunk.UNLOAD, ChunkEvent.Unload.BUS, (event, it) -> it.handle(event.getLevel(), event.getChunk(), event.getChunk().getPos()));
 
         bindSimple(LivingEntityCallback.Heal.Before.EVENT, LivingHealEvent.BUS, (event, it) -> event.setAmount(it.computeHeal(event.getEntity(), event.getAmount())));
-        bindSimple(LivingEntityCallback.Fall.Before.EVENT, LivingFallEvent.BUS, (event, it) -> it.computeFallDamage(event.getEntity(), event.getDamageMultiplier()));
+        LivingEntityCallback.Fall.Before.EVENT.configureMapping(BalmSupplementalEvents.LIVING_FALL::register);
         bindSimple(LivingEntityCallback.Death.Before.EVENT, LivingDeathEvent.BUS, (event, it) -> it.allowDeath(event.getEntity(), event.getSource()));
         bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingDamageEvent.BUS, (event, it) -> it.computeDamage(event.getEntity(), event.getSource(), event.getAmount()));
 

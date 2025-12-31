@@ -88,14 +88,6 @@ public class FabricBalmSupplementalEvents {
         return newDamageAmount;
     });
 
-    public static final Event<LivingEntityCallback.Fall.Before> LIVING_FALL = EventFactory.createArrayBacked(LivingEntityCallback.Fall.Before.class, (listeners) -> (entity, fallDamage) -> {
-        float newDamage = fallDamage;
-        for (final var listener : listeners) {
-            newDamage = listener.computeFallDamage(entity, newDamage);
-        }
-        return newDamage;
-    });
-
     public static final Event<LivingEntityCallback.Heal.Before> LIVING_HEAL = EventFactory.createArrayBacked(LivingEntityCallback.Heal.Before.class, (listeners) -> (entity, amount) -> {
         float newAmount = amount;
         for (final var listener : listeners) {
