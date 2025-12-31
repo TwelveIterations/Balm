@@ -7,7 +7,7 @@ import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.keymappings.KeyConflictContext;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifier;
 import net.blay09.mods.balm.api.client.keymappings.KeyModifiers;
-import net.blay09.mods.balm.common.NamespaceResolver;
+import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
 import net.blay09.mods.balm.common.client.keymappings.CommonBalmKeyMappings;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -21,8 +21,10 @@ public class AmecsBalmKeyMappings extends CommonBalmKeyMappings {
 
     private static final Map<KeyMapping, KeyConflictContext> contextAwareKeyMappings = new ConcurrentHashMap<>();
 
-    public AmecsBalmKeyMappings(NamespaceResolver namespaceResolver) {
-        super(namespaceResolver);
+    public AmecsBalmKeyMappings() {
+        super(new LegacyNamespaceResolver(() -> {
+            throw new UnsupportedOperationException("No default namespace available");
+        }));
     }
 
     @Override
