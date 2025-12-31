@@ -92,7 +92,7 @@ modrinth {
     projectId = findProperty("modrinth_project_id")
     versionType = "release"
     versionNumber = project.version + "+forge-" + libs.minecraft.get().version
-    uploadFile = jar.outputs.getFiles().asPath.replace(".jar", "-all.jar")
+    uploadFile = tasks.jarJar.archiveFile.get().asFile
     changelog = rootProject.file("CHANGELOG.md").text
     gameVersions = [libs.minecraft.get().version]
     syncBodyFrom = rootProject.file("modpage.md").text
