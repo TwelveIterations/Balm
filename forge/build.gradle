@@ -99,3 +99,6 @@ modrinth {
     loaders = ['forge']
 }
 tasks.modrinth.dependsOn(build)
+
+// Workaround for missing Minecraft sources on CI
+tasks.named('compileJava') { dependsOn(syncMavenizer) }
