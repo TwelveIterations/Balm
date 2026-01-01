@@ -1,15 +1,19 @@
 package net.blay09.mods.balm.fabric.internal.mixin;
 
+import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.blay09.mods.balm.nbt.BalmDataHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin implements BalmDataHolder {
@@ -72,5 +76,17 @@ public class EntityMixin implements BalmDataHolder {
     @Override
     public void balm$setNeoForgeBalmData(CompoundTag tag) {
         this.neoForgeBalmData = tag;
+    }
+
+    @Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/world/entity/Entity;", at = @At("HEAD"), cancellable = true)
+    public void teleport(TeleportTransition transition, CallbackInfoReturnable<@Nullable Entity> callbackInfo) {
+        final var entity = (Entity) (Object) this;
+        final var fromDim = entity.level().dimension();
+        final var toDim = transition.newLevel().dimension();
+        if (!fromDim.equals(toDim)) {
+            if (!FabricBalmSupplementalEvents.ENTITY_CHANGED_DIMENSION.invoker().allowDimensionChange(entity, fromDim, toDim)) {
+                callbackInfo.setReturnValue(null);
+            }
+        }
     }
 }

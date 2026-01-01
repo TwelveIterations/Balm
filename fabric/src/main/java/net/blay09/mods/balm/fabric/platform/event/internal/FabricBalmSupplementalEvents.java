@@ -56,6 +56,15 @@ public class FabricBalmSupplementalEvents {
         }
     });
 
+    public static final Event<EntityCallback.DimensionChange> ENTITY_CHANGED_DIMENSION = EventFactory.createArrayBacked(EntityCallback.DimensionChange.class, (listeners) -> (entity, from, to) -> {
+        for (final var listener : listeners) {
+            if (!listener.allowDimensionChange(entity, from, to)) {
+                return false;
+            }
+        }
+        return true;
+    });
+
     public static final Event<ItemCallback.Craft.After> ITEM_CRAFTED = EventFactory.createArrayBacked(ItemCallback.Craft.After.class, (listeners) -> (player, itemStack, craftMatrix) -> {
         for (final var listener : listeners) {
             listener.afterCraft(player, itemStack, craftMatrix);

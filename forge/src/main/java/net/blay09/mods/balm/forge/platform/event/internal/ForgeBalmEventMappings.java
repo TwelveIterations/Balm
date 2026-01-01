@@ -12,6 +12,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
@@ -97,6 +98,7 @@ public class ForgeBalmEventMappings {
         bindSimple(CropCallback.Grow.After.EVENT, BlockEvent.CropGrowEvent.Post.BUS, (event, it) -> it.afterGrow(event.getLevel(), event.getPos(), event.getState()));
 
         bindSimple(EntityCallback.AddedToLevel.EVENT, EntityJoinLevelEvent.BUS, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
+        bindCancelable(EntityCallback.DimensionChange.BEFORE, EntityTravelToDimensionEvent.BUS, (event, it) -> !it.allowDimensionChange(event.getEntity(), event.getEntity().level().dimension(), event.getDimension()));
 
         bindSimple(CreativeModeTabCallback.BuildContents.EVENT, BuildCreativeModeTabContentsEvent.BUS, (event, it) -> it.handle(event.getTab(), event));
 

@@ -15,10 +15,10 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.CommandEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -103,6 +103,7 @@ public class NeoForgeBalmEventMappings {
 
         bindSimple(EntityCallback.AddedToLevel.EVENT, EntityJoinLevelEvent.class, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
         bindSimple(EntityCallback.RemovedFromLevel.EVENT, EntityLeaveLevelEvent.class, (event, it) -> it.handle(event.getLevel(), event.getEntity()));
+        bindCancelable(EntityCallback.DimensionChange.BEFORE, EntityTravelToDimensionEvent.class, (event, it) -> !it.allowDimensionChange(event.getEntity(), event.getEntity().level().dimension(), event.getDimension()));
 
         bindSimple(CreativeModeTabCallback.BuildContents.EVENT, BuildCreativeModeTabContentsEvent.class, (event, it) -> it.handle(event.getTab(), event));
 

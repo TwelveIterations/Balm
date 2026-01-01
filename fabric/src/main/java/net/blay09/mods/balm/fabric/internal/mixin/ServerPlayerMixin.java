@@ -28,17 +28,24 @@ public class ServerPlayerMixin {
         FabricBalmSupplementalEvents.SERVER_PLAYER_OPEN_MENU.invoker().handle(player, player.containerMenu);
     }
 
-    @Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("HEAD"))
-    public void teleportHead(TeleportTransition transition, CallbackInfoReturnable<ServerPlayer> callbackInfo, @Share("fromDimHolder") LocalRef<ResourceKey<Level>> fromDimHolder) {
-        ServerPlayer player = (ServerPlayer) (Object) this;
-        fromDimHolder.set(player.level().dimension());
+    @Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("HEAD"), cancellable = true)
+    public void teleportHead(TeleportTransition transition, CallbackInfoReturnable<@Nullable ServerPlayer> callbackInfo, @Share("fromDimHolder") LocalRef<ResourceKey<Level>> fromDimHolder) {
+        final var player = (ServerPlayer) (Object) this;
+        final var fromDim = player.level().dimension();
+        final var toDim = transition.newLevel().dimension();
+        fromDimHolder.set(fromDim);
+        if (!fromDim.equals(toDim)) {
+            if (!FabricBalmSupplementalEvents.ENTITY_CHANGED_DIMENSION.invoker().allowDimensionChange(player, fromDim, toDim)) {
+                callbackInfo.setReturnValue(null);
+            }
+        }
     }
 
     @Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("RETURN"))
     public void teleportTail(TeleportTransition transition, CallbackInfoReturnable<ServerPlayer> callbackInfo, @Share("fromDimHolder") LocalRef<ResourceKey<Level>> fromDimHolder) {
-        ServerPlayer player = (ServerPlayer) (Object) this;
-        final ResourceKey<Level> fromDim = fromDimHolder.get();
-        final ResourceKey<Level> toDim = transition.newLevel().dimension();
+        final var player = (ServerPlayer) (Object) this;
+        final var fromDim = fromDimHolder.get();
+        final var toDim = transition.newLevel().dimension();
         if (!fromDim.equals(toDim)) {
             FabricBalmSupplementalEvents.SERVER_PLAYER_CHANGED_DIMENSION.invoker().handle(player, fromDim, toDim);
         }
