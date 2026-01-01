@@ -45,3 +45,8 @@ plugins {
 
 includeBuild('build-logic')
 include('common', 'fabric', 'neoforge', 'forge')
+
+buildScan {
+    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    termsOfServiceAgree = "yes"
+}
