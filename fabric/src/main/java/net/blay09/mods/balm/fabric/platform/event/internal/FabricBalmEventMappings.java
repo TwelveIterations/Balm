@@ -94,6 +94,11 @@ public class FabricBalmEventMappings {
         LivingEntityCallback.Death.Before.EVENT.configureMapping((phase, it)
                 -> ServerLivingEntityEvents.ALLOW_DEATH.register((livingEntity, damageSource, damage) -> !it.allowDeath(livingEntity, damageSource)));
 
+        LivingEntityCallback.MobEffectCallback.Apply.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.MOB_EFFECT_APPLY::register);
+        LivingEntityCallback.MobEffectCallback.Add.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.MOB_EFFECT_ADD::register);
+        LivingEntityCallback.MobEffectCallback.Remove.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.MOB_EFFECT_REMOVE::register);
+        LivingEntityCallback.MobEffectCallback.Expire.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.MOB_EFFECT_EXPIRE::register);
+
         PlayerCallback.Attack.Before.EVENT.configureMapping((phase, it)
                 -> AttackEntityCallback.EVENT.register(mapPhase(phase), (player, target, hand, entity, entityHitResult) -> !it.allowAttack(player, entity) ? InteractionResult.FAIL : InteractionResult.PASS));
 

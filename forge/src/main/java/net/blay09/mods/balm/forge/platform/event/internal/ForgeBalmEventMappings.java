@@ -4,6 +4,7 @@ import net.blay09.mods.balm.platform.event.EventMapper;
 import net.blay09.mods.balm.platform.event.EventPhases;
 import net.blay09.mods.balm.platform.event.callback.*;
 import net.blay09.mods.balm.platform.event.internal.BalmSupplementalEvents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -120,6 +121,15 @@ public class ForgeBalmEventMappings {
         LivingEntityCallback.Fall.Before.EVENT.configureMapping(BalmSupplementalEvents.LIVING_FALL::register);
         bindSimple(LivingEntityCallback.Death.Before.EVENT, LivingDeathEvent.BUS, (event, it) -> it.allowDeath(event.getEntity(), event.getSource()));
         bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingDamageEvent.BUS, (event, it) -> it.computeDamage(event.getEntity(), event.getSource(), event.getAmount()));
+
+        bindSimple(LivingEntityCallback.MobEffectCallback.Apply.Before.EVENT, MobEffectEvent.Applicable.BUS, (event, it) -> {
+            if (!it.allowApply(event.getEntity(), event.getEffectInstance(), /* source is not supported on Forge */null)) {
+                event.setResult(Result.DENY);
+            }
+        });
+        bindSimple(LivingEntityCallback.MobEffectCallback.Add.Before.EVENT, MobEffectEvent.Added.BUS, (event, it) -> it.effectAdded(event.getEntity(), event.getEffectInstance(), event.getOldEffectInstance(), event.getEffectSource()));
+        bindCancelable(LivingEntityCallback.MobEffectCallback.Remove.Before.EVENT, MobEffectEvent.Remove.BUS, (event, it) -> !it.allowRemove(event.getEntity(), BuiltInRegistries.MOB_EFFECT.wrapAsHolder(event.getEffect()), event.getEffectInstance()));
+        bindSimple(LivingEntityCallback.MobEffectCallback.Expire.Before.EVENT, MobEffectEvent.Expired.BUS, (event, it) -> /* cannot cancel on Forge */it.allowExpire(event.getEntity(), event.getEffectInstance()));
 
         bindSimple(PlayerCallback.Attack.Before.EVENT, AttackEntityEvent.BUS, (event, it) -> it.allowAttack(event.getEntity(), event.getTarget()));
 

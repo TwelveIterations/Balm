@@ -20,6 +20,7 @@ import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
@@ -125,6 +126,11 @@ public class NeoForgeBalmEventMappings {
         LivingEntityCallback.Fall.Before.EVENT.configureMapping(BalmSupplementalEvents.LIVING_FALL::register);
         bindCancelable(LivingEntityCallback.Death.Before.EVENT, LivingDeathEvent.class, (event, it) -> !it.allowDeath(event.getEntity(), event.getSource()));
         bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingDamageEvent.Pre.class, (event, it) -> it.computeDamage(event.getEntity(), event.getSource(), event.getNewDamage()));
+
+        bindSimple(LivingEntityCallback.MobEffectCallback.Apply.Before.EVENT, MobEffectEvent.Applicable.class, (event, it) -> it.allowApply(event.getEntity(), event.getEffectInstance(), event.getEffectSource()));
+        bindSimple(LivingEntityCallback.MobEffectCallback.Add.Before.EVENT, MobEffectEvent.Added.class, (event, it) -> it.effectAdded(event.getEntity(), event.getEffectInstance(), event.getOldEffectInstance(), event.getEffectSource()));
+        bindCancelable(LivingEntityCallback.MobEffectCallback.Remove.Before.EVENT, MobEffectEvent.Remove.class, (event, it) -> !it.allowRemove(event.getEntity(), event.getEffect(), event.getEffectInstance()));
+        bindCancelable(LivingEntityCallback.MobEffectCallback.Expire.Before.EVENT, MobEffectEvent.Expired.class, (event, it) -> !it.allowExpire(event.getEntity(), event.getEffectInstance()));
 
         bindCancelable(PlayerCallback.Attack.Before.EVENT, AttackEntityEvent.class, (event, it) -> !it.allowAttack(event.getEntity(), event.getTarget()));
 

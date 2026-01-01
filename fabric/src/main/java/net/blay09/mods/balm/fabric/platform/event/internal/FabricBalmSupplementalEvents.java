@@ -121,6 +121,40 @@ public class FabricBalmSupplementalEvents {
         }
     });
 
+    public static final Event<LivingEntityCallback.MobEffectCallback.Apply.Before> MOB_EFFECT_APPLY = EventFactory.createArrayBacked(LivingEntityCallback.MobEffectCallback.Apply.Before.class, (listeners) -> (entity, effectInstance, source) -> {
+        for (final var listener : listeners) {
+            if (!listener.allowApply(entity, effectInstance, source)) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
+    public static final Event<LivingEntityCallback.MobEffectCallback.Add.Before> MOB_EFFECT_ADD = EventFactory.createArrayBacked(LivingEntityCallback.MobEffectCallback.Add.Before.class, (listeners) -> (entity, effectInstance, previousEffectInstance, source) -> {
+        for (final var listener : listeners) {
+            listener.effectAdded(entity, effectInstance, previousEffectInstance, source);
+        }
+    });
+
+    public static final Event<LivingEntityCallback.MobEffectCallback.Remove.Before> MOB_EFFECT_REMOVE = EventFactory.createArrayBacked(LivingEntityCallback.MobEffectCallback.Remove.Before.class, (listeners) -> (entity, effect, effectInstance) -> {
+        for (final var listener : listeners) {
+            if (!listener.allowRemove(entity, effect, effectInstance)) {
+                return false;
+            }
+        }
+        return true;
+    });
+
+    public static final Event<LivingEntityCallback.MobEffectCallback.Expire.Before> MOB_EFFECT_EXPIRE = EventFactory.createArrayBacked(LivingEntityCallback.MobEffectCallback.Expire.Before.class, (listeners) -> (entity, effectInstance) -> {
+        for (final var listener : listeners) {
+            if (!listener.allowExpire(entity, effectInstance)) {
+                return false;
+            }
+        }
+        return true;
+    });
+
     public static void initialize() {
         ServerTickEvents.START_WORLD_TICK.register(level -> {
             if (SERVER_PLAYER_TICK_PRE.hasHandlers()) {
