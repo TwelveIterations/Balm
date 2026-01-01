@@ -23,9 +23,9 @@ jobs:
             const includePattern = /^(?!\s*\/\/)\s*include\s*\(\s*(['"]([^'"]+)['"](?:,\s*['"]([^'"]+)['"])*\s*)\)/gm;
             const includes = [...settingsGradle.matchAll(includePattern)]
               .flatMap(match => match[0].match(/['"]([^'"]+)['"]/g).map(item => item.replace(/['"]/g, '')));
-            const includeFabric = false || includes.includes('fabric');
+            const includeFabric = false && includes.includes('fabric');
             const includeForge = includes.includes('forge');
-            const includeNeoForge = false || includes.includes('neoforge');
+            const includeNeoForge = false && includes.includes('neoforge');
             const gradleProperties = fs.readFileSync('gradle.properties', 'utf8');
             const mavenSnapshots = gradleProperties.match(/^(?!#)maven_snapshots\s*=\s*(.+)/m);
             return {
@@ -60,5 +60,5 @@ jobs:
           bump: patch
         id: bump-version
       - name: Publish
-        run: ./gradlew :${{ matrix.loader }}:dependencies :${{ matrix.loader }}:${{ matrix.task }} --scan '-Pversion=${{ steps.bump-version.outputs.version }}-SNAPSHOT'
+        run: ./gradlew :${{ matrix.loader }}:syncMavenizer :${{ matrix.loader }}:dependencies :${{ matrix.loader }}:${{ matrix.task }} --scan '-Pversion=${{ steps.bump-version.outputs.version }}-SNAPSHOT'
     needs: prepare-matrix
