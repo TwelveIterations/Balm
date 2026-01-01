@@ -60,5 +60,5 @@ jobs:
           bump: patch
         id: bump-version
       - name: Publish
-        run: ./gradlew :${{ matrix.loader }}:${{ matrix.task }} '-Pversion=${{ steps.bump-version.outputs.version }}-SNAPSHOT' '-PmavenUsername=${{ secrets.MAVEN_USER }}' '-PmavenPassword=${{ secrets.MAVEN_PASSWORD }} --stacktrace'
+        run: ./gradlew :${{ matrix.loader }}:${{ matrix.task }}  --stacktrace '-Pversion=${{ steps.bump-version.outputs.version }}-SNAPSHOT' '-PmavenUsername=${{ secrets.MAVEN_USER }}' '-PmavenPassword=${{ secrets.MAVEN_PASSWORD }}'
     needs: prepare-matrix
