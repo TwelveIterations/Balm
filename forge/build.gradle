@@ -6,7 +6,6 @@ plugins {
     alias libs.plugins.forgeJarJar
     alias libs.plugins.curseForgeGradle
     alias libs.plugins.modrinthMinotaur
-    id 'com.gradle.build-scan' version '3.19.2'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
