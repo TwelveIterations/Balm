@@ -44,10 +44,22 @@ public interface AsymmetricalEventMapper<TCallback, TInvoker> {
     TInvoker invoker();
 
     /**
-     * For internal use by Balm or custom event mappers. Binds a registrar and invoker callback to this event.
+     * Use this to configure custom unbound event mappers. Binds a registrar and invoker callback to this event.
      *
      * @param registrar The consumer that takes the priority phase and listener and registers it to the mod-loader specific bus.
      * @param invoker   The invoker that takes the incoming parameters and fires them into the mod-loader specific bus.
      */
     void configureMapping(BiConsumer<Identifier, TCallback> registrar, Supplier<TInvoker> invoker);
+
+    /**
+     * Use this to configure custom unbound event mappers. Binds a registrar and invoker callback to this event.
+     *
+     * @param registrar The consumer that takes the priority phase and listener and registers it to the mod-loader specific bus.
+     * @param invoker   The invoker that takes the incoming parameters and fires them into the mod-loader specific bus.
+     * @return this event mapper.
+     */
+    default AsymmetricalEventMapper<TCallback, TInvoker> configureMappingAndReturn(BiConsumer<Identifier, TCallback> registrar, Supplier<TInvoker> invoker) {
+        configureMapping(registrar, invoker);
+        return this;
+    }
 }

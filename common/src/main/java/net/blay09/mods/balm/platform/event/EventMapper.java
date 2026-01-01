@@ -43,11 +43,22 @@ public interface EventMapper<TCallback> {
     void register(Identifier phase, TCallback listener);
 
     /**
-     * For internal use by Balm or custom event mappers. Binds a registrar and invoker callback to this event.
+     * Use this to configure custom unbound event mappers. Binds a registrar and invoker callback to this event.
      *
      * @param registrar The consumer that takes the priority phase and listener and registers it to the mod-loader specific bus.
      */
     void configureMapping(BiConsumer<Identifier, TCallback> registrar);
+
+    /**
+     * Use this to configure custom unbound event mappers. Binds a registrar callback to this event.
+     *
+     * @param registrar The consumer that takes the priority phase and listener and registers it to the mod-loader specific bus.
+     * @return this event mapper.
+     */
+    default EventMapper<TCallback> configureMappingAndReturn(BiConsumer<Identifier, TCallback> registrar) {
+        configureMapping(registrar);
+        return this;
+    }
 
     /**
      * For internal use by Balm. Returns the name of this event mapper.
