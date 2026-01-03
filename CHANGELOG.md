@@ -1,2 +1,4 @@
-- Fixed PlayerOpenMenuEvent not firing on Neo/Forge
-- Backported Balm Registrars, Progress Renderer and Quick Move Utilities
+- Added `BalmVillagerTradeRegistrar` for registering additional trades to villagers
+- Added `BalmEntityTypeRegistration.withSpawnPlacement` for defining spawn placement on a new entity
+- Added `BiomeModificationBuilder.addSpawn` and `BiomeModificationBuilder.setSpawnCost` for adding mob spawns to biomes
+- Fixed various potential concurrency issues in Balm wrappers related to Permissions, Loot Modifiers, Commands and Capabilities
