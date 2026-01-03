@@ -1,2 +1,3 @@
-- Fixed NoSuchFileExceptions in lookupAllModPaths/lookupModPath
+- Fixed Amecs support failing to initialize
+- Fixed various potential concurrency issues in Balm wrappers and registrars
 - Fixed `/balm export icons` not working sometimes
