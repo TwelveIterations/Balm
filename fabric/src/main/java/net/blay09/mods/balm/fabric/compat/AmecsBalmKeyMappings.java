@@ -47,7 +47,7 @@ public class AmecsBalmKeyMappings extends CommonBalmKeyMappings {
 
     @Override
     public BalmKeyMappings scoped(String modId) {
-        return new AmecsBalmKeyMappings(new StaticNamespaceResolver(modId));
+        return this;
     }
 
     @Override
