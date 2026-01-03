@@ -5,10 +5,7 @@ import net.blay09.mods.balm.api.event.EntityTickHandler;
 import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
 import net.blay09.mods.balm.api.event.client.*;
-import net.blay09.mods.balm.api.event.client.screen.ScreenDrawEvent;
-import net.blay09.mods.balm.api.event.client.screen.ScreenInitEvent;
-import net.blay09.mods.balm.api.event.client.screen.ScreenKeyEvent;
-import net.blay09.mods.balm.api.event.client.screen.ScreenMouseEvent;
+import net.blay09.mods.balm.api.event.client.screen.*;
 import net.blay09.mods.balm.fabric.event.FabricBalmEvents;
 import net.blay09.mods.balm.mixin.ClientLevelAccessor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
@@ -27,6 +24,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class FabricBalmClientEvents {
+
+    private static final List<Consumer<Screen>> screenContainerDrawBackgroundInitializers = new ArrayList<>();
 
     private static final List<Consumer<Screen>> screenDrawPreInitializers = new ArrayList<>();
     private static final List<Consumer<Screen>> screenDrawPostInitializers = new ArrayList<>();
@@ -56,6 +55,8 @@ public class FabricBalmClientEvents {
     private static void initializeScreenEvents() {
         if (beforeInitListener == null) {
             final List<List<Consumer<Screen>>> initializers = new ArrayList<>();
+
+            initializers.add(screenContainerDrawBackgroundInitializers);
 
             initializers.add(screenDrawPreInitializers);
             initializers.add(screenDrawPostInitializers);
@@ -152,6 +153,14 @@ public class FabricBalmClientEvents {
             final ScreenInitEvent.Post event = new ScreenInitEvent.Post(screen);
             events.fireEventHandlers(event);
         }));
+
+        events.registerEvent(ContainerScreenDrawEvent.Background.class, () -> {
+            initializeScreenEvents();
+            screenContainerDrawBackgroundInitializers.add((scr) -> ScreenEvents.afterBackground(scr).register((screen, guiGraphics, mouseX, mouseY, tickDelta) -> {
+                final ContainerScreenDrawEvent.Background event = new ContainerScreenDrawEvent.Background(screen, guiGraphics, mouseX, mouseY);
+                events.fireEventHandlers(event);
+            }));
+        });
 
         events.registerEvent(ScreenDrawEvent.Pre.class, () -> {
             initializeScreenEvents();
