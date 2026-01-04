@@ -3,6 +3,7 @@ package net.blay09.mods.balm.client.platform.module;
 import net.blay09.mods.balm.client.BalmClient;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.BalmTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
@@ -54,6 +55,9 @@ public interface BalmClientModule {
     }
 
     default void registerClientReloadListeners(BalmClientResourceReloadListenerRegistrar resourceReloadListeners) {
+    }
+
+    default void registerTooltipComponents(BalmTooltipComponentRegistrar tooltipComponents) {
     }
 
     default void initialize() {

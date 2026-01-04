@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.neoforge.client.platform.runtime.internal;
 
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.BalmTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
@@ -12,6 +13,7 @@ import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegis
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmKeyMappingRegistrar;
+import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmTooltipComponentRegistrar;
 import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.color.block.internal.NeoForgeBalmBlockColorRegistrar;
@@ -138,4 +140,12 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
         });
     }
 
+    @Override
+    public void tooltipComponents(String namespace, Consumer<BalmTooltipComponentRegistrar> initializer) {
+        BalmLoadContexts.get(namespace).ifPresent(context -> {
+            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+                modBus.addListener((RegisterClientTooltipComponentFactoriesEvent event) -> initializer.accept(new NeoForgeBalmTooltipComponentRegistrar(event)));
+            }
+        });
+    }
 }

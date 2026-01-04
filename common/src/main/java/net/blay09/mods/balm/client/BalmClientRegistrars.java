@@ -120,6 +120,15 @@ public class BalmClientRegistrars {
         runtime.resourceReloadListeners(namespace, initializer);
     }
 
+    /**
+     * Use this to register tooltip components using the registrar provided in the consumer callback.
+     *
+     * @param initializer Callback that receives a scoped registrar for tooltip components.
+     */
+    public void tooltipComponents(Consumer<BalmTooltipComponentRegistrar> initializer) {
+        runtime.tooltipComponents(namespace, initializer);
+    }
+
     public void registerModule(BalmClientModule module) {
         runtime.registerModule(this, module);
     }

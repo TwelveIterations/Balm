@@ -2,6 +2,7 @@ package net.blay09.mods.balm.client.platform.runtime.internal;
 
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.BalmTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
@@ -31,6 +32,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         menuScreens(modId, module::registerMenuScreens);
         blockStateModels(modId, module::registerBlockStateModels);
         keyMappings(modId, module::registerKeyMappings);
+        tooltipComponents(modId, module::registerTooltipComponents);
 
         module.initialize();
     }
@@ -60,4 +62,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer);
 
     void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer);
+
+    void tooltipComponents(String namespace, Consumer<BalmTooltipComponentRegistrar> initializer);
 }
