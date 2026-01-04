@@ -4,6 +4,7 @@ import net.blay09.mods.balm.client.BalmClient;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
+import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
@@ -58,6 +59,9 @@ public interface BalmClientModule {
     }
 
     default void registerClientTooltipComponents(BalmClientTooltipComponentRegistrar tooltipComponents) {
+    }
+
+    default void registerRangeSelectItemModelProperties(BalmRangeSelectItemModelPropertyRegistrar rangeSelectItemModelProperties) {
     }
 
     default void initialize() {

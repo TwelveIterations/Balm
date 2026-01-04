@@ -129,6 +129,15 @@ public class BalmClientRegistrars {
         runtime.clientTooltipComponents(namespace, initializer);
     }
 
+    /**
+     * Use this to register range select item model properties using the registrar provided in the consumer callback.
+     *
+     * @param initializer Callback that receives a scoped registrar for range select item model properties.
+     */
+    public void rangeSelectItemModelProperties(Consumer<BalmRangeSelectItemModelPropertyRegistrar> initializer) {
+        runtime.rangeSelectItemModelProperties(namespace, initializer);
+    }
+
     public void registerModule(BalmClientModule module) {
         runtime.registerModule(this, module);
     }

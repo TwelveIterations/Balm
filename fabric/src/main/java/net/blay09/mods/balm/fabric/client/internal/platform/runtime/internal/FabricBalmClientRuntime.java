@@ -2,6 +2,7 @@ package net.blay09.mods.balm.fabric.client.internal.platform.runtime.internal;
 
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
+import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
@@ -13,6 +14,7 @@ import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegis
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmClientTooltipComponentRegistrar;
+import net.blay09.mods.balm.fabric.client.internal.FabricBalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.renderer.block.model.FabricBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
@@ -99,5 +101,10 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
     @Override
     public void clientTooltipComponents(String namespace, Consumer<BalmClientTooltipComponentRegistrar> initializer) {
         initializer.accept(FabricBalmClientTooltipComponentRegistrar.INSTANCE);
+    }
+
+    @Override
+    public void rangeSelectItemModelProperties(String namespace, Consumer<BalmRangeSelectItemModelPropertyRegistrar> initializer) {
+        initializer.accept(FabricBalmRangeSelectItemModelPropertyRegistrar.INSTANCE);
     }
 }
