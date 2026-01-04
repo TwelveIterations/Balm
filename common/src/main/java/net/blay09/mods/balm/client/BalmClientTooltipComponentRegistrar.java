@@ -5,7 +5,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import java.util.function.Function;
 
-public interface BalmTooltipComponentRegistrar {
+public interface BalmClientTooltipComponentRegistrar {
 
     <T extends TooltipComponent> void register(Class<T> type, Function<? super T, ? extends ClientTooltipComponent> factory);
 }

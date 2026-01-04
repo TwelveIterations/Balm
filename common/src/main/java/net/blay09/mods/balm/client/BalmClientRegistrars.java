@@ -125,8 +125,8 @@ public class BalmClientRegistrars {
      *
      * @param initializer Callback that receives a scoped registrar for tooltip components.
      */
-    public void tooltipComponents(Consumer<BalmTooltipComponentRegistrar> initializer) {
-        runtime.tooltipComponents(namespace, initializer);
+    public void clientTooltipComponents(Consumer<BalmClientTooltipComponentRegistrar> initializer) {
+        runtime.clientTooltipComponents(namespace, initializer);
     }
 
     public void registerModule(BalmClientModule module) {

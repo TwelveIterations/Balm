@@ -1,17 +1,17 @@
 package net.blay09.mods.balm.forge.client.internal;
 
-import net.blay09.mods.balm.client.BalmTooltipComponentRegistrar;
+import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 
 import java.util.function.Function;
 
-public class ForgeBalmTooltipComponentRegistrar implements BalmTooltipComponentRegistrar {
+public class ForgeBalmClientTooltipComponentRegistrar implements BalmClientTooltipComponentRegistrar {
 
     private final RegisterClientTooltipComponentFactoriesEvent event;
 
-    public ForgeBalmTooltipComponentRegistrar(RegisterClientTooltipComponentFactoriesEvent event) {
+    public ForgeBalmClientTooltipComponentRegistrar(RegisterClientTooltipComponentFactoriesEvent event) {
         this.event = event;
     }
 
