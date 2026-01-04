@@ -9,6 +9,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
@@ -53,6 +54,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         module.registerModels(getModels().scoped(modId));
         module.registerKeyMappings(getKeyMappings().scoped(modId));
         keyMappings(modId, module::registerKeyMappings);
+        clientTooltipComponents(modId, module::registerClientTooltipComponents);
         resourceReloadListeners(modId, module::registerClientReloadListeners);
         blockColors(modId, module::registerBlockColors);
         itemColors(modId, module::registerItemColors);
@@ -103,4 +105,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer);
 
     void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer);
+
+    void clientTooltipComponents(String namespace, Consumer<BalmClientTooltipComponentRegistrar> initializer);
 }

@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
@@ -22,6 +23,7 @@ import net.blay09.mods.balm.common.BalmLoadContexts;
 import net.blay09.mods.balm.common.LegacyNamespaceResolver;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
+import net.blay09.mods.balm.fabric.client.internal.FabricBalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.color.item.FabricBalmItemColorRegistrar;
@@ -198,6 +200,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     @Override
     public void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
         initializer.accept(new FabricBalmClientResourceReloadListenerRegistrar(namespace));
+    }
+
+    @Override
+    public void clientTooltipComponents(String namespace, Consumer<BalmClientTooltipComponentRegistrar> initializer) {
+        initializer.accept(FabricBalmClientTooltipComponentRegistrar.INSTANCE);
     }
 
 }

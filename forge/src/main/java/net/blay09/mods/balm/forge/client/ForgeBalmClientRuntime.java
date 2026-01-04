@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
@@ -27,6 +28,7 @@ import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.client.color.block.ForgeBalmBlockColorRegistrar;
 import net.blay09.mods.balm.forge.client.color.item.ForgeBalmItemColorRegistrar;
 import net.blay09.mods.balm.forge.client.gui.screens.inventory.ForgeBalmMenuScreenRegistrar;
+import net.blay09.mods.balm.forge.client.internal.ForgeBalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.model.geom.ForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.forge.client.particle.ForgeBalmParticleProviderRegistrar;
@@ -198,5 +200,12 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
     @Override
     public void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
         initializer.accept(ForgeBalmClientResourceReloadListenerRegistrar.INSTANCE);
+    }
+
+    @Override
+    public void clientTooltipComponents(String namespace, Consumer<BalmClientTooltipComponentRegistrar> initializer) {
+        ModBusEventRegisters.register(namespace, (bus)
+                -> bus.addListener((RegisterClientTooltipComponentFactoriesEvent event)
+                -> initializer.accept(new ForgeBalmClientTooltipComponentRegistrar(event))));
     }
 }

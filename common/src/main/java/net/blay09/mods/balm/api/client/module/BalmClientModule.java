@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.api.event.BalmEvents;
+import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
@@ -79,5 +80,8 @@ public interface BalmClientModule {
     }
 
     default void registerClientReloadListeners(BalmClientResourceReloadListenerRegistrar resourceReloadListeners) {
+    }
+
+    default void registerClientTooltipComponents(BalmClientTooltipComponentRegistrar clientTooltipComponents) {
     }
 }

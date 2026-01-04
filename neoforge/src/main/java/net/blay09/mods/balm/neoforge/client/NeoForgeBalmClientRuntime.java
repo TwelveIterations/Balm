@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
 import net.blay09.mods.balm.api.client.rendering.BalmTextures;
 import net.blay09.mods.balm.api.client.screen.BalmScreens;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
@@ -26,6 +27,7 @@ import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.color.block.internal.NeoForgeBalmBlockColorRegistrar;
 import net.blay09.mods.balm.neoforge.client.color.item.internal.NeoForgeBalmItemColorRegistrar;
 import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.internal.NeoForgeBalmMenuScreenRegistrar;
+import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.model.geom.internal.NeoForgeBalmModelLayerRegistrar;
@@ -209,6 +211,15 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
                 modBus.addListener((RegisterClientReloadListenersEvent event) -> initializer.accept(new NeoForgeBalmClientResourceReloadListenerRegistrar(event)));
+            }
+        });
+    }
+
+    @Override
+    public void clientTooltipComponents(String namespace, Consumer<BalmClientTooltipComponentRegistrar> initializer) {
+        BalmLoadContexts.get(namespace).ifPresent(context -> {
+            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+                modBus.addListener((RegisterClientTooltipComponentFactoriesEvent event) -> initializer.accept(new NeoForgeBalmClientTooltipComponentRegistrar(event)));
             }
         });
     }
