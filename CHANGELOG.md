@@ -4,6 +4,8 @@
 - Added `LivingEntityCallback.MobEffectCallback.*` for reacting to changes of Potion Effects (server only)
 - Added `EntityCallback.DimensionChange` for reacting to changes of entity dimensions (client and server)
 - Added `EventMapper.configureMappingAndReturn` to make defining custom event handlers easier inside interfaces
+- Added `BalmClientTooltipComponentRegistrar` for registering client tooltip component factories
+- Added `BalmRangeSelectItemModelPropertyRegistrar` for registering custom item model properties
 - Re-enabled unified recipe viewer support for JEI
 - Updated to Loom 1.14 and ForgeGradle 7
 - Updated to Kuma 21.11.12
@@ -14,4 +16,5 @@
 - Fixed `LivingEntityCallback.Fall` not respecting new damage amount on NeoForge and Forge
 - Fixed `LivingEntityCallback.Fall` providing wrong original fall damage on NeoForge and Forge
 - Fixed `LivingEntityCallback.Heal` not respecting new heal amount on NeoForge and Forge
+- Fixed `RenderCallback.ComputeFov` applying FOV Effects scaling incorrectly on NeoForge and Forge
 - Fixed various potential concurrency issues in Balm wrappers related to Permissions, Loot Modifiers, Commands and Capabilities
