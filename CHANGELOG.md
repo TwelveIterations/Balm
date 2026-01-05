@@ -1,4 +1,5 @@
 - Added `BalmVillagerTradeRegistrar` for registering additional trades to villagers
 - Added `BalmEntityTypeRegistration.withSpawnPlacement` for defining spawn placement on a new entity
 - Added `BiomeModificationBuilder.addSpawn` and `BiomeModificationBuilder.setSpawnCost` for adding mob spawns to biomes
+- Added `BalmClientTooltipComponentRegistrar` for registering client tooltip component factories
 - Fixed various potential concurrency issues in Balm wrappers related to Permissions, Loot Modifiers, Commands and Capabilities
