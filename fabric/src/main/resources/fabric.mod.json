@@ -11,8 +11,8 @@
   ],
   "contact": {
     "homepage": "https://balm.twelveiterations.com/",
-    "sources": "https://github.com/TwelveIterationMods/Balm",
-    "issues": "https://github.com/TwelveIterationMods/Balm/issues"
+    "sources": "https://github.com/TwelveIterations/Balm",
+    "issues": "https://github.com/TwelveIterations/Balm/issues"
   },
   "license": "${license}",
   "icon": "${mod_id}.png",

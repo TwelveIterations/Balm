@@ -1,7 +1,7 @@
 modLoader="javafml"
 loaderVersion="[1,)"
 license="${license}"
-issueTrackerURL="https://github.com/TwelveIterationMods/Balm/issues"
+issueTrackerURL="https://github.com/TwelveIterations/Balm/issues"
 [[mods]]
 modId="balm"
 version="${version}"
