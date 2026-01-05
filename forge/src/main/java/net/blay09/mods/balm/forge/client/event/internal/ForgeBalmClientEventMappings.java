@@ -6,6 +6,7 @@ import net.blay09.mods.balm.forge.platform.event.internal.ForgeBalmEventMappings
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
@@ -68,7 +69,7 @@ public class ForgeBalmClientEventMappings extends ForgeBalmEventMappings {
         RenderCallback.BlockHighlight.EVENT.configureMapping(BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT::register);
         bindSimple(RenderCallback.UpdateFov.EVENT, ComputeFovModifierEvent.BUS, (event, it) -> {
             final var newFov = it.computeFov(event.getPlayer(), event.getFovModifier());
-            event.setNewFovModifier(newFov * event.getScale());
+            event.setNewFovModifier(Mth.lerp(event.getScale(), 1f, newFov));
         });
         bindCancelable(RenderCallback.Hand.EVENT, RenderHandEvent.BUS, (event, it) -> !it.shouldRender(event.getHand(), event.getItemStack(), event.getSwingProgress()));
 

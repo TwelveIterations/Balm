@@ -6,6 +6,7 @@ import net.blay09.mods.balm.neoforge.platform.event.internal.NeoForgeBalmEventMa
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -71,7 +72,7 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
 
         bindSimple(RenderCallback.UpdateFov.EVENT, ComputeFovModifierEvent.class, (event, it) -> {
             final var newFov = it.computeFov(event.getPlayer(), event.getFovModifier());
-            event.setNewFovModifier(newFov * event.getFovScale());
+            event.setNewFovModifier(Mth.lerp(event.getFovScale(), 1f, newFov));
         });
         bindCancelable(RenderCallback.Hand.EVENT, RenderHandEvent.class, (event, it) -> !it.shouldRender(event.getHand(), event.getItemStack(), event.getSwingProgress()));
         bindCancelable(RenderCallback.Gui.BEFORE, RenderGuiEvent.Pre.class, (event, it) -> !it.shouldRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
