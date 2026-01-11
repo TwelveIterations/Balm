@@ -2,7 +2,7 @@ package net.blay09.mods.balm.fabric.world.item.internal;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.world.item.internal.AbstractBalmCreativeModeTabRegistrar;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab;
 
 public class FabricBalmCreativeModeTabRegistrar extends AbstractBalmCreativeModeTabRegistrar {
@@ -12,6 +12,6 @@ public class FabricBalmCreativeModeTabRegistrar extends AbstractBalmCreativeMode
 
     @Override
     public CreativeModeTab.Builder createBuilder() {
-        return FabricItemGroup.builder();
+        return FabricCreativeModeTab.builder();
     }
 }

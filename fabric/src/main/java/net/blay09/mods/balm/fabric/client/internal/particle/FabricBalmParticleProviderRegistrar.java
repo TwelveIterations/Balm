@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.client.internal.particle;
 
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.Holder;
@@ -15,11 +15,11 @@ public class FabricBalmParticleProviderRegistrar implements BalmParticleProvider
 
     @Override
     public <T extends ParticleOptions> void register(Holder<? extends ParticleType<T>> particleType, Function<SpriteSet, ParticleProvider<T>> factory) {
-        ParticleFactoryRegistry.getInstance().register(particleType.value(), factory::apply);
+        ParticleProviderRegistry.getInstance().register(particleType.value(), factory::apply);
     }
 
     @Override
     public <T extends ParticleOptions> void register(Holder<? extends ParticleType<T>> particleType, ParticleProvider<T> provider) {
-        ParticleFactoryRegistry.getInstance().register(particleType.value(), provider);
+        ParticleProviderRegistry.getInstance().register(particleType.value(), provider);
     }
 }
