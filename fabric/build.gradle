@@ -9,12 +9,6 @@ plugins {
 
 dependencies {
     minecraft libs.minecraft
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment variantOf(libs.parchment) {
-            artifactType('zip')
-        }
-    }
     modImplementation libs.fabricLoader
     modImplementation libs.fabricApi
 }
