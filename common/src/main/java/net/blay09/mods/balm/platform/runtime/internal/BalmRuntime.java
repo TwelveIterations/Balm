@@ -11,7 +11,6 @@ import net.blay09.mods.balm.platform.BalmHooks;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
-import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.platform.module.BalmModule;
@@ -65,8 +64,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer);
 
-    void villagerTrades(String namespace, Consumer<BalmVillagerTradeRegistrar> initializer);
-
     BalmPermissions getPermissions();
 
     <TProxy> SidedProxy<TProxy> sidedProxy(String commonName, String clientName);
@@ -93,7 +90,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         entityTypes(modId, module::registerEntityTypes);
         module.registerWorldGen(getWorldGen());
         poiTypes(modId, module::registerPoiTypes);
-        villagerTrades(modId, module::registerVillagerTrades);
         module.registerNetworking(getNetworking());
         menuTypes(modId, module::registerMenuTypes);
         module.registerCapabilities(getCapabilities());

@@ -10,7 +10,6 @@ import net.blay09.mods.balm.fabric.platform.internal.FabricBalmHooks;
 import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.blay09.mods.balm.fabric.stats.internal.FabricBalmCustomStatRegistrar;
-import net.blay09.mods.balm.fabric.world.entity.npc.villager.internal.FabricBalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.fabric.world.level.levelgen.internal.FabricBalmWorldGen;
 import net.blay09.mods.balm.platform.BalmHooks;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
@@ -31,7 +30,6 @@ import net.blay09.mods.balm.network.BalmNetworking;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.platform.permissions.BalmPermissions;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
-import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
 import net.blay09.mods.balm.platform.permissions.internal.CommonBalmPermissions;
 import net.blay09.mods.balm.core.BalmRegistrar;
@@ -165,11 +163,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new FabricBalmCustomStatRegistrar(registrar(), namespace));
-    }
-
-    @Override
-    public void villagerTrades(String namespace, Consumer<BalmVillagerTradeRegistrar> initializer) {
-        initializer.accept(new FabricBalmVillagerTradeRegistrar());
     }
 
     @Override
