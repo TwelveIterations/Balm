@@ -95,7 +95,7 @@ public record NeoForgeBalmNetworking() implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(ServerLevel level, BlockPos pos, T message) {
-        PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(pos), message);
+        PacketDistributor.sendToPlayersTrackingChunk(level, ChunkPos.containing(pos), message);
     }
 
     @Override
