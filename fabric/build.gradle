@@ -15,8 +15,8 @@ dependencies {
             artifactType('zip')
         }
     }
-    modImplementation libs.fabricLoader
-    modImplementation libs.fabricApi
+    implementation libs.fabricLoader
+    implementation libs.fabricApi
 }
 
 apply from: rootProject.file('repositories.gradle')
