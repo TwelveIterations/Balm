@@ -2,8 +2,8 @@ package net.blay09.mods.balm.fabric.world.inventory.internal;
 
 import net.blay09.mods.balm.world.BalmMenuFactory;
 import net.blay09.mods.balm.world.inventory.internal.AbstractBalmMenuTypeRegistrarImpl;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
@@ -14,6 +14,6 @@ public class FabricBalmMenuTypeRegistrar extends AbstractBalmMenuTypeRegistrarIm
 
     @Override
     public <TMenu extends AbstractContainerMenu, TPayload> MenuType<TMenu> createMenuType(BalmMenuFactory<TMenu, TPayload> factory) {
-        return new ExtendedScreenHandlerType<>(factory::create, factory.getStreamCodec());
+        return new ExtendedMenuType<>(factory::create, factory.getStreamCodec());
     }
 }

@@ -5,6 +5,7 @@ import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventPhases;
 import net.blay09.mods.balm.platform.event.callback.*;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.*;
@@ -12,7 +13,6 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
 
@@ -65,9 +65,9 @@ public class FabricBalmEventMappings {
         ServerPlayerCallback.ChunkTracking.STOP.configureMapping(FabricBalmSupplementalEvents.SERVER_PLAYER_CHUNK_TRACKING_STOP::register);
 
         LevelCallback.LOAD.configureMapping((phase, it)
-                -> ServerWorldEvents.LOAD.register(mapPhase(phase), (server, world) -> it.handle(world)));
+                -> ServerLevelEvents.LOAD.register(mapPhase(phase), (server, world) -> it.handle(world)));
         LevelCallback.UNLOAD.configureMapping((phase, it)
-                -> ServerWorldEvents.UNLOAD.register(mapPhase(phase), (server, world) -> it.handle(world)));
+                -> ServerLevelEvents.UNLOAD.register(mapPhase(phase), (server, world) -> it.handle(world)));
         LevelCallback.Chunk.LOAD.configureMapping((phase, it)
                 -> ServerChunkEvents.CHUNK_LOAD.register(mapPhase(phase), (level, chunk) -> it.handle(level, chunk, chunk.getPos())));
         LevelCallback.Chunk.UNLOAD.configureMapping((phase, it)
@@ -112,7 +112,7 @@ public class FabricBalmEventMappings {
                 -> PlayerBlockBreakEvents.BEFORE.register(mapPhase(phase), (world, player, pos, state, blockEntity) -> it.allowBreak(world, pos, state, blockEntity, player)));
 
         CreativeModeTabCallback.BuildContents.EVENT.configureMapping((phase, it)
-                -> ItemGroupEvents.MODIFY_ENTRIES_ALL.register(mapPhase(phase), it::handle));
+                -> CreativeModeTabEvents.MODIFY_ENTRIES_ALL.register(mapPhase(phase), it::handle));
     }
 
     private static InteractionResult mapInteractionResult(InteractionEventResult result) {

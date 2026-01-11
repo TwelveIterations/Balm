@@ -6,7 +6,7 @@ import net.blay09.mods.balm.nbt.BalmDataHolder;
 import net.blay09.mods.balm.world.entity.BalmForcedPoseHolder;
 import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
 import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
+import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -84,7 +84,7 @@ public class FabricBalmHooks implements BalmHooks {
 
     @Override
     public void setBurnTime(Item item, int burnTime) {
-        FuelRegistryEvents.BUILD.register((builder, context) -> builder.add(item, burnTime));
+        FuelValueEvents.BUILD.register((builder, context) -> builder.add(item, burnTime));
     }
 
     @Override

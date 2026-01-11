@@ -20,7 +20,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -74,14 +74,14 @@ public class FabricBalm implements ModInitializer {
                 if (blockEntity instanceof BalmContainerProvider containerProvider) {
                     final var container = direction != null ? containerProvider.getContainer(direction) : containerProvider.getContainer();
                     if (container != null) {
-                        return InventoryStorage.of(container, direction);
+                        return ContainerStorage.of(container, direction);
                     }
                 } else if (blockEntity != null) {
                     running = true;
                     final var container = Balm.capabilities().getCapability(blockEntity, direction, Objects.requireNonNull(CommonCapabilities.CONTAINER));
                     running = false;
                     if (container != null) {
-                        return InventoryStorage.of(container, direction);
+                        return ContainerStorage.of(container, direction);
                     }
                 }
 

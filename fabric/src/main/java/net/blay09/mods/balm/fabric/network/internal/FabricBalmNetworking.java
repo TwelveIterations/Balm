@@ -9,11 +9,11 @@ import net.blay09.mods.balm.network.protocol.common.custom.ServerboundMessageReg
 import net.blay09.mods.balm.platform.BalmEnvironment;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -87,7 +87,7 @@ public class FabricBalmNetworking implements BalmNetworking {
     @Override
     public void openMenu(Player player, MenuProvider menuProvider) {
         if (menuProvider instanceof BalmMenuProvider<?> balmMenuProvider) {
-            player.openMenu(new ExtendedScreenHandlerFactory<>() {
+            player.openMenu(new ExtendedMenuProvider<>() {
                 @Override
                 public Object getScreenOpeningData(ServerPlayer player) {
                     return balmMenuProvider.getScreenOpeningData(player);
