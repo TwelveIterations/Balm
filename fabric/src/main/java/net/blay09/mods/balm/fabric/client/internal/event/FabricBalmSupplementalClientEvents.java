@@ -162,14 +162,14 @@ public class FabricBalmSupplementalClientEvents {
     });
 
     public static void initialize() {
-        ClientTickEvents.START_WORLD_TICK.register(level -> {
+        ClientTickEvents.START_LEVEL_TICK.register(level -> {
             if (CLIENT_PLAYER_TICK_PRE.hasHandlers()) {
                 for (final var player : level.players()) {
                     CLIENT_PLAYER_TICK_PRE.invoker().handle(player);
                 }
             }
         });
-        ClientTickEvents.END_WORLD_TICK.register(level -> {
+        ClientTickEvents.END_LEVEL_TICK.register(level -> {
             if (CLIENT_PLAYER_TICK_POST.hasHandlers()) {
                 for (final var player : level.players()) {
                     CLIENT_PLAYER_TICK_POST.invoker().handle(player);
@@ -177,12 +177,12 @@ public class FabricBalmSupplementalClientEvents {
             }
         });
 
-        ClientTickEvents.START_WORLD_TICK.register(level -> {
+        ClientTickEvents.START_LEVEL_TICK.register(level -> {
             if (CLIENT_ENTITY_TICK_PRE.hasHandlers()) {
                 ((ClientLevelAccessor) level).getTickingEntities().forEach(entity -> CLIENT_ENTITY_TICK_PRE.invoker().handle(entity));
             }
         });
-        ClientTickEvents.END_WORLD_TICK.register(level -> {
+        ClientTickEvents.END_LEVEL_TICK.register(level -> {
             if (CLIENT_ENTITY_TICK_POST.hasHandlers()) {
                 ((ClientLevelAccessor) level).getTickingEntities().forEach(entity -> CLIENT_ENTITY_TICK_POST.invoker().handle(entity));
             }

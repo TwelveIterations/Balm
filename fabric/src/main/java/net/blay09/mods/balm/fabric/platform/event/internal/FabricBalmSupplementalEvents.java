@@ -156,14 +156,14 @@ public class FabricBalmSupplementalEvents {
     });
 
     public static void initialize() {
-        ServerTickEvents.START_WORLD_TICK.register(level -> {
+        ServerTickEvents.START_LEVEL_TICK.register(level -> {
             if (SERVER_PLAYER_TICK_PRE.hasHandlers()) {
                 for (final var player : level.players()) {
                     SERVER_PLAYER_TICK_PRE.invoker().handle(player);
                 }
             }
         });
-        ServerTickEvents.END_WORLD_TICK.register(level -> {
+        ServerTickEvents.END_LEVEL_TICK.register(level -> {
             if (SERVER_PLAYER_TICK_POST.hasHandlers()) {
                 for (final var player : level.players()) {
                     SERVER_PLAYER_TICK_POST.invoker().handle(player);
@@ -171,14 +171,14 @@ public class FabricBalmSupplementalEvents {
             }
         });
 
-        ServerTickEvents.START_WORLD_TICK.register(level -> {
+        ServerTickEvents.START_LEVEL_TICK.register(level -> {
             if (SERVER_ENTITY_TICK_PRE.hasHandlers()) {
                 for (final var entity : level.getAllEntities()) {
                     SERVER_ENTITY_TICK_PRE.invoker().handle(entity);
                 }
             }
         });
-        ServerTickEvents.END_WORLD_TICK.register(level -> {
+        ServerTickEvents.END_LEVEL_TICK.register(level -> {
             if (SERVER_ENTITY_TICK_POST.hasHandlers()) {
                 for (final var entity : level.getAllEntities()) {
                     SERVER_ENTITY_TICK_POST.invoker().handle(entity);

@@ -18,9 +18,9 @@ public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
         ClientTickCallback.AFTER.configureMapping((phase, it)
                 -> ClientTickEvents.END_CLIENT_TICK.register(mapPhase(phase), it::handle));
         ClientTickCallback.ClientLevelTick.BEFORE.configureMapping((phase, it)
-                -> ClientTickEvents.START_WORLD_TICK.register(mapPhase(phase), it::handle));
+                -> ClientTickEvents.START_LEVEL_TICK.register(mapPhase(phase), it::handle));
         ClientTickCallback.ClientLevelTick.AFTER.configureMapping((phase, it)
-                -> ClientTickEvents.END_WORLD_TICK.register(mapPhase(phase), it::handle));
+                -> ClientTickEvents.END_LEVEL_TICK.register(mapPhase(phase), it::handle));
 
         ClientTickCallback.ClientPlayerTick.BEFORE.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_PLAYER_TICK_PRE::register);
         ClientTickCallback.ClientPlayerTick.AFTER.configureMapping(FabricBalmSupplementalClientEvents.CLIENT_PLAYER_TICK_POST::register);

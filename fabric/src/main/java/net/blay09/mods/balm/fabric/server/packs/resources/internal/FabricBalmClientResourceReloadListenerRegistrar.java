@@ -17,6 +17,6 @@ public class FabricBalmClientResourceReloadListenerRegistrar implements BalmClie
     @Override
     public void register(String name, PreparableReloadListener listener) {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
-        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(identifier, listener);
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(identifier, listener);
     }
 }

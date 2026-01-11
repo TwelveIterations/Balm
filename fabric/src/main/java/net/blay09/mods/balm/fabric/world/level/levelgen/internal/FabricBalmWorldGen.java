@@ -25,12 +25,12 @@ public class FabricBalmWorldGen implements BalmWorldGen {
 
         @Override
         public void addSpawn(MobCategory spawnGroup, MobSpawnSettings.SpawnerData spawnEntry, int weight) {
-            builder.getSpawnSettings().addSpawn(spawnGroup, spawnEntry, weight);
+            builder.getMobSpawnSettings().addSpawn(spawnGroup, spawnEntry, weight);
         }
 
         @Override
         public void setSpawnCost(EntityType<?> entityType, double mass, double gravityLimit) {
-            builder.getSpawnSettings().setSpawnCost(entityType, mass, gravityLimit);
+            builder.getMobSpawnSettings().addMobCharge(entityType, mass, gravityLimit);
         }
     }
 
@@ -38,7 +38,7 @@ public class FabricBalmWorldGen implements BalmWorldGen {
     public void modifyBiome(Identifier id, BiomePredicate predicate, BiomeModifier modifier) {
         BiomeModifications.create(id)
                 .add(ModificationPhase.ADDITIONS,
-                        it -> predicate.test(it.getBiomeRegistryEntry()),
-                        (selectionContext, modificationContext) -> modifier.modifyBiome(selectionContext.getBiomeRegistryEntry(), new FabricBiomeModificationBuilder(modificationContext)));
+                        it -> predicate.test(it.getBiomeHolder()),
+                        (selectionContext, modificationContext) -> modifier.modifyBiome(selectionContext.getBiomeHolder(), new FabricBiomeModificationBuilder(modificationContext)));
     }
 }

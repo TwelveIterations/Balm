@@ -10,6 +10,6 @@ public class FabricBalmKeyMappingRegistrar implements BalmKeyMappingRegistrar {
 
     @Override
     public KeyMapping register(KeyMapping keyMapping) {
-        return KeyMappingHelper.registerKeyBinding(keyMapping);
+        return KeyMappingHelper.registerKeyMapping(keyMapping);
     }
 }

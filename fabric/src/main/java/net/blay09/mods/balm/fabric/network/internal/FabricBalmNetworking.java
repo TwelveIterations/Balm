@@ -171,7 +171,7 @@ public class FabricBalmNetworking implements BalmNetworking {
     public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {
         registeredMods.add(type.id().getNamespace());
         final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
-        PayloadTypeRegistry.playS2C().register(type, messageRegistration.getCodec());
+        PayloadTypeRegistry.clientboundPlay().register(type, messageRegistration.getCodec());
         messagesByType.put(type, messageRegistration);
     }
 
@@ -181,7 +181,7 @@ public class FabricBalmNetworking implements BalmNetworking {
         final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
         messagesByType.put(type, messageRegistration);
 
-        PayloadTypeRegistry.playC2S().register(type, messageRegistration.getCodec());
+        PayloadTypeRegistry.serverboundPlay().register(type, messageRegistration.getCodec());
         ServerPlayNetworking.registerGlobalReceiver(type, ((payload, context) -> context.server().execute(() -> {
             replyPacketSender = context.responseSender();
             handler.accept(context.player(), payload);

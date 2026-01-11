@@ -69,7 +69,7 @@ public class FabricBalmHooks implements BalmHooks {
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
-        return itemStack.getRecipeRemainder();
+        return itemStack.getCraftingRemainder();
     }
 
     @Override
