@@ -5,7 +5,7 @@ neoForge = "26.1.0.0-alpha.5+snapshot-2"
 forge = "61.0.1"
 fabricApi = "0.141.2+26.1"
 fabricLoader = "0.18.4"
-kuma = "21.11.12"
+kuma = "26.1.0.1-SNAPSHOT"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
