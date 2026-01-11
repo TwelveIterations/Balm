@@ -1,13 +1,13 @@
 dependencies {
-    modApi(libs.kumaFabric)
+    api(libs.kumaFabric)
     include(libs.kumaFabric)
-    modCompileOnly libs.modMenu
-    modCompileOnly libs.jeiCommon
-    modCompileOnly libs.wthitFabric
-    modCompileOnly libs.jadeFabric
-    modCompileOnly libs.trinkets
-    modCompileOnly libs.fabricPermissionsApi
-    modCompileOnly libs.rebornEnergy
-    modCompileOnly libs.clothConfigFabric
-    modCompileOnly libs.configuredFabric
+    compileOnly libs.modMenu
+    compileOnly libs.jeiCommon
+    compileOnly libs.wthitFabric
+    compileOnly libs.jadeFabric
+    compileOnly libs.trinkets
+    compileOnly libs.fabricPermissionsApi
+    compileOnly libs.rebornEnergy
+    compileOnly libs.clothConfigFabric
+    compileOnly libs.configuredFabric
 }
