@@ -14,35 +14,27 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CropBlock.class)
 public class FabricCropBlockMixin {
 
-    @ModifyVariable(method = "getGrowthSpeed(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", ordinal = 0))
-    private static BlockState getGrowthSpeedCaptureLocals(BlockState state, @Share("farmBlock") LocalRef<BlockState> farmBlock) {
-        farmBlock.set(state);
-        return state;
-    }
-
-    @ModifyVariable(method = "getGrowthSpeed(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"), ordinal = 1)
-    private static float getGrowthSpeed(float g, Block block, BlockGetter blockGetter, BlockPos pos, @Share("farmBlock") LocalRef<BlockState> farmBlock) {
-        BlockState state = farmBlock.get();
-        if (state.getBlock() instanceof CustomFarmBlock customFarmBlock) {
-            if (customFarmBlock.canSustainPlant(state, blockGetter, pos, Direction.UP, block)) {
-                if (customFarmBlock.isFertile(state, blockGetter, pos)) {
-                    return 3f;
-                } else {
-                    return 1f;
+    @WrapOperation(method = "getGrowthSpeed(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getValue(Lnet/minecraft/world/level/block/state/properties/Property;)Ljava/lang/Comparable;"))
+    private static Comparable<?> getGrowthSpeedGetMoisture(BlockState instance, Property<?> property, Operation<Comparable<?>> original, Block block, BlockGetter blockGetter, BlockPos pos) {
+        final var originalResult = original.call(instance, property);
+        if ((Integer) originalResult <= 0 && instance.getBlock() instanceof CustomFarmBlock customFarmBlock) {
+            if (customFarmBlock.canSustainPlant(instance, blockGetter, pos, Direction.UP, block)) {
+                if (customFarmBlock.isFertile(instance, blockGetter, pos)) {
+                    return 1;
                 }
             }
         }
 
-        return g;
+        return originalResult;
     }
 
     @WrapOperation(method = "randomTick(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;nextInt(I)I"))
