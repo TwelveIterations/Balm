@@ -57,7 +57,7 @@
     },
     "configured": {
       "providers": [
-        "net.blay09.mods.balm.fabric.compat.ConfiguredConfigProvider"
+        "net.blay09.mods.balm.fabric.platform.compatibility.config.internal.ConfiguredConfigProvider"
       ]
     }
   }
