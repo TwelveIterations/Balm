@@ -13,6 +13,8 @@ public class ItemStackMixin {
     @Inject(method = "is(Lnet/minecraft/core/Holder;)Z", at = @At("RETURN"), cancellable = true)
     public void is(Holder<Item> holder, CallbackInfoReturnable<Boolean> cir) {
         //noinspection ConstantValue
-        cir.setReturnValue(cir.getReturnValue() || ((ItemStack) (Object) this).is(holder.value()));
+        if (!cir.getReturnValue() && ((ItemStack) (Object) this).is(holder.value())) {
+            cir.setReturnValue(true);
+        }
     }
 }
