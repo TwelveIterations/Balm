@@ -5,7 +5,7 @@ import net.blay09.mods.balm.client.platform.internal.BalmClientSafeClientAccess;
 import net.blay09.mods.balm.fabric.client.internal.platform.runtime.internal.FabricBalmClientRuntime;
 import net.blay09.mods.balm.fabric.network.internal.FabricBalmNetworking;
 import net.blay09.mods.balm.client.BalmClient;
-import net.blay09.mods.balm.platform.module.internal.RemotePlayerModList;
+import net.blay09.mods.balm.network.internal.RemotePlayerModList;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEvent;

@@ -4,8 +4,6 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.network.BalmNetworking;
 import net.blay09.mods.balm.platform.BalmEnvironment;
 import net.blay09.mods.balm.platform.ModInfo;
-import net.blay09.mods.balm.platform.module.internal.NetworkVersions;
-import net.blay09.mods.balm.platform.module.internal.RemotePlayerModList;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import org.jspecify.annotations.Nullable;

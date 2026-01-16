@@ -6,8 +6,8 @@ import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallba
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.network.internal.CommonBalmNetworking;
 import net.blay09.mods.balm.platform.BalmEnvironment;
-import net.blay09.mods.balm.platform.module.internal.NetworkVersions;
-import net.blay09.mods.balm.platform.module.internal.ServerboundModListMessage;
+import net.blay09.mods.balm.network.internal.NetworkVersions;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.ServerboundModListMessage;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.minecraft.resources.Identifier;
 

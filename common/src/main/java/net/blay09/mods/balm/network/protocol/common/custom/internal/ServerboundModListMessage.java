@@ -1,5 +1,6 @@
-package net.blay09.mods.balm.platform.module.internal;
+package net.blay09.mods.balm.network.protocol.common.custom.internal;
 
+import net.blay09.mods.balm.network.internal.NetworkVersions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

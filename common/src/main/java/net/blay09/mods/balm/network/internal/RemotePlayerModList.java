@@ -1,7 +1,6 @@
-package net.blay09.mods.balm.platform.module.internal;
+package net.blay09.mods.balm.network.internal;
 
 import net.blay09.mods.balm.Balm;
-import net.blay09.mods.balm.network.internal.CommonBalmNetworking;
 import net.blay09.mods.balm.platform.BalmEnvironment;
 import net.blay09.mods.balm.platform.event.BidirectionalEventMapper;
 import net.blay09.mods.balm.platform.event.EventMapper;

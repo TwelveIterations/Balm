@@ -4,6 +4,8 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.commands.internal.InternalsCommand;
 import net.blay09.mods.balm.network.BalmNetworking;
+import net.blay09.mods.balm.network.internal.RemotePlayerModList;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.ServerboundModListMessage;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.platform.capabilities.internal.CommonCapabilitiesImpl;
 import net.blay09.mods.balm.platform.module.BalmModule;
