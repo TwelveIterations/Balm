@@ -4,17 +4,12 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.internal.BalmClientSafeClientAccess;
 import net.blay09.mods.balm.fabric.client.internal.platform.runtime.internal.FabricBalmClientRuntime;
 import net.blay09.mods.balm.fabric.network.internal.FabricBalmNetworking;
-import net.blay09.mods.balm.platform.BalmEnvironment;
 import net.blay09.mods.balm.client.BalmClient;
-import net.blay09.mods.balm.network.protocol.common.custom.internal.NetworkVersions;
-import net.blay09.mods.balm.network.protocol.common.custom.internal.ServerboundModListMessage;
-import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.platform.module.internal.RemotePlayerModList;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEvent;
 import net.minecraft.world.item.crafting.RecipeMap;
-
-import java.util.HashMap;
 
 public class FabricBalmClient implements ClientModInitializer {
     @Override
@@ -23,20 +18,12 @@ public class FabricBalmClient implements ClientModInitializer {
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
-            final var networking = (FabricBalmNetworking) Balm.networking();
-            final var modVersions = new HashMap<String, NetworkVersions>();
-            for (final var modId : networking.getRegisteredMods()) {
-                networking.getNetworkVersions(modId, BalmEnvironment.CLIENT)
-                        .ifPresent(clientVersions -> modVersions.put(modId, clientVersions));
-            }
-            Balm.networking().sendToServer(new ServerboundModListMessage(modVersions));
-        });
-
         ClientRecipeSynchronizedEvent.EVENT.register((client, synchronizedRecipes) -> {
             if (Balm.safeClientAccess() instanceof BalmClientSafeClientAccess clientProxy) {
                 clientProxy.setSyncedRecipes(RecipeMap.create(synchronizedRecipes.recipes()));
             }
         });
+
+        RemotePlayerModList.RECEIVED.register(event -> RemotePlayerModList.validateRemoteMods(event.player(), event.modList()));
     }
 }

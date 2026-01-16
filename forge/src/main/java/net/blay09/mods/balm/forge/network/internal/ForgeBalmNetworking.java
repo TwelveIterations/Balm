@@ -1,7 +1,8 @@
 package net.blay09.mods.balm.forge.network.internal;
 
 import net.blay09.mods.balm.Balm;
-import net.blay09.mods.balm.network.BalmNetworking;
+import net.blay09.mods.balm.internal.mixin.ChunkMapAccessor;
+import net.blay09.mods.balm.network.internal.CommonBalmNetworking;
 import net.blay09.mods.balm.network.protocol.common.custom.ClientboundMessageRegistration;
 import net.blay09.mods.balm.network.protocol.common.custom.ServerboundMessageRegistration;
 import net.blay09.mods.balm.network.protocol.common.custom.internal.MessageRegistration;
@@ -16,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
@@ -27,7 +29,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
-public class ForgeBalmNetworking implements BalmNetworking {
+public class ForgeBalmNetworking extends CommonBalmNetworking {
 
     private static final Logger logger = LoggerFactory.getLogger(ForgeBalmNetworking.class);
 
@@ -42,11 +44,13 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public void allowClientOnly(String modId) {
+        super.allowClientOnly(modId);
         NetworkChannels.allowClientOnly(modId);
     }
 
     @Override
     public void allowServerOnly(String modId) {
+        super.allowServerOnly(modId);
         NetworkChannels.allowServerOnly(modId);
     }
 
@@ -63,6 +67,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
 
     @Override
     public void defineNetworkVersion(String modId, String version) {
+        super.defineNetworkVersion(modId, version);
         NetworkChannels.defineNetworkVersion(modId, version);
     }
 
@@ -79,42 +84,58 @@ public class ForgeBalmNetworking implements BalmNetworking {
             throw new IllegalStateException("No context to reply to");
         }
 
-        final var messageRegistration = getMessageRegistrationOrThrow(message);
-        final var type = messageRegistration.getType();
-        final var channel = NetworkChannels.get(type.id().getNamespace());
+        final var channel = NetworkChannels.get(message.type().id().getNamespace());
         channel.reply(message, replyContext);
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendTo(Player player, T message) {
-        final var messageRegistration = getMessageRegistrationOrThrow(message);
-        final var type = messageRegistration.getType();
-        final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.PLAYER.with((ServerPlayer) player));
+        if (player instanceof ServerPlayer serverPlayer && isMessageSupported(serverPlayer, message)) {
+            final var channel = NetworkChannels.get(message.type().id().getNamespace());
+            channel.send(message, serverPlayer.connection.getConnection());
+        }
     }
 
     @Override
-    public <T extends CustomPacketPayload> void sendToTracking(ServerLevel world, BlockPos pos, T message) {
-        final var messageRegistration = getMessageRegistrationOrThrow(message);
-        final var type = messageRegistration.getType();
-        final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.TRACKING_CHUNK.with(world.getChunkAt(pos)));
+    public <T extends CustomPacketPayload> void sendToTracking(ServerLevel level, BlockPos pos, T message) {
+        final var channel = NetworkChannels.get(message.type().id().getNamespace());
+        final var players = level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false);
+        for (final var player : players) {
+            if (isMessageSupported(player, message)) {
+                channel.send(message, player.connection.getConnection());
+            }
+        }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(Entity entity, T message) {
-        final var messageRegistration = getMessageRegistrationOrThrow(message);
-        final var type = messageRegistration.getType();
-        final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.TRACKING_ENTITY.with(entity));
+        final var channel = NetworkChannels.get(message.type().id().getNamespace());
+        if (entity.level() instanceof ServerLevel level) {
+            final var trackedEntity = ((ChunkMapAccessor) level.getChunkSource().chunkMap).getEntityMap().get(entity.getId());
+            for(final var connection : trackedEntity.getSeenBy()) {
+                final var player = connection.getPlayer();
+                if (isMessageSupported(player, message)) {
+                    channel.send(message, player.connection.getConnection());
+                }
+            }
+        }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToAll(MinecraftServer server, T message) {
-        final var messageRegistration = getMessageRegistrationOrThrow(message);
-        final var type = messageRegistration.getType();
-        final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.ALL.noArg());
+        final var channel = NetworkChannels.get(message.type().id().getNamespace());
+        for (final var player : server.getPlayerList().getPlayers()) {
+            if (isMessageSupported(player, message)) {
+                channel.send(message, player.connection.getConnection());
+            }
+        }
+    }
+
+    @Override
+    public boolean isMessageSupported(ServerPlayer player, CustomPacketPayload payload) {
+        // Short-circuit to Forge's inbuilt check, but if the mod is announced (super impl) we send it regardless
+        // That way we error explicitly on an illegal state rather than letting the issue propagate into undefined behavior
+        return NetworkChannels.get(payload.type().id().getNamespace()).isRemotePresent(player.connection.getConnection()) || super.isMessageSupported(player, payload);
     }
 
     @Override
@@ -124,19 +145,10 @@ public class ForgeBalmNetworking implements BalmNetworking {
             return;
         }
 
-        final var messageRegistration = getMessageRegistrationOrThrow(message);
-        final var type = messageRegistration.getType();
-        final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.SERVER.noArg());
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends CustomPacketPayload> MessageRegistration<RegistryFriendlyByteBuf, T> getMessageRegistrationOrThrow(T message) {
-        final var messageRegistration = (MessageRegistration<RegistryFriendlyByteBuf, T>) messagesByType.get(message.type());
-        if (messageRegistration == null) {
-            throw new IllegalArgumentException("Cannot send message " + message.getClass() + " as it is not registered");
+        if (isMessageSupportedByServer(message)) {
+            final var channel = NetworkChannels.get(message.type().id().getNamespace());
+            channel.send(message, PacketDistributor.SERVER.noArg());
         }
-        return messageRegistration;
     }
 
     @Override
@@ -144,6 +156,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
         final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
 
         messagesByType.put(type, messageRegistration);
+        registeredMods.add(type.id().getNamespace());
 
         SimpleChannel channel = NetworkChannels.get(type.id().getNamespace());
         channel.messageBuilder(clazz, nextDiscriminator(type.id().getNamespace()), NetworkDirection.PLAY_TO_CLIENT)
@@ -157,6 +170,7 @@ public class ForgeBalmNetworking implements BalmNetworking {
         final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
 
         messagesByType.put(type, messageRegistration);
+        registeredMods.add(type.id().getNamespace());
 
         final var channel = NetworkChannels.get(type.id().getNamespace());
         channel.messageBuilder(clazz, nextDiscriminator(type.id().getNamespace()), NetworkDirection.PLAY_TO_SERVER)

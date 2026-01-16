@@ -34,10 +34,13 @@ import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
+import net.blay09.mods.balm.platform.module.internal.NetworkVersions;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
@@ -48,6 +51,9 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void menuTypes(String namespace, Consumer<BalmMenuTypeRegistrar> initializer);
 
     BalmNetworking getNetworking();
+
+    default void validateRemoteModList(ServerPlayer player, Map<String, NetworkVersions> modList) {
+    }
 
     BalmHooks getHooks();
 
