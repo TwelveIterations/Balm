@@ -1,1 +1,1 @@
-- Fixed `ContainerScreenDrawEvent.Background` firing unreliably on Fabric
+- Fixed ItemStack#is mixin to be less invasive, to prevent potentially breaking other mods targetting the same method
