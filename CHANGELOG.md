@@ -1,20 +1,3 @@
-- Added `BalmVillagerTradeRegistrar` for registering additional trades to villagers
-- Added `BalmEntityTypeRegistration.withSpawnPlacement` for defining spawn placement on a new entity
-- Added `BiomeModificationBuilder.addSpawn` and `BiomeModificationBuilder.setSpawnCost` for adding mob spawns to biomes
-- Added `LivingEntityCallback.MobEffectCallback.*` for reacting to changes of Potion Effects (server only)
-- Added `EntityCallback.DimensionChange` for reacting to changes of entity dimensions (client and server)
-- Added `EventMapper.configureMappingAndReturn` to make defining custom event handlers easier inside interfaces
-- Added `BalmClientTooltipComponentRegistrar` for registering client tooltip component factories
-- Added `BalmRangeSelectItemModelPropertyRegistrar` for registering custom item model properties
-- Re-enabled unified recipe viewer support for JEI
-- Updated to Loom 1.14 and ForgeGradle 7
-- Updated to Kuma 21.11.12
-  - Added `overrideName` to specify a custom name for a key mapping
-  - Added `skipRegistration` to create virtual key mappings that do not show up in controls
-  - Fixed Kuma-registered keys not being remappable when `Controlling` is installed
-  - Fixed `handleWorldInput` always consuming the key on Fabric, even if handler returned `false`
-- Fixed `LivingEntityCallback.Fall` not respecting new damage amount on NeoForge and Forge
-- Fixed `LivingEntityCallback.Fall` providing wrong original fall damage on NeoForge and Forge
-- Fixed `LivingEntityCallback.Heal` not respecting new heal amount on NeoForge and Forge
-- Fixed `RenderCallback.ComputeFov` applying FOV Effects scaling incorrectly on NeoForge and Forge
-- Fixed various potential concurrency issues in Balm wrappers related to Permissions, Loot Modifiers, Commands and Capabilities
+- Fixed wrong class name for Fabric common proxy
+- Fixed wrong provider class for Configured on Fabric
+- Fixed ItemStack#is mixin to be less invasive, to prevent potentially breaking other mods targetting the same method
