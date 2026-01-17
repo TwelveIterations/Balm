@@ -64,7 +64,8 @@ public final class InternalsCommand {
                                 source.sendSuccess(() -> Component.literal("Difficulty set to Peaceful"), true);
                                 level.setWeatherParameters(99999, 0, false, false);
                                 source.sendSuccess(() -> Component.literal("Weather cleared"), true);
-                                level.setDayTime(1000);
+                                final var clockManager = source.getServer().clockManager();
+                                level.dimensionType().defaultClock().ifPresent(it -> clockManager.setTotalTicks(it, 1000L));
                                 source.sendSuccess(() -> Component.literal("Set the time to Daytime"), true);
                             } else {
                                 context.getSource()

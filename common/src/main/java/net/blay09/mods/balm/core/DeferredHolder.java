@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -41,6 +42,12 @@ public class DeferredHolder<T> implements Holder<T> {
     }
 
     @Override
+    public boolean areComponentsBound() {
+        tryBind();
+        return delegate != null && delegate.areComponentsBound();
+    }
+
+    @Override
     public boolean is(Identifier identifier) {
         return resourceKey.identifier().equals(identifier);
     }
@@ -71,6 +78,16 @@ public class DeferredHolder<T> implements Holder<T> {
     public Stream<TagKey<T>> tags() {
         tryBind();
         return delegate != null ? delegate.tags() : Stream.empty();
+    }
+
+    @Override
+    public DataComponentMap components() {
+        tryBind();
+        if (delegate == null) {
+            throw new IllegalStateException("Tried to access " + resourceKey + " before it was bound");
+        }
+        
+        return delegate.components();
     }
 
     @Override

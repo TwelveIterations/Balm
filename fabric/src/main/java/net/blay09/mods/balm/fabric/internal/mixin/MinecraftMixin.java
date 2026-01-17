@@ -35,7 +35,7 @@ public class MinecraftMixin {
         return FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().modifyScreen(screen);
     }
 
-    @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;interactAt(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"))
+    @WrapOperation(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"))
     public InteractionResult startUseItemInteractAt(MultiPlayerGameMode instance, Player player, Entity entity, EntityHitResult entityHitResult, InteractionHand hand, Operation<InteractionResult> operation) {
         final var result = FabricBalmSupplementalClientEvents.CLIENT_USE_ITEM.invoker().beforeUse(player, hand);
         return result.interactionResult().orElseGet(() -> operation.call(instance, player, entity, entityHitResult, hand));

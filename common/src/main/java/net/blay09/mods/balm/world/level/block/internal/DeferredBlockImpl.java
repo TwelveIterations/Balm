@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import net.blay09.mods.balm.world.level.block.DeferredBlock;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
@@ -38,6 +39,11 @@ public record DeferredBlockImpl(Holder<Block> holder) implements DeferredBlock {
     }
 
     @Override
+    public boolean areComponentsBound() {
+        return holder.areComponentsBound();
+    }
+
+    @Override
     public boolean is(Identifier identifier) {
         return holder.is(identifier);
     }
@@ -65,6 +71,11 @@ public record DeferredBlockImpl(Holder<Block> holder) implements DeferredBlock {
     @Override
     public Stream<TagKey<Block>> tags() {
         return holder.tags();
+    }
+
+    @Override
+    public DataComponentMap components() {
+        return holder.components();
     }
 
     @Override

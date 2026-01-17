@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
@@ -28,6 +29,11 @@ public record DeferredItemImpl(Holder<Item> holder) implements DeferredItem {
     @Override
     public boolean isBound() {
         return holder.isBound();
+    }
+
+    @Override
+    public boolean areComponentsBound() {
+        return holder.areComponentsBound();
     }
 
     @Override
@@ -58,6 +64,11 @@ public record DeferredItemImpl(Holder<Item> holder) implements DeferredItem {
     @Override
     public Stream<TagKey<Item>> tags() {
         return holder.tags();
+    }
+
+    @Override
+    public DataComponentMap components() {
+        return holder.components();
     }
 
     @Override

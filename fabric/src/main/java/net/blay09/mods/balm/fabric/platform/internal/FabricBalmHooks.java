@@ -68,7 +68,7 @@ public class FabricBalmHooks implements BalmHooks {
     }
 
     @Override
-    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
+    public ItemStackTemplate getCraftingRemainingItem(ItemStack itemStack) {
         return itemStack.getCraftingRemainder();
     }
 
@@ -124,8 +124,8 @@ public class FabricBalmHooks implements BalmHooks {
                     int filled = fluidTank.fill(fluid, 1000, true);
                     if (filled >= 1000) {
                         if (handItem.getCount() > 1) {
-                            ItemStack restItem = Balm.hooks().getCraftingRemainingItem(handItem);
-                            if (player.addItem(restItem)) {
+                            final var restItem = Balm.hooks().getCraftingRemainingItem(handItem);
+                            if (player.addItem(restItem.create())) {
                                 player.playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
                                 fluidTank.getFluid().getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
                                 handItem.shrink(1);
@@ -134,7 +134,7 @@ public class FabricBalmHooks implements BalmHooks {
                             }
                         } else {
                             player.playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
-                            player.setItemInHand(hand, Balm.hooks().getCraftingRemainingItem(handItem));
+                            player.setItemInHand(hand, Balm.hooks().getCraftingRemainingItem(handItem).create());
                             fluidTank.fill(fluid, 1000, false);
                             return true;
                         }

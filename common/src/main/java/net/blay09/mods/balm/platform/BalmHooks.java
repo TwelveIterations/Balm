@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -49,7 +50,7 @@ public interface BalmHooks {
      */
     boolean isFakePlayer(Player player);
 
-    ItemStack getCraftingRemainingItem(ItemStack itemStack);
+    ItemStackTemplate getCraftingRemainingItem(ItemStack itemStack);
 
     /**
      * Returns the dye color for a dye item.

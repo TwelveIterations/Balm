@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.fabric.client.internal.color.block;
 
 import net.blay09.mods.balm.client.color.block.internal.AbstractBalmBlockColorRegistrar;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.world.level.block.Block;
 
@@ -12,6 +12,6 @@ public class FabricBalmBlockColorRegistrar extends AbstractBalmBlockColorRegistr
 
     @Override
     public void register(BlockColor color, Supplier<Block[]> blocks) {
-        ColorProviderRegistry.BLOCK.register(color, blocks.get());
+        BlockColorRegistry.register(color, blocks.get());
     }
 }

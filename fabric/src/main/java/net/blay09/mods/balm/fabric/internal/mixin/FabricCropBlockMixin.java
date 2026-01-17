@@ -23,9 +23,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CropBlock.class)
 public class FabricCropBlockMixin {
 
-    @WrapOperation(method = "getGrowthSpeed(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getValue(Lnet/minecraft/world/level/block/state/properties/Property;)Ljava/lang/Comparable;"))
-    private static Comparable<?> getGrowthSpeedGetMoisture(BlockState instance, Property<?> property, Operation<Comparable<?>> original, Block block, BlockGetter blockGetter, BlockPos pos) {
-        final var originalResult = original.call(instance, property);
+    @WrapOperation(method = "getGrowthSpeed(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getValueOrElse(Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Ljava/lang/Comparable;"))
+    private static Comparable<?> getGrowthSpeedGetMoisture(BlockState instance, Property<?> property, Comparable<?> comparable, Operation<Comparable<?>> original, Block block, BlockGetter blockGetter, BlockPos pos) {
+        final var originalResult = original.call(instance, property, comparable);
         if ((Integer) originalResult <= 0 && instance.getBlock() instanceof CustomFarmBlock customFarmBlock) {
             if (customFarmBlock.canSustainPlant(instance, blockGetter, pos, Direction.UP, block)) {
                 if (customFarmBlock.isFertile(instance, blockGetter, pos)) {
