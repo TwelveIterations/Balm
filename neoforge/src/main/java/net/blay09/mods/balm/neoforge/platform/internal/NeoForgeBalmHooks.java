@@ -11,10 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -90,7 +87,7 @@ public class NeoForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
+    public ItemStackTemplate getCraftingRemainingItem(ItemStack itemStack) {
         return itemStack.getCraftingRemainder();
     }
 
