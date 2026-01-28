@@ -160,7 +160,15 @@ public class Balm {
         runtime.addServerReloadListener(identifier, reloadListener);
     }
 
+    /**
+     * @deprecated Renamed to {@link #safeClientAccess()}.
+     */
+    @Deprecated
     public static BalmProxy getProxy() {
+        return safeClientAccess();
+    }
+
+    public static BalmProxy safeClientAccess() {
         return runtime.getProxy();
     }
 
@@ -168,11 +176,27 @@ public class Balm {
         return runtime.getEvents();
     }
 
+    /**
+     * @deprecated Renamed to {@link #config()}.
+     */
+    @Deprecated
     public static BalmConfig getConfig() {
+        return config();
+    }
+
+    public static BalmConfig config() {
         return runtime.getConfig();
     }
 
+    /**
+     * @deprecated Renamed to {@link #networking()}.
+     */
+    @Deprecated
     public static BalmNetworking getNetworking() {
+        return networking();
+    }
+
+    public static BalmNetworking networking() {
         return runtime.getNetworking();
     }
 
@@ -220,7 +244,15 @@ public class Balm {
         return runtime.getMenus();
     }
 
+    /**
+     * @deprecated Renamed to {@link #hooks()}.
+     */
+    @Deprecated
     public static BalmHooks getHooks() {
+        return hooks();
+    }
+
+    public static BalmHooks hooks() {
         return runtime.getHooks();
     }
 
@@ -252,15 +284,36 @@ public class Balm {
         return runtime.getEntities();
     }
 
+    /**
+     * @deprecated Renamed to {@link #capabilities()}.
+     */
+    @Deprecated
     public static BalmCapabilities getCapabilities() {
+        return capabilities();
+    }
+
+    public static BalmCapabilities capabilities() {
         return runtime.getCapabilities();
     }
 
+    @Deprecated
     public static BalmCommands getCommands() {
+        return commands();
+    }
+
+    public static BalmCommands commands() {
         return runtime.getCommands();
     }
 
+    /**
+     * @deprecated Renamed to {@link #lootModifiers()}.
+     */
+    @Deprecated
     public static BalmLootTables getLootTables() {
+        return lootModifiers();
+    }
+
+    public static BalmLootTables lootModifiers() {
         return runtime.getLootTables();
     }
 
@@ -272,7 +325,15 @@ public class Balm {
         return runtime.getStats();
     }
 
+    /**
+     * @deprecated Renamed to {@link #modSupport()}.
+     */
+    @Deprecated
     public static BalmModSupport getModSupport() {
+        return modSupport();
+    }
+
+    public static BalmModSupport modSupport() {
         return runtime.getModSupport();
     }
 
@@ -284,7 +345,15 @@ public class Balm {
         return runtime.getParticles();
     }
 
+    /**
+     * @deprecated Renamed to {@link #permissions()}.
+     */
+    @Deprecated
     public static BalmPermissions getPermissions() {
+        return permissions();
+    }
+
+    public static BalmPermissions permissions() {
         return runtime.getPermissions();
     }
 
