@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly "net.blay09.mods:kuma-api-common:$kuma_version"
+    api "net.blay09.mods:kuma-api-common:$kuma_version"
     compileOnly "mezz.jei:jei-$jei_minecraft_version-common-api:$jei_version"
     compileOnly "mcp.mobius.waila:wthit-api:mojmap-$wthit_version"
 }
