@@ -62,7 +62,12 @@ public final class InternalsCommand {
                                 source.sendSuccess(() -> Component.literal("Trader Spawning disabled"), true);
                                 server.setDifficulty(Difficulty.PEACEFUL, true);
                                 source.sendSuccess(() -> Component.literal("Difficulty set to Peaceful"), true);
-                                level.setWeatherParameters(99999, 0, false, false);
+                                final var weatherData = level.getWeatherData();
+                                weatherData.setClearWeatherTime(99999);
+                                weatherData.setRainTime(0);
+                                weatherData.setThunderTime(0);
+                                weatherData.setRaining(false);
+                                weatherData.setThundering(false);
                                 source.sendSuccess(() -> Component.literal("Weather cleared"), true);
                                 final var clockManager = source.getServer().clockManager();
                                 level.dimensionType().defaultClock().ifPresent(it -> clockManager.setTotalTicks(it, 1000L));

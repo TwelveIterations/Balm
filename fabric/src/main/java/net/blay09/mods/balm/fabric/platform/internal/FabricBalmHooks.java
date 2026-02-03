@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -75,11 +76,7 @@ public class FabricBalmHooks implements BalmHooks {
     @Override
     @Nullable
     public DyeColor getColor(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof DyeItem) {
-            return ((DyeItem) itemStack.getItem()).getDyeColor();
-        }
-
-        return null;
+        return itemStack.get(DataComponents.DYE);
     }
 
     @Override
