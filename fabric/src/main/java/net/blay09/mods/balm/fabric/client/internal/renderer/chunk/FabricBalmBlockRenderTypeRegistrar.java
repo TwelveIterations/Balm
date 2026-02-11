@@ -11,7 +11,6 @@ public class FabricBalmBlockRenderTypeRegistrar implements BalmBlockRenderTypeRe
 
     @Override
     public void setRenderLayer(Holder<Block> block, ChunkSectionLayer layer) {
-        ChunkSectionLayerMap.putBlocks(layer, block.value());
     }
 
 }

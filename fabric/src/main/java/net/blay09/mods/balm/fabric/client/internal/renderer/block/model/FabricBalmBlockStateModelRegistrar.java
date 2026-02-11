@@ -26,8 +26,8 @@ public class FabricBalmBlockStateModelRegistrar extends AbstractBalmBlockStateMo
             final var textureSlots = model.getTopTextureSlots();
             final var ambientOcclusion = model.getTopAmbientOcclusion();
             final var quadCollection = model.bakeTopGeometry(textureSlots, baker, BlockModelRotation.IDENTITY);
-            final var particleSprite = model.resolveParticleSprite(textureSlots, baker);
-            return new SingleVariant(new SimpleModelWrapper(quadCollection, ambientOcclusion, particleSprite));
+            final var particleMaterial = model.resolveParticleMaterial(textureSlots, baker);
+            return new SingleVariant(new SimpleModelWrapper(quadCollection, ambientOcclusion, particleMaterial, false));
         }));
         return new FabricDeferredBlockStateModel(extraModelKey);
     }
