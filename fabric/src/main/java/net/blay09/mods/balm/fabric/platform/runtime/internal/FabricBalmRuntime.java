@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.fabric.platform.runtime.internal;
 
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.fabric.commands.internal.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.core.internal.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.core.particles.internal.FabricBalmParticleTypeRegistrar;

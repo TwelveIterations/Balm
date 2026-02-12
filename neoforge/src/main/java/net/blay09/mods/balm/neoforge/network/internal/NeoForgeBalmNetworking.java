@@ -1,8 +1,9 @@
 package net.blay09.mods.balm.neoforge.network.internal;
 
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.internal.mixin.ChunkMapAccessor;
 import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
-import net.blay09.mods.balm.network.BalmNetworking;
+import net.blay09.mods.balm.network.internal.CommonBalmNetworking;
 import net.blay09.mods.balm.network.protocol.common.custom.ClientboundMessageRegistration;
 import net.blay09.mods.balm.network.protocol.common.custom.ServerboundMessageRegistration;
 import net.blay09.mods.balm.network.protocol.common.custom.internal.MessageRegistration;
@@ -31,31 +32,15 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
-public record NeoForgeBalmNetworking() implements BalmNetworking {
+public class NeoForgeBalmNetworking extends CommonBalmNetworking {
 
     private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmNetworking.class);
     @Nullable
     private static IPayloadContext replyContext;
-    private static final Set<String> clientOnlyMods = Collections.synchronizedSet(new HashSet<>());
-    private static final Set<String> serverOnlyMods = Collections.synchronizedSet(new HashSet<>());
-    private static final Map<String, String> networkVersions = new ConcurrentHashMap<>();
-
-    @Override
-    public void allowClientOnly(String modId) {
-        clientOnlyMods.add(modId);
-    }
-
-    @Override
-    public void allowServerOnly(String modId) {
-        serverOnlyMods.add(modId);
-    }
 
     @Override
     public void openMenu(Player player, MenuProvider menuProvider) {
@@ -66,11 +51,6 @@ public record NeoForgeBalmNetworking() implements BalmNetworking {
                 serverPlayer.openMenu(menuProvider);
             }
         }
-    }
-
-    @Override
-    public void defineNetworkVersion(String modId, String version) {
-        networkVersions.put(modId, version);
     }
 
     private <T> void openGui(ServerPlayer player, BalmMenuProvider<T> menuProvider) {
@@ -89,23 +69,42 @@ public record NeoForgeBalmNetworking() implements BalmNetworking {
     @Override
     public <T extends CustomPacketPayload> void sendTo(Player player, T message) {
         if (player instanceof ServerPlayer serverPlayer) {
-            PacketDistributor.sendToPlayer(serverPlayer, message);
+            if (isMessageSupported(serverPlayer, message)) {
+                PacketDistributor.sendToPlayer(serverPlayer, message);
+            }
         }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(ServerLevel level, BlockPos pos, T message) {
-        PacketDistributor.sendToPlayersTrackingChunk(level, ChunkPos.containing(pos), message);
+        final var players = level.getChunkSource().chunkMap.getPlayers(ChunkPos.containing(pos), false);
+        for (final var player : players) {
+            if (isMessageSupported(player, message)) {
+                PacketDistributor.sendToPlayer(player, message);
+            }
+        }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(Entity entity, T message) {
-        PacketDistributor.sendToPlayersTrackingEntity(entity, message);
+        if (entity.level() instanceof ServerLevel level) {
+            final var trackedEntity = ((ChunkMapAccessor) level.getChunkSource().chunkMap).getEntityMap().get(entity.getId());
+            for(final var connection : trackedEntity.getSeenBy()) {
+                final var player = connection.getPlayer();
+                if (isMessageSupported(player, message)) {
+                    PacketDistributor.sendToPlayer(player, message);
+                }
+            }
+        }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToAll(MinecraftServer server, T message) {
-        PacketDistributor.sendToAllPlayers(message);
+        for (final var player : server.getPlayerList().getPlayers()) {
+            if (isMessageSupported(player, message)) {
+                PacketDistributor.sendToPlayer(player, message);
+            }
+        }
     }
 
     @Override
@@ -115,7 +114,9 @@ public record NeoForgeBalmNetworking() implements BalmNetworking {
             return;
         }
 
-        ClientPacketDistributor.sendToServer(message);
+        if (isMessageSupportedByServer(message)) {
+            ClientPacketDistributor.sendToServer(message);
+        }
     }
 
     @Override
@@ -123,6 +124,7 @@ public record NeoForgeBalmNetworking() implements BalmNetworking {
         final var messageRegistration = new ClientboundMessageRegistration<>(type, codec, handler);
         final var registrations = getActiveRegistrations(type.id().getNamespace());
         registrations.playMessagesByType.put(type, messageRegistration);
+        registeredMods.add(type.id().getNamespace());
     }
 
     @Override
@@ -130,6 +132,7 @@ public record NeoForgeBalmNetworking() implements BalmNetworking {
         final var messageRegistration = new ServerboundMessageRegistration<>(type, codec, handler);
         final var registrations = getActiveRegistrations(type.id().getNamespace());
         registrations.playMessagesByType.put(type, messageRegistration);
+        registeredMods.add(type.id().getNamespace());
     }
 
     private Registrations getActiveRegistrations(String namespace) {
@@ -146,9 +149,10 @@ public record NeoForgeBalmNetworking() implements BalmNetworking {
 
         @SubscribeEvent
         public void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
-            final var networkVersion = networkVersions.get(modId);
+            final var networking = (CommonBalmNetworking) Balm.networking();
+            final var networkVersion = networking.getNetworkVersion(modId);
             var registrar = event.registrar(networkVersion != null ? networkVersion : modId);
-            if (clientOnlyMods.contains(modId) || serverOnlyMods.contains(modId)) {
+            if (networking.isClientOnly(modId) || networking.isServerOnly(modId)) {
                 registrar = registrar.optional();
             }
             for (final var entry : playMessagesByType.entrySet()) {
