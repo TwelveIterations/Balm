@@ -1,12 +1,10 @@
 package net.blay09.mods.balm.fabric.network.internal;
 
 import net.blay09.mods.balm.Balm;
-import net.blay09.mods.balm.network.BalmNetworking;
-import net.blay09.mods.balm.network.protocol.common.custom.internal.NetworkVersions;
+import net.blay09.mods.balm.network.internal.CommonBalmNetworking;
 import net.blay09.mods.balm.network.protocol.common.custom.ClientboundMessageRegistration;
-import net.blay09.mods.balm.network.protocol.common.custom.internal.MessageRegistration;
 import net.blay09.mods.balm.network.protocol.common.custom.ServerboundMessageRegistration;
-import net.blay09.mods.balm.platform.BalmEnvironment;
+import net.blay09.mods.balm.network.protocol.common.custom.internal.MessageRegistration;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -14,7 +12,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -32,21 +29,17 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
-public class FabricBalmNetworking implements BalmNetworking {
+public class FabricBalmNetworking extends CommonBalmNetworking {
 
     private static final Logger logger = LoggerFactory.getLogger(FabricBalmNetworking.class);
 
     private static final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> messagesByType = new ConcurrentHashMap<>();
     @Nullable
     private static PacketSender replyPacketSender;
-    private final Set<String> registeredMods = Collections.synchronizedSet(new HashSet<>());
-    private final Set<String> clientOnlyMods = Collections.synchronizedSet(new HashSet<>());
-    private final Set<String> serverOnlyMods = Collections.synchronizedSet(new HashSet<>());
-    private final Map<String, String> networkVersions = Collections.synchronizedMap(new HashMap<>());
 
     public static void initializeClientHandlers() {
         for (final var messageRegistration : messagesByType.values()) {
@@ -60,28 +53,6 @@ public class FabricBalmNetworking implements BalmNetworking {
         final var type = messageRegistration.getType();
         BiConsumer<Player, TPayload> handler = messageRegistration.getHandler();
         ClientPlayNetworking.registerGlobalReceiver(type, ((payload, context) -> context.client().execute(() -> handler.accept(context.player(), payload))));
-    }
-
-    public Set<String> getRegisteredMods() {
-        return registeredMods;
-    }
-
-    public boolean isClientOnly(String modId) {
-        return clientOnlyMods.contains(modId);
-    }
-
-    public boolean isServerOnly(String modId) {
-        return serverOnlyMods.contains(modId);
-    }
-
-    @Override
-    public void allowClientOnly(String modId) {
-        clientOnlyMods.add(modId);
-    }
-
-    @Override
-    public void allowServerOnly(String modId) {
-        serverOnlyMods.add(modId);
     }
 
     @Override
@@ -110,20 +81,6 @@ public class FabricBalmNetworking implements BalmNetworking {
     }
 
     @Override
-    public void defineNetworkVersion(String modId, String version) {
-        networkVersions.put(modId, version);
-    }
-
-    public Optional<NetworkVersions> getNetworkVersions(String modId, BalmEnvironment environment) {
-        return FabricLoader.getInstance().getModContainer(modId)
-                .map(modContainer -> modContainer.getMetadata().getVersion().toString())
-                .map(modVersion -> {
-                    final var networkVersion = networkVersions.getOrDefault(modId, modVersion);
-                    return new NetworkVersions(modVersion, networkVersion, environment == BalmEnvironment.CLIENT ? !isClientOnly(modId) : !isServerOnly(modId));
-                });
-    }
-
-    @Override
     public <T extends CustomPacketPayload> void reply(T message) {
         if (replyPacketSender == null) {
             throw new IllegalStateException("No context to reply to");
@@ -134,35 +91,50 @@ public class FabricBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendTo(Player player, T message) {
-        ServerPlayNetworking.send((ServerPlayer) player, message);
+        if (player instanceof ServerPlayer serverPlayer && isMessageSupported(serverPlayer, message)) {
+            ServerPlayNetworking.send(serverPlayer, message);
+        }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(ServerLevel world, BlockPos pos, T message) {
-        for (ServerPlayer player : PlayerLookup.tracking(world, pos)) {
-            ServerPlayNetworking.send(player, message);
+        for (final var player : PlayerLookup.tracking(world, pos)) {
+            if (isMessageSupported(player, message)) {
+                ServerPlayNetworking.send(player, message);
+            }
         }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(Entity entity, T message) {
-        for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-            ServerPlayNetworking.send(player, message);
+        for (final var player : PlayerLookup.tracking(entity)) {
+            if (isMessageSupported(player, message)) {
+                ServerPlayNetworking.send(player, message);
+            }
         }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToAll(MinecraftServer server, T message) {
-        for (ServerPlayer player : PlayerLookup.all(server)) {
-            ServerPlayNetworking.send(player, message);
+        for (final var player : PlayerLookup.all(server)) {
+            if (isMessageSupported(player, message)) {
+                ServerPlayNetworking.send(player, message);
+            }
         }
+    }
+
+    @Override
+    public boolean isMessageSupported(ServerPlayer player, CustomPacketPayload payload) {
+        // Short-circuit to Fabric's inbuilt check, but if the mod is announced (super impl) we send it regardless
+        // That way we error explicitly on an illegal state rather than letting the issue propagate into undefined behavior
+        return ServerPlayNetworking.canSend(player, payload.type()) || super.isMessageSupported(player, payload);
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
         if (!Balm.safeClientAccess().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
-        } else {
+        } else if (isMessageSupportedByServer(message)) {
             ClientPlayNetworking.send(message);
         }
     }

@@ -12,7 +12,9 @@
     "MinecraftServerMixin",
     "ReloadableServerResourcesMixin",
     "StemBlockMixin",
-    "RandomizableContainerBlockEntityMixin"
+    "RandomizableContainerBlockEntityMixin",
+    "ChunkMapAccessor",
+    "TrackedEntityAccessor"
   ],
   "client": [
     "DebugScreenOverlayMixin",
