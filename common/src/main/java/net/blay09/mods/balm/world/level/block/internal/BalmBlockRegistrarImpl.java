@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -57,6 +58,13 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         @Override
         public Stream<DeferredBlock> filterNonNullDiscriminators() {
             return entrySet().stream().filter(it -> it.getKey() != null).map(Entry::getValue);
+        }
+
+        @Override
+        public Stream<DeferredBlock> sortedValues(Comparator<T> comparator) {
+            final var sorted = filterNonNullDiscriminatorEntries().sorted(Entry.comparingByKey(comparator)).map(Entry::getValue);
+            final var nullValue = get(null);
+            return nullValue != null ? Stream.concat(Stream.of(nullValue), sorted) : sorted;
         }
     }
 
