@@ -22,7 +22,7 @@ public class LevelChunkMixin {
 
     @Final
     @Shadow
-    Level level;
+    private Level level;
 
     @Inject(method = "registerAllBlockEntitiesAfterLevelLoad", at = @At("HEAD"))
     private void registerAllBlockEntitiesAfterLevelLoad(CallbackInfo callbackInfo) {

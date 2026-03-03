@@ -2,8 +2,6 @@ package net.blay09.mods.balm.fabric.internal.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.blay09.mods.balm.world.level.block.CustomFarmBlock;
 import net.minecraft.core.BlockPos;
