@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TypedInstance.class)
 public interface TypedInstanceMixin {
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Inject(method = "is(Lnet/minecraft/core/Holder;)Z", at = @At("RETURN"), cancellable = true)
     default void is(Holder holder, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue() && ((TypedInstance) this).is(holder.value())) {
