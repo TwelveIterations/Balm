@@ -15,7 +15,6 @@ import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmRangeSelectItemModelPropertyRegistrar;
-import net.blay09.mods.balm.fabric.client.internal.renderer.block.model.FabricBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
@@ -30,7 +29,6 @@ import net.blay09.mods.balm.fabric.client.internal.particle.FabricBalmParticlePr
 import net.blay09.mods.balm.fabric.client.internal.renderer.chunk.FabricBalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.fabric.server.packs.resources.internal.FabricBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 
 import java.util.function.Consumer;
 
@@ -60,7 +58,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
 
     @Override
     public void blockStateModels(String namespace, Consumer<BalmBlockStateModelRegistrar> initializer) {
-        ModelLoadingPlugin.register(context -> initializer.accept(new FabricBalmBlockStateModelRegistrar(context)));
+        // TODO ModelLoadingPlugin.register(context -> initializer.accept(new FabricBalmBlockStateModelRegistrar(context)));
     }
 
     @Override
