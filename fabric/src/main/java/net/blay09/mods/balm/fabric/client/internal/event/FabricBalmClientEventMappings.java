@@ -61,13 +61,13 @@ public class FabricBalmClientEventMappings extends FabricBalmEventMappings {
 
         ScreenCallback.Render.BEFORE.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
-                -> ScreenEvents.beforeRender(initScreen).register(mapPhase(phase), it::render)));
+                -> ScreenEvents.beforeExtract(initScreen).register(mapPhase(phase), it::render)));
         ScreenCallback.Render.AFTER_BACKGROUND.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
                 -> ScreenEvents.afterBackground(initScreen).register(mapPhase(phase), it::render)));
         ScreenCallback.Render.AFTER.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
-                -> ScreenEvents.afterRender(initScreen).register(mapPhase(phase), it::render)));
+                -> ScreenEvents.afterExtract(initScreen).register(mapPhase(phase), it::render)));
         ScreenCallback.KeyPress.Before.EVENT.configureMapping((phase, it)
                 -> ScreenEvents.BEFORE_INIT.register(mapPhase(phase), (client, initScreen, scaledWidth, scaledHeight)
                 -> ScreenKeyboardEvents.allowKeyPress(initScreen).register(mapPhase(phase), (screen1, event1) -> !it.keyPressed(screen1, event1))));

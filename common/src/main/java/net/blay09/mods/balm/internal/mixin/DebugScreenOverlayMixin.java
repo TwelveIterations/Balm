@@ -2,7 +2,7 @@ package net.blay09.mods.balm.internal.mixin;
 
 import net.blay09.mods.balm.client.platform.event.internal.BalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,8 +18,8 @@ public class DebugScreenOverlayMixin {
     @Shadow
     private Minecraft minecraft;
 
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
-    public void renderPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"), cancellable = true)
+    public void extractRenderStatePre(GuiGraphicsExtractor guiGraphics, CallbackInfo callbackInfo) {
         final var window = minecraft.getWindow();
         if (!BalmSupplementalClientEvents.RENDER_GUI_DEBUG_PRE.invoker()
                 .shouldRender(guiGraphics, window)) {
@@ -27,8 +27,8 @@ public class DebugScreenOverlayMixin {
         }
     }
 
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
-    public void renderPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("TAIL"))
+    public void extractRenderStatePost(GuiGraphicsExtractor guiGraphics, CallbackInfo callbackInfo) {
         final var window = minecraft.getWindow();
         BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST.invoker().afterRender(guiGraphics, window);
     }

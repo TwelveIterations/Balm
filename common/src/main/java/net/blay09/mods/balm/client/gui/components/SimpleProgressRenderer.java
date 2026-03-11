@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.client.gui.components;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public class SimpleProgressRenderer implements ProgressRenderer {
@@ -70,7 +70,7 @@ public class SimpleProgressRenderer implements ProgressRenderer {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int screenX, int screenY, float progress) {
+    public void render(GuiGraphicsExtractor guiGraphics, int screenX, int screenY, float progress) {
         if (progress <= 0 || direction == Direction.INVISIBLE) {
             return;
         }

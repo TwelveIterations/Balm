@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.client.gui.components;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class SegmentedProgressRenderer implements ProgressRenderer {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int screenX, int screenY, float progress) {
+    public void render(GuiGraphicsExtractor guiGraphics, int screenX, int screenY, float progress) {
         if (progress <= 0 || segments.isEmpty()) {
             return;
         }

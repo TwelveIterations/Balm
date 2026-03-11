@@ -3,7 +3,7 @@ package net.blay09.mods.balm.fabric.internal.mixin;
 import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ChatComponent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,15 +19,15 @@ public class ChatComponentMixin {
     @Shadow
     private Minecraft minecraft;
 
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;IIILnet/minecraft/client/gui/components/ChatComponent$DisplayMode;Z)V", at = @At("HEAD"), cancellable = true)
-    public void renderPre(GuiGraphics guiGraphics, Font font, int tickCount, int x, int y, ChatComponent.DisplayMode displayMode, boolean changeCursorOnInsertions, CallbackInfo callbackInfo) {
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;IIILnet/minecraft/client/gui/components/ChatComponent$DisplayMode;Z)V", at = @At("HEAD"), cancellable = true)
+    public void renderPre(GuiGraphicsExtractor guiGraphics, Font font, int tickCount, int x, int y, ChatComponent.DisplayMode displayMode, boolean changeCursorOnInsertions, CallbackInfo callbackInfo) {
         if (!FabricBalmSupplementalClientEvents.RENDER_GUI_CHAT_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
         }
     }
 
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;IIILnet/minecraft/client/gui/components/ChatComponent$DisplayMode;Z)V", at = @At("TAIL"))
-    public void renderPost(GuiGraphics guiGraphics, Font font, int tickCount, int x, int y, ChatComponent.DisplayMode displayMode, boolean changeCursorOnInsertions, CallbackInfo callbackInfo) {
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;IIILnet/minecraft/client/gui/components/ChatComponent$DisplayMode;Z)V", at = @At("TAIL"))
+    public void renderPost(GuiGraphicsExtractor guiGraphics, Font font, int tickCount, int x, int y, ChatComponent.DisplayMode displayMode, boolean changeCursorOnInsertions, CallbackInfo callbackInfo) {
         FabricBalmSupplementalClientEvents.RENDER_GUI_CHAT_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 }

@@ -1,6 +1,6 @@
 package net.blay09.mods.balm.client.gui.components;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ public class ParallelProgressRenderer implements ProgressRenderer {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int x, int y, float progress) {
+    public void render(GuiGraphicsExtractor guiGraphics, int x, int y, float progress) {
         for (ProgressRenderer renderer : renderers) {
             renderer.render(guiGraphics, x, y, progress);
         }

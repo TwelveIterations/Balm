@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.client.platform.event.callback;
 
 import net.blay09.mods.balm.platform.event.EventMapper;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -9,7 +9,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 public interface ScreenCallback {
     @FunctionalInterface
     interface Render {
-        void render(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta);
+        void render(Screen screen, GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float tickDelta);
 
         EventMapper<Render> BEFORE = EventMapper.createUnbound("ScreenCallback.Render.Before");
         EventMapper<Render> AFTER_BACKGROUND = EventMapper.createUnbound("ScreenCallback.Render.AfterBackground");

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.minecraft.client.Camera;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,12 +37,12 @@ public interface RenderCallback {
 
         @FunctionalInterface
         interface Before {
-            boolean shouldRender(GuiGraphics guiGraphics, Window window);
+            boolean shouldRender(GuiGraphicsExtractor guiGraphics, Window window);
         }
 
         @FunctionalInterface
         interface After {
-            void afterRender(GuiGraphics guiGraphics, Window window);
+            void afterRender(GuiGraphicsExtractor guiGraphics, Window window);
         }
 
         interface Health {

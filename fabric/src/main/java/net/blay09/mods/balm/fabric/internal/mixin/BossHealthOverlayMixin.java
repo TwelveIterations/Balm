@@ -2,7 +2,7 @@ package net.blay09.mods.balm.fabric.internal.mixin;
 
 import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.BossHealthOverlay;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,15 +18,15 @@ public class BossHealthOverlayMixin {
     @Shadow
     private Minecraft minecraft;
 
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
-    public void renderPre(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"), cancellable = true)
+    public void extractRenderStatePre(GuiGraphicsExtractor guiGraphics, CallbackInfo callbackInfo) {
         if (!FabricBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
             callbackInfo.cancel();
         }
     }
 
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("TAIL"))
-    public void renderPost(GuiGraphics guiGraphics, CallbackInfo callbackInfo) {
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("TAIL"))
+    public void extractRenderStatePost(GuiGraphicsExtractor guiGraphics, CallbackInfo callbackInfo) {
         FabricBalmSupplementalClientEvents.RENDER_GUI_BOSS_INFO_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
     }
 

@@ -7,7 +7,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerDisplaySlotsBuilder;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,12 +53,12 @@ public class CommonJeiRecipeCategory<T> implements IRecipeCategory<T> {
         slotsBuilder.accept(recipe, new JeiRecipeViewerDisplaySlotsBuilder(builder));
     }
 
-    @Override
-    public void draw(Object recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    /*TODO @Override
+    public void draw(Object recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         if (background != null) {
             background.draw(guiGraphics);
         }
-    }
+    }*/
 
     @Override
     public int getWidth() {
