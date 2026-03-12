@@ -31,6 +31,7 @@ import net.blay09.mods.balm.neoforge.server.packs.resources.internal.NeoForgeBal
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 
@@ -55,7 +56,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void blockEntityRenderers(String namespace, Consumer<BalmBlockEntityRendererRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> initializer.accept(new NeoForgeBalmBlockEntityRendererRegistrar(event)));
             }
         });
@@ -64,7 +65,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void entityRenderers(String namespace, Consumer<BalmEntityRendererRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> initializer.accept(new NeoForgeBalmEntityRendererRegistrar(event)));
             }
         });
@@ -73,7 +74,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void menuScreens(String namespace, Consumer<BalmMenuScreenRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((RegisterMenuScreensEvent event) -> initializer.accept(new NeoForgeBalmMenuScreenRegistrar(event)));
             }
         });
@@ -82,7 +83,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void blockStateModels(String namespace, Consumer<BalmBlockStateModelRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((ModelEvent.RegisterStandalone event) -> initializer.accept(new NeoForgeBalmBlockStateModelRegistrar(event)));
             }
         });
@@ -91,7 +92,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void keyMappings(String namespace, Consumer<BalmKeyMappingRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((RegisterKeyMappingsEvent event) -> initializer.accept(new NeoForgeBalmKeyMappingRegistrar(event)));
             }
         });
@@ -100,7 +101,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void modelLayers(String namespace, Consumer<BalmModelLayerRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((EntityRenderersEvent.RegisterLayerDefinitions event) -> initializer.accept(new NeoForgeBalmModelLayerRegistrar(event)));
             }
         });
@@ -109,8 +110,8 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
-                modBus.addListener((RegisterColorHandlersEvent.Block event) -> initializer.accept(new NeoForgeBalmBlockColorRegistrar(event)));
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
+                modBus.addListener((RegisterColorHandlersEvent.BlockTintSources event) -> initializer.accept(new NeoForgeBalmBlockColorRegistrar(event)));
             }
         });
     }
@@ -118,7 +119,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((RegisterParticleProvidersEvent event) -> initializer.accept(new NeoForgeBalmParticleProviderRegistrar(event)));
             }
         });
@@ -127,7 +128,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> initializer.accept(new NeoForgeBalmBlockRenderTypeRegistrar())));
             }
         });
@@ -136,7 +137,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((AddClientReloadListenersEvent event) -> initializer.accept(new NeoForgeBalmClientResourceReloadListenerRegistrar(namespace, event)));
             }
         });
@@ -145,7 +146,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void clientTooltipComponents(String namespace, Consumer<BalmClientTooltipComponentRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((RegisterClientTooltipComponentFactoriesEvent event) -> initializer.accept(new NeoForgeBalmClientTooltipComponentRegistrar(event)));
             }
         });
@@ -154,7 +155,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public void rangeSelectItemModelProperties(String namespace, Consumer<BalmRangeSelectItemModelPropertyRegistrar> initializer) {
         BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((RegisterRangeSelectItemModelPropertyEvent event) -> initializer.accept(new NeoForgeBalmRangeSelectItemModelPropertyRegistrar(event)));
             }
         });
