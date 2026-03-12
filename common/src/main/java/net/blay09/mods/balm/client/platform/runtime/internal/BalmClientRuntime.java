@@ -61,6 +61,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
 
     void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer);
 
+    @Deprecated
     void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer);
 
     void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer);

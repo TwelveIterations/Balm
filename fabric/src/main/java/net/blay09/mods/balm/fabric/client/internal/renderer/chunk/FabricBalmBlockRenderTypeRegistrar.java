@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
 
+@Deprecated
 public class FabricBalmBlockRenderTypeRegistrar implements BalmBlockRenderTypeRegistrar {
     public static final FabricBalmBlockRenderTypeRegistrar INSTANCE = new FabricBalmBlockRenderTypeRegistrar();
 

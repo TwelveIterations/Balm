@@ -98,6 +98,7 @@ public class BalmClientRegistrars {
      *
      * @param initializer Callback that receives a scoped registrar for block render types.
      */
+    @Deprecated
     public void blockRenderTypes(Consumer<BalmBlockRenderTypeRegistrar> initializer) {
         runtime.blockRenderTypes(namespace, initializer);
     }

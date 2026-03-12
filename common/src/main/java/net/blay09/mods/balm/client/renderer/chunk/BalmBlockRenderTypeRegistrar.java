@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
 
+@Deprecated
 public interface BalmBlockRenderTypeRegistrar {
     default void setRenderLayer(DeferredBlock block, ChunkSectionLayer layer) {
         // We keep a DeferredBlock overload as it implements both BlockLike and Holder<Block> and would be ambiguous in the other overloads
