@@ -1,0 +1,9 @@
+package net.blay09.mods.balm.fabric.platform.compatibility.config.internal;
+
+import net.blay09.mods.balm.platform.config.internal.BalmConfigScreenProviders;
+
+public class ClothConfigSupport {
+    public ClothConfigSupport() {
+        BalmConfigScreenProviders.register("cloth-config", ClothConfigUtils::getConfigScreenFactory);
+    }
+}

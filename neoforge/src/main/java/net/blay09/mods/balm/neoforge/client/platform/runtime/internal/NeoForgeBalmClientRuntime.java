@@ -1,39 +1,44 @@
 package net.blay09.mods.balm.neoforge.client.platform.runtime.internal;
 
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
+import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
-import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
-import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
-import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmKeyMappingRegistrar;
-import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmClientTooltipComponentRegistrar;
-import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmRangeSelectItemModelPropertyRegistrar;
-import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
-import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.client.color.block.internal.NeoForgeBalmBlockColorRegistrar;
-import net.blay09.mods.balm.neoforge.client.platform.event.internal.NeoForgeBalmClientEventMappings;
 import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.internal.NeoForgeBalmMenuScreenRegistrar;
+import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmClientTooltipComponentRegistrar;
+import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmKeyMappingRegistrar;
+import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.neoforge.client.model.geom.internal.NeoForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.neoforge.client.particle.internal.NeoForgeBalmParticleProviderRegistrar;
-import net.blay09.mods.balm.neoforge.client.renderer.chunk.internal.NeoForgeBalmBlockRenderTypeRegistrar;
+import net.blay09.mods.balm.neoforge.client.platform.event.internal.NeoForgeBalmClientEventMappings;
 import net.blay09.mods.balm.neoforge.client.renderer.block.model.internal.NeoForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.internal.NeoForgeBalmBlockEntityRendererRegistrar;
+import net.blay09.mods.balm.neoforge.client.renderer.chunk.internal.NeoForgeBalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.entity.internal.NeoForgeBalmEntityRendererRegistrar;
+import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
+import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.server.packs.resources.internal.NeoForgeBalmClientResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.platform.config.BalmConfig;
+import net.blay09.mods.balm.platform.config.internal.BalmConfigScreenProviders;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 
 import java.util.function.Consumer;
 
@@ -41,6 +46,16 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
 
     public NeoForgeBalmClientRuntime() {
         NeoForgeBalmClientEventMappings.bind();
+
+        BalmConfigScreenProviders.register(BalmConfig.DEFAULT_CONFIG_SCREEN_PROVIDER_ID, modId -> {
+            if (Balm.config().getSchemasByNamespace(modId).isEmpty()) {
+                return null;
+            }
+
+            return parent -> ModList.get().getModContainerById(modId)
+                    .map(modContainer -> new ConfigurationScreen(modContainer, parent))
+                    .orElse(null);
+        });
     }
 
     @Override

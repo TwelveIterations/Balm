@@ -3,6 +3,7 @@ package net.blay09.mods.balm.platform.config.internal;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.platform.config.BalmConfig;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
@@ -10,17 +11,22 @@ import net.blay09.mods.balm.platform.config.reflection.internal.ConfigReflection
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public abstract class AbstractBalmConfig implements BalmConfig {
 
+    private static final List<String> DEFAULT_CONFIG_SCREEN_PROVIDERS = List.of("cloth-config", "configured", DEFAULT_CONFIG_SCREEN_PROVIDER_ID);
+
     private final Map<Identifier, BalmConfigSchema> schemas = new ConcurrentHashMap<>();
     private final Map<Identifier, MutableLoadedConfig> localConfigs = new ConcurrentHashMap<>();
     private final Map<Identifier, LoadedConfig> activeConfigs = new ConcurrentHashMap<>();
+    private final Map<String, List<String>> configScreenProviderOrders = new ConcurrentHashMap<>();
 
     private final Map<Identifier, Object> activeReflectionConfigs = new ConcurrentHashMap<>();
     private final Multimap<Identifier, Consumer<MutableLoadedConfig>> configLoadHandlers = ArrayListMultimap.create();
@@ -68,6 +74,23 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     @Override
     public Collection<BalmConfigSchema> getSchemas() {
         return schemas.values();
+    }
+
+    @Override
+    public void setPreferredConfigScreen(String modId, String providerId) {
+        setPreferredConfigScreen(modId, List.of(providerId, DEFAULT_CONFIG_SCREEN_PROVIDER_ID));
+    }
+
+    @Override
+    public void setPreferredConfigScreen(String modId, List<String> providerIds) {
+        configScreenProviderOrders.put(modId, List.copyOf(providerIds));
+    }
+
+    @Override
+    @Nullable
+    public BalmConfigScreenFactory getConfigScreenFactory(String modId) {
+        final var providerIds = configScreenProviderOrders.getOrDefault(modId, DEFAULT_CONFIG_SCREEN_PROVIDERS);
+        return BalmConfigScreenProviders.getFactory(modId, providerIds);
     }
 
     @Override
