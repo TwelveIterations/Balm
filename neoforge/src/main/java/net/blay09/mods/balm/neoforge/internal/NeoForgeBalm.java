@@ -19,6 +19,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -36,8 +37,8 @@ import java.util.function.BiFunction;
 @Mod("balm")
 public class NeoForgeBalm {
 
-    public NeoForgeBalm(IEventBus modBus) {
-        BalmLoadContexts.register("balm", new NeoForgeLoadContext(modBus));
+    public NeoForgeBalm(ModContainer modContainer, IEventBus modBus) {
+        BalmLoadContexts.register("balm", new NeoForgeLoadContext(modContainer, modBus));
 
         ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
