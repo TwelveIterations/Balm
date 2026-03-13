@@ -1,3 +1,6 @@
-- Fixed wrong class name for Fabric common proxy
-- Fixed wrong provider class for Configured on Fabric
-- Fixed ItemStack#is mixin to be less invasive, to prevent potentially breaking other mods targetting the same method
+- Fixed server-client-optional mods sending packets even if the remote does not have the mod installed
+- Updated minimum Fabric Loader version requirement, as older versions of Fabric Loader are not loading jarjar'd Kuma correctly
+- For developers:
+  - Added `.sortedValues()` helper to `DiscriminatedBlocks`, useful for data generators to have consistent order
+  - Added `SessionLocal` for tracking state scoped to the client connection
+  - Changed `sendTo*` to only send if channel is supported or mod is announced
