@@ -49,7 +49,7 @@ jobs:
           app-id: ${{ vars.AUTOMATIONS_APP_ID }}
           private-key: ${{ secrets.AUTOMATIONS_PRIVATE_KEY }}
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
       - name: Get GitHub App User ID
@@ -121,7 +121,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.create-release.outputs.ref }}
       - name: Validate gradle wrapper
@@ -149,7 +149,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.create-release.outputs.ref }}
       - name: Validate gradle wrapper
@@ -188,7 +188,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.create-release.outputs.ref }}
       - name: Download ${{ matrix.loader }} artifact
