@@ -15,7 +15,7 @@ public interface DiscriminatedBlocks<T> extends Map<@Nullable T, DeferredBlock> 
 
     @SuppressWarnings("unchecked")
     default Stream<DeferredBlock> sortedValues() {
-        return sortedValues((Comparator<T>) Comparator.nullsLast(Comparator.naturalOrder()));
+        return sortedValues((Comparator<T>) Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     static <T> String prefix(@Nullable T value, String name) {
