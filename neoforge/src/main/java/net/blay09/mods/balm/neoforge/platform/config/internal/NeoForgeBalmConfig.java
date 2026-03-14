@@ -310,7 +310,16 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     }
 
     private void initializeConfigurationScreen(ModContainer modContainer) {
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+        if (modContainer.getCustomExtension(IConfigScreenFactory.class).isEmpty()) {
+            modContainer.registerExtensionPoint(IConfigScreenFactory.class, (targetModContainer, modListScreen) -> {
+                final var factory = getConfigScreenFactory(targetModContainer.getModId());
+                if (factory != null) {
+                    return factory.create(modListScreen);
+                }
+
+                return new ConfigurationScreen(targetModContainer, modListScreen);
+            });
+        }
     }
 
     private Pair<ModConfigSpec, HashBasedTable<String, String, ModConfigSpec.ConfigValue<?>>> mapToConfigSpec(BalmConfigSchema schema) {

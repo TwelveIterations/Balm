@@ -15,6 +15,8 @@ public class FabricBalmClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ((FabricBalmClientRuntime) BalmClient.getRuntime()).initializeRuntime();
+        Balm.initializeIfLoaded("cloth-config", "net.blay09.mods.balm.fabric.platform.compatibility.config.internal.ClothConfigSupport");
+        Balm.initializeIfLoaded("configured", "net.blay09.mods.balm.fabric.platform.compatibility.config.internal.ConfiguredConfigSupport");
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 

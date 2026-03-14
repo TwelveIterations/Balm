@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.platform.config;
 
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.platform.config.reflection.internal.ConfigReflection;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.minecraft.resources.Identifier;
@@ -7,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -72,6 +74,13 @@ public interface BalmConfig {
 
     Collection<BalmConfigSchema> getSchemas();
 
+    void setPreferredConfigScreen(String modId, String providerId);
+
+    void setPreferredConfigScreen(String modId, List<String> providerIds);
+
+    @Nullable
+    BalmConfigScreenFactory getConfigScreenFactory(String modId);
+
     default void saveLocalConfig(BalmConfigSchema schema) {
         final var config = getLocalConfig(schema);
         if (config != null) {
@@ -89,4 +98,6 @@ public interface BalmConfig {
             onConfigAvailable(schema, (config) -> handler.accept(Objects.requireNonNull(getActiveConfig(configDataClass))));
         }
     }
+
+    String DEFAULT_CONFIG_SCREEN_PROVIDER_ID = "default";
 }
