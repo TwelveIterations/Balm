@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.world.level.block;
 
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jspecify.annotations.Nullable;
@@ -11,6 +12,9 @@ import java.util.function.*;
  * Provides convenience access to registering blocks and block items.
  */
 public interface BalmBlockRegistrar {
+    void addAlias(Identifier oldId, Identifier newId);
+
+    void addAlias(String oldName, String newName);
 
     default BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesBuilder) {
         return register(name, constructor, () -> propertiesBuilder.apply(BlockBehaviour.Properties.of()));

@@ -12,17 +12,29 @@ import java.util.function.Function;
 
 public class FabricBalmRegistrar implements BalmRegistrar {
 
-    @Override
+    private static Registry<?> getRawRegistry(ResourceKey<? extends Registry<?>> registryKey) {
+        return Objects.requireNonNull(BuiltInRegistries.REGISTRY.getValue(registryKey.identifier()));
+    }
+
     @SuppressWarnings("unchecked")
+    private static <T> Registry<T> getRegistry(ResourceKey<? extends Registry<T>> registryKey) {
+        return (Registry<T>) getRawRegistry(registryKey);
+    }
+
+    @Override
     public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
-        final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(resourceKey.registry());
-        Objects.requireNonNull(registry);
+        final var registry = getRegistry(resourceKey.registryKey());
         return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));
     }
 
     @Override
     public <T> Scoped<T> scoped(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
         return new Scoped<>(registryKey, namespace);
+    }
+
+    @Override
+    public <T> void addAlias(ResourceKey<? extends Registry<T>> registryKey, Identifier oldId, Identifier newId) {
+        getRegistry(registryKey).addAlias(oldId, newId);
     }
 
     public static class Scoped<T> implements BalmRegistrar.Scoped<T> {
@@ -36,12 +48,18 @@ public class FabricBalmRegistrar implements BalmRegistrar {
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public Holder<T> register(String name, Function<Identifier, T> resourceFunction) {
-            final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(registryKey.identifier());
-            Objects.requireNonNull(registry);
+            final var registry = getRegistry(registryKey);
             final var resourceKey = ResourceKey.create(registryKey, Identifier.fromNamespaceAndPath(namespace, name));
             return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));
+        }
+
+        @Override
+        public void addAlias(String oldName, String newName) {
+            getRegistry(registryKey).addAlias(
+                    Identifier.fromNamespaceAndPath(namespace, oldName),
+                    Identifier.fromNamespaceAndPath(namespace, newName)
+            );
         }
     }
 

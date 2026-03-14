@@ -32,6 +32,23 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
     }
 
     @Override
+    public void addAlias(Identifier oldId, Identifier newId) {
+        registrar.addAlias(
+                Registries.ITEM,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                Identifier.fromNamespaceAndPath(namespace, oldName),
+                Identifier.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
+    @Override
     public BalmItemRegistration register(String name, Function<Item.Properties, Item> constructor, Supplier<Item.Properties> properties) {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);

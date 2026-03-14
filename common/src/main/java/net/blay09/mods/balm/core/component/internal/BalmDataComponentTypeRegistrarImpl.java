@@ -23,6 +23,23 @@ public class BalmDataComponentTypeRegistrarImpl implements BalmDataComponentType
     }
 
     @Override
+    public void addAlias(Identifier oldId, Identifier newId) {
+        registrar.addAlias(
+                Registries.DATA_COMPONENT_TYPE,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                Identifier.fromNamespaceAndPath(namespace, oldName),
+                Identifier.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
+    @Override
     public <T> BalmDataComponentTypeRegistration<T> register(String name, BiFunction<Identifier, DataComponentType.Builder<T>, DataComponentType.Builder<T>> constructor) {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.DATA_COMPONENT_TYPE, identifier);

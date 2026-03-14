@@ -15,9 +15,13 @@ public interface BalmRegistrar {
 
     <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction);
 
+    <T> void addAlias(ResourceKey<? extends Registry<T>> registryKey, Identifier oldId, Identifier newId);
+
     <T> Scoped<T> scoped(ResourceKey<? extends Registry<T>> registryKey, String namespace);
 
     interface Scoped<T> {
         Holder<T> register(String name, Function<Identifier, T> resourceFunction);
+
+        void addAlias(String oldName, String newName);
     }
 }

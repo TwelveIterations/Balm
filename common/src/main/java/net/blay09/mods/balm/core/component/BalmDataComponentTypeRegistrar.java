@@ -13,6 +13,9 @@ import java.util.function.Function;
  * Provides convenience access to registering data component types.
  */
 public interface BalmDataComponentTypeRegistrar {
+    void addAlias(Identifier oldId, Identifier newId);
+
+    void addAlias(String oldName, String newName);
 
     default <T> BalmDataComponentTypeRegistration<T> register(String name, Codec<T> codec) {
         return register(name, (id, builder) -> this.<T>createBuilder().persistent(codec));

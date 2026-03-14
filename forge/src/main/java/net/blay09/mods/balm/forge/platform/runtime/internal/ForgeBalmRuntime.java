@@ -8,6 +8,7 @@ import net.blay09.mods.balm.forge.platform.attachment.internal.ForgeBalmDataAtta
 import net.blay09.mods.balm.forge.platform.runtime.ForgeLoadContext;
 import net.blay09.mods.balm.forge.platform.event.internal.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.core.internal.DeferredRegisters;
+import net.blay09.mods.balm.forge.core.internal.ForgeRegistryAliasRemapper;
 import net.blay09.mods.balm.forge.platform.capabilities.internal.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.commands.internal.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.platform.compatibility.ForgeBalmModSupport;
@@ -120,6 +121,7 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
         initializer.accept(new BalmRegistrars(this, modId));
 
         final var modEventBus = context.modBusGroup();
+        ModBusEventRegisters.getRegistrations(modId, ForgeRegistryAliasRemapper.class);
         DeferredRegisters.register(modId, modEventBus);
         ModBusEventRegisters.register(modId, modEventBus);
     }

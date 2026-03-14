@@ -19,6 +19,11 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
     }
 
     @Override
+    public void addAlias(ResourceKey<? extends Registry<T>> registryKey, Identifier oldId, Identifier newId) {
+        DeferredRegisters.addAlias(newId.getNamespace(), registryKey, oldId, newId);
+    }
+
+    @Override
     public <T> Scoped<T> scoped(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
         return new Scoped<>(registryKey, namespace);
     }
@@ -38,6 +43,16 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
             final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
             final var registryObject = deferredRegister.register(name, () -> resourceFunction.apply(Identifier.fromNamespaceAndPath(namespace, name)));
             return new DeferredHolder<>(registryObject.getKey());
+        }
+
+        @Override
+        public void addAlias(String oldName, String newName) {
+            DeferredRegisters.addAlias(
+                    namespace,
+                    registryKey,
+                    Identifier.fromNamespaceAndPath(namespace, oldName),
+                    Identifier.fromNamespaceAndPath(namespace, newName)
+            );
         }
     }
 }

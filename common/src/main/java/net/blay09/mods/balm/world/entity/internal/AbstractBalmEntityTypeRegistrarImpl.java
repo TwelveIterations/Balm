@@ -25,6 +25,23 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
         this.namespace = namespace;
     }
 
+    @Override
+    public void addAlias(Identifier oldId, Identifier newId) {
+        registrar.addAlias(
+                Registries.ENTITY_TYPE,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                Identifier.fromNamespaceAndPath(namespace, oldName),
+                Identifier.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
     protected abstract <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Supplier<AttributeSupplier.Builder> attributesFunction);
 
     protected abstract <T extends Entity> void registerSpawnPlacement(Holder<EntityType<T>> entityType, SpawnPlacementType spawnPlacementType, Heightmap.Types heightmapType, Supplier<SpawnPlacements.SpawnPredicate<T>> attributesFunction);

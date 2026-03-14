@@ -28,6 +28,23 @@ public abstract class AbstractBalmBlockEntityTypeRegistrarImpl implements BalmBl
     }
 
     @Override
+    public void addAlias(Identifier oldId, Identifier newId) {
+        registrar.addAlias(
+                Registries.BLOCK_ENTITY_TYPE,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                Identifier.fromNamespaceAndPath(namespace, oldName),
+                Identifier.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
+    @Override
     public <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, BlockLike... blocks) {
         return register(name, constructor, Set.of(blocks));
     }

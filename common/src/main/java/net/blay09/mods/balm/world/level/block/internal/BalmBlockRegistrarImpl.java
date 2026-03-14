@@ -31,6 +31,23 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     }
 
     @Override
+    public void addAlias(Identifier oldId, Identifier newId) {
+        registrar.addAlias(
+                Registries.BLOCK,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                Identifier.fromNamespaceAndPath(namespace, oldName),
+                Identifier.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
+    @Override
     public BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, Supplier<BlockBehaviour.Properties> properties) {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.BLOCK, identifier);
