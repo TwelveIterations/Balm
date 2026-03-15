@@ -8,10 +8,10 @@ import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.Nullable;
 
 public class CommonCapabilities {
-    @Nullable
+    @SuppressWarnings("NotNullFieldNotInitialized")
     public static CapabilityType<Block, Container, Direction> CONTAINER;
-    @Nullable
+    @SuppressWarnings("NotNullFieldNotInitialized")
     public static CapabilityType<Block, FluidTank, Direction> FLUID_TANK;
-    @Nullable
+    @SuppressWarnings("NotNullFieldNotInitialized")
     public static CapabilityType<Block, EnergyStorage, Direction> ENERGY_STORAGE;
 }
