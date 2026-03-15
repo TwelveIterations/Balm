@@ -6,6 +6,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface DiscriminatedItems<T> extends Map<@Nullable T, DeferredItem> {
@@ -26,5 +27,21 @@ public interface DiscriminatedItems<T> extends Map<@Nullable T, DeferredItem> {
 
     static <T> String suffix(String name, @Nullable T value) {
         return value == null || StringUtil.isBlank(Objects.toString(value)) ? name : name + "_" + value;
+    }
+
+    static <T> Function<T, String> prefixer(String name) {
+        return prefixer(name, null);
+    }
+
+    static <T> Function<T, String> suffixer(String name) {
+        return suffixer(name, null);
+    }
+
+    static <T> Function<T, String> prefixer(String name, @Nullable T skip) {
+        return it -> prefix(it != skip ? it : null, name);
+    }
+
+    static <T> Function<T, String> suffixer(String name, @Nullable T skip) {
+        return it -> suffix(name, it != skip ? it : null);
     }
 }
