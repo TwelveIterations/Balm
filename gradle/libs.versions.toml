@@ -1,9 +1,9 @@
 [versions]
-minecraft = "26.1-pre-2"
-neoForm = "26.1-pre-2-1"
-neoForge = "26.1.0.0-alpha.14+snapshot-11"
+minecraft = "26.1-pre-3"
+neoForm = "26.1-pre-3-1"
+neoForge = "26.1.0.0-alpha.15+pre-3"
 forge = "61.0.1"
-fabricApi = "0.143.13+26.1"
+fabricApi = "0.143.14+26.1"
 fabricLoader = "0.18.4"
 kuma = "26.1.0.1-SNAPSHOT"
 
