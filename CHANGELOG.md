@@ -1,6 +1,2 @@
-- Fixed server-client-optional mods sending packets even if the remote does not have the mod installed
-- Updated minimum Fabric Loader version requirement, as older versions of Fabric Loader are not loading jarjar'd Kuma correctly
-- For developers:
-  - Added `.sortedValues()` helper to `DiscriminatedBlocks`, useful for data generators to have consistent order
-  - Added `SessionLocal` for tracking state scoped to the client connection
-  - Changed `sendTo*` to only send if channel is supported or mod is announced
+- Fixed remote mod versions no longer being verified when connecting to a Fabric server
+- Fixed optional mods always being considered uninstalled on clients when connecting to a NeoForge server
