@@ -27,6 +27,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.handling.MainThreadPayloadHandler;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -137,6 +138,11 @@ public class NeoForgeBalmNetworking extends CommonBalmNetworking {
 
     private Registrations getActiveRegistrations(String namespace) {
         return ModBusEventRegisters.getRegistrations(namespace, Registrations.class);
+    }
+
+    @Override
+    public boolean isMessageSupported(ServerPlayer player, CustomPacketPayload payload) {
+        return player.connection.hasChannel(payload) || super.isMessageSupported(player, payload);
     }
 
     public static class Registrations {
