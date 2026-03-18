@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.client.platform.runtime.internal;
 
+import net.blay09.mods.balm.client.platform.module.internal.InternalsClientModule;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
@@ -42,6 +43,7 @@ public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLo
         }
 
         registerModule(new BalmClientRegistrars(this, "balm"), new ConfigSyncClient());
+        registerModule(new BalmClientRegistrars(this, "balm"), new InternalsClientModule());
     }
 
 }
