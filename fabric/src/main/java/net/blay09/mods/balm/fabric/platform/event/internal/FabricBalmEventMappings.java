@@ -92,7 +92,7 @@ public class FabricBalmEventMappings {
         LivingEntityCallback.Fall.Before.EVENT.configureMapping(BalmSupplementalEvents.LIVING_FALL::register);
         LivingEntityCallback.Heal.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.LIVING_HEAL::register);
         LivingEntityCallback.Death.Before.EVENT.configureMapping((phase, it)
-                -> ServerLivingEntityEvents.ALLOW_DEATH.register((livingEntity, damageSource, damage) -> !it.allowDeath(livingEntity, damageSource)));
+                -> ServerLivingEntityEvents.ALLOW_DEATH.register((livingEntity, damageSource, damage) -> it.allowDeath(livingEntity, damageSource)));
 
         LivingEntityCallback.MobEffectCallback.Apply.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.MOB_EFFECT_APPLY::register);
         LivingEntityCallback.MobEffectCallback.Add.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.MOB_EFFECT_ADD::register);
