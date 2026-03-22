@@ -70,7 +70,7 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
     private static class DiscriminatedItemsImpl<T> extends HashMap<@Nullable T, DeferredItem> implements DiscriminatedItems<T> {
 
         @Override
-        public Stream<Entry<T, DeferredItem>> sortedEntries(Comparator<T> comparator) {
+        public Stream<Entry<@Nullable T, DeferredItem>> sortedEntries(Comparator<T> comparator) {
             return entrySet().stream().sorted(Entry.comparingByKey(comparator));
         }
 

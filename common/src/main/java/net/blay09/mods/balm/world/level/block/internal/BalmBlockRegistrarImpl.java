@@ -68,7 +68,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
 
     private static class DiscriminatedBlocksImpl<T> extends HashMap<@Nullable T, DeferredBlock> implements DiscriminatedBlocks<T> {
         @Override
-        public Stream<Entry<T, DeferredBlock>> sortedEntries(Comparator<T> comparator) {
+        public Stream<Entry<@Nullable T, DeferredBlock>> sortedEntries(Comparator<T> comparator) {
             return entrySet().stream().sorted(Entry.comparingByKey(comparator));
         }
     }
