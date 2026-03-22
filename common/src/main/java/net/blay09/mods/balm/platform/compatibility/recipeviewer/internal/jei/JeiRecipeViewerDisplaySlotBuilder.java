@@ -3,6 +3,7 @@ package net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.jei;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerDisplaySlotBuilder;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
@@ -22,6 +23,12 @@ class JeiRecipeViewerDisplaySlotBuilder implements RecipeViewerDisplaySlotBuilde
     @Override
     public RecipeViewerDisplaySlotBuilder add(ItemStack itemStack) {
         builder.add(itemStack);
+        return this;
+    }
+
+    @Override
+    public RecipeViewerDisplaySlotBuilder add(ItemStackTemplate itemStackTemplate) {
+        builder.add(itemStackTemplate.create()); // TODO change to not create if JEI accepts templates
         return this;
     }
 
