@@ -10,7 +10,6 @@ import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegis
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
-import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
@@ -25,7 +24,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         final var modId = module.getId().getNamespace();
         resourceReloadListeners(modId, module::registerClientReloadListeners);
         blockColors(modId, module::registerBlockColors);
-        blockRenderTypes(modId, module::registerBlockRenderTypes);
         blockEntityRenderers(modId, module::registerBlockEntityRenderers);
         entityRenderers(modId, module::registerEntityRenderers);
         particleProviders(modId, module::registerParticleProviders);
@@ -60,9 +58,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void blockColors(String namespace, Consumer<BalmBlockColorRegistrar> initializer);
 
     void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer);
-
-    @Deprecated
-    void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer);
 
     void resourceReloadListeners(String namespace, Consumer<BalmClientResourceReloadListenerRegistrar> initializer);
 

@@ -12,7 +12,6 @@ import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
-import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.neoforge.client.color.block.internal.NeoForgeBalmBlockColorRegistrar;
 import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.internal.NeoForgeBalmMenuScreenRegistrar;
@@ -24,7 +23,6 @@ import net.blay09.mods.balm.neoforge.client.particle.internal.NeoForgeBalmPartic
 import net.blay09.mods.balm.neoforge.client.platform.event.internal.NeoForgeBalmClientEventMappings;
 import net.blay09.mods.balm.neoforge.client.renderer.block.model.internal.NeoForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.internal.NeoForgeBalmBlockEntityRendererRegistrar;
-import net.blay09.mods.balm.neoforge.client.renderer.chunk.internal.NeoForgeBalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.entity.internal.NeoForgeBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
@@ -36,7 +34,6 @@ import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListe
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 
@@ -136,15 +133,6 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
                 modBus.addListener((RegisterParticleProvidersEvent event) -> initializer.accept(new NeoForgeBalmParticleProviderRegistrar(event)));
-            }
-        });
-    }
-
-    @Override
-    public void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer) {
-        BalmLoadContexts.get(namespace).ifPresent(context -> {
-            if (context instanceof NeoForgeLoadContext(ModContainer modContainer, IEventBus modBus)) {
-                modBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> initializer.accept(new NeoForgeBalmBlockRenderTypeRegistrar())));
             }
         });
     }

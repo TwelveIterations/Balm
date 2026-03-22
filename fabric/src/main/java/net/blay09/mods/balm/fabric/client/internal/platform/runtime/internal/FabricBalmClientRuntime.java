@@ -8,7 +8,6 @@ import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
-import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
@@ -26,7 +25,6 @@ import net.blay09.mods.balm.fabric.client.internal.renderer.entity.FabricBalmEnt
 import net.blay09.mods.balm.fabric.client.internal.model.geom.FabricBalmModelLayerRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.particle.FabricBalmParticleProviderRegistrar;
-import net.blay09.mods.balm.fabric.client.internal.renderer.chunk.FabricBalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.fabric.server.packs.resources.internal.FabricBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 
@@ -84,11 +82,6 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
     @Override
     public void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer) {
         initializer.accept(FabricBalmParticleProviderRegistrar.INSTANCE);
-    }
-
-    @Override
-    public void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer) {
-        initializer.accept(FabricBalmBlockRenderTypeRegistrar.INSTANCE);
     }
 
     @Override

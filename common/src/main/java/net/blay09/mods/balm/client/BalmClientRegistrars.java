@@ -9,7 +9,6 @@ import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
-import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 
@@ -91,16 +90,6 @@ public class BalmClientRegistrars {
      */
     public void particleProviders(Consumer<BalmParticleProviderRegistrar> initializer) {
         runtime.particleProviders(namespace, initializer);
-    }
-
-    /**
-     * Use this to register block render types using the registrar provided in the consumer callback.
-     *
-     * @param initializer Callback that receives a scoped registrar for block render types.
-     */
-    @Deprecated
-    public void blockRenderTypes(Consumer<BalmBlockRenderTypeRegistrar> initializer) {
-        runtime.blockRenderTypes(namespace, initializer);
     }
 
     /**

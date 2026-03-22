@@ -11,7 +11,6 @@ import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
-import net.blay09.mods.balm.client.renderer.chunk.BalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.client.internal.ForgeBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.forge.client.internal.ForgeBalmClientTooltipComponentRegistrar;
@@ -25,7 +24,6 @@ import net.blay09.mods.balm.forge.client.model.geom.internal.ForgeBalmModelLayer
 import net.blay09.mods.balm.forge.client.particle.internal.ForgeBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.block.model.internal.ForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.blockentity.internal.ForgeBalmBlockEntityRendererRegistrar;
-import net.blay09.mods.balm.forge.client.renderer.chunk.internal.ForgeBalmBlockRenderTypeRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.entity.internal.ForgeBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.server.packs.resources.internal.ForgeBalmClientResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
@@ -92,14 +90,6 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     @Override
     public void particleProviders(String namespace, Consumer<BalmParticleProviderRegistrar> initializer) {
         RegisterParticleProvidersEvent.BUS.addListener(event -> initializer.accept(new ForgeBalmParticleProviderRegistrar(event)));
-    }
-
-    @Override
-    public void blockRenderTypes(String namespace, Consumer<BalmBlockRenderTypeRegistrar> initializer) {
-        final var busGroup = ModBusEventRegisters.getBusGroup(namespace);
-        FMLClientSetupEvent.getBus(busGroup)
-                .addListener((event)
-                        -> event.enqueueWork(() -> initializer.accept(new ForgeBalmBlockRenderTypeRegistrar())));
     }
 
     @Override
