@@ -68,20 +68,8 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
 
     private static class DiscriminatedBlocksImpl<T> extends HashMap<@Nullable T, DeferredBlock> implements DiscriminatedBlocks<T> {
         @Override
-        public Stream<Entry<T, DeferredBlock>> filterNonNullDiscriminatorEntries() {
-            return entrySet().stream().filter(it -> it.getKey() != null);
-        }
-
-        @Override
-        public Stream<DeferredBlock> filterNonNullDiscriminators() {
-            return entrySet().stream().filter(it -> it.getKey() != null).map(Entry::getValue);
-        }
-
-        @Override
-        public Stream<DeferredBlock> sortedValues(Comparator<T> comparator) {
-            final var sorted = filterNonNullDiscriminatorEntries().sorted(Entry.comparingByKey(comparator)).map(Entry::getValue);
-            final var nullValue = get(null);
-            return nullValue != null ? Stream.concat(Stream.of(nullValue), sorted) : sorted;
+        public Stream<Entry<T, DeferredBlock>> sortedEntries(Comparator<T> comparator) {
+            return entrySet().stream().sorted(Entry.comparingByKey(comparator));
         }
     }
 

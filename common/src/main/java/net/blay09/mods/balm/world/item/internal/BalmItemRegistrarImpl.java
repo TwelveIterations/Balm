@@ -68,22 +68,12 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
     }
 
     private static class DiscriminatedItemsImpl<T> extends HashMap<@Nullable T, DeferredItem> implements DiscriminatedItems<T> {
-        @Override
-        public Stream<Entry<T, DeferredItem>> filterNonNullDiscriminatorEntries() {
-            return entrySet().stream().filter(it -> it.getKey() != null);
-        }
 
         @Override
-        public Stream<DeferredItem> filterNonNullDiscriminators() {
-            return entrySet().stream().filter(it -> it.getKey() != null).map(Entry::getValue);
+        public Stream<Entry<T, DeferredItem>> sortedEntries(Comparator<T> comparator) {
+            return entrySet().stream().sorted(Entry.comparingByKey(comparator));
         }
 
-        @Override
-        public Stream<DeferredItem> sortedValues(Comparator<T> comparator) {
-            final var sorted = filterNonNullDiscriminatorEntries().sorted(Entry.comparingByKey(comparator)).map(Entry::getValue);
-            final var nullValue = get(null);
-            return nullValue != null ? Stream.concat(Stream.of(nullValue), sorted) : sorted;
-        }
     }
 
     private static class BalmDiscriminatedItemRegistrationImpl<T> extends HashMap<@Nullable T, BalmItemRegistration> implements BalmDiscriminatedItemRegistration<T> {

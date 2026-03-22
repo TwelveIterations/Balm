@@ -10,15 +10,19 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface DiscriminatedBlocks<T> extends Map<@Nullable T, DeferredBlock> {
-    Stream<Map.Entry<T, DeferredBlock>> filterNonNullDiscriminatorEntries();
-
-    Stream<DeferredBlock> filterNonNullDiscriminators();
-
-    Stream<DeferredBlock> sortedValues(Comparator<T> comparator);
+    Stream<Map.Entry<T, DeferredBlock>> sortedEntries(Comparator<T> comparator);
 
     @SuppressWarnings("unchecked")
+    default Stream<Map.Entry<T, DeferredBlock>> sortedEntries() {
+        return sortedEntries((Comparator<T>) Comparator.nullsFirst(Comparator.naturalOrder()));
+    }
+
+    default Stream<DeferredBlock> sortedValues(Comparator<T> comparator) {
+        return sortedEntries(comparator).map(Entry::getValue);
+    }
+
     default Stream<DeferredBlock> sortedValues() {
-        return sortedValues((Comparator<T>) Comparator.nullsFirst(Comparator.naturalOrder()));
+        return sortedEntries().map(Entry::getValue);
     }
 
     static <T> String prefix(@Nullable T value, String name) {
