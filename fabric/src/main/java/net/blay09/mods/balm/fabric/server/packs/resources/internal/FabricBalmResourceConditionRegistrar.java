@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FabricBalmResourceConditionRegistrar implements BalmResourceConditionRegistrar {
 
-    // TODO Can we get rid of this static state?
     private static final Map<Identifier, ResourceConditionType<?>> conditions = new ConcurrentHashMap<>();
 
     private final String namespace;
