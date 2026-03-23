@@ -15,7 +15,6 @@ public class Balmstrap {
      * @see Balm#initializeMod(String, BalmRuntimeLoadContext, java.util.function.Consumer)
      */
     public static void onRuntimeAvailable(Runnable callback) {
-        // TODO In the future, we could avoid the potentially early class load here by having the runtime pull from this class instead.
         Balm.getRuntime().onRuntimeAvailable(callback);
     }
 
