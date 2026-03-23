@@ -145,6 +145,11 @@ public class NeoForgeBalmNetworking extends CommonBalmNetworking {
         return player.connection.hasChannel(payload) || super.isMessageSupported(player, payload);
     }
 
+    @Override
+    public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
+        return true;
+    }
+
     public static class Registrations {
         private final String modId;
         private final Map<CustomPacketPayload.Type<? extends CustomPacketPayload>, MessageRegistration<RegistryFriendlyByteBuf, ? extends CustomPacketPayload>> playMessagesByType = new ConcurrentHashMap<>();

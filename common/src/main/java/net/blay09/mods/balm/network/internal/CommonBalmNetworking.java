@@ -61,10 +61,5 @@ public abstract class CommonBalmNetworking implements BalmNetworking {
         return RemotePlayerModList.wasModAnnouncedToServer(player, payload.type().id().getNamespace());
     }
 
-    /**
-     * TODO Currently always true.
-     */
-    public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
-        return true;
-    }
+    public abstract boolean isMessageSupportedByServer(CustomPacketPayload payload);
 }
