@@ -12,7 +12,7 @@ dependencies {
             classifier = "api"
         }
     }
-    compileOnly libs.jadeNeoForge
-    compileOnly libs.wthitNeoForge
+    // compileOnly libs.jadeNeoForge
+    // compileOnly libs.wthitNeoForge
     compileOnly libs.theOneProbe
 }

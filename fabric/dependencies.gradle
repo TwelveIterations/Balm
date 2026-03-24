@@ -4,7 +4,7 @@ dependencies {
     compileOnly libs.modMenu
     compileOnly libs.jeiCommon
     compileOnly libs.wthitFabric
-    // compileOnly libs.jadeFabric
+    compileOnly libs.jadeFabric
     // compileOnly libs.trinkets
     compileOnly libs.fabricPermissionsApi
     compileOnly libs.rebornEnergy
