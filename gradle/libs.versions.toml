@@ -29,8 +29,8 @@ wthitCommon = { module = "mcp.mobius.waila:wthit-api", version = "mojmap-16.0.1"
 wthitFabric = { module = "mcp.mobius.waila:wthit", version = "fabric-16.0.1" }
 wthitNeoForge = { module = "mcp.mobius.waila:wthit", version = "neo-16.0.1" }
 wthitForge = { module = "mcp.mobius.waila:wthit", version = "forge-16.0.1" }
-jeiCommon = { module = "mezz.jei:jei-1.21.11-common-api", version = "27.3.0.14" }
-modMenu = { module = "maven.modrinth:modmenu", version = "15.0.0" }
+jeiCommon = { module = "mezz.jei:jei-26.1-pre-3-common-api", version = "29.1.0.16" }
+modMenu = { module = "maven.modrinth:modmenu", version = "18.0.0-alpha.6" }
 trinkets = { module = "dev.emi:trinkets", version = "3.10.0" }
 fabricPermissionsApi = { module = "me.lucko:fabric-permissions-api", version = "0.4.0" }
 rebornEnergy = { module = "teamreborn:energy", version = "4.2.0" }
