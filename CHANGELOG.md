@@ -1,1 +1,2 @@
-- Fixed wrong Kuma version being included on NeoForge
+- Fixed crash if a mod proxy is unable to be instantiated.
+  - Fabric Permissions API being present will still log an error (since it's not actually supported yet since it's not actually updated to 26.1), but will no longer crash.
