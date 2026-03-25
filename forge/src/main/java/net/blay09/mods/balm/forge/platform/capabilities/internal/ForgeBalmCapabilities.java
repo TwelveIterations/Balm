@@ -64,7 +64,6 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
 
     @Override
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
-        getRegistrations(identifier.getNamespace()).apiClasses.add(apiClass);
         final var backingType = backingTypes.get(identifier);
         if (backingType == null) {
             throw new IllegalStateException(
@@ -147,10 +146,6 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
         return type;
     }
 
-    private Registrations getRegistrations(String namespace) {
-        return ModBusEventRegisters.getRegistrations(namespace, Registrations.class);
-    }
-
     record BlockEntityCapabilityProvider(BlockEntity blockEntity, CapabilityType<Block, ?, ?> type,
                                          BiFunction<BlockEntity, ?, ?> provider) implements ICapabilityProvider {
         @Override
@@ -181,20 +176,4 @@ public record ForgeBalmCapabilities() implements BalmCapabilities {
                                                                    BiFunction<BlockEntity, TContext, TApi> provider) {
     }
 
-
-    public static class Registrations implements ModBusEventRegister {
-
-        private final List<Class<?>> apiClasses = new ArrayList<>();
-
-        private void registerCapabilities(final RegisterCapabilitiesEvent event) {
-            for (final var apiClass : apiClasses) {
-                event.register(apiClass);
-            }
-        }
-
-        @Override
-        public void register(BusGroup busGroup) {
-            RegisterCapabilitiesEvent.BUS.addListener(this::registerCapabilities);
-        }
-    }
 }
