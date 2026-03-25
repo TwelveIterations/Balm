@@ -60,6 +60,7 @@ tasks.named('jar', Jar) {
 
 sourceSets.main.resources.srcDir 'src/generated/resources'
 
+
 tasks.register('curseforge', TaskPublishCurseForge) {
     dependsOn('build')
     description = 'Publishes the Forge build to CurseForge.'
@@ -90,4 +91,9 @@ modrinth {
     gameVersions = [libs.minecraft.get().version]
     loaders = ['forge']
 }
-tasks.modrinth.dependsOn(build)
+
+sourceSets.each {
+    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
+}
