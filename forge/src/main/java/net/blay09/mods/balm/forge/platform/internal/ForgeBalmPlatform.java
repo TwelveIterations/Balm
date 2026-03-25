@@ -23,12 +23,12 @@ import java.util.Optional;
 public class ForgeBalmPlatform implements BalmPlatform {
     @Override
     public boolean isModLoaded(String modId) {
-        return ModList.get().isLoaded(modId);
+        return ModList.isLoaded(modId);
     }
 
     @Override
     public Optional<ModInfo> getModInfo(String modId) {
-        return ModList.get().getModContainerById(modId).map(ForgeModInfo::new);
+        return ModList.getModContainerById(modId).map(ForgeModInfo::new);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ForgeBalmPlatform implements BalmPlatform {
 
     @Override
     public List<String> loadedPrimaryModIds() {
-        return ModList.get().getMods().stream().map(IModInfo::getModId).toList();
+        return ModList.getMods().stream().map(IModInfo::getModId).toList();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ForgeBalmPlatform implements BalmPlatform {
 
     @Override
     public void visitModResources(String modId, String path, ModResourceVisitor visitor) {
-        final var modFile = ModList.get().getModFileById(modId);
+        final var modFile = ModList.getModFileById(modId);
         final var nioPath = modFile.getFile().findResource(path);
         if (Files.exists(nioPath)) {
             try (final var walker = Files.walk(nioPath)) {
@@ -74,7 +74,7 @@ public class ForgeBalmPlatform implements BalmPlatform {
 
     @Override
     public Optional<ModResource> lookupModResource(String modId, String path) {
-        final var modFile = ModList.get().getModFileById(modId);
+        final var modFile = ModList.getModFileById(modId);
         final var resource = modFile.getFile().findResource(path);
         return Files.exists(resource) ? Optional.of(new PathModResource(resource)) : Optional.empty();
     }

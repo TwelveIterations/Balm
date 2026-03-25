@@ -189,7 +189,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
         super.registerConfig(schema);
 
         final var namespace = schema.identifier().getNamespace();
-        final var modContainer = ModList.get().getModContainerById(namespace)
+        final var modContainer = ModList.getModContainerById(namespace)
                 .orElseThrow(() -> new IllegalStateException("Mod container for " + namespace + " not found when registering config."));
         final var modBusGroup = BalmLoadContexts.get(namespace).map(it -> ((ForgeLoadContext) it).modBusGroup()).orElse(null);
         if (modBusGroup == null) {

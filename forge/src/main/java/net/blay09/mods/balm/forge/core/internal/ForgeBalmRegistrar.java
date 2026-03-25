@@ -18,8 +18,9 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
         return new DeferredHolder<>(resourceKey);
     }
 
+
     @Override
-    public void addAlias(ResourceKey<? extends Registry<T>> registryKey, Identifier oldId, Identifier newId) {
+    public <T> void addAlias(ResourceKey<? extends Registry<T>> registryKey, Identifier oldId, Identifier newId) {
         DeferredRegisters.addAlias(newId.getNamespace(), registryKey, oldId, newId);
     }
 

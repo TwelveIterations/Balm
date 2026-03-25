@@ -23,7 +23,6 @@ import net.blay09.mods.balm.forge.platform.event.internal.ForgeBalmEventMappings
 import net.blay09.mods.balm.forge.server.packs.resources.internal.ForgeBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.forge.server.packs.resources.internal.ForgeBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.forge.stats.internal.ForgeBalmCustomStatRegistrar;
-import net.blay09.mods.balm.forge.world.entity.npc.villager.internal.ForgeBalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.forge.world.level.levelgen.internal.ForgeBalmWorldGen;
 import net.blay09.mods.balm.forge.world.block.entity.internal.ForgeBalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.forge.world.entity.internal.ForgeBalmEntityTypeRegistrar;
@@ -43,16 +42,13 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistra
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
-import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
 import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
 
 import java.util.function.Consumer;
 
@@ -169,11 +165,6 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new ForgeBalmCustomStatRegistrar(registrar(), namespace));
-    }
-
-    @Override
-    public void villagerTrades(String namespace, Consumer<BalmVillagerTradeRegistrar> initializer) {
-        VillagerTradesEvent.BUS.addListener(event -> initializer.accept(new ForgeBalmVillagerTradeRegistrar(event)));
     }
 
     @Override

@@ -99,7 +99,7 @@ public class ForgeBalmNetworking extends CommonBalmNetworking {
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(ServerLevel level, BlockPos pos, T message) {
         final var channel = NetworkChannels.get(message.type().id().getNamespace());
-        final var players = level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false);
+        final var players = level.getChunkSource().chunkMap.getPlayers(ChunkPos.containing(pos), false);
         for (final var player : players) {
             if (isMessageSupported(player, message)) {
                 channel.send(message, player.connection.getConnection());
