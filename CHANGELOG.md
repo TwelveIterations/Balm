@@ -1,3 +1,1 @@
-- Updated to Minecraft 26.1
-- Fixed packets being sent to client even if they do not support the packet
-- Mod Developers: See [Migration Notes](https://balm.twelveiterations.com/migration/26.1) for API changes
+- Fixed wrong Kuma version being included on NeoForge
