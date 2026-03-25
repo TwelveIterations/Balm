@@ -88,7 +88,6 @@ modrinth {
     uploadFile = tasks.jarJar.archiveFile.get().asFile
     changelog = rootProject.file("CHANGELOG.md").text
     gameVersions = [libs.minecraft.get().version]
-    syncBodyFrom = rootProject.file("modpage.md").text
     loaders = ['forge']
 }
 tasks.modrinth.dependsOn(build)
