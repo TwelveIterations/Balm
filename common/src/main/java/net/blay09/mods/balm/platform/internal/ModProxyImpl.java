@@ -2,6 +2,8 @@ package net.blay09.mods.balm.platform.internal;
 
 import net.blay09.mods.balm.platform.ModProxy;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -9,11 +11,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ModProxyImpl<T> implements ModProxy<T> {
+
+    private final Logger logger = LoggerFactory.getLogger(ModProxyImpl.class);
+
     private final Predicate<String> modLoadedPredicate;
-    private final List<ModEntry> proxies = new ArrayList<>();
+    private final List<ModEntry<T>> proxies = new ArrayList<>();
     @Nullable
     private Function<List<T>, T> multiplexer;
     private T fallback;
@@ -25,7 +29,7 @@ public class ModProxyImpl<T> implements ModProxy<T> {
     @Override
     @SuppressWarnings("unchecked")
     public ModProxy<T> with(String modId, String clazzName) {
-        proxies.add(new ModEntry(modId, clazzName, () -> {
+        proxies.add(new ModEntry<>(modId, clazzName, () -> {
             try {
                 return (T) Class.forName(clazzName).getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
@@ -54,14 +58,29 @@ public class ModProxyImpl<T> implements ModProxy<T> {
     public T build() {
         final var applicableProxies = proxies.stream().filter(proxy -> modLoadedPredicate.test(proxy.modId)).toList();
         if (multiplexer != null && applicableProxies.size() > 1) {
-            return multiplexer.apply(applicableProxies.stream().map(ModEntry::proxy).map(Supplier::get).collect(Collectors.toList()));
+            final var effectiveProxies = new ArrayList<T>();
+            for (final var applicableProxy : applicableProxies) {
+                try {
+                    effectiveProxies.add(applicableProxy.proxy.get());
+                } catch (Exception e) {
+                    logger.error("Failed to instantiate proxy", e);
+                }
+            }
+            if(effectiveProxies.size() > 1) {
+                return multiplexer.apply(effectiveProxies);
+            }
+            return effectiveProxies.getFirst();
         }
 
-        if (applicableProxies.isEmpty()) {
-            return fallback;
+        for (final var applicableProxy : applicableProxies) {
+            try {
+                return applicableProxy.proxy.get();
+            } catch (Exception e) {
+                logger.error("Failed to instantiate proxy", e);
+            }
         }
 
-        return applicableProxies.getFirst().proxy().get();
+        return fallback;
     }
 
     public Supplier<T> buildLazily() {
@@ -79,27 +98,6 @@ public class ModProxyImpl<T> implements ModProxy<T> {
         };
     }
 
-    private final class ModEntry {
-        private final String modId;
-        private final String clazzName;
-        private final Supplier<T> proxy;
-
-        private ModEntry(String modId, String clazzName, Supplier<T> proxy) {
-            this.modId = modId;
-            this.clazzName = clazzName;
-            this.proxy = proxy;
-        }
-
-        public String modId() {
-            return modId;
-        }
-
-        public String clazzName() {
-            return clazzName;
-        }
-
-        public Supplier<T> proxy() {
-            return proxy;
-        }
+    public record ModEntry<T>(String modId, String clazzName, Supplier<T> proxy) {
     }
 }
