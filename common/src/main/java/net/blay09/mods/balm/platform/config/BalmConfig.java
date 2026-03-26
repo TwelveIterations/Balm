@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.platform.config;
 
-import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.platform.config.reflection.internal.ConfigReflection;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.minecraft.resources.Identifier;
@@ -58,6 +57,8 @@ public interface BalmConfig {
         return getSchema(ConfigReflection.getIdentifier(configDataClass));
     }
 
+    List<String> getPreferredConfigScreenProviders(String modId);
+
     @Nullable
     default <T> T getActiveConfig(Class<T> configDataClass) {
         final var schema = getSchema(configDataClass);
@@ -77,9 +78,6 @@ public interface BalmConfig {
     void setPreferredConfigScreen(String modId, String providerId);
 
     void setPreferredConfigScreen(String modId, List<String> providerIds);
-
-    @Nullable
-    BalmConfigScreenFactory getConfigScreenFactory(String modId);
 
     default void saveLocalConfig(BalmConfigSchema schema) {
         final var config = getLocalConfig(schema);

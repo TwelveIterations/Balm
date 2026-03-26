@@ -4,6 +4,7 @@ import com.electronwill.nightconfig.core.EnumGetMethod;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
+import net.blay09.mods.balm.neoforge.client.platform.config.internal.NeoForgeBalmConfigScreenProviders;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.internal.AbstractBalmConfig;
 import net.blay09.mods.balm.platform.config.schema.*;
@@ -11,14 +12,11 @@ import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
 import net.blay09.mods.balm.platform.event.internal.BalmSupplementalEvents;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -288,7 +286,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         modContainer.registerConfig(configType, mappedConfigSpec.getFirst());
 
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
-            initializeConfigurationScreen(modContainer);
+            NeoForgeBalmConfigScreenProviders.initializeConfigurationScreen(modContainer);
         }
     }
 
@@ -307,19 +305,6 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         final var wrappedConfig = new LoadedNeoForgeConfig(schema, modConfig, modConfigProperties);
         wrappedConfig.applyFrom(schema, config);
         ((ModConfigSpec) modConfig.getSpec()).save();
-    }
-
-    private void initializeConfigurationScreen(ModContainer modContainer) {
-        if (modContainer.getCustomExtension(IConfigScreenFactory.class).isEmpty()) {
-            modContainer.registerExtensionPoint(IConfigScreenFactory.class, (targetModContainer, modListScreen) -> {
-                final var factory = getConfigScreenFactory(targetModContainer.getModId());
-                if (factory != null) {
-                    return factory.create(modListScreen);
-                }
-
-                return new ConfigurationScreen(targetModContainer, modListScreen);
-            });
-        }
     }
 
     private Pair<ModConfigSpec, HashBasedTable<String, String, ModConfigSpec.ConfigValue<?>>> mapToConfigSpec(BalmConfigSchema schema) {

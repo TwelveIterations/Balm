@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.platform.config.internal;
 
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenProvider;
 import org.jspecify.annotations.Nullable;
@@ -34,5 +35,10 @@ public final class BalmConfigScreenProviders {
         }
 
         return null;
+    }
+
+    @Nullable
+    public static BalmConfigScreenFactory getFactory(String modId) {
+        return getFactory(modId, Balm.config().getPreferredConfigScreenProviders(modId));
     }
 }

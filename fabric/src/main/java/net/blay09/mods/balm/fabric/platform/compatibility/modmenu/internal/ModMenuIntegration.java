@@ -3,6 +3,7 @@ package net.blay09.mods.balm.fabric.platform.compatibility.modmenu.internal;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.config.internal.BalmConfigScreenProviders;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -16,7 +17,7 @@ public class ModMenuIntegration implements ModMenuApi {
         final var result = new HashMap<String, ConfigScreenFactory<?>>();
         for (final var schema : Balm.config().getSchemas()) {
             final var namespace = schema.identifier().getNamespace();
-            final var screenFactory = Balm.config().getConfigScreenFactory(namespace);
+            final var screenFactory = BalmConfigScreenProviders.getFactory(namespace);
             if (screenFactory != null) {
                 result.put(namespace, screenFactory::create);
             }

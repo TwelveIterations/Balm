@@ -3,7 +3,6 @@ package net.blay09.mods.balm.platform.config.internal;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.blay09.mods.balm.Balm;
-import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.platform.config.BalmConfig;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
@@ -11,7 +10,6 @@ import net.blay09.mods.balm.platform.config.reflection.internal.ConfigReflection
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.minecraft.resources.Identifier;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -87,10 +85,8 @@ public abstract class AbstractBalmConfig implements BalmConfig {
     }
 
     @Override
-    @Nullable
-    public BalmConfigScreenFactory getConfigScreenFactory(String modId) {
-        final var providerIds = configScreenProviderOrders.getOrDefault(modId, DEFAULT_CONFIG_SCREEN_PROVIDERS);
-        return BalmConfigScreenProviders.getFactory(modId, providerIds);
+    public List<String> getPreferredConfigScreenProviders(String modId) {
+        return configScreenProviderOrders.getOrDefault(modId, List.of(DEFAULT_CONFIG_SCREEN_PROVIDER_ID));
     }
 
     @Override
