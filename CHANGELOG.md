@@ -1,1 +1,4 @@
-- Fixed crash on dedicated servers
+- Re-added Cloth Config Support
+- Re-added Configured Support
+- Re-added Jade Support
+- Re-added Reborn Energy Support
