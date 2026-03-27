@@ -10,7 +10,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class NeoForgeBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegis
     @SuppressWarnings("unchecked")
     protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityType, Supplier<AttributeSupplier.Builder> attributes) {
         final var registrations = getActiveRegistrations();
-        registrations.attributeSuppliers.put((Holder<@NotNull EntityType<? extends @NotNull LivingEntity>>) (Holder<?>) entityType, () -> attributes.get().build());
+        registrations.attributeSuppliers.put((Holder<EntityType<? extends LivingEntity>>) (Holder<?>) entityType, () -> attributes.get().build());
     }
 
     @Override

@@ -8,7 +8,6 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
@@ -57,7 +56,7 @@ public class BalmDataComponentTypeRegistrarImpl implements BalmDataComponentType
 
         @SuppressWarnings("unchecked")
         private BalmDataComponentTypeRegistrationImpl(Holder<?> holder) {
-            this.holder = (Holder<@NotNull DataComponentType<T>>) holder;
+            this.holder = (Holder<DataComponentType<T>>) holder;
         }
 
         @Override

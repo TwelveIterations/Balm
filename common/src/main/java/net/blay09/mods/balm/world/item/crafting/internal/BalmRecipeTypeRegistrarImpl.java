@@ -11,7 +11,6 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -135,7 +134,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         @SuppressWarnings("unchecked")
         private RecipeTypeRegistrationImpl(BalmRecipeTypeRegistrar recipeTypeRegistrar, Holder<?> holder) {
             this.recipeTypeRegistrar = recipeTypeRegistrar;
-            this.holder = (Holder<@NotNull RecipeType<TRecipe>>) holder;
+            this.holder = (Holder<RecipeType<TRecipe>>) holder;
         }
 
         @Override
@@ -172,7 +171,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
 
         @SuppressWarnings("unchecked")
         private RecipeSerializerRegistrationImpl(Holder<?> holder) {
-            this.holder = (Holder<@NotNull RecipeSerializer<T>>) holder;
+            this.holder = (Holder<RecipeSerializer<T>>) holder;
         }
 
         @Override

@@ -7,7 +7,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.levelgen.Heightmap;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -20,7 +19,7 @@ public class FabricBalmEntityTypeRegistrar extends AbstractBalmEntityTypeRegistr
     @SuppressWarnings("unchecked")
     protected <T extends Entity> void registerDefaultAttributes(Holder<EntityType<T>> entityTypeHolder, Supplier<AttributeSupplier.Builder> attributes) {
         final var entityType = entityTypeHolder.value();
-        FabricDefaultAttributeRegistry.register((EntityType<? extends @NotNull LivingEntity>) entityType, attributes.get());
+        FabricDefaultAttributeRegistry.register((EntityType<? extends LivingEntity>) entityType, attributes.get());
     }
 
     @Override

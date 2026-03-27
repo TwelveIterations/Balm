@@ -12,9 +12,7 @@ import net.neoforged.neoforge.server.permission.PermissionAPI;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
 import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -35,14 +33,14 @@ public class NeoForgeBalmPermissions extends CommonBalmPermissions {
     public void registerPermission(Identifier permission, Function<PermissionContext, Boolean> defaultResolver) {
         super.registerPermission(permission, defaultResolver);
         nodes.put(permission, new PermissionNode<>(permission, PermissionTypes.BOOLEAN,
-                (serverPlayer, uuid, permissionDynamicContexts) ->
+                (serverPlayer, uuid, _) ->
                         defaultResolver.apply(serverPlayer != null ? new PlayerPermissionContext(serverPlayer) : new OfflinePermissionContext(uuid))));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public boolean hasPermission(ServerPlayer player, Identifier permission) {
-        final var node = (PermissionNode<@NotNull Boolean>) nodes.get(permission);
+        final var node = (PermissionNode<Boolean>) nodes.get(permission);
         if (node == null) {
             return false;
         }
@@ -53,7 +51,7 @@ public class NeoForgeBalmPermissions extends CommonBalmPermissions {
     @Override
     @SuppressWarnings("unchecked")
     public boolean hasPermission(CommandSourceStack source, Identifier permission) {
-        final var node = (PermissionNode<@NotNull Boolean>) nodes.get(permission);
+        final var node = (PermissionNode<Boolean>) nodes.get(permission);
         if (node == null) {
             return false;
         }

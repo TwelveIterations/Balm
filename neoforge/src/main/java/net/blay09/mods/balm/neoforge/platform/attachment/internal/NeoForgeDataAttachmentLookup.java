@@ -4,15 +4,14 @@ import net.blay09.mods.balm.platform.attachment.DataAttachmentLookup;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class NeoForgeDataAttachmentLookup<T> implements DataAttachmentLookup<T> {
     private final Holder<AttachmentType<T>> type;
 
     @SuppressWarnings("unchecked")
     public NeoForgeDataAttachmentLookup(Holder<?> type) {
-        this.type = (Holder<@NotNull AttachmentType<T>>) type;
+        this.type = (Holder<AttachmentType<T>>) type;
     }
 
     @Override
