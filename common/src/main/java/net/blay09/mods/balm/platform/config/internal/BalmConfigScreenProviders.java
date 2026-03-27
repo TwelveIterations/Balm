@@ -5,6 +5,7 @@ import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenProvider;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,14 +22,15 @@ public final class BalmConfigScreenProviders {
     }
 
     @Nullable
+    public static BalmConfigScreenFactory getFactory(String modId, String providerId) {
+        final var provider = providers.get(providerId);
+        return provider != null ? provider.factory(modId) : null;
+    }
+
+    @Nullable
     public static BalmConfigScreenFactory getFactory(String modId, List<String> providerIds) {
         for (final var providerId : providerIds) {
-            final var provider = providers.get(providerId);
-            if (provider == null) {
-                continue;
-            }
-
-            final var factory = provider.factory(modId);
+            final var factory = getFactory(modId, providerId);
             if (factory != null) {
                 return factory;
             }
@@ -40,5 +42,9 @@ public final class BalmConfigScreenProviders {
     @Nullable
     public static BalmConfigScreenFactory getFactory(String modId) {
         return getFactory(modId, Balm.config().getPreferredConfigScreenProviders(modId));
+    }
+
+    public static Collection<String> getProviderIds() {
+        return providers.keySet();
     }
 }

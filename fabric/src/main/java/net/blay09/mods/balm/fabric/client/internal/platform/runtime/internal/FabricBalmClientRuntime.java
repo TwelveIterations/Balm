@@ -1,33 +1,37 @@
 package net.blay09.mods.balm.fabric.client.internal.platform.runtime.internal;
 
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
-import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
-import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
-import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
+import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
+import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
+import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
-import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
-import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
-import net.blay09.mods.balm.fabric.client.internal.FabricBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmClientTooltipComponentRegistrar;
+import net.blay09.mods.balm.fabric.client.internal.FabricBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmRangeSelectItemModelPropertyRegistrar;
-import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
-import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
-import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
+import net.blay09.mods.balm.fabric.client.internal.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmClientEventMappings;
 import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
 import net.blay09.mods.balm.fabric.client.internal.gui.screens.inventory.FabricBalmMenuScreenRegistrar;
+import net.blay09.mods.balm.fabric.client.internal.model.geom.FabricBalmModelLayerRegistrar;
+import net.blay09.mods.balm.fabric.client.internal.particle.FabricBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.renderer.entity.FabricBalmEntityRendererRegistrar;
-import net.blay09.mods.balm.fabric.client.internal.model.geom.FabricBalmModelLayerRegistrar;
-import net.blay09.mods.balm.fabric.client.internal.color.block.FabricBalmBlockColorRegistrar;
-import net.blay09.mods.balm.fabric.client.internal.particle.FabricBalmParticleProviderRegistrar;
+import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.blay09.mods.balm.fabric.server.packs.resources.internal.FabricBalmClientResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.platform.config.BalmConfig;
+import net.blay09.mods.balm.platform.config.internal.BalmConfigScreenProviders;
+import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadContext> {
@@ -35,6 +39,25 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
     public FabricBalmClientRuntime() {
         FabricBalmSupplementalClientEvents.initialize();
         FabricBalmClientEventMappings.bind();
+
+        BalmConfigScreenProviders.register(BalmConfig.DEFAULT_CONFIG_SCREEN_PROVIDER_ID, modId -> {
+            if (Balm.config().getSchemasByNamespace(modId).isEmpty()) {
+                return null;
+            }
+
+            final var defaultFallbackOrder = new TreeSet<String>();
+            defaultFallbackOrder.add("cloth-config");
+            defaultFallbackOrder.add("configured");
+            defaultFallbackOrder.addAll(BalmConfigScreenProviders.getProviderIds());
+            for (final var providerId : defaultFallbackOrder) {
+                final var factory = BalmConfigScreenProviders.getFactory(modId, providerId);
+                if (factory != null) {
+                    return factory;
+                }
+            }
+
+            return null;
+        });
     }
 
     @Override
