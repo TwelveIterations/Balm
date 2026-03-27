@@ -15,7 +15,7 @@
     "issues": "https://github.com/TwelveIterations/Balm/issues"
   },
   "license": "${license}",
-  "icon": "${mod_id}.png",
+  "icon": "balm.png",
 
   "environment": "*",
   "entrypoints": {
@@ -29,16 +29,16 @@
       "net.blay09.mods.balm.fabric.platform.compatibility.modmenu.internal.ModMenuIntegration"
     ],
     "jade": [
-      "net.blay09.mods.balm.fabric.platform.compatibility.hudinfo.internal.FabricJadeModCompat"
+      "net.blay09.mods.balm.platform.compatibility.hudinfo.internal.JadeModIntegration"
     ],
     "jei_mod_plugin": [
       "net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.jei.CommonJeiPlugin"
     ]
   },
   "mixins": [
-    "${mod_id}.mixins.json",
-    "${mod_id}.api.mixins.json",
-    "${mod_id}.fabric.mixins.json"
+    "balm.mixins.json",
+    "balm.api.mixins.json",
+    "balm.fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
@@ -57,7 +57,7 @@
     },
     "configured": {
       "providers": [
-        "net.blay09.mods.balm.fabric.platform.compatibility.config.internal.ConfiguredConfigProvider"
+        "net.blay09.mods.balm.platform.compatibility.config.internal.ConfiguredConfigProvider"
       ]
     }
   }

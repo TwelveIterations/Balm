@@ -1,9 +1,8 @@
-package net.blay09.mods.balm.fabric.platform.compatibility.hudinfo.internal;
+package net.blay09.mods.balm.platform.compatibility.hudinfo.internal;
 
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.BlockInfoContext;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.HudInfoOutput;
-import net.blay09.mods.balm.platform.compatibility.hudinfo.internal.CommonBalmModSupportHudInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -15,7 +14,7 @@ import snownee.jade.impl.ui.ProgressElement;
 import snownee.jade.impl.ui.SimpleProgressStyle;
 
 @WailaPlugin("balm")
-public class FabricJadeModCompat implements IWailaPlugin {
+public class JadeModIntegration implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(new BalmBlockComponentProvider(), Block.class);

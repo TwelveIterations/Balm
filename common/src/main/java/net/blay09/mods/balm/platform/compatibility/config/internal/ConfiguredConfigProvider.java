@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.fabric.platform.compatibility.config.internal;
+package net.blay09.mods.balm.platform.compatibility.config.internal;
 
 import com.mrcrayfish.configured.api.*;
 import com.mrcrayfish.configured.api.util.ConfigScreenHelper;

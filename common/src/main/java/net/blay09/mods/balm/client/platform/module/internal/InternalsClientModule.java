@@ -30,6 +30,9 @@ public final class InternalsClientModule implements BalmClientModule {
 
     @Override
     public void initialize() {
+        Balm.initializeIfLoaded("cloth-config", "net.blay09.mods.balm.platform.compatibility.config.internal.ClothConfigSupport");
+        Balm.initializeIfLoaded("configured", "net.blay09.mods.balm.platform.compatibility.config.internal.ConfiguredConfigSupport");
+
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             final var networking = (CommonBalmNetworking) Balm.networking();
             final var modVersions = new HashMap<String, NetworkVersions>();

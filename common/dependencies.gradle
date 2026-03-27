@@ -3,4 +3,7 @@ dependencies {
     compileOnly libs.wthitCommon
     compileOnly libs.jeiCommon
     compileOnly libs.mixinExtras
+    compileOnly libs.jadeNeoForge
+    compileOnly libs.clothConfigNeoForge
+    compileOnly libs.configuredNeoForge
 }

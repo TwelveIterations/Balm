@@ -1,4 +1,4 @@
-package net.blay09.mods.balm.fabric.platform.compatibility.config.internal;
+package net.blay09.mods.balm.platform.compatibility.config.internal;
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
