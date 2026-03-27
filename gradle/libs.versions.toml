@@ -30,15 +30,17 @@ wthitFabric = { module = "mcp.mobius.waila:wthit", version = "fabric-19.0.0" }
 wthitNeoForge = { module = "mcp.mobius.waila:wthit", version = "neo-19.0.0" }
 wthitForge = { module = "mcp.mobius.waila:wthit", version = "forge-19.0.0" }
 jeiCommon = { module = "mezz.jei:jei-26.1-pre-3-common-api", version = "29.1.0.16" }
-modMenu = { module = "maven.modrinth:modmenu", version = "18.0.0-alpha.6" }
+modMenu = { module = "maven.modrinth:modmenu", version = "18.0.0-alpha.8" }
 trinkets = { module = "dev.emi:trinkets", version = "3.10.0" }
 fabricPermissionsApi = { module = "me.lucko:fabric-permissions-api", version = "0.6.1" }
-rebornEnergy = { module = "teamreborn:energy", version = "4.2.0" }
-clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version = "19.0.147" }
-configuredFabric = { module = "curse.maven:configured-457570", version = "6802489" }
-jadeFabric = { module = "maven.modrinth:jade", version = "26.0.3+fabric" }
-jadeNeoForge = { module = "maven.modrinth:jade", version = "26.0.3+neoforge" }
-curios = { module = "top.theillusivec4.curios:curios-neoforge", version = "9.5.1+1.21.1" }
+rebornEnergy = { module = "teamreborn:energy", version = "5.0.0" }
+clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version = "26.1.154" }
+clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version = "26.1.154" }
+configuredNeoForge = { module = "curse.maven:configured-457570", version = "7820635" }
+configuredFabric = { module = "curse.maven:configured-457570", version = "7820636" }
+jadeFabric = { module = "maven.modrinth:jade", version = "26.0.5+fabric" }
+jadeNeoForge = { module = "maven.modrinth:jade", version = "26.0.6+neoforge" }
+curios = { module = "top.theillusivec4.curios:curios-neoforge", version = "15.0.0-beta.1+26.1" }
 theOneProbe = { module = "curse.maven:the-one-probe-245211", version = "6106996" }
 
 [plugins]

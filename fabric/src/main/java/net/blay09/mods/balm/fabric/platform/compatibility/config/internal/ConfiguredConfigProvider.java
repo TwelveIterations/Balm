@@ -3,6 +3,7 @@ package net.blay09.mods.balm.fabric.platform.compatibility.config.internal;
 import com.mrcrayfish.configured.api.*;
 import com.mrcrayfish.configured.api.util.ConfigScreenHelper;
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
@@ -246,6 +247,10 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                 return ConfigLocalization.forPropertyTooltip(property);
             }
         };
+    }
+
+    public static BalmConfigScreenFactory getConfigScreenFactory(String modId) {
+        return parentScreen -> createConfigScreen(modId, parentScreen);
     }
 
     public static Screen createConfigScreen(String modId, Screen parent) {
