@@ -2,7 +2,6 @@ dependencies {
     api libs.kumaNeoForge
     jarJar("net.blay09.mods:kuma-api-neoforge") {
         version {
-            strictly kuma_version_range
             prefer libs.kumaNeoForge.get().version
         }
     }
