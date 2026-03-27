@@ -3,7 +3,7 @@ dependencies {
     include(libs.kumaFabric)
     compileOnly libs.modMenu
     compileOnly libs.jeiCommon
-    compileOnly libs.wthitFabric
+    compileOnly libs.wthitCommon
     compileOnly libs.jadeFabric
     // compileOnly libs.trinkets
     compileOnly libs.fabricPermissionsApi

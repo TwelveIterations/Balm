@@ -12,7 +12,7 @@ dependencies {
         }
     }
     compileOnly libs.jadeNeoForge
-    // compileOnly libs.wthitNeoForge
+    compileOnly libs.wthitCommon
     compileOnly libs.theOneProbe
     compileOnly libs.clothConfigNeoForge
     compileOnly libs.configuredNeoForge

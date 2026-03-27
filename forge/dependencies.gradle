@@ -2,9 +2,9 @@ dependencies {
     api libs.kumaForge
     jarJar("net.blay09.mods:kuma-api-forge:${libs.kumaForge.get().version}")
     compileOnly libs.jeiCommon
-    // compileOnly libs.wthitForge
 
     // These aren't actually used, just here so we don't fail on common compile.
+    compileOnly libs.wthitCommon
     compileOnly libs.configuredNeoForge
     compileOnly libs.clothConfigNeoForge
     compileOnly libs.jadeNeoForge

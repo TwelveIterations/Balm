@@ -8,7 +8,7 @@ import net.blay09.mods.balm.platform.compatibility.hudinfo.HudInfoOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 
-public class WTHITModCompat implements IWailaClientPlugin {
+public class WTHITModIntegration implements IWailaClientPlugin {
 
     @Override
     public void register(IClientRegistrar registrar) {
