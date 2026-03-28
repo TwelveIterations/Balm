@@ -23,7 +23,7 @@ public class NeoForgeBalmResourceReloadListenerRegistrar implements BalmResource
 
     @Override
     public void register(String name, Function<HolderLookup.Provider, PreparableReloadListener> listenerFactory) {
-        event.addListener(Identifier.fromNamespaceAndPath(namespace, name), listenerFactory.apply(event.getRegistryAccess()));
+        event.addListener(Identifier.fromNamespaceAndPath(namespace, name), listenerFactory.apply(event.getServerResources().getRegistryLookup()));
     }
 
     @Override
