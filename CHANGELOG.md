@@ -1,4 +1,5 @@
 - Re-added Cloth Config Support
 - Re-added Configured Support
 - Re-added Jade Support
+- Re-added WTHIT Support
 - Re-added Reborn Energy Support
