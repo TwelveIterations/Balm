@@ -1,5 +1,2 @@
-- Re-added Cloth Config Support
-- Re-added Configured Support
-- Re-added Jade Support
-- Re-added WTHIT Support
-- Re-added Reborn Energy Support
+- Fixed stack overflow when resolving fallback config screen without any supported config mod installed on Fabric
+- Fixed wrong registry lookup in reload listeners on NeoForge
