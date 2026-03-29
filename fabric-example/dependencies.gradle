@@ -1,0 +1,5 @@
+dependencies {
+    compileOnly project(":common")
+    implementation project(":common-example")
+    implementation project(":fabric")
+}

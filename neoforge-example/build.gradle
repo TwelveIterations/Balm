@@ -1,0 +1,76 @@
+plugins {
+    alias libs.plugins.modDevGradle
+}
+
+neoForge {
+    version = libs.neoForge.get().version
+    // Automatically enable neoforge AccessTransformers if the file exists
+    def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers.from(at.absolutePath)
+    }
+
+    parchment.parchmentArtifact = libs.parchment.get().toString()
+
+    runs {
+        configureEach {
+            systemProperty('neoforge.enabledGameTestNamespaces', 'balm_example')
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})"
+        }
+
+        client {
+            client()
+        }
+    }
+
+    mods {
+        balm_example {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+apply from: rootProject.file('repositories.gradle')
+apply from: 'dependencies.gradle'
+
+tasks.named('compileJava', JavaCompile) {
+    dependsOn(configurations.commonExampleJava)
+    source(configurations.commonExampleJava)
+}
+
+processResources {
+    dependsOn(configurations.commonExampleResources)
+    dependsOn(configurations.commonExampleGeneratedResources)
+    from(configurations.commonExampleResources)
+    from(configurations.commonExampleGeneratedResources)
+}
+
+tasks.named('javadoc', Javadoc).configure {
+    dependsOn(configurations.commonExampleJava)
+    source(configurations.commonExampleJava)
+}
+
+tasks.matching { it.name == 'sourcesJar' }.configureEach {
+    dependsOn(configurations.commonExampleJava)
+    from(configurations.commonExampleJava)
+    dependsOn(configurations.commonExampleResources)
+    from(configurations.commonExampleResources)
+    dependsOn(configurations.commonExampleGeneratedResources)
+    from(configurations.commonExampleGeneratedResources)
+}
+
+def neoForgeSnapshotUrl = findProperty("neoforge_snapshot_url")
+if (neoForgeSnapshotUrl != null && !neoForgeSnapshotUrl.isBlank()) {
+    repositories {
+        maven {
+            name = 'Maven for NeoForge Snapshots'
+            url = neoForgeSnapshotUrl
+            content {
+                includeModule('net.neoforged', 'neoforge')
+                includeModule('net.neoforged', 'testframework')
+            }
+        }
+    }
+}

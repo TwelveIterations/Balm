@@ -1,0 +1,20 @@
+configurations {
+    commonExampleJava {
+        canBeResolved = true
+    }
+    commonExampleResources {
+        canBeResolved = true
+    }
+    commonExampleGeneratedResources {
+        canBeResolved = true
+    }
+}
+
+dependencies {
+    compileOnly project(":common")
+    commonExampleJava project(path: ":common-example", configuration: "commonJava")
+    commonExampleResources project(path: ":common-example", configuration: "commonResources")
+    commonExampleGeneratedResources project(path: ":common-example", configuration: "commonGeneratedResources")
+
+    implementation project(":neoforge")
+}

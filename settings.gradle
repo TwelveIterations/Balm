@@ -45,11 +45,14 @@ plugins {
 
 includeBuild('build-logic')
 include('common')
+include('common-example')
 if (include_fabric == "true") {
     include('fabric')
+    include('fabric-example')
 }
 if (include_neoforge == "true") {
     include('neoforge')
+    include('neoforge-example')
 }
 if (include_forge == "true") {
     include('forge')

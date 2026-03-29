@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "balm_example",
+  "version": "${version}",
+
+  "name": "Balm Example Mod",
+  "description": "${description}",
+  "authors": [
+    "BlayTheNinth"
+  ],
+  "contact": {
+    "homepage": "https://balm.twelveiterations.com/",
+    "sources": "https://github.com/TwelveIterations/Balm",
+    "issues": "https://github.com/TwelveIterations/Balm/issues"
+  },
+  "license": "${license}",
+  "icon": "balm.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.example.balm.fabric.FabricBalmExample"
+    ],
+    "client": [
+      "com.example.balm.fabric.client.FabricBalmExampleClient"
+    ]
+  },
+  "mixins": [
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "fabric-api": "*",
+    "minecraft": "*",
+    "java": "*"
+  },
+  "suggests": {
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/VAfZ2Nau6j"
+      }
+    }
+  }
+}

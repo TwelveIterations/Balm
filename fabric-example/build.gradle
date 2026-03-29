@@ -1,0 +1,32 @@
+plugins {
+    alias libs.plugins.fabricLoom
+}
+
+dependencies {
+    minecraft libs.minecraft
+    implementation libs.fabricLoader
+    implementation libs.fabricApi
+}
+
+apply from: rootProject.file('repositories.gradle')
+apply from: 'dependencies.gradle'
+
+loom {
+    def aw = project(":common").file("src/main/resources/${mod_id}.classtweaker")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+
+    runs {
+        client {
+            client()
+            setConfigName("fabric Example")
+            ideConfigGenerated(true)
+            runDir("runs/client")
+        }
+    }
+}
