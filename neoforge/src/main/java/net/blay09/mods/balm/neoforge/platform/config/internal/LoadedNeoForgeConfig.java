@@ -16,7 +16,7 @@ public record LoadedNeoForgeConfig(BalmConfigSchema schema, ModConfig modConfig,
     public <T> void setRaw(ConfiguredProperty<T> property, T value) {
         @SuppressWarnings("unchecked") final var backingProperty = (ModConfigSpec.ConfigValue<T>) properties.get(property.category(), property.name());
         if (backingProperty != null) {
-            final var mappedValue = NeoForgeBalmConfig.mapConfigValueToNeoForge(value);
+            final var mappedValue = NeoForgeBalmConfig.mapConfigValueToNeoForge(property.validateValue(value).getOrThrow());
             backingProperty.set((T) mappedValue);
         }
     }

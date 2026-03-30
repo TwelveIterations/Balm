@@ -50,6 +50,7 @@ public class ConfigReflection {
             if (field.getAnnotation(Synced.class) != null) {
                 property.synced();
             }
+            final var rangeAnnotation = field.getAnnotation(Range.class);
             final var type = field.getType();
             final var nestedTypeAnnotation = field.getAnnotation(NestedType.class);
             final var nestedType = nestedTypeAnnotation != null ? nestedTypeAnnotation.value() : null;
@@ -60,13 +61,29 @@ public class ConfigReflection {
                 } else if (type == Identifier.class) {
                     property.IdentifierOf((Identifier) defaultValue);
                 } else if (type == Integer.class || type == int.class) {
-                    property.intOf((int) defaultValue);
+                    if (rangeAnnotation != null) {
+                        property.intOf((int) defaultValue, Integer.parseInt(rangeAnnotation.min()), Integer.parseInt(rangeAnnotation.max()));
+                    } else {
+                        property.intOf((int) defaultValue);
+                    }
                 } else if (type == Long.class || type == long.class) {
-                    property.longOf((long) defaultValue);
+                    if (rangeAnnotation != null) {
+                        property.longOf((long) defaultValue, Long.parseLong(rangeAnnotation.min()), Long.parseLong(rangeAnnotation.max()));
+                    } else {
+                        property.longOf((long) defaultValue);
+                    }
                 } else if (type == Float.class || type == float.class) {
-                    property.floatOf((float) defaultValue);
+                    if (rangeAnnotation != null) {
+                        property.floatOf((float) defaultValue, Float.parseFloat(rangeAnnotation.min()), Float.parseFloat(rangeAnnotation.max()));
+                    } else {
+                        property.floatOf((float) defaultValue);
+                    }
                 } else if (type == Double.class || type == double.class) {
-                    property.doubleOf((double) defaultValue);
+                    if (rangeAnnotation != null) {
+                        property.doubleOf((double) defaultValue, Double.parseDouble(rangeAnnotation.min()), Double.parseDouble(rangeAnnotation.max()));
+                    } else {
+                        property.doubleOf((double) defaultValue);
+                    }
                 } else if (type == Boolean.class || type == boolean.class) {
                     property.boolOf((boolean) defaultValue);
                 } else if (type.isEnum()) {

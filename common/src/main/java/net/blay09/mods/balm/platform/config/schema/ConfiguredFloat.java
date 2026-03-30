@@ -4,7 +4,17 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 
+import java.util.Optional;
+
 public interface ConfiguredFloat extends ConfiguredProperty<Float> {
+    default Optional<Float> minValue() {
+        return Optional.empty();
+    }
+
+    default Optional<Float> maxValue() {
+        return Optional.empty();
+    }
+
     default float get(LoadedConfig config) {
         return getRaw(config);
     }

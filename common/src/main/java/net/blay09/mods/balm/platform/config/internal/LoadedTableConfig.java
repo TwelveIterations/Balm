@@ -53,7 +53,7 @@ public record LoadedTableConfig(
     @Override
     public <T> void setRaw(ConfiguredProperty<T> property, T value) {
         if (property.type().isAssignableFrom(value.getClass())) {
-            table.put(property.category(), property.name(), value);
+            table.put(property.category(), property.name(), property.validateValue(value).getOrThrow());
         } else {
             throw new IllegalArgumentException("Invalid type for property " + property.name() + " in category " + property.category() + ": " + value.getClass()
                     .getName() + ", expected " + property.type().getName());

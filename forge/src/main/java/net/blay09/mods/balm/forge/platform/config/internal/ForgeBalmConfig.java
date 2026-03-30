@@ -39,14 +39,22 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
         return switch (property) {
             case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue().booleanValue());
-            case ConfiguredDouble configuredDouble -> spec.define(configuredDouble.name(), configuredDouble.defaultValue());
+            case ConfiguredDouble configuredDouble -> configuredDouble.minValue().isPresent() || configuredDouble.maxValue().isPresent()
+                    ? spec.defineInRange(configuredDouble.name(), configuredDouble.defaultValue(), configuredDouble.minValue().orElse(Double.NEGATIVE_INFINITY), configuredDouble.maxValue().orElse(Double.POSITIVE_INFINITY))
+                    : spec.define(configuredDouble.name(), configuredDouble.defaultValue());
             case ConfiguredEnum<?> configuredEnum -> defineEnum(spec, configuredEnum);
-            case ConfiguredFloat configuredFloat -> spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
-            case ConfiguredInt configuredInt -> spec.define(configuredInt.name(), configuredInt.defaultValue());
+            case ConfiguredFloat configuredFloat -> configuredFloat.minValue().isPresent() || configuredFloat.maxValue().isPresent()
+                    ? spec.defineInRange(configuredFloat.name(), configuredFloat.defaultValue().doubleValue(), (double) configuredFloat.minValue().orElse(Float.NEGATIVE_INFINITY), (double) configuredFloat.maxValue().orElse(Float.POSITIVE_INFINITY))
+                    : spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
+            case ConfiguredInt configuredInt -> configuredInt.minValue().isPresent() || configuredInt.maxValue().isPresent()
+                    ? spec.defineInRange(configuredInt.name(), configuredInt.defaultValue(), configuredInt.minValue().orElse(Integer.MIN_VALUE), configuredInt.maxValue().orElse(Integer.MAX_VALUE))
+                    : spec.define(configuredInt.name(), configuredInt.defaultValue());
             case ConfiguredList<?> configuredList -> spec.defineListAllowEmpty(configuredList.name(),
                     mapConfigCollectionToNeoForge(configuredList.defaultValue()),
                     (it) -> validateListElement(configuredList, it));
-            case ConfiguredLong configuredLong -> spec.define(configuredLong.name(), configuredLong.defaultValue());
+            case ConfiguredLong configuredLong -> configuredLong.minValue().isPresent() || configuredLong.maxValue().isPresent()
+                    ? spec.defineInRange(configuredLong.name(), configuredLong.defaultValue(), configuredLong.minValue().orElse(Long.MIN_VALUE), configuredLong.maxValue().orElse(Long.MAX_VALUE))
+                    : spec.define(configuredLong.name(), configuredLong.defaultValue());
             case ConfiguredIdentifier configuredIdentifier ->
                     spec.define(configuredIdentifier.name(), configuredIdentifier.defaultValue().toString());
             case ConfiguredSet<?> configuredSet -> spec.defineListAllowEmpty(configuredSet.name(),

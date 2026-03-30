@@ -4,7 +4,17 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 
+import java.util.Optional;
+
 public interface ConfiguredDouble extends ConfiguredProperty<Double> {
+    default Optional<Double> minValue() {
+        return Optional.empty();
+    }
+
+    default Optional<Double> maxValue() {
+        return Optional.empty();
+    }
+
     default double get(LoadedConfig config) {
         return getRaw(config);
     }

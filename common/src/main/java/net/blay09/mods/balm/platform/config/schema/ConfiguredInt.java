@@ -4,7 +4,17 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 
+import java.util.Optional;
+
 public interface ConfiguredInt extends ConfiguredProperty<Integer> {
+    default Optional<Integer> minValue() {
+        return Optional.empty();
+    }
+
+    default Optional<Integer> maxValue() {
+        return Optional.empty();
+    }
+
     default int get(LoadedConfig config) {
         return getRaw(config);
     }

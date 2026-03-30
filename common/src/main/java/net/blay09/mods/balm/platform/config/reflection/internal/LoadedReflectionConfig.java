@@ -14,7 +14,7 @@ public record LoadedReflectionConfig<ConfigData>(ConfigData data) implements Mut
         try {
             final var holder = locatePropertyHolder(property);
             final var field = holder.getClass().getField(property.name());
-            field.set(holder, value);
+            field.set(holder, property.validateValue(value).getOrThrow());
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException("Failed to set config property '" +
                     (property.category().isEmpty() ? "" : property.category() + ".") +

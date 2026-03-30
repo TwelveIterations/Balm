@@ -44,16 +44,32 @@ public class ConfigPropertyBuilder {
         return schema.addAndReturn(new IntConfigProperty(this, defaultValue));
     }
 
+    public IntConfigProperty intOf(int defaultValue, int minValue, int maxValue) {
+        return schema.addAndReturn(new IntConfigProperty(this, defaultValue, minValue, maxValue));
+    }
+
     public LongConfigProperty longOf(long defaultValue) {
         return schema.addAndReturn(new LongConfigProperty(this, defaultValue));
+    }
+
+    public LongConfigProperty longOf(long defaultValue, long minValue, long maxValue) {
+        return schema.addAndReturn(new LongConfigProperty(this, defaultValue, minValue, maxValue));
     }
 
     public FloatConfigProperty floatOf(float defaultValue) {
         return schema.addAndReturn(new FloatConfigProperty(this, defaultValue));
     }
 
+    public FloatConfigProperty floatOf(float defaultValue, float minValue, float maxValue) {
+        return schema.addAndReturn(new FloatConfigProperty(this, defaultValue, minValue, maxValue));
+    }
+
     public DoubleConfigProperty doubleOf(double defaultValue) {
         return schema.addAndReturn(new DoubleConfigProperty(this, defaultValue));
+    }
+
+    public DoubleConfigProperty doubleOf(double defaultValue, double minValue, double maxValue) {
+        return schema.addAndReturn(new DoubleConfigProperty(this, defaultValue, minValue, maxValue));
     }
 
     public StringConfigProperty stringOf(String defaultValue) {

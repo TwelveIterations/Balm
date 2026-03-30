@@ -71,20 +71,24 @@ public class ClothConfigSupport {
                             .setSaveConsumer(value -> stringProperty.set(config, value))
                             .build()
             );
-            case ConfiguredInt intProperty -> categoryInstance.addEntry(
-                    builder.entryBuilder().startIntField(displayName, intProperty.get(config))
-                            .setDefaultValue(intProperty.defaultValue())
-                            .setTooltip(tooltip)
-                            .setSaveConsumer(value -> intProperty.set(config, value))
-                            .build()
-            );
-            case ConfiguredFloat floatProperty -> categoryInstance.addEntry(
-                    builder.entryBuilder().startFloatField(displayName, floatProperty.get(config))
-                            .setDefaultValue(floatProperty.defaultValue())
-                            .setTooltip(tooltip)
-                            .setSaveConsumer(value -> floatProperty.set(config, value))
-                            .build()
-            );
+            case ConfiguredInt intProperty -> {
+                var fieldBuilder = builder.entryBuilder().startIntField(displayName, intProperty.get(config))
+                        .setDefaultValue(intProperty.defaultValue())
+                        .setTooltip(tooltip)
+                        .setSaveConsumer(value -> intProperty.set(config, value));
+                fieldBuilder = intProperty.minValue().map(fieldBuilder::setMin).orElse(fieldBuilder);
+                fieldBuilder = intProperty.maxValue().map(fieldBuilder::setMax).orElse(fieldBuilder);
+                categoryInstance.addEntry(fieldBuilder.build());
+            }
+            case ConfiguredFloat floatProperty -> {
+                var fieldBuilder = builder.entryBuilder().startFloatField(displayName, floatProperty.get(config))
+                        .setDefaultValue(floatProperty.defaultValue())
+                        .setTooltip(tooltip)
+                        .setSaveConsumer(value -> floatProperty.set(config, value));
+                fieldBuilder = floatProperty.minValue().map(fieldBuilder::setMin).orElse(fieldBuilder);
+                fieldBuilder = floatProperty.maxValue().map(fieldBuilder::setMax).orElse(fieldBuilder);
+                categoryInstance.addEntry(fieldBuilder.build());
+            }
             case ConfiguredBoolean booleanProperty -> categoryInstance.addEntry(
                     builder.entryBuilder().startBooleanToggle(displayName, booleanProperty.get(config))
                             .setDefaultValue(booleanProperty.defaultValue())

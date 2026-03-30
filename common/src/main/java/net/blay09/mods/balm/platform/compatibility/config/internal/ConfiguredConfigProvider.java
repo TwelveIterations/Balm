@@ -6,6 +6,10 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredDouble;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredFloat;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredInt;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredLong;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
@@ -173,12 +177,15 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public void set(T o) {
-                        config.setRaw(property, o);
+                        config.setRaw(property, property.validateValue(o).getOrThrow());
                     }
 
                     @Override
                     public boolean isValid(T o) {
-                        return ClassUtils.isAssignable(o.getClass(), property.type(), true);
+                        if (!ClassUtils.isAssignable(o.getClass(), property.type(), true)) {
+                            return false;
+                        }
+                        return property.validateValue(o).isSuccess();
                     }
 
                     @Override
@@ -208,7 +215,17 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public @Nullable Component getValidationHint() {
-                        return null;
+                        return switch (property) {
+                            case ConfiguredInt configuredInt when (configuredInt.minValue().isPresent() || configuredInt.maxValue().isPresent()) ->
+                                    Component.literal("Range: " + configuredInt.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredInt.maxValue().map(String::valueOf).orElse("+inf"));
+                            case ConfiguredLong configuredLong when (configuredLong.minValue().isPresent() || configuredLong.maxValue().isPresent()) ->
+                                    Component.literal("Range: " + configuredLong.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredLong.maxValue().map(String::valueOf).orElse("+inf"));
+                            case ConfiguredFloat configuredFloat when (configuredFloat.minValue().isPresent() || configuredFloat.maxValue().isPresent()) ->
+                                    Component.literal("Range: " + configuredFloat.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredFloat.maxValue().map(String::valueOf).orElse("+inf"));
+                            case ConfiguredDouble configuredDouble when (configuredDouble.minValue().isPresent() || configuredDouble.maxValue().isPresent()) ->
+                                    Component.literal("Range: " + configuredDouble.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredDouble.maxValue().map(String::valueOf).orElse("+inf"));
+                            default -> null;
+                        };
                     }
 
                     @Override
