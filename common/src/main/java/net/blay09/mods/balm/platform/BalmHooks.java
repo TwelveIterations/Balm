@@ -50,6 +50,7 @@ public interface BalmHooks {
      */
     boolean isFakePlayer(Player player);
 
+    @Nullable
     ItemStackTemplate getCraftingRemainingItem(ItemStack itemStack);
 
     /**

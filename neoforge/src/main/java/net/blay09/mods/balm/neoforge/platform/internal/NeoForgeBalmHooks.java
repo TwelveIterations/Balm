@@ -23,7 +23,6 @@ import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,7 +47,7 @@ public class NeoForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public boolean growCrop(ItemStack itemStack, Level level, BlockPos pos, Player player) {
+    public boolean growCrop(ItemStack itemStack, Level level, BlockPos pos, @Nullable Player player) {
         if (player != null) {
             return BoneMealItem.applyBonemeal(itemStack, level, pos, player);
         } else {
@@ -87,12 +86,12 @@ public class NeoForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public ItemStackTemplate getCraftingRemainingItem(ItemStack itemStack) {
+    public @Nullable ItemStackTemplate getCraftingRemainingItem(ItemStack itemStack) {
         return itemStack.getCraftingRemainder();
     }
 
     @Override
-    public DyeColor getColor(ItemStack itemStack) {
+    public @Nullable DyeColor getColor(ItemStack itemStack) {
         return DyeColor.getColor(itemStack);
     }
 
@@ -112,7 +111,7 @@ public class NeoForgeBalmHooks implements BalmHooks {
     }
 
     @Override
-    public void setForcedPose(Player player, Pose pose) {
+    public void setForcedPose(Player player, @Nullable Pose pose) {
         player.setForcedPose(pose);
     }
 

@@ -69,13 +69,12 @@ public class FabricBalmHooks implements BalmHooks {
     }
 
     @Override
-    public ItemStackTemplate getCraftingRemainingItem(ItemStack itemStack) {
+    public @Nullable ItemStackTemplate getCraftingRemainingItem(ItemStack itemStack) {
         return itemStack.getCraftingRemainder();
     }
 
     @Override
-    @Nullable
-    public DyeColor getColor(ItemStack itemStack) {
+    public @Nullable DyeColor getColor(ItemStack itemStack) {
         return itemStack.get(DataComponents.DYE);
     }
 
