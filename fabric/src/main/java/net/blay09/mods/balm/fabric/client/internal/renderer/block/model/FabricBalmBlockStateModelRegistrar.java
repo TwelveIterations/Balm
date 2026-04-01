@@ -6,10 +6,10 @@ import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
-import net.minecraft.client.renderer.block.model.SingleVariant;
-import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.renderer.block.dispatch.BlockModelRotation;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.SingleVariant;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
 import net.minecraft.resources.Identifier;
 
 public class FabricBalmBlockStateModelRegistrar extends AbstractBalmBlockStateModelRegistrar {
@@ -27,7 +27,7 @@ public class FabricBalmBlockStateModelRegistrar extends AbstractBalmBlockStateMo
             final var ambientOcclusion = model.getTopAmbientOcclusion();
             final var quadCollection = model.bakeTopGeometry(textureSlots, baker, BlockModelRotation.IDENTITY);
             final var particleMaterial = model.resolveParticleMaterial(textureSlots, baker);
-            return new SingleVariant(new SimpleModelWrapper(quadCollection, ambientOcclusion, particleMaterial, false));
+            return new SingleVariant(new SimpleModelWrapper(quadCollection, ambientOcclusion, particleMaterial));
         }));
         return new FabricDeferredBlockStateModel(extraModelKey);
     }
@@ -38,7 +38,7 @@ public class FabricBalmBlockStateModelRegistrar extends AbstractBalmBlockStateMo
         public BlockStateModel asBlockStateModel() {
             final var modelManager = Minecraft.getInstance().getModelManager();
             final var model = modelManager.getModel(extraModelKey);
-            return model != null ? model : modelManager.getMissingBlockStateModel();
+            return model != null ? model : modelManager.getBlockStateModelSet().missingModel();
         }
     }
 }
