@@ -1,10 +1,10 @@
 [versions]
 minecraft = "26.1"
 neoForm = "26.1-1"
-neoForge = "26.1.0.1-beta"
-forge = "62.0.1"
-fabricApi = "0.144.0+26.1"
-fabricLoader = "0.18.4"
+neoForge = "26.1.0.19-beta"
+forge = "62.0.9"
+fabricApi = "0.145.1+26.1"
+fabricLoader = "0.18.5"
 kuma = "26.1.0.2"
 
 [libraries]
