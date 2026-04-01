@@ -28,7 +28,7 @@ class JeiRecipeViewerDisplaySlotBuilder implements RecipeViewerDisplaySlotBuilde
 
     @Override
     public RecipeViewerDisplaySlotBuilder add(ItemStackTemplate itemStackTemplate) {
-        builder.add(itemStackTemplate.create()); // TODO change to not create if JEI accepts templates
+        builder.add(itemStackTemplate.create());
         return this;
     }
 

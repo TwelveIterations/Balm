@@ -12,7 +12,6 @@ import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerReci
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ class JeiRecipeTypeRegistration<T> implements RecipeViewerRecipeTypeRegistration
     private int backgroundTextureX;
     private int backgroundTextureY;
     private ItemStack icon = ItemStack.EMPTY;
-    private BiConsumer<T, RecipeViewerDisplaySlotsBuilder> slotsBuilder = (recipe, builder) -> {
+    private BiConsumer<T, RecipeViewerDisplaySlotsBuilder> slotsBuilder = (_, _) -> {
     };
 
     public JeiRecipeTypeRegistration(Identifier identifier, Class<T> recipeClass) {
@@ -66,7 +65,7 @@ class JeiRecipeTypeRegistration<T> implements RecipeViewerRecipeTypeRegistration
 
     private IRecipeCategory<T> createJeiCategory(IJeiHelpers helpers) {
         final var guiHelper = helpers.getGuiHelper();
-        final var drawableIcon = icon != null ? guiHelper.createDrawableItemStack(icon) : null;
+        final var drawableIcon = !icon.isEmpty() ? guiHelper.createDrawableItemStack(icon) : null;
         final var drawableBackground = backgroundTexture != null ? guiHelper.createDrawable(backgroundTexture, backgroundTextureX, backgroundTextureY, width, height) : null;
         return new CommonJeiRecipeCategory<>(jeiRecipeType, title, drawableIcon, width, height, drawableBackground, slotsBuilder);
     }

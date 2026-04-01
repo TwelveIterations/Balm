@@ -26,7 +26,7 @@ mixin = { module = "org.spongepowered:mixin", version = "0.8.7" }
 mixinExtras = { module = "io.github.llamalad7:mixinextras-common", version = "0.5.2" }
 
 wthitCommon = { module = "mcp.mobius.waila:wthit-api", version = "mojmap-19.0.0" }
-jeiCommon = { module = "mezz.jei:jei-26.1-pre-3-common-api", version = "29.1.0.16" }
+jeiCommon = { module = "mezz.jei:jei-26.1-common-api", version = "29.2.0.20" }
 modMenu = { module = "maven.modrinth:modmenu", version = "18.0.0-alpha.8" }
 trinkets = { module = "dev.emi:trinkets", version = "3.10.0" }
 fabricPermissionsApi = { module = "me.lucko:fabric-permissions-api", version = "0.6.1" }

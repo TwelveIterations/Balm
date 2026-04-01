@@ -17,13 +17,13 @@ public class CommonJeiRecipeCategory<T> implements IRecipeCategory<T> {
 
     private final IRecipeType<T> recipeType;
     private final Component title;
-    private final IDrawable icon;
+    private final @Nullable IDrawable icon;
     private final int width;
     private final int height;
-    private final IDrawable background;
+    private final @Nullable IDrawable background;
     private final BiConsumer<T, RecipeViewerDisplaySlotsBuilder> slotsBuilder;
 
-    public CommonJeiRecipeCategory(IRecipeType<T> recipeType, Component title, IDrawable icon, int width, int height, IDrawable background, BiConsumer<T, RecipeViewerDisplaySlotsBuilder> slotsBuilder) {
+    public CommonJeiRecipeCategory(IRecipeType<T> recipeType, Component title, @Nullable IDrawable icon, int width, int height, @Nullable IDrawable background, BiConsumer<T, RecipeViewerDisplaySlotsBuilder> slotsBuilder) {
         this.recipeType = recipeType;
         this.title = title;
         this.icon = icon;
@@ -53,12 +53,12 @@ public class CommonJeiRecipeCategory<T> implements IRecipeCategory<T> {
         slotsBuilder.accept(recipe, new JeiRecipeViewerDisplaySlotsBuilder(builder));
     }
 
-    /*TODO @Override
+    @Override
     public void draw(Object recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         if (background != null) {
             background.draw(guiGraphics);
         }
-    }*/
+    }
 
     @Override
     public int getWidth() {
