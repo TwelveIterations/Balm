@@ -1,2 +1,3 @@
-- Fixed stack overflow when resolving fallback config screen without any supported config mod installed on Fabric
-- Fixed wrong registry lookup in reload listeners on NeoForge
+- Re-added support for block state models on Fabric
+- Re-added unified support for JEI
+- Added `@Range` and range options for numeric config properties
