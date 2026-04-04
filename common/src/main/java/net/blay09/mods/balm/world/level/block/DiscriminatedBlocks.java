@@ -9,11 +9,11 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public interface DiscriminatedBlocks<T> extends Map<@Nullable T, DeferredBlock> {
-    Stream<Map.Entry<@Nullable T, DeferredBlock>> sortedEntries(Comparator<T> comparator);
+public interface DiscriminatedBlocks<T> extends Map<T, DeferredBlock> {
+    Stream<Map.Entry<T, DeferredBlock>> sortedEntries(Comparator<T> comparator);
 
     @SuppressWarnings("unchecked")
-    default Stream<Map.Entry<@Nullable T, DeferredBlock>> sortedEntries() {
+    default Stream<Map.Entry<T, DeferredBlock>> sortedEntries() {
         return sortedEntries((Comparator<T>) Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
