@@ -4,8 +4,8 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.world.level.block.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -25,9 +25,16 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     private final BalmRegistrar registrar;
     private final String namespace;
 
+    private boolean useBlockDescriptionPrefixForItems;
+
     public BalmBlockRegistrarImpl(BalmRegistrar registrar, String namespace) {
         this.registrar = registrar;
         this.namespace = namespace;
+    }
+
+    @Override
+    public void enableBlockDescriptionPrefixForItems() {
+        useBlockDescriptionPrefixForItems = true;
     }
 
     @Override
@@ -52,7 +59,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.BLOCK, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(properties.get().setId(resourceKey)));
-        return new BalmBlockRegistrationImpl(registrar, holder);
+        return new BalmBlockRegistrationImpl(registrar, holder, useBlockDescriptionPrefixForItems);
     }
 
     @Override
@@ -87,20 +94,29 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     private static final class BalmBlockRegistrationImpl implements BalmBlockRegistration {
         private final BalmRegistrar registrar;
         private final Holder<Block> holder;
+        private final boolean useBlockDescriptionPrefixForItems;
         @Nullable
         private DeferredBlock deferredBlock;
 
-        private BalmBlockRegistrationImpl(BalmRegistrar registrar, Holder<Block> holder) {
+        private BalmBlockRegistrationImpl(BalmRegistrar registrar, Holder<Block> holder, boolean useBlockDescriptionPrefixForItems) {
             this.registrar = registrar;
             this.holder = holder;
+            this.useBlockDescriptionPrefixForItems = useBlockDescriptionPrefixForItems;
         }
 
         @Override
         public BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Supplier<Item.Properties> properties) {
             final var blockResourceKey = holder.unwrapKey().orElseThrow();
             final var itemResourceKey = ResourceKey.create(Registries.ITEM, blockResourceKey.identifier());
-            registrar.register(itemResourceKey, (id) -> constructor.apply(holder.value(), properties.get().setId(itemResourceKey)));
+            registrar.register(itemResourceKey, (_) -> constructor.apply(holder.value(), patchItemProperties(properties.get().setId(itemResourceKey))));
             return this;
+        }
+
+        private Item.Properties patchItemProperties(Item.Properties properties) {
+            if (useBlockDescriptionPrefixForItems) {
+                return properties.useBlockDescriptionPrefix();
+            }
+            return properties;
         }
 
         @Override

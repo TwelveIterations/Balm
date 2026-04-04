@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.world.level.block;
 
 import net.blay09.mods.balm.core.BalmHolderRegistration;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
