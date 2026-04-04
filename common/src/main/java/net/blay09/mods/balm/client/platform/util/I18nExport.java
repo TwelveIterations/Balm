@@ -8,6 +8,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,6 +26,7 @@ public class I18nExport {
         final Map<ResourceKey<? extends Registry<?>>, Function<Identifier, String>> registryToI18nMappers = new HashMap<>();
         registryToI18nMappers.put(Registries.CREATIVE_MODE_TAB, it -> it.toLanguageKey("itemGroup"));
         registryToI18nMappers.put(Registries.ITEM, it -> it.toLanguageKey("item"));
+        registryToI18nMappers.put(Registries.BLOCK, it -> it.toLanguageKey("block"));
 
         final var result = new HashSet<String>();
         final var options = Minecraft.getInstance().options;
@@ -54,9 +57,16 @@ public class I18nExport {
 
         BuiltInRegistries.REGISTRY.stream().forEach(registry -> {
             for (final var identifier : registry.keySet()) {
-                final var mapper = registryToI18nMappers.get(registry.key());
-                if (mapper != null && identifier.getNamespace().equals(namespace)) {
-                    result.add(mapper.apply(identifier));
+                final var value = registry.getValue(identifier);
+                if (value instanceof Item item) {
+                    result.add(item.getDescriptionId());
+                } else if (value instanceof Block block) {
+                    result.add(block.getDescriptionId());
+                } else {
+                    final var mapper = registryToI18nMappers.get(registry.key());
+                    if (mapper != null && identifier.getNamespace().equals(namespace)) {
+                        result.add(mapper.apply(identifier));
+                    }
                 }
             }
         });
