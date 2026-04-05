@@ -57,7 +57,7 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
     }
 
     @Override
-    public <T> BalmDiscriminatedItemRegistration<T> registerDiscriminated(Set<@Nullable T> values, Function<T, String> nameFunction, BiFunction<T, Item.Properties, Item> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesFunction) {
+    public <T> BalmDiscriminatedItemRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, Item.Properties, Item> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesFunction) {
         final var map = new BalmDiscriminatedItemRegistrationImpl<T>();
         for (final var value : values) {
             final var name = nameFunction.apply(value);
@@ -67,16 +67,16 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
         return map;
     }
 
-    private static class DiscriminatedItemsImpl<T> extends HashMap<@Nullable T, DeferredItem> implements DiscriminatedItems<T> {
+    private static class DiscriminatedItemsImpl<T> extends HashMap<T, DeferredItem> implements DiscriminatedItems<T> {
 
         @Override
-        public Stream<Entry<@Nullable T, DeferredItem>> sortedEntries(Comparator<T> comparator) {
+        public Stream<Entry<T, DeferredItem>> sortedEntries(Comparator<T> comparator) {
             return entrySet().stream().sorted(Entry.comparingByKey(comparator));
         }
 
     }
 
-    private static class BalmDiscriminatedItemRegistrationImpl<T> extends HashMap<@Nullable T, BalmItemRegistration> implements BalmDiscriminatedItemRegistration<T> {
+    private static class BalmDiscriminatedItemRegistrationImpl<T> extends HashMap<T, BalmItemRegistration> implements BalmDiscriminatedItemRegistration<T> {
         @Override
         public DiscriminatedItems<T> asDiscriminatedItems() {
             final var map = new DiscriminatedItemsImpl<T>();

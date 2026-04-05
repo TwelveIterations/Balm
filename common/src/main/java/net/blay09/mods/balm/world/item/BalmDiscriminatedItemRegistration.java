@@ -4,6 +4,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
-public interface BalmDiscriminatedItemRegistration<T> extends Map<@Nullable T, BalmItemRegistration> {
+public interface BalmDiscriminatedItemRegistration<T> extends Map<T, BalmItemRegistration> {
     DiscriminatedItems<T> asDiscriminatedItems();
 }

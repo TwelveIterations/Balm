@@ -63,7 +63,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     }
 
     @Override
-    public <T> BalmDiscriminatedBlockRegistration<T> registerDiscriminated(Set<@Nullable T> values, Function<@Nullable T, String> nameFunction, BiFunction<@Nullable T, BlockBehaviour.Properties, Block> constructor, BiFunction<@Nullable T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction) {
+    public <T> BalmDiscriminatedBlockRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, BiFunction<T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction) {
         final var map = new BalmDiscriminatedBlockRegistrationImpl<T>();
         for (final var value : values) {
             final var name = nameFunction.apply(value);
@@ -73,14 +73,14 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         return map;
     }
 
-    private static class DiscriminatedBlocksImpl<T> extends HashMap<@Nullable T, DeferredBlock> implements DiscriminatedBlocks<T> {
+    private static class DiscriminatedBlocksImpl<T> extends HashMap<T, DeferredBlock> implements DiscriminatedBlocks<T> {
         @Override
-        public Stream<Entry<@Nullable T, DeferredBlock>> sortedEntries(Comparator<T> comparator) {
+        public Stream<Entry<T, DeferredBlock>> sortedEntries(Comparator<T> comparator) {
             return entrySet().stream().sorted(Entry.comparingByKey(comparator));
         }
     }
 
-    private static class BalmDiscriminatedBlockRegistrationImpl<T> extends HashMap<@Nullable T, BalmBlockRegistration> implements BalmDiscriminatedBlockRegistration<T> {
+    private static class BalmDiscriminatedBlockRegistrationImpl<T> extends HashMap<T, BalmBlockRegistration> implements BalmDiscriminatedBlockRegistration<T> {
 
         @Override
         public DiscriminatedBlocks<T> asDiscriminatedBlocks() {

@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface BalmDiscriminatedBlockRegistration<T> extends Map<@Nullable T, BalmBlockRegistration> {
+public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockRegistration> {
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems() {
         forEach((_, it) -> it.withDefaultItem());
         return this;
@@ -21,7 +21,7 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<@Nullable T, 
         return this;
     }
 
-    default BalmDiscriminatedBlockRegistration<T> withDefaultItems(BiFunction<@Nullable T, Item.Properties, Item.Properties> propertiesBuilder) {
+    default BalmDiscriminatedBlockRegistration<T> withDefaultItems(BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
         forEach((discriminator, it) -> it.withItem(BlockItem::new, (properties) -> propertiesBuilder.apply(discriminator, properties)));
         return this;
     }
@@ -54,7 +54,7 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<@Nullable T, 
         return this;
     }
 
-    default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<@Nullable T, Item.Properties, Item.Properties> propertiesBuilder) {
+    default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
         forEach((discrimination, it) -> it.withItem(constructor, (properties) -> propertiesBuilder.apply(discrimination, properties)));
         return this;
     }

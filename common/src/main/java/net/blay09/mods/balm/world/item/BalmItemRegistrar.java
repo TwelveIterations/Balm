@@ -39,10 +39,10 @@ public interface BalmItemRegistrar {
         return registerDiscriminated(Set.of(values), nameFunction, constructor, propertiesSupplier);
     }
 
-    default <T> BalmDiscriminatedItemRegistration<T> registerDiscriminated(Set<@Nullable T> values, Function<T, String> nameFunction, BiFunction<T, Item.Properties, Item> constructor, Function<Item.Properties, Item.Properties> propertiesSupplier) {
+    default <T> BalmDiscriminatedItemRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, Item.Properties, Item> constructor, Function<Item.Properties, Item.Properties> propertiesSupplier) {
         return registerDiscriminated(values, nameFunction, constructor, (discriminator, properties) -> propertiesSupplier.apply(properties));
     }
 
-    <T> BalmDiscriminatedItemRegistration<T> registerDiscriminated(Set<@Nullable T> values, Function<T, String> nameFunction, BiFunction<T, Item.Properties, Item> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesSupplier);
+    <T> BalmDiscriminatedItemRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, Item.Properties, Item> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesSupplier);
 
 }
