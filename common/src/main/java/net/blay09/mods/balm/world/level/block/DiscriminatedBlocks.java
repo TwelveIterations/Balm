@@ -25,27 +25,41 @@ public interface DiscriminatedBlocks<T> extends Map<T, DeferredBlock> {
         return sortedEntries().map(Entry::getValue);
     }
 
+    @Deprecated
     static <T> String prefix(@Nullable T value, String name) {
         return value == null || StringUtil.isBlank(Objects.toString(value)) ? name : value + "_" + name;
     }
 
+    @Deprecated
     static <T> String suffix(String name, @Nullable T value) {
         return value == null || StringUtil.isBlank(Objects.toString(value)) ? name : name + "_" + value;
     }
 
+    @Deprecated
     static <T> Function<T, String> prefixer(String name) {
         return prefixer(name, null);
     }
 
+    @Deprecated
     static <T> Function<T, String> suffixer(String name) {
         return suffixer(name, null);
     }
 
+    @Deprecated
     static <T> Function<T, String> prefixer(String name, @Nullable T skip) {
         return it -> prefix(it != skip ? it : null, name);
     }
 
+    @Deprecated
     static <T> Function<T, String> suffixer(String name, @Nullable T skip) {
         return it -> suffix(name, it != skip ? it : null);
+    }
+
+    static <T> Function<T, String> prefixWith(String name) {
+        return it -> name + "_" + it;
+    }
+
+    static <T> Function<T, String> suffixWith(String name) {
+        return it -> it + "_" + name;
     }
 }
