@@ -2,6 +2,7 @@ package net.blay09.mods.balm.world.level.block;
 
 import net.blay09.mods.balm.core.BalmHolderRegistration;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -33,6 +34,8 @@ public interface BalmBlockRegistration extends BalmHolderRegistration<Block> {
     }
 
     BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder);
+
+    BalmBlockRegistration withItem(String name, BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder);
 
     /**
      * @deprecated Use {@link #withItem(BiFunction, Function)} instead, so that Balm can apply appropriate default properties.

@@ -3,7 +3,6 @@ package net.blay09.mods.balm.world.level.block;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -56,6 +55,11 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockR
 
     default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
         forEach((discrimination, it) -> it.withItem(constructor, (properties) -> propertiesBuilder.apply(discrimination, properties)));
+        return this;
+    }
+
+    default BalmDiscriminatedBlockRegistration<T> withItems(Function<T, String> nameFunction, BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
+        forEach((discrimination, it) -> it.withItem(nameFunction.apply(discrimination), constructor, (properties) -> propertiesBuilder.apply(discrimination, properties)));
         return this;
     }
 
