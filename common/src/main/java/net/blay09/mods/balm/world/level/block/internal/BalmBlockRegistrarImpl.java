@@ -105,6 +105,15 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         }
 
         @Override
+        public BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
+            final var blockResourceKey = holder.unwrapKey().orElseThrow();
+            final var itemResourceKey = ResourceKey.create(Registries.ITEM, blockResourceKey.identifier());
+            registrar.register(itemResourceKey, (_) -> constructor.apply(holder.value(), propertiesBuilder.apply(patchItemProperties(new Item.Properties().setId(itemResourceKey)))));
+            return this;
+        }
+
+        @Override
+        @Deprecated
         public BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Supplier<Item.Properties> properties) {
             final var blockResourceKey = holder.unwrapKey().orElseThrow();
             final var itemResourceKey = ResourceKey.create(Registries.ITEM, blockResourceKey.identifier());

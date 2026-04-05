@@ -32,14 +32,20 @@ public interface BalmBlockRegistration extends BalmHolderRegistration<Block> {
         return withItem(constructor, Function.identity());
     }
 
-    default BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
-        return withItem(constructor, () -> propertiesBuilder.apply(new Item.Properties()));
-    }
+    BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder);
 
+    /**
+     * @deprecated Use {@link #withItem(BiFunction, Function)} instead, so that Balm can apply appropriate default properties.
+     */
+    @Deprecated
     default BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Item.Properties properties) {
         return withItem(constructor, () -> properties);
     }
 
+    /**
+     * @deprecated Use {@link #withItem(BiFunction, Function)} instead, so that Balm can apply appropriate default properties.
+     */
+    @Deprecated
     BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Supplier<Item.Properties> properties);
 
     default BlockLike asBlockLike() {
