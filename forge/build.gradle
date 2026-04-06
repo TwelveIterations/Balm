@@ -24,7 +24,9 @@ minecraft {
         configureEach {
             workingDir.convention layout.projectDirectory.dir('run')
             // Mixin requires either specifying the config via command line, or in the Manifest
-            args "--mixin.config=${mod_id}.mixins.json,${mod_id}-api.mixins.json,${mod_id}-forge.mixins.json"
+            args "--mixin.config=${mod_id}.mixins.json"
+            args "--mixin.config=${mod_id}.api.mixins.json"
+            args "--mixin.config=${mod_id}.forge.mixins.json"
         }
         register('client') {
             systemProperty 'forge.enabledGameTestNamespaces', mod_id
