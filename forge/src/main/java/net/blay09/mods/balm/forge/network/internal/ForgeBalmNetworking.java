@@ -140,7 +140,7 @@ public class ForgeBalmNetworking extends CommonBalmNetworking {
 
     @Override
     public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
-        return true;
+        return NetworkChannels.get(payload.type().id().getNamespace()).isRemotePresent(Balm.safeClientAccess().getConnection());
     }
 
     @Override

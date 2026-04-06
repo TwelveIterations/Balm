@@ -147,7 +147,8 @@ public class NeoForgeBalmNetworking extends CommonBalmNetworking {
 
     @Override
     public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
-        return true;
+        final var packetListener = Balm.safeClientAccess().getPacketListener();
+        return packetListener != null && NetworkRegistry.hasChannel(packetListener, payload.type().id());
     }
 
     public static class Registrations {
