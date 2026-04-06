@@ -1,9 +1,1 @@
-- Added `BalmBlockRegistration#withItem` and `BalmDiscriminatedBlockRegistration#withItems` overload that takes a name function
-  - This is for block items whose names differ from the block (e.g. sweet berries in Vanilla)
-- Added `BalmBlockRegistrar#enableBlockDescriptionPrefixForItems` as an opt-in to have block items use `block.` language prefix
-  - This is to match Vanilla and will become the default in Minecraft 26.2
-- Fixed `getDescriptionId()` not being respected in `I18nExport`
-- Deprecated suffix/prefix helpers in `DiscriminatedBlocks` and `DiscriminatedItems`, added more explicitly named alternatives
-- Deprecated `withItem()` methods that take properties directly
-  - The function variant should be used so that Balm can apply defaults first.
-- Removed enforced `@Nullable` from `DiscriminatedBlocks` and `DiscriminatedItems`
+- Fixed crash on startup on Forge
