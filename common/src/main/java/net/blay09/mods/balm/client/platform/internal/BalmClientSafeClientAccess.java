@@ -3,6 +3,8 @@ package net.blay09.mods.balm.client.platform.internal;
 import net.blay09.mods.balm.platform.BalmSafeClientAccess;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeMap;
 import org.jspecify.annotations.Nullable;
@@ -72,5 +74,16 @@ public class BalmClientSafeClientAccess extends BalmSafeClientAccess {
 
     public void setSyncedRecipes(@Nullable RecipeMap syncedRecipes) {
         this.syncedRecipes = syncedRecipes;
+    }
+
+    @Override
+    public @Nullable Connection getConnection() {
+        final var packetListener = Minecraft.getInstance().getConnection();
+        return packetListener != null ? packetListener.getConnection() : null;
+    }
+
+    @Override
+    public @Nullable ClientGamePacketListener getPacketListener() {
+        return Minecraft.getInstance().getConnection();
     }
 }

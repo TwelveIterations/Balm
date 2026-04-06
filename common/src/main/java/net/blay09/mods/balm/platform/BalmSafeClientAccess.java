@@ -2,6 +2,8 @@ package net.blay09.mods.balm.platform;
 
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.mixin.RecipeManagerAccessor;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeMap;
 import org.jspecify.annotations.Nullable;
@@ -49,5 +51,13 @@ public class BalmSafeClientAccess {
         }
 
         return Optional.empty();
+    }
+
+    public @Nullable Connection getConnection() {
+        return null;
+    }
+
+    public @Nullable ClientGamePacketListener getPacketListener() {
+        return null;
     }
 }
