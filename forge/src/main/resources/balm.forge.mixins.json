@@ -6,7 +6,7 @@
   "mixins": [
     "EntityMixin",
     "RandomizableContainerBlockEntityForgeMixin",
-    "ItemStackMixin"
+    "TypedInstanceMixin"
   ],
   "client": [
     "MinecraftMixin",
