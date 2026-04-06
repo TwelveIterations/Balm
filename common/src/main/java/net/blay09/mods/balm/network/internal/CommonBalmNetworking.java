@@ -62,7 +62,7 @@ public abstract class CommonBalmNetworking implements BalmNetworking {
     }
 
     /**
-     * TODO Currently always true.
+     * TODO Currently always true unless overridden by loader subclass..
      */
     public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
         return true;

@@ -139,6 +139,11 @@ public class ForgeBalmNetworking extends CommonBalmNetworking {
     }
 
     @Override
+    public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
+        return NetworkChannels.get(payload.type().id().getNamespace()).isRemotePresent(Balm.safeClientAccess().getConnection());
+    }
+
+    @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
         if (!Balm.safeClientAccess().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
