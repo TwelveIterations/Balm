@@ -157,7 +157,7 @@ public class CommonJeiPlugin implements IModPlugin {
             @Override
             @SuppressWarnings("unchecked")
             public List<Rect2i> getGuiExtraAreas() {
-                if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> containerScreen) {
+                if (Minecraft.getInstance().gui.screen() instanceof AbstractContainerScreen<?> containerScreen) {
                     return entry.getOcclusions((T) containerScreen);
                 }
 
