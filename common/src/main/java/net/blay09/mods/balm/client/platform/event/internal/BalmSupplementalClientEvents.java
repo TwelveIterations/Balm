@@ -20,9 +20,9 @@ public class BalmSupplementalClientEvents {
         }
     });
 
-    public static final Event<RenderCallback.BlockHighlight> RENDER_BLOCK_HIGHLIGHT = EventFactory.createArrayBacked(RenderCallback.BlockHighlight.class, (listeners) -> (blockHitResult, poseStack, multiBufferSource, camera, color, lineWidth) -> {
+    public static final Event<RenderCallback.BlockHighlight> RENDER_BLOCK_HIGHLIGHT = EventFactory.createArrayBacked(RenderCallback.BlockHighlight.class, (listeners) -> (blockHitResult, camera, levelRenderState) -> {
         for (final var listener : listeners) {
-            if (!listener.shouldRender(blockHitResult, poseStack, multiBufferSource, camera, color, lineWidth)) {
+            if (!listener.shouldRender(blockHitResult, camera, levelRenderState)) {
                 return false;
             }
         }

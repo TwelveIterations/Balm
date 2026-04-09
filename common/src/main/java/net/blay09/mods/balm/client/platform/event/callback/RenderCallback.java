@@ -1,11 +1,10 @@
 package net.blay09.mods.balm.client.platform.event.callback;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +20,7 @@ public interface RenderCallback {
 
     @FunctionalInterface
     interface BlockHighlight {
-        boolean shouldRender(BlockHitResult hitResult, PoseStack poseStack, MultiBufferSource multiBufferSource, Camera camera, int color, float lineWidth);
+        boolean shouldRender(BlockHitResult hitResult, Camera camera, LevelRenderState levelRenderState);
 
         EventMapper<BlockHighlight> EVENT = EventMapper.createUnbound("RenderCallback.BlockHighlight");
     }

@@ -1,12 +1,10 @@
 package net.blay09.mods.balm.internal.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.blay09.mods.balm.client.platform.event.internal.BalmSupplementalClientEvents;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.RenderBuffers;
-import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,18 +18,14 @@ public class LevelRendererMixin {
 
     @Final
     @Shadow
-    private RenderBuffers renderBuffers;
-
-    @Final
-    @Shadow
     private Minecraft minecraft;
 
-    @Inject(method = "renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/level/BlockOutlineRenderState;IF)V", at = @At("HEAD"), cancellable = true)
-    public void renderHitOutline(PoseStack poseStack, VertexConsumer vertexConsumer, double x, double y, double z, BlockOutlineRenderState state, int color, float lineWidth, CallbackInfo callbackInfo) {
-        if (minecraft.hitResult instanceof BlockHitResult blockHitResult) {
+    @Inject(method = "extractBlockOutline(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/state/level/LevelRenderState;)V", at = @At("RETURN"), cancellable = true)
+    public void extractBlockOutline(Camera camera, LevelRenderState levelRenderState, CallbackInfo ci) {
+        if (minecraft.hitResult instanceof BlockHitResult blockHitResult && levelRenderState.blockOutlineRenderState != null) {
             if (!BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT.invoker()
-                    .shouldRender(blockHitResult, poseStack, renderBuffers.bufferSource(), minecraft.gameRenderer.getMainCamera(), color, lineWidth)) {
-                callbackInfo.cancel();
+                    .shouldRender(blockHitResult, camera, levelRenderState)) {
+                levelRenderState.blockOutlineRenderState = null;
             }
         }
     }
