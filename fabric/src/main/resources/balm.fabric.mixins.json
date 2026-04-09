@@ -25,6 +25,7 @@
     "ChatComponentMixin",
     "EntityModelSetAccessor",
     "GuiMixin",
+    "HudMixin",
     "ItemInHandRendererMixin",
     "KeyboardHandlerMixin",
     "MinecraftMixin",
