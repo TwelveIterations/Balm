@@ -17,8 +17,7 @@
     "ServerPlayerMixin",
     "CommandsMixin",
     "PoiTypesAccessor",
-    "RandomizableContainerMixin",
-    "TypedInstanceMixin"
+    "RandomizableContainerMixin"
   ],
   "client": [
     "AbstractClientPlayerMixin",
