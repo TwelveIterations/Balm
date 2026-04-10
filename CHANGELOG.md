@@ -1,1 +1,2 @@
-- Fixed crash on startup on Forge
+- Fixed Balm not being usable in multiplayer when installed client-side only 
+- API: Added `BalmSafeClientAccess#getConnection` and `BalmSafeClientAccess#getPacketListener`
