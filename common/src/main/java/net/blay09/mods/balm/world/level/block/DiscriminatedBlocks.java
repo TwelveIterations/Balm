@@ -62,4 +62,8 @@ public interface DiscriminatedBlocks<T> extends Map<T, DeferredBlock> {
     static <T> Function<T, String> suffixWith(String name) {
         return it -> it + "_" + name;
     }
+
+    static <T> Function<T, String> surroundWith(String prefix, String suffix) {
+        return it -> prefix + "_" + it + "_" + suffix;
+    }
 }
