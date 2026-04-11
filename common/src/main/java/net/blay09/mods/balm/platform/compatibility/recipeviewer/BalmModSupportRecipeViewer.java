@@ -4,4 +4,6 @@ import net.minecraft.resources.Identifier;
 
 public interface BalmModSupportRecipeViewer {
     void register(Identifier identifier, RecipeViewerInfoProvider provider);
+
+    boolean hasKeyboardFocus();
 }

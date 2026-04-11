@@ -5,6 +5,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGlobalGuiHandler;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerOcclusionProvider;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.CommonBalmModSupportRecipeViewer;
@@ -24,16 +25,17 @@ import java.util.List;
 public class CommonJeiPlugin implements IModPlugin {
 
     private final JeiRecipeViewerRegistrar registrar = new JeiRecipeViewerRegistrar();
-    private boolean initialized;
+    private boolean registrarsInitialized;
+    private boolean runtimeInitialized;
 
     private void ensureInitialized() {
-        if (!initialized) {
+        if (!registrarsInitialized) {
             if (Balm.modSupport().recipeViewers() instanceof CommonBalmModSupportRecipeViewer recipeViewerSupport) {
                 for (final var provider : recipeViewerSupport.getProviders()) {
                     provider.initialize(registrar);
                 }
             }
-            initialized = true;
+            registrarsInitialized = true;
         }
     }
 
@@ -92,6 +94,20 @@ public class CommonJeiPlugin implements IModPlugin {
 
         for (final var entry : registrar.getIdentifiableRecipeTypeTransferRegistrations()) {
             registerRecipeTransferHandler(registration, entry);
+        }
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        if (Balm.modSupport().recipeViewers() instanceof CommonBalmModSupportRecipeViewer recipeViewerSupport) {
+            recipeViewerSupport.setHasKeyboardFocus(() -> jeiRuntime.getIngredientListOverlay().hasKeyboardFocus());
+        }
+    }
+
+    @Override
+    public void onRuntimeUnavailable() {
+        if (Balm.modSupport().recipeViewers() instanceof CommonBalmModSupportRecipeViewer recipeViewerSupport) {
+            recipeViewerSupport.setHasKeyboardFocus(null);
         }
     }
 
