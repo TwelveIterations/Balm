@@ -8,6 +8,7 @@ import mezz.jei.api.registration.*;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerOcclusionProvider;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.CommonBalmModSupportRecipeViewer;
+import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.IdentifiableRecipeTypeTransferRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.ScreenOcclusionRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.SimpleRecipeTransferRegistration;
 import net.minecraft.client.Minecraft;
@@ -88,8 +89,13 @@ public class CommonJeiPlugin implements IModPlugin {
         for (final var entry : registrar.getTransferRegistrations()) {
             registerRecipeTransferHandler(registration, entry);
         }
+
+        for (final var entry : registrar.getIdentifiableRecipeTypeTransferRegistrations()) {
+            registerRecipeTransferHandler(registration, entry);
+        }
     }
 
+    @Deprecated
     private <TMenu extends AbstractContainerMenu> void registerRecipeTransferHandler(IRecipeTransferRegistration registration, SimpleRecipeTransferRegistration<TMenu> entry) {
         registrar.getRecipeTypes().stream()
                 .filter(it -> entry.recipeTypePredicate().test(it))
@@ -103,6 +109,18 @@ public class CommonJeiPlugin implements IModPlugin {
                         entry.recipeSlotCount(),
                         entry.inventorySlotStart(),
                         entry.inventorySlotCount()));
+    }
+
+    private <TMenu extends AbstractContainerMenu> void registerRecipeTransferHandler(IRecipeTransferRegistration registration, IdentifiableRecipeTypeTransferRegistration<TMenu> entry) {
+        registration.getJeiHelpers().getRecipeType(entry.recipeTypeId()).ifPresent(recipeType -> {
+            registration.addRecipeTransferHandler(entry.menuClass(),
+                    entry.menuType().value(),
+                    recipeType,
+                    entry.recipeSlotStart(),
+                    entry.recipeSlotCount(),
+                    entry.inventorySlotStart(),
+                    entry.inventorySlotCount());
+        });
     }
 
     private <T extends AbstractContainerScreen<?>> void registerScreenOcclusion(IGuiHandlerRegistration registration, ScreenOcclusionRegistration<T> entry) {
