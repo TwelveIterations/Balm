@@ -10,5 +10,5 @@ dependencies {
     compileOnly libs.rebornEnergy
     compileOnly libs.clothConfigFabric
     compileOnly libs.configuredFabric
-    implementation libs.ftbUltimineFabric
+    compileOnly libs.ftbUltimineFabric
 }
