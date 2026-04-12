@@ -16,4 +16,5 @@ dependencies {
     compileOnly libs.theOneProbe
     compileOnly libs.clothConfigNeoForge
     compileOnly libs.configuredNeoForge
+    implementation libs.ftbUltimineNeoForge
 }

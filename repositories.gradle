@@ -24,6 +24,22 @@ repositories {
     }
 
     maven {
+        name = 'FTB'
+        url = 'https://maven.ftb.dev/releases'
+        content {
+            includeGroup 'dev.ftb.mods'
+        }
+    }
+
+    maven {
+        name = 'FTB Snapshots'
+        url = 'https://maven.ftb.dev/snapshots'
+        content {
+            includeGroup 'dev.ftb.mods'
+        }
+    }
+
+    maven {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
         content {

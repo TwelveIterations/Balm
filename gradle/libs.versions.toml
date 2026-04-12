@@ -6,6 +6,7 @@ forge = "64.0.0"
 fabricApi = "0.145.4+26.1.2"
 fabricLoader = "0.19.1"
 kuma = "26.1.1.2"
+ftbUltimine = "26.1.0.1-SNAPSHOT"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -21,6 +22,9 @@ kumaCommon = { module = "net.blay09.mods:kuma-api-common", version.ref = "kuma" 
 kumaFabric = { module = "net.blay09.mods:kuma-api-fabric", version.ref = "kuma" }
 kumaNeoForge = { module = "net.blay09.mods:kuma-api-neoforge", version.ref = "kuma" }
 kumaForge = { module = "net.blay09.mods:kuma-api-forge", version.ref = "kuma" }
+ftbUltimineCommon = { module = "dev.ftb.mods:ftb-ultimine", version.ref = "ftbUltimine" }
+ftbUltimineFabric = { module = "dev.ftb.mods:ftb-ultimine-fabric", version.ref = "ftbUltimine" }
+ftbUltimineNeoForge = { module = "dev.ftb.mods:ftb-ultimine-neoforge", version.ref = "ftbUltimine" }
 
 mixin = { module = "org.spongepowered:mixin", version = "0.8.7" }
 mixinExtras = { module = "io.github.llamalad7:mixinextras-common", version = "0.5.2" }

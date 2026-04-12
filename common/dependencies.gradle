@@ -6,4 +6,5 @@ dependencies {
     compileOnly libs.jadeNeoForge
     compileOnly libs.clothConfigNeoForge
     compileOnly libs.configuredNeoForge
+    compileOnly libs.ftbUltimineCommon
 }
