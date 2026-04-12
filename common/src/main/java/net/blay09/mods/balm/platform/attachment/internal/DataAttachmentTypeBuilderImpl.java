@@ -36,6 +36,7 @@ public class DataAttachmentTypeBuilderImpl<T> implements DataAttachmentTypeBuild
     @Override
     public DataAttachmentTypeBuilder<T> networkSynchronized(StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec, BiPredicate<Object, ServerPlayer> predicate) {
         this.streamCodec = streamCodec;
+        this.syncPredicate = predicate;
         return this;
     }
 
