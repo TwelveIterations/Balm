@@ -2,7 +2,11 @@ package net.blay09.mods.balm.neoforge.platform.attachment.internal;
 
 import net.blay09.mods.balm.platform.attachment.DataAttachmentLookup;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jspecify.annotations.Nullable;
 
@@ -17,5 +21,25 @@ public class NeoForgeDataAttachmentLookup<T> implements DataAttachmentLookup<T> 
     @Override
     public @Nullable T get(Player player) {
         return player.getData(type::value);
+    }
+
+    @Override
+    public @Nullable T get(Level level) {
+        return level.getData(type::value);
+    }
+
+    @Override
+    public @Nullable T get(Entity entity) {
+        return entity.getData(type::value);
+    }
+
+    @Override
+    public @Nullable T get(BlockEntity blockEntity) {
+        return blockEntity.getData(type::value);
+    }
+
+    @Override
+    public @Nullable T get(ChunkAccess chunk) {
+        return chunk.getData(type::value);
     }
 }
