@@ -22,6 +22,11 @@ public class FabricDataAttachmentLookup<T> implements DataAttachmentLookup<T> {
     }
 
     @Override
+    public @Nullable T getOrCreate(Player player) {
+        return player.getAttachedOrCreate(type);
+    }
+
+    @Override
     public boolean has(Player player) {
         return player.hasAttached(type);
     }
@@ -39,6 +44,11 @@ public class FabricDataAttachmentLookup<T> implements DataAttachmentLookup<T> {
     @Override
     public @Nullable T get(Level level) {
         return level.getAttached(type);
+    }
+
+    @Override
+    public @Nullable T getOrCreate(Level level) {
+        return level.getAttachedOrCreate(type);
     }
 
     @Override
@@ -62,6 +72,11 @@ public class FabricDataAttachmentLookup<T> implements DataAttachmentLookup<T> {
     }
 
     @Override
+    public @Nullable T getOrCreate(Entity entity) {
+        return entity.getAttachedOrCreate(type);
+    }
+
+    @Override
     public boolean has(Entity entity) {
         return entity.hasAttached(type);
     }
@@ -82,6 +97,11 @@ public class FabricDataAttachmentLookup<T> implements DataAttachmentLookup<T> {
     }
 
     @Override
+    public @Nullable T getOrCreate(BlockEntity blockEntity) {
+        return blockEntity.getAttachedOrCreate(type);
+    }
+
+    @Override
     public boolean has(BlockEntity blockEntity) {
         return blockEntity.hasAttached(type);
     }
@@ -99,6 +119,11 @@ public class FabricDataAttachmentLookup<T> implements DataAttachmentLookup<T> {
     @Override
     public @Nullable T get(ChunkAccess chunk) {
         return chunk.getAttached(type);
+    }
+
+    @Override
+    public @Nullable T getOrCreate(ChunkAccess chunk) {
+        return chunk.getAttachedOrCreate(type);
     }
 
     @Override

@@ -20,6 +20,11 @@ public class NeoForgeDataAttachmentLookup<T> implements DataAttachmentLookup<T> 
 
     @Override
     public @Nullable T get(Player player) {
+        return player.getExistingDataOrNull(type::value);
+    }
+
+    @Override
+    public T getOrCreate(Player player) {
         return player.getData(type::value);
     }
 
@@ -40,6 +45,11 @@ public class NeoForgeDataAttachmentLookup<T> implements DataAttachmentLookup<T> 
 
     @Override
     public @Nullable T get(Level level) {
+        return level.getExistingDataOrNull(type::value);
+    }
+
+    @Override
+    public T getOrCreate(Level level) {
         return level.getData(type::value);
     }
 
@@ -60,6 +70,11 @@ public class NeoForgeDataAttachmentLookup<T> implements DataAttachmentLookup<T> 
 
     @Override
     public @Nullable T get(Entity entity) {
+        return entity.getExistingDataOrNull(type::value);
+    }
+
+    @Override
+    public T getOrCreate(Entity entity) {
         return entity.getData(type::value);
     }
 
@@ -80,6 +95,11 @@ public class NeoForgeDataAttachmentLookup<T> implements DataAttachmentLookup<T> 
 
     @Override
     public @Nullable T get(BlockEntity blockEntity) {
+        return blockEntity.getExistingDataOrNull(type::value);
+    }
+
+    @Override
+    public T getOrCreate(BlockEntity blockEntity) {
         return blockEntity.getData(type::value);
     }
 
@@ -100,6 +120,11 @@ public class NeoForgeDataAttachmentLookup<T> implements DataAttachmentLookup<T> 
 
     @Override
     public @Nullable T get(ChunkAccess chunk) {
+        return chunk.getExistingDataOrNull(type::value);
+    }
+
+    @Override
+    public T getOrCreate(ChunkAccess chunk) {
         return chunk.getData(type::value);
     }
 

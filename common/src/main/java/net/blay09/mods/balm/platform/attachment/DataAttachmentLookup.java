@@ -11,6 +11,8 @@ public interface DataAttachmentLookup<T> {
     @Nullable
     T get(Player player);
 
+    T getOrCreate(Player player);
+
     boolean has(Player player);
 
     @Nullable
@@ -21,6 +23,8 @@ public interface DataAttachmentLookup<T> {
 
     @Nullable
     T get(Level level);
+
+    T getOrCreate(Level level);
 
     boolean has(Level level);
 
@@ -33,6 +37,8 @@ public interface DataAttachmentLookup<T> {
     @Nullable
     T get(Entity entity);
 
+    T getOrCreate(Entity entity);
+
     boolean has(Entity entity);
 
     @Nullable
@@ -44,6 +50,8 @@ public interface DataAttachmentLookup<T> {
     @Nullable
     T get(BlockEntity blockEntity);
 
+    T getOrCreate(BlockEntity blockEntity);
+
     boolean has(BlockEntity blockEntity);
 
     @Nullable
@@ -54,6 +62,8 @@ public interface DataAttachmentLookup<T> {
 
     @Nullable
     T get(ChunkAccess chunk);
+
+    T getOrCreate(ChunkAccess chunk);
 
     boolean has(ChunkAccess chunk);
 
