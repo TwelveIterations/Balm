@@ -1,2 +1,7 @@
-- Fixed Balm not being usable in multiplayer when installed client-side only 
-- API: Added `BalmSafeClientAccess#getConnection` and `BalmSafeClientAccess#getPacketListener`
+- API: Added `BalmModSupportMultiMiners` for a unified API against veinminer-like mods, with FTB Ultimine support for now
+- API: Added `DataAttachmentLookup#has`, `DataAttachmentLookup#remove`, `DataAttachmentLookup#update` and `DataAttachmentLookup#getOrCreate`
+- API: Added additional overloads for `DataAttachmentLookup#get` to cover other types like Levels and Chunks
+- API: Added `BalmModSupportRecipeViewer#hasKeyboardFocus` as a workaround since JEI focus is not reported on `Screen#isFocused`
+- API: Added `DiscriminatedBlocks#surroundWith` and `DiscriminatedItems#surroundWith`
+- API: Fixed sync predicate never actually being stored in data attachments
+- API: Fixed `DataAttachmentLookup#get` initializing the attachment on NeoForge but not on Fabric. Now initializes only with `getOrCreate`.
