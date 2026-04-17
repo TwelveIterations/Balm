@@ -32,6 +32,10 @@ class JeiRecipeTypeRegistration<T> implements RecipeViewerRecipeTypeRegistration
     private Identifier backgroundTexture;
     private int backgroundTextureX;
     private int backgroundTextureY;
+    private int backgroundWidth;
+    private int backgroundHeight;
+    private int backgroundTextureWidth = 256;
+    private int backgroundTextureHeight = 256;
     private ItemStack icon = ItemStack.EMPTY;
     private BiConsumer<T, RecipeViewerDisplaySlotsBuilder> slotsBuilder = (_, _) -> {
     };
@@ -66,7 +70,7 @@ class JeiRecipeTypeRegistration<T> implements RecipeViewerRecipeTypeRegistration
     private IRecipeCategory<T> createJeiCategory(IJeiHelpers helpers) {
         final var guiHelper = helpers.getGuiHelper();
         final var drawableIcon = !icon.isEmpty() ? guiHelper.createDrawableItemStack(icon) : null;
-        final var drawableBackground = backgroundTexture != null ? guiHelper.createDrawable(backgroundTexture, backgroundTextureX, backgroundTextureY, width, height) : null;
+        final var drawableBackground = backgroundTexture != null ? guiHelper.drawableBuilder(backgroundTexture, backgroundTextureX, backgroundTextureY, backgroundWidth, backgroundHeight).setTextureSize(backgroundTextureWidth, backgroundTextureHeight).build() : null;
         return new CommonJeiRecipeCategory<>(jeiRecipeType, title, drawableIcon, width, height, drawableBackground, slotsBuilder);
     }
 
@@ -89,14 +93,29 @@ class JeiRecipeTypeRegistration<T> implements RecipeViewerRecipeTypeRegistration
         public RecipeViewerDisplayBuilder<T> size(int width, int height) {
             JeiRecipeTypeRegistration.this.width = width;
             JeiRecipeTypeRegistration.this.height = height;
+            if (backgroundWidth == 0) {
+                backgroundWidth = width;
+            }
+            if (backgroundHeight == 0) {
+                backgroundHeight = height;
+            }
             return this;
         }
 
         @Override
         public RecipeViewerDisplayBuilder<T> background(Identifier texture, int u, int v) {
+            return background(texture, u, v, width, height);
+        }
+
+        @Override
+        public RecipeViewerDisplayBuilder<T> background(Identifier texture, int u, int v, int width, int height, int textureWidth, int textureHeight) {
             JeiRecipeTypeRegistration.this.backgroundTexture = texture;
             JeiRecipeTypeRegistration.this.backgroundTextureX = u;
             JeiRecipeTypeRegistration.this.backgroundTextureY = v;
+            JeiRecipeTypeRegistration.this.backgroundWidth = width;
+            JeiRecipeTypeRegistration.this.backgroundHeight = height;
+            JeiRecipeTypeRegistration.this.backgroundTextureWidth = textureWidth;
+            JeiRecipeTypeRegistration.this.backgroundTextureHeight = textureHeight;
             return this;
         }
 

@@ -16,6 +16,12 @@ public interface RecipeViewerDisplayBuilder<T> {
 
     RecipeViewerDisplayBuilder<T> background(Identifier texture, int u, int v);
 
+    default RecipeViewerDisplayBuilder<T> background(Identifier texture, int u, int v, int width, int height) {
+        return background(texture, u, v, width, height, 256, 256);
+    }
+
+    RecipeViewerDisplayBuilder<T> background(Identifier texture, int u, int v, int width, int height, int textureWidth, int textureHeight);
+
     default RecipeViewerDisplayBuilder<T> icon(ItemLike itemLike) {
         return icon(new ItemStack(itemLike));
     }
