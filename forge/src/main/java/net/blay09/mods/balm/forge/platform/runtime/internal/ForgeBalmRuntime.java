@@ -28,6 +28,7 @@ import net.blay09.mods.balm.forge.world.block.entity.internal.ForgeBalmBlockEnti
 import net.blay09.mods.balm.forge.world.entity.internal.ForgeBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.forge.world.inventory.internal.ForgeBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.forge.world.item.internal.ForgeBalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.forge.world.item.internal.ForgeBalmCompostableRegistrar;
 import net.blay09.mods.balm.network.BalmNetworking;
 import net.blay09.mods.balm.platform.BalmHooks;
 import net.blay09.mods.balm.platform.BalmPlatform;
@@ -44,6 +45,7 @@ import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.item.BalmCompostableRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
@@ -135,6 +137,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public void dataAttachmentTypes(String namespace, Consumer<BalmDataAttachmentTypeRegistrar> initializer) {
         initializer.accept(new ForgeBalmDataAttachmentTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void compostables(String namespace, Consumer<BalmCompostableRegistrar> initializer) {
+        initializer.accept(new ForgeBalmCompostableRegistrar());
     }
 
     @Override

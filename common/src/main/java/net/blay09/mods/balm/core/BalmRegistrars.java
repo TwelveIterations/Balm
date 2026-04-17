@@ -14,6 +14,7 @@ import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
+import net.blay09.mods.balm.world.item.BalmCompostableRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
@@ -99,6 +100,15 @@ public class BalmRegistrars {
      */
     public void items(Consumer<BalmItemRegistrar> initializer) {
         runtime.items(namespace, initializer);
+    }
+
+    /**
+     * Use this to register compostable items using the registrar provided in the consumer callback.
+     *
+     * @param initializer Callback that receives a registrar for registering compostable items.
+     */
+    public void compostables(Consumer<BalmCompostableRegistrar> initializer) {
+        runtime.compostables(namespace, initializer);
     }
 
     /**

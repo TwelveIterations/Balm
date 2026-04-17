@@ -4,31 +4,34 @@ import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
-import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
-import net.blay09.mods.balm.neoforge.core.internal.DeferredRegisters;
-import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
-import net.blay09.mods.balm.neoforge.platform.internal.NeoForgeBalmHooks;
-import net.blay09.mods.balm.network.BalmNetworking;
-import net.blay09.mods.balm.platform.BalmHooks;
-import net.blay09.mods.balm.platform.BalmPlatform;
-import net.blay09.mods.balm.neoforge.platform.capabilities.internal.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.commands.internal.NeoForgeBalmCommands;
-import net.blay09.mods.balm.neoforge.platform.compatibility.internal.NeoForgeBalmModSupport;
-import net.blay09.mods.balm.neoforge.platform.config.internal.NeoForgeBalmConfig;
+import net.blay09.mods.balm.neoforge.core.internal.DeferredRegisters;
 import net.blay09.mods.balm.neoforge.core.internal.NeoForgeBalmRegistrar;
 import net.blay09.mods.balm.neoforge.core.particles.internal.NeoForgeBalmParticleTypeRegistrar;
-import net.blay09.mods.balm.neoforge.platform.event.internal.NeoForgeBalmEventMappings;
-import net.blay09.mods.balm.neoforge.platform.internal.NeoForgeBalmPlatform;
 import net.blay09.mods.balm.neoforge.network.internal.NeoForgeBalmNetworking;
+import net.blay09.mods.balm.neoforge.platform.attachment.internal.NeoForgeBalmDataAttachmentTypeRegistrar;
+import net.blay09.mods.balm.neoforge.platform.capabilities.internal.NeoForgeBalmCapabilities;
+import net.blay09.mods.balm.neoforge.platform.compatibility.internal.NeoForgeBalmModSupport;
+import net.blay09.mods.balm.neoforge.platform.config.internal.NeoForgeBalmConfig;
+import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
+import net.blay09.mods.balm.neoforge.platform.event.internal.NeoForgeBalmEventMappings;
+import net.blay09.mods.balm.neoforge.platform.internal.NeoForgeBalmHooks;
+import net.blay09.mods.balm.neoforge.platform.internal.NeoForgeBalmPlatform;
 import net.blay09.mods.balm.neoforge.platform.permissions.internal.NeoForgeBalmPermissions;
+import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.server.packs.resources.internal.NeoForgeBalmResourceConditionRegistrar;
 import net.blay09.mods.balm.neoforge.server.packs.resources.internal.NeoForgeBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.neoforge.stats.internal.NeoForgeBalmCustomStatRegistrar;
-import net.blay09.mods.balm.neoforge.world.level.levelgen.NeoForgeBalmWorldGen;
 import net.blay09.mods.balm.neoforge.world.entity.internal.NeoForgeBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.neoforge.world.inventory.internal.NeoForgeBalmMenuTypeRegistrar;
+import net.blay09.mods.balm.neoforge.world.item.internal.NeoForgeBalmCompostableRegistrar;
 import net.blay09.mods.balm.neoforge.world.item.internal.NeoForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.neoforge.world.level.block.entity.internal.NeoForgeBalmBlockEntityTypeRegistrar;
+import net.blay09.mods.balm.neoforge.world.level.levelgen.NeoForgeBalmWorldGen;
+import net.blay09.mods.balm.network.BalmNetworking;
+import net.blay09.mods.balm.platform.BalmHooks;
+import net.blay09.mods.balm.platform.BalmPlatform;
+import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
 import net.blay09.mods.balm.platform.config.BalmConfig;
@@ -40,15 +43,16 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerReg
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
+import net.blay09.mods.balm.world.item.BalmCompostableRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
 import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
-import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
-import net.blay09.mods.balm.neoforge.platform.attachment.internal.NeoForgeBalmDataAttachmentTypeRegistrar;
+import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.registries.datamaps.DataMapsUpdatedEvent;
 
 import java.util.function.Consumer;
 
@@ -134,6 +138,13 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
         initializer.accept(new NeoForgeBalmCreativeModeTabRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void compostables(String namespace, Consumer<BalmCompostableRegistrar> initializer) {
+        NeoForge.EVENT_BUS.addListener(DataMapsUpdatedEvent.class, event
+                -> event.ifRegistry(Registries.ITEM, (registry)
+                -> initializer.accept(new NeoForgeBalmCompostableRegistrar(registry))));
     }
 
     public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
