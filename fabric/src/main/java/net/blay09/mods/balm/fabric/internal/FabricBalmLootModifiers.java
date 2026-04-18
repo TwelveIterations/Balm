@@ -3,8 +3,10 @@ package net.blay09.mods.balm.fabric.internal;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.List;
 
@@ -14,13 +16,13 @@ public final class FabricBalmLootModifiers {
     }
 
     public static void initialize() {
-        LootTableEvents.MODIFY_DROPS.register((holder, lootContext, drops) -> applyModifiers(drops, lootContext));
+        LootTableEvents.MODIFY_DROPS.register((holder, lootContext, drops) -> applyModifiers(holder, drops, lootContext));
     }
 
-    private static void applyModifiers(List<ItemStack> drops, LootContext lootContext) {
+    private static void applyModifiers(Holder<LootTable> holder, List<ItemStack> drops, LootContext lootContext) {
         final var lootModifiers = ((CommonBalmLootTables) Balm.lootModifiers()).lootModifiers;
         for (final var modifier : lootModifiers.values()) {
-            modifier.apply(lootContext, drops);
+            modifier.apply(lootContext, drops, holder.unwrapKey().orElse(null));
         }
     }
 }
