@@ -8,7 +8,6 @@
     "BlockStateBaseAccessor",
     "BlockStateBaseMixin",
     "CropBlockMixin",
-    "LootTableMixin",
     "MinecraftServerMixin",
     "ReloadableServerResourcesMixin",
     "StemBlockMixin",

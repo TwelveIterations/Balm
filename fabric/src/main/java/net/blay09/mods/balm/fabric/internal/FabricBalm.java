@@ -48,6 +48,7 @@ public class FabricBalm implements ModInitializer {
         ((FabricBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         ((FabricBalmPlatform) Balm.platform()).initialize();
+        FabricBalmLootModifiers.initialize();
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
             CompoundTag data = ((BalmDataHolder) oldPlayer).balm$getFabricBalmData();

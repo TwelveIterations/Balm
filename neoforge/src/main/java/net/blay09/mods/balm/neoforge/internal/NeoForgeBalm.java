@@ -5,6 +5,7 @@ import net.blay09.mods.balm.neoforge.core.internal.DeferredRegisters;
 import net.blay09.mods.balm.neoforge.platform.capabilities.internal.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.platform.compatibility.energy.internal.NeoForgeEnergyStorage;
 import net.blay09.mods.balm.neoforge.platform.compatibility.fluid.internal.NeoForgeFluidTank;
+import net.blay09.mods.balm.neoforge.world.level.storage.loot.internal.NeoForgeBalmLootModifier;
 import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
 import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
 import net.blay09.mods.balm.neoforge.platform.runtime.internal.NeoForgeBalmRuntime;
@@ -23,6 +24,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -41,6 +43,8 @@ public class NeoForgeBalm {
         BalmLoadContexts.register("balm", new NeoForgeLoadContext(modContainer, modBus));
 
         ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
+        DeferredRegisters.get(NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS, "balm")
+                .register("loot_modifiers", () -> NeoForgeBalmLootModifier.CODEC);
 
         DeferredRegisters.register("balm", modBus);
         ModBusEventRegisters.register("balm", modBus);

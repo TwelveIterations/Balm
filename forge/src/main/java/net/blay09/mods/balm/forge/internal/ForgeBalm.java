@@ -12,6 +12,7 @@ import net.blay09.mods.balm.forge.client.internal.ForgeBalmClient;
 import net.blay09.mods.balm.forge.platform.energy.internal.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.platform.fluid.internal.ForgeFluidTank;
 import net.blay09.mods.balm.forge.world.level.levelgen.internal.ForgeBalmWorldGen;
+import net.blay09.mods.balm.forge.world.level.storage.loot.internal.ForgeBalmLootModifier;
 import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
 import net.blay09.mods.balm.platform.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.platform.fluid.BalmFluidTankProvider;
@@ -28,6 +29,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.BiFunction;
 
@@ -40,6 +42,8 @@ public class ForgeBalm {
 
         Balm.getRuntime().registerModule(new BalmRegistrars(Balm.getRuntime(), "balm"), new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
+        DeferredRegisters.get(ForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS.getKey(), "balm")
+                .register("loot_modifiers", () -> ForgeBalmLootModifier.CODEC);
 
         DeferredRegisters.register("balm", modBusGroup);
         ModBusEventRegisters.register("balm", modBusGroup);
