@@ -18,4 +18,12 @@ public interface BalmResourceReloadListenerRegistrar {
     void register(String name, Consumer<ResourceManager> reloadListener);
 
     void addDependency(Identifier first, Identifier second);
+
+    VanillaKeys vanillaKeys();
+
+    interface VanillaKeys {
+        Identifier advancements();
+        Identifier functions();
+        Identifier recipes();
+    }
 }

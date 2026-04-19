@@ -4,6 +4,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerReg
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
@@ -17,6 +18,22 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class FabricBalmResourceReloadListenerRegistrar implements BalmResourceReloadListenerRegistrar {
+    private static final VanillaKeys VANILLA_KEYS = new VanillaKeys() {
+        @Override
+        public Identifier advancements() {
+            return ResourceReloaderKeys.Server.ADVANCEMENTS;
+        }
+
+        @Override
+        public Identifier functions() {
+            return ResourceReloaderKeys.Server.FUNCTIONS;
+        }
+
+        @Override
+        public Identifier recipes() {
+            return ResourceReloaderKeys.Server.RECIPES;
+        }
+    };
 
     private final String namespace;
 
@@ -61,5 +78,10 @@ public class FabricBalmResourceReloadListenerRegistrar implements BalmResourceRe
     @Override
     public void addDependency(Identifier first, Identifier second) {
         ResourceLoader.get(PackType.SERVER_DATA).addListenerOrdering(first, second);
+    }
+
+    @Override
+    public VanillaKeys vanillaKeys() {
+        return VANILLA_KEYS;
     }
 }

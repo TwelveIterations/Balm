@@ -20,4 +20,9 @@ public class ForgeBalmClientResourceReloadListenerRegistrar implements BalmClien
     public void addDependency(Identifier first, Identifier second) {
         throw new UnsupportedOperationException("Reload listener ordering is not supported on Forge.");
     }
+
+    @Override
+    public VanillaKeys vanillaKeys() {
+        throw new UnsupportedOperationException("Vanilla reload listener keys are not supported on Forge.");
+    }
 }

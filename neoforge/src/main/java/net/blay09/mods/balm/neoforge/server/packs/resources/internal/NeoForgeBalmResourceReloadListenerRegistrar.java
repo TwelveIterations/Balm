@@ -7,11 +7,28 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.resource.VanillaServerListeners;
 
 import java.util.function.Function;
 import java.util.function.Consumer;
 
 public class NeoForgeBalmResourceReloadListenerRegistrar implements BalmResourceReloadListenerRegistrar {
+    private static final VanillaKeys VANILLA_KEYS = new VanillaKeys() {
+        @Override
+        public Identifier advancements() {
+            return VanillaServerListeners.ADVANCEMENTS;
+        }
+
+        @Override
+        public Identifier functions() {
+            return VanillaServerListeners.FUNCTIONS;
+        }
+
+        @Override
+        public Identifier recipes() {
+            return VanillaServerListeners.RECIPES;
+        }
+    };
 
     private final String namespace;
     private final AddServerReloadListenersEvent event;
@@ -34,5 +51,10 @@ public class NeoForgeBalmResourceReloadListenerRegistrar implements BalmResource
     @Override
     public void addDependency(Identifier first, Identifier second) {
         event.addDependency(first, second);
+    }
+
+    @Override
+    public VanillaKeys vanillaKeys() {
+        return VANILLA_KEYS;
     }
 }
