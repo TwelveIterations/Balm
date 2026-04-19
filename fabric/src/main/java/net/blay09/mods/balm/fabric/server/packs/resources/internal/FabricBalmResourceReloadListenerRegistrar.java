@@ -3,6 +3,7 @@ package net.blay09.mods.balm.fabric.server.packs.resources.internal;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
@@ -55,5 +56,10 @@ public class FabricBalmResourceReloadListenerRegistrar implements BalmResourceRe
                 return identifier;
             }
         });
+    }
+
+    @Override
+    public void addDependency(Identifier first, Identifier second) {
+        ResourceLoader.get(PackType.SERVER_DATA).addListenerOrdering(first, second);
     }
 }

@@ -30,4 +30,9 @@ public class NeoForgeBalmResourceReloadListenerRegistrar implements BalmResource
     public void register(String name, Consumer<ResourceManager> reloadListener) {
         event.addListener(Identifier.fromNamespaceAndPath(namespace, name), (ResourceManagerReloadListener) reloadListener::accept);
     }
+
+    @Override
+    public void addDependency(Identifier first, Identifier second) {
+        event.addDependency(first, second);
+    }
 }

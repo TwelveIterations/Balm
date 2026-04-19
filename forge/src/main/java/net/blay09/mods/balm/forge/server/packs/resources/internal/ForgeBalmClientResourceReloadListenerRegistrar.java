@@ -2,6 +2,7 @@ package net.blay09.mods.balm.forge.server.packs.resources.internal;
 
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 
@@ -13,5 +14,10 @@ public class ForgeBalmClientResourceReloadListenerRegistrar implements BalmClien
         if (Minecraft.getInstance().getResourceManager() instanceof ReloadableResourceManager reloadableResourceManager) {
             reloadableResourceManager.registerReloadListener(listener);
         }
+    }
+
+    @Override
+    public void addDependency(Identifier first, Identifier second) {
+        throw new UnsupportedOperationException("Reload listener ordering is not supported on Forge.");
     }
 }

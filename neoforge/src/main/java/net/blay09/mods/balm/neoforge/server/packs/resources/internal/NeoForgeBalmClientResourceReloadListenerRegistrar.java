@@ -19,4 +19,9 @@ public class NeoForgeBalmClientResourceReloadListenerRegistrar implements BalmCl
     public void register(String name, PreparableReloadListener listener) {
         event.addListener(Identifier.fromNamespaceAndPath(namespace, name), listener);
     }
+
+    @Override
+    public void addDependency(Identifier first, Identifier second) {
+        event.addDependency(first, second);
+    }
 }
