@@ -1,7 +1,7 @@
 [versions]
 minecraft = "26.1.2"
 neoForm = "26.1.2-1"
-neoForge = "26.1.2.20-beta"
+neoForge = "26.1.2.21-beta"
 forge = "64.0.4"
 fabricApi = "0.146.1+26.1.2"
 fabricLoader = "0.19.2"
