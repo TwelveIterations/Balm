@@ -26,6 +26,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.ChunkWatchEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.level.block.CropGrowEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
@@ -76,7 +77,7 @@ public class NeoForgeBalmEventMappings {
             event.setNewSpeed(speed);
             return false;
         }).orElse(false));
-        bindCancelable(BlockCallback.Break.Before.EVENT, BlockEvent.BreakEvent.class, (event, it) -> {
+        bindCancelable(BlockCallback.Break.Before.EVENT, BreakBlockEvent.class, (event, it) -> {
             final var level = event.getLevel();
             final var blockEntity = level.getBlockEntity(event.getPos());
             return !it.allowBreak(level, event.getPos(), event.getState(), blockEntity, event.getPlayer());
