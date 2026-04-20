@@ -1,7 +1,8 @@
-- API: Added `BalmModSupportMultiMiners` for a unified API against veinminer-like mods, with FTB Ultimine support for now
-- API: Added `DataAttachmentLookup#has`, `DataAttachmentLookup#remove`, `DataAttachmentLookup#update` and `DataAttachmentLookup#getOrCreate`
-- API: Added additional overloads for `DataAttachmentLookup#get` to cover other types like Levels and Chunks
-- API: Added `BalmModSupportRecipeViewer#hasKeyboardFocus` as a workaround since JEI focus is not reported on `Screen#isFocused`
-- API: Added `DiscriminatedBlocks#surroundWith` and `DiscriminatedItems#surroundWith`
-- API: Fixed sync predicate never actually being stored in data attachments
-- API: Fixed `DataAttachmentLookup#get` initializing the attachment on NeoForge but not on Fabric. Now initializes only with `getOrCreate`.
+- Updated for Breaking Changes in NeoForge 26.1.2.20-beta
+
+- API: Added `BalmClient.clientHooks()` with a `getFocusedElement()` helper
+- API: Added `BalmResourceReloadListenerRegistrar#addDependency` and `BalmClientResourceReloadListenerRegistrar#addDependency`, not supported on Forge
+- API: Added `BalmResourceReloadListenerRegistrar#vanillaKeys` and `BalmClientResourceReloadListenerRegistrar#vanillaKeys` for use in `addDependency`
+- API: Added `lootTableId` parameter to `BalmLootModifier`
+- API: Added `BalmCompostableRegistrar`
+- API: Added overloads to set texture size for JEI support
