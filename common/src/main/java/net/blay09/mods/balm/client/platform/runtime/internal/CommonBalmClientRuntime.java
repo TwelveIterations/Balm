@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.client.platform.runtime.internal;
 
+import net.blay09.mods.balm.client.platform.BalmClientHooks;
+import net.blay09.mods.balm.client.platform.internal.CommonBalmClientHooks;
 import net.blay09.mods.balm.client.platform.module.internal.InternalsClientModule;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -15,6 +17,7 @@ public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLo
     private static final List<Runnable> initCallbacks = Collections.synchronizedList(new ArrayList<>());
     private static final List<BalmClientModule> modules = Collections.synchronizedList(new ArrayList<>());
 
+    private final BalmClientHooks clientHooks = new CommonBalmClientHooks();
     private boolean ready;
 
     @Override
@@ -28,6 +31,11 @@ public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLo
         if (isReady()) {
             callback.run();
         }
+    }
+
+    @Override
+    public BalmClientHooks clientHooks() {
+        return clientHooks;
     }
 
     @Override

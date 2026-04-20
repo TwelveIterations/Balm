@@ -6,6 +6,7 @@ import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
+import net.blay09.mods.balm.client.platform.BalmClientHooks;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
@@ -40,6 +41,8 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     boolean isReady();
 
     void onRuntimeAvailable(Runnable callback);
+
+    BalmClientHooks clientHooks();
 
     void registerModule(BalmClientRegistrars registrars, BalmClientModule module);
 
