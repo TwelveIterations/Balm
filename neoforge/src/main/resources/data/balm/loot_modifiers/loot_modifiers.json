@@ -1,4 +1,5 @@
 {
   "type": "balm:loot_modifiers",
-  "conditions": []
+  "conditions": [],
+  "priority": 0
 }
