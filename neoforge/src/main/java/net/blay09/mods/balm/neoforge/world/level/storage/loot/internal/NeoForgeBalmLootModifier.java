@@ -17,8 +17,8 @@ public class NeoForgeBalmLootModifier extends LootModifier {
     public static final MapCodec<NeoForgeBalmLootModifier> CODEC = RecordCodecBuilder.mapCodec(instance ->
             codecStart(instance).apply(instance, NeoForgeBalmLootModifier::new));
 
-    public NeoForgeBalmLootModifier(LootItemCondition[] conditions) {
-        super(conditions);
+    public NeoForgeBalmLootModifier(LootItemCondition[] conditions, int priority) {
+        super(conditions, priority);
     }
 
     @Override
