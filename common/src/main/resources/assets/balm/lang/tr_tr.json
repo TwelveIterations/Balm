@@ -30,16 +30,5 @@
   "tag.item.c.stones": "Taşlar",
   "tag.item.c.chests.chests": "Ahşap Sandıklar",
   "tag.item.c.rods.wooden": "Ahşap Oltalar",
-  "config.balm.exampleBoolean": "Örnek Boolean",
-  "config.balm.exampleInt": "Örnek Int",
-  "config.balm.exampleString": "Örnek String",
-  "config.balm.exampleMultilineString": "Örnek Multiline String",
-  "config.balm.exampleEnum": "Örnek Enum",
-  "config.balm.exampleStringList": "Örnek String Listesi",
-  "config.balm.exampleResourceLocationSet": "Örnek Kaynak Konumu Ayarı",
-  "config.balm.exampleIntList": "Örnek Int Listesi",
-  "config.balm.exampleEnumList": "Örnek Enum Listesi",
-  "config.balm.exampleCategory.innerField": "Örnek Inner Field",
-  "config.balm.exampleCategory.exampleFloat": "Örnek Float",
   "balm.configuration.exampleCategory": "Örnek Kategori"
 }
