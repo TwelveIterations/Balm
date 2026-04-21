@@ -21,10 +21,18 @@ public interface BalmBlockRegistration extends BalmHolderRegistration<Block> {
         return withItem(BlockItem::new, propertiesBuilder);
     }
 
+    /**
+     * @deprecated Use {@link #withDefaultItem(Function)} instead, so that Balm can apply appropriate default properties.
+     */
+    @Deprecated
     default BalmBlockRegistration withDefaultItem(Supplier<Item.Properties> propertiesSupplier) {
         return withItem(BlockItem::new, propertiesSupplier);
     }
 
+    /**
+     * @deprecated Use {@link #withDefaultItem(Function)} instead, so that Balm can apply appropriate default properties.
+     */
+    @Deprecated
     default BalmBlockRegistration withDefaultItem(Item.Properties properties) {
         return withItem(BlockItem::new, properties);
     }
