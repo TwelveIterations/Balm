@@ -7,7 +7,6 @@ import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerVani
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.IngredientInfoRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.IdentifiableRecipeTypeTransferRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.ScreenOcclusionRegistration;
-import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.SimpleRecipeTransferRegistration;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 
 class JeiRecipeViewerRegistrar implements RecipeViewerRegistrar {
 
@@ -32,8 +30,6 @@ class JeiRecipeViewerRegistrar implements RecipeViewerRegistrar {
     private final List<IngredientInfoRegistration> ingredientInfoRegistrations = Collections.synchronizedList(new ArrayList<>());
     private final List<ScreenOcclusionRegistration<?>> screenOcclusions = Collections.synchronizedList(new ArrayList<>());
     private final List<RecipeViewerOcclusionProvider<?>> globalScreenOcclusions = Collections.synchronizedList(new ArrayList<>());
-    @Deprecated
-    private final List<SimpleRecipeTransferRegistration<?>> transferRegistrations = Collections.synchronizedList(new ArrayList<>());
     private final List<IdentifiableRecipeTypeTransferRegistration<?>> identifiableRecipeTypeTransferRegistrations = Collections.synchronizedList(new ArrayList<>());
 
     @Override
@@ -67,8 +63,6 @@ class JeiRecipeViewerRegistrar implements RecipeViewerRegistrar {
 
     @Override
     public <T extends AbstractContainerMenu> void registerRecipeTransferHandler(Class<T> menuClass, Holder<MenuType<T>> menuType, RecipeType<?> recipeType, int recipeSlotStart, int recipeSlotCount, int inventorySlotStart, int inventorySlotCount) {
-        Predicate<RecipeViewerRecipeTypeRegistration<?>> predicate = it -> it instanceof JeiVanillaRecipeTypeRegistration<?, ?> registration && registration.containsRecipeType(recipeType);
-        transferRegistrations.add(new SimpleRecipeTransferRegistration<>(menuClass, menuType, predicate, recipeSlotStart, recipeSlotCount, inventorySlotStart, inventorySlotCount));
         final var recipeTypeId = BuiltInRegistries.RECIPE_TYPE.getKey(recipeType);
         if (recipeTypeId != null) {
             identifiableRecipeTypeTransferRegistrations.add(new IdentifiableRecipeTypeTransferRegistration<>(menuClass, menuType, recipeTypeId, recipeSlotStart, recipeSlotCount, inventorySlotStart, inventorySlotCount));
@@ -93,10 +87,5 @@ class JeiRecipeViewerRegistrar implements RecipeViewerRegistrar {
 
     public Collection<IdentifiableRecipeTypeTransferRegistration<?>> getIdentifiableRecipeTypeTransferRegistrations() {
         return identifiableRecipeTypeTransferRegistrations;
-    }
-
-    @Deprecated
-    public Collection<SimpleRecipeTransferRegistration<?>> getTransferRegistrations() {
-        return transferRegistrations;
     }
 }
