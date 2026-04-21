@@ -18,7 +18,7 @@
   ],
   "client": [
     "DebugScreenOverlayMixin",
-    "LevelRendererMixin",
+    "LevelExtractorMixin",
     "ChestRendererMixin"
   ],
   "server": [
