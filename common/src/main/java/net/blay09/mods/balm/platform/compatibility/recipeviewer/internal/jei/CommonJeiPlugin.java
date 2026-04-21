@@ -11,7 +11,6 @@ import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerOccl
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.CommonBalmModSupportRecipeViewer;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.IdentifiableRecipeTypeTransferRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.ScreenOcclusionRegistration;
-import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.SimpleRecipeTransferRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
@@ -92,10 +91,6 @@ public class CommonJeiPlugin implements IModPlugin {
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         ensureInitialized();
 
-        for (final var entry : registrar.getTransferRegistrations()) {
-            registerRecipeTransferHandler(registration, entry);
-        }
-
         for (final var entry : registrar.getIdentifiableRecipeTypeTransferRegistrations()) {
             registerRecipeTransferHandler(registration, entry);
         }
@@ -113,22 +108,6 @@ public class CommonJeiPlugin implements IModPlugin {
         if (Balm.modSupport().recipeViewers() instanceof CommonBalmModSupportRecipeViewer recipeViewerSupport) {
             recipeViewerSupport.setHasKeyboardFocus(null);
         }
-    }
-
-    @Deprecated
-    private <TMenu extends AbstractContainerMenu> void registerRecipeTransferHandler(IRecipeTransferRegistration registration, SimpleRecipeTransferRegistration<TMenu> entry) {
-        registrar.getRecipeTypes().stream()
-                .filter(it -> entry.recipeTypePredicate().test(it))
-                .map(it -> it.jeiRecipeType)
-                .findFirst()
-                .ifPresent(recipeType -> registration.addRecipeTransferHandler(
-                        entry.menuClass(),
-                        entry.menuType().value(),
-                        recipeType,
-                        entry.recipeSlotStart(),
-                        entry.recipeSlotCount(),
-                        entry.inventorySlotStart(),
-                        entry.inventorySlotCount()));
     }
 
     private <TMenu extends AbstractContainerMenu> void registerRecipeTransferHandler(IRecipeTransferRegistration registration, IdentifiableRecipeTypeTransferRegistration<TMenu> entry) {
