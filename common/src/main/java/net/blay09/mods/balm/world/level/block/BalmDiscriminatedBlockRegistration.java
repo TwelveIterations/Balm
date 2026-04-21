@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.Block;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockRegistration> {
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems() {
@@ -22,24 +21,6 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockR
 
     default BalmDiscriminatedBlockRegistration<T> withDefaultItems(BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
         forEach((discriminator, it) -> it.withItem(BlockItem::new, (properties) -> propertiesBuilder.apply(discriminator, properties)));
-        return this;
-    }
-
-    /**
-     * @deprecated Use {@link #withDefaultItems(Function)} or {@link #withDefaultItems(BiFunction)} instead, so that Balm can apply appropriate default properties.
-     */
-    @Deprecated
-    default BalmDiscriminatedBlockRegistration<T> withDefaultItems(Supplier<Item.Properties> propertiesSupplier) {
-        forEach((_, it) -> it.withItem(BlockItem::new, propertiesSupplier));
-        return this;
-    }
-
-    /**
-     * @deprecated Use {@link #withDefaultItems(Function)} or {@link #withDefaultItems(BiFunction)} instead, so that Balm can apply appropriate default properties.
-     */
-    @Deprecated
-    default BalmDiscriminatedBlockRegistration<T> withDefaultItems(Item.Properties properties) {
-        forEach((_, it) -> it.withItem(BlockItem::new, properties));
         return this;
     }
 
@@ -60,24 +41,6 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockR
 
     default BalmDiscriminatedBlockRegistration<T> withItems(Function<T, String> nameFunction, BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
         forEach((discrimination, it) -> it.withItem(nameFunction.apply(discrimination), constructor, (properties) -> propertiesBuilder.apply(discrimination, properties)));
-        return this;
-    }
-
-    /**
-     * @deprecated Use {@link #withItems(BiFunction, Function)} or {@link #withItems(BiFunction, BiFunction)} instead, so that Balm can apply appropriate default properties.
-     */
-    @Deprecated
-    default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, Item.Properties properties) {
-        forEach((_, it) -> it.withItem(constructor, () -> properties));
-        return this;
-    }
-
-    /**
-     * @deprecated Use {@link #withItems(BiFunction, Function)} or {@link #withItems(BiFunction, BiFunction)} instead, so that Balm can apply appropriate default properties.
-     */
-    @Deprecated
-    default BalmDiscriminatedBlockRegistration<T> withItems(BiFunction<Block, Item.Properties, BlockItem> constructor, Supplier<Item.Properties> properties) {
-        forEach((_, it) -> it.withItem(constructor, properties));
         return this;
     }
 
