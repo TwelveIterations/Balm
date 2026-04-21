@@ -12,7 +12,6 @@
     "ReloadableServerResourcesMixin",
     "StemBlockMixin",
     "LivingEntityMixin",
-    "RandomizableContainerBlockEntityMixin",
     "ChunkMapAccessor",
     "TrackedEntityAccessor"
   ],

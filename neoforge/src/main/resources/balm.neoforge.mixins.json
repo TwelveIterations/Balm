@@ -4,8 +4,7 @@
   "package": "net.blay09.mods.balm.neoforge.internal.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "EntityMixin",
-    "RandomizableContainerMixin"
+    "EntityMixin"
   ],
   "client": [
     "MinecraftMixin",
