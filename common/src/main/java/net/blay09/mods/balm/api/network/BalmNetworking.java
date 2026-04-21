@@ -69,4 +69,8 @@ public interface BalmNetworking {
     }
 
     BalmNetworking scoped(String modId);
+
+    boolean isMessageSupported(ServerPlayer player, CustomPacketPayload payload);
+
+    boolean isMessageSupportedByServer(CustomPacketPayload payload);
 }

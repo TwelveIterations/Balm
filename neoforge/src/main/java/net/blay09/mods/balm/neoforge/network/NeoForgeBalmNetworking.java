@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.network.MessageRegistration;
 import net.blay09.mods.balm.api.network.ServerboundMessageRegistration;
 import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.StaticNamespaceResolver;
+import net.blay09.mods.balm.mixin.ChunkMapAccessor;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -27,6 +28,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.handling.MainThreadPayloadHandler;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,23 +90,42 @@ public record NeoForgeBalmNetworking(NamespaceResolver namespaceResolver) implem
     @Override
     public <T extends CustomPacketPayload> void sendTo(Player player, T message) {
         if (player instanceof ServerPlayer serverPlayer) {
-            PacketDistributor.sendToPlayer(serverPlayer, message);
+            if (isMessageSupported(serverPlayer, message)) {
+                PacketDistributor.sendToPlayer(serverPlayer, message);
+            }
         }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(ServerLevel level, BlockPos pos, T message) {
-        PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(pos), message);
+        final var players = level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false);
+        for (final var player : players) {
+            if (isMessageSupported(player, message)) {
+                PacketDistributor.sendToPlayer(player, message);
+            }
+        }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(Entity entity, T message) {
-        PacketDistributor.sendToPlayersTrackingEntity(entity, message);
+        if (entity.level() instanceof ServerLevel level) {
+            final var trackedEntity = ((ChunkMapAccessor) level.getChunkSource().chunkMap).getEntityMap().get(entity.getId());
+            for(final var connection : trackedEntity.getSeenBy()) {
+                final var player = connection.getPlayer();
+                if (isMessageSupported(player, message)) {
+                    PacketDistributor.sendToPlayer(player, message);
+                }
+            }
+        }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToAll(MinecraftServer server, T message) {
-        PacketDistributor.sendToAllPlayers(message);
+        for (final var player : server.getPlayerList().getPlayers()) {
+            if (isMessageSupported(player, message)) {
+                PacketDistributor.sendToPlayer(player, message);
+            }
+        }
     }
 
     @Override
@@ -114,7 +135,10 @@ public record NeoForgeBalmNetworking(NamespaceResolver namespaceResolver) implem
             return;
         }
 
-        PacketDistributor.sendToServer(message);
+
+        if (isMessageSupportedByServer(message)) {
+            PacketDistributor.sendToServer(message);
+        }
     }
 
     @Override
@@ -138,6 +162,17 @@ public record NeoForgeBalmNetworking(NamespaceResolver namespaceResolver) implem
 
     private Registrations getActiveRegistrations() {
         return ModBusEventRegisters.getRegistrations(namespaceResolver.getDefaultNamespace(), Registrations.class);
+    }
+
+    @Override
+    public boolean isMessageSupported(ServerPlayer player, CustomPacketPayload payload) {
+        return player.connection.hasChannel(payload);
+    }
+
+    @Override
+    public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
+        final var packetListener = Balm.safeClientAccess().getPacketListener();
+        return packetListener != null && NetworkRegistry.hasChannel(packetListener, payload.type().id());
     }
 
     public static class Registrations {

@@ -128,38 +128,57 @@ public class FabricBalmNetworking implements BalmNetworking {
 
     @Override
     public <T extends CustomPacketPayload> void sendTo(Player player, T message) {
-        ServerPlayNetworking.send((ServerPlayer) player, message);
+        if (player instanceof ServerPlayer serverPlayer && isMessageSupported(serverPlayer, message)) {
+            ServerPlayNetworking.send(serverPlayer, message);
+        }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(ServerLevel world, BlockPos pos, T message) {
-        for (ServerPlayer player : PlayerLookup.tracking(world, pos)) {
-            ServerPlayNetworking.send(player, message);
+        for (final var player : PlayerLookup.tracking(world, pos)) {
+            if (isMessageSupported(player, message)) {
+                ServerPlayNetworking.send(player, message);
+            }
         }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToTracking(Entity entity, T message) {
-        for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-            ServerPlayNetworking.send(player, message);
+        for (final var player : PlayerLookup.tracking(entity)) {
+            if (isMessageSupported(player, message)) {
+                ServerPlayNetworking.send(player, message);
+            }
         }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToAll(MinecraftServer server, T message) {
-        for (ServerPlayer player : PlayerLookup.all(server)) {
-            ServerPlayNetworking.send(player, message);
+        for (final var player : PlayerLookup.all(server)) {
+            if (isMessageSupported(player, message)) {
+                ServerPlayNetworking.send(player, message);
+            }
         }
     }
 
     @Override
     public <T extends CustomPacketPayload> void sendToServer(T message) {
-        if (!Balm.getProxy().isConnected()) {
+        if (!Balm.safeClientAccess().isConnected()) {
             logger.debug("Skipping message {} because we're not connected to a server", message);
-        } else {
+        } else if (isMessageSupportedByServer(message)) {
             ClientPlayNetworking.send(message);
         }
     }
+
+    @Override
+    public boolean isMessageSupported(ServerPlayer player, CustomPacketPayload payload) {
+        return ServerPlayNetworking.canSend(player, payload.type());
+    }
+
+    @Override
+    public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
+        return ClientPlayNetworking.canSend(payload.type());
+    }
+
 
     @Override
     public <T extends CustomPacketPayload> void registerClientboundPacket(CustomPacketPayload.Type<T> type, Class<T> clazz, StreamCodec<RegistryFriendlyByteBuf, T> codec, BiConsumer<Player, T> handler) {

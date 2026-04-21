@@ -6,6 +6,7 @@ import net.blay09.mods.balm.api.network.BalmNetworking;
 import net.blay09.mods.balm.api.network.ClientboundMessageRegistration;
 import net.blay09.mods.balm.api.network.MessageRegistration;
 import net.blay09.mods.balm.api.network.ServerboundMessageRegistration;
+import net.blay09.mods.balm.mixin.ChunkMapAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
@@ -89,16 +91,23 @@ public class ForgeBalmNetworking implements BalmNetworking {
     public <T extends CustomPacketPayload> void sendTo(Player player, T message) {
         final var messageRegistration = getMessageRegistrationOrThrow(message);
         final var type = messageRegistration.getType();
-        final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.PLAYER.with((ServerPlayer) player));
+        if (player instanceof ServerPlayer serverPlayer && isMessageSupported(serverPlayer, message)) {
+            final var channel = NetworkChannels.get(type.id().getNamespace());
+            channel.send(message, PacketDistributor.PLAYER.with(serverPlayer));
+        }
     }
 
     @Override
-    public <T extends CustomPacketPayload> void sendToTracking(ServerLevel world, BlockPos pos, T message) {
+    public <T extends CustomPacketPayload> void sendToTracking(ServerLevel level, BlockPos pos, T message) {
         final var messageRegistration = getMessageRegistrationOrThrow(message);
         final var type = messageRegistration.getType();
         final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.TRACKING_CHUNK.with(world.getChunkAt(pos)));
+        final var players = level.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false);
+        for (final var player : players) {
+            if (isMessageSupported(player, message)) {
+                channel.send(message, player.connection.getConnection());
+            }
+        }
     }
 
     @Override
@@ -106,7 +115,15 @@ public class ForgeBalmNetworking implements BalmNetworking {
         final var messageRegistration = getMessageRegistrationOrThrow(message);
         final var type = messageRegistration.getType();
         final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.TRACKING_ENTITY.with(entity));
+        if (entity.level() instanceof ServerLevel level) {
+            final var trackedEntity = ((ChunkMapAccessor) level.getChunkSource().chunkMap).getEntityMap().get(entity.getId());
+            for(final var connection : trackedEntity.getSeenBy()) {
+                final var player = connection.getPlayer();
+                if (isMessageSupported(player, message)) {
+                    channel.send(message, player.connection.getConnection());
+                }
+            }
+        }
     }
 
     @Override
@@ -114,7 +131,11 @@ public class ForgeBalmNetworking implements BalmNetworking {
         final var messageRegistration = getMessageRegistrationOrThrow(message);
         final var type = messageRegistration.getType();
         final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.ALL.noArg());
+        for (final var player : server.getPlayerList().getPlayers()) {
+            if (isMessageSupported(player, message)) {
+                channel.send(message, player.connection.getConnection());
+            }
+        }
     }
 
     @Override
@@ -127,7 +148,20 @@ public class ForgeBalmNetworking implements BalmNetworking {
         final var messageRegistration = getMessageRegistrationOrThrow(message);
         final var type = messageRegistration.getType();
         final var channel = NetworkChannels.get(type.id().getNamespace());
-        channel.send(message, PacketDistributor.SERVER.noArg());
+        if (isMessageSupportedByServer(message)) {
+            channel.send(message, PacketDistributor.SERVER.noArg());
+        }
+    }
+
+
+    @Override
+    public boolean isMessageSupported(ServerPlayer player, CustomPacketPayload payload) {
+        return NetworkChannels.get(payload.type().id().getNamespace()).isRemotePresent(player.connection.getConnection());
+    }
+
+    @Override
+    public boolean isMessageSupportedByServer(CustomPacketPayload payload) {
+        return NetworkChannels.get(payload.type().id().getNamespace()).isRemotePresent(Balm.safeClientAccess().getConnection());
     }
 
     @SuppressWarnings("unchecked")
