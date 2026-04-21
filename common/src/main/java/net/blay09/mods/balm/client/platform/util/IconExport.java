@@ -101,14 +101,14 @@ public class IconExport {
                 RenderSystem.outputDepthTextureOverride = renderTarget.getDepthTextureView();
 
                 if (trackingState.usesBlockLight()) {
-                    gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
+                    gameRenderer.lighting().setupFor(Lighting.Entry.ITEMS_3D);
                 } else {
-                    gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_FLAT);
+                    gameRenderer.lighting().setupFor(Lighting.Entry.ITEMS_FLAT);
                 }
 
-                trackingState.submit(poseStack, gameRenderer.getSubmitNodeStorage(), LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
-                gameRenderer.getFeatureRenderDispatcher().renderAllFeatures();
-                minecraft.renderBuffers().bufferSource().endBatch();
+                trackingState.submit(poseStack, gameRenderer.submitNodeStorage(), LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
+                gameRenderer.featureRenderDispatcher().renderAllFeatures();
+                gameRenderer.renderBuffers().bufferSource().uploadAndDraw();
             } finally {
                 RenderSystem.outputColorTextureOverride = previousColorOverride;
                 RenderSystem.outputDepthTextureOverride = previousDepthOverride;
