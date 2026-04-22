@@ -12,13 +12,6 @@ import java.util.function.*;
  * Provides convenience access to registering blocks and block items.
  */
 public interface BalmBlockRegistrar {
-
-    /**
-     * Opt-in to automatically use block description prefixes for block items, matching Vanilla behavior.
-     * Will be removed in Minecraft 26.2, where block description prefixes will become the default.
-     */
-    void enableBlockDescriptionPrefixForItems();
-
     void addAlias(Identifier oldId, Identifier newId);
 
     void addAlias(String oldName, String newName);

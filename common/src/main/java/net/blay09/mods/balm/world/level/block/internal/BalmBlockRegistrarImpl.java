@@ -25,16 +25,9 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     private final BalmRegistrar registrar;
     private final String namespace;
 
-    private boolean useBlockDescriptionPrefixForItems;
-
     public BalmBlockRegistrarImpl(BalmRegistrar registrar, String namespace) {
         this.registrar = registrar;
         this.namespace = namespace;
-    }
-
-    @Override
-    public void enableBlockDescriptionPrefixForItems() {
-        useBlockDescriptionPrefixForItems = true;
     }
 
     @Override
@@ -59,7 +52,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.BLOCK, identifier);
         final var holder = registrar.register(resourceKey, (_) -> constructor.apply(properties.get().setId(resourceKey)));
-        return new BalmBlockRegistrationImpl(namespace, registrar, holder, useBlockDescriptionPrefixForItems);
+        return new BalmBlockRegistrationImpl(namespace, registrar, holder);
     }
 
     @Override
@@ -95,15 +88,13 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         private final String namespace;
         private final BalmRegistrar registrar;
         private final Holder<Block> holder;
-        private final boolean useBlockDescriptionPrefixForItems;
         @Nullable
         private DeferredBlock deferredBlock;
 
-        private BalmBlockRegistrationImpl(String namespace, BalmRegistrar registrar, Holder<Block> holder, boolean useBlockDescriptionPrefixForItems) {
+        private BalmBlockRegistrationImpl(String namespace, BalmRegistrar registrar, Holder<Block> holder) {
             this.namespace = namespace;
             this.registrar = registrar;
             this.holder = holder;
-            this.useBlockDescriptionPrefixForItems = useBlockDescriptionPrefixForItems;
         }
 
         @Override
@@ -116,15 +107,12 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         public BalmBlockRegistration withItem(String name, BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
             final var itemIdentifier = Identifier.fromNamespaceAndPath(namespace, name);
             final var itemResourceKey = ResourceKey.create(Registries.ITEM, itemIdentifier);
-            registrar.register(itemResourceKey, (_) -> constructor.apply(holder.value(), propertiesBuilder.apply(patchItemProperties(new Item.Properties().setId(itemResourceKey)))));
+            registrar.register(itemResourceKey, (_) -> constructor.apply(holder.value(), propertiesBuilder.apply(defaultItemProperties(itemResourceKey))));
             return this;
         }
 
-        private Item.Properties patchItemProperties(Item.Properties properties) {
-            if (useBlockDescriptionPrefixForItems) {
-                return properties.useBlockDescriptionPrefix();
-            }
-            return properties;
+        private Item.Properties defaultItemProperties(ResourceKey<Item> itemResourceKey) {
+            return new Item.Properties().setId(itemResourceKey).useBlockDescriptionPrefix();
         }
 
         @Override
