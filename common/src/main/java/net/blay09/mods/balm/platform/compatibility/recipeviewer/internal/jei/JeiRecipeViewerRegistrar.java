@@ -4,18 +4,21 @@ import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerOccl
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerRecipeTypeRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerRegistrar;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerVanillaRecipeTypeRegistration;
+import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.IngredientInfoRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.IdentifiableRecipeTypeTransferRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.ScreenOcclusionRegistration;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.SimpleRecipeTransferRegistration;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +29,7 @@ import java.util.function.Predicate;
 class JeiRecipeViewerRegistrar implements RecipeViewerRegistrar {
 
     private final List<JeiRecipeTypeRegistration<?>> recipeTypeRegistrations = Collections.synchronizedList(new ArrayList<>());
+    private final List<IngredientInfoRegistration> ingredientInfoRegistrations = Collections.synchronizedList(new ArrayList<>());
     private final List<ScreenOcclusionRegistration<?>> screenOcclusions = Collections.synchronizedList(new ArrayList<>());
     private final List<RecipeViewerOcclusionProvider<?>> globalScreenOcclusions = Collections.synchronizedList(new ArrayList<>());
     @Deprecated
@@ -44,6 +48,11 @@ class JeiRecipeViewerRegistrar implements RecipeViewerRegistrar {
         final var recipeTypeRegistration = new JeiVanillaRecipeTypeRegistration<>(identifier, recipeClass);
         recipeTypeRegistrations.add(recipeTypeRegistration);
         return recipeTypeRegistration;
+    }
+
+    @Override
+    public void registerIngredientInfo(ItemLike itemLike, Component description) {
+        ingredientInfoRegistrations.add(new IngredientInfoRegistration(itemLike, description));
     }
 
     @Override
@@ -68,6 +77,10 @@ class JeiRecipeViewerRegistrar implements RecipeViewerRegistrar {
 
     public Collection<JeiRecipeTypeRegistration<?>> getRecipeTypes() {
         return recipeTypeRegistrations;
+    }
+
+    public Collection<IngredientInfoRegistration> getIngredientInfoRegistrations() {
+        return ingredientInfoRegistrations;
     }
 
     public Collection<ScreenOcclusionRegistration<?>> getScreenOcclusions() {

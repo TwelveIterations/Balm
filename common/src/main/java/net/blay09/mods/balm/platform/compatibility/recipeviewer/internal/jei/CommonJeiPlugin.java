@@ -60,6 +60,10 @@ public class CommonJeiPlugin implements IModPlugin {
         for (final var recipeTypeRegistration : registrar.getRecipeTypes()) {
             recipeTypeRegistration.registerRecipes(registration);
         }
+
+        for (final var ingredientInfoRegistration : registrar.getIngredientInfoRegistrations()) {
+            registration.addIngredientInfo(ingredientInfoRegistration.itemLike(), ingredientInfoRegistration.description());
+        }
     }
 
     @Override
