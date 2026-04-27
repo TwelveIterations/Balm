@@ -9,8 +9,6 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 
-import java.util.Objects;
-
 public class NeoForgeBalmBlockStateModelRegistrar extends AbstractBalmBlockStateModelRegistrar {
 
     private final ModelEvent.RegisterStandalone event;
@@ -29,7 +27,12 @@ public class NeoForgeBalmBlockStateModelRegistrar extends AbstractBalmBlockState
     public record NeoForgeDeferredBlockStateModel(StandaloneModelKey<BlockStateModel> key) implements DeferredBlockStateModel {
         @Override
         public BlockStateModel asBlockStateModel() {
-            return Objects.requireNonNull(Minecraft.getInstance().getModelManager().getStandaloneModel(key));
+            final var model = Minecraft.getInstance().getModelManager().getStandaloneModel(key);
+            if(model != null) {
+                return model;
+            }
+
+            return Minecraft.getInstance().getModelManager().getBlockStateModelSet().missingModel();
         }
     }
 }
