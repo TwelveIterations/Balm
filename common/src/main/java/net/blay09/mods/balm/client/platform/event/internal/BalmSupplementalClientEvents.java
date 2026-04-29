@@ -3,6 +3,7 @@ package net.blay09.mods.balm.client.platform.event.internal;
 import net.blay09.mods.balm.client.platform.event.callback.RenderCallback;
 import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventFactory;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 
 public class BalmSupplementalClientEvents {
     public static final Event<RenderCallback.Gui.Before> RENDER_GUI_DEBUG_PRE = EventFactory.createArrayBacked(RenderCallback.Gui.Before.class, (listeners) -> (guiGraphics, window) -> {
@@ -20,12 +21,14 @@ public class BalmSupplementalClientEvents {
         }
     });
 
-    public static final Event<RenderCallback.BlockHighlight> RENDER_BLOCK_HIGHLIGHT = EventFactory.createArrayBacked(RenderCallback.BlockHighlight.class, (listeners) -> (blockHitResult, camera, levelRenderState) -> {
+    public static final Event<RenderCallback.BlockHighlight> RENDER_BLOCK_HIGHLIGHT = EventFactory.createArrayBacked(RenderCallback.BlockHighlight.class, (listeners) -> (blockHitResult, camera, blockOutlineRenderState) -> {
+        BlockOutlineRenderState newBlockOutlineRenderState = blockOutlineRenderState;
         for (final var listener : listeners) {
-            if (!listener.shouldRender(blockHitResult, camera, levelRenderState)) {
-                return false;
+            newBlockOutlineRenderState = listener.extractRenderState(blockHitResult, camera, newBlockOutlineRenderState);
+            if (newBlockOutlineRenderState == null) {
+                return null;
             }
         }
-        return true;
+        return newBlockOutlineRenderState;
     });
 }
