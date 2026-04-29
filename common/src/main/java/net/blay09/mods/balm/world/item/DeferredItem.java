@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.world.item;
 
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -13,4 +14,6 @@ public interface DeferredItem extends ItemLike {
     ItemStack createStack(int count);
 
     Holder<Item> asHolder();
+
+    ResourceKey<Item> asResourceKey();
 }

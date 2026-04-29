@@ -2,6 +2,7 @@ package net.blay09.mods.balm.world.level.block.internal;
 
 import net.blay09.mods.balm.world.level.block.DeferredBlock;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -23,6 +24,11 @@ public record DeferredBlockImpl(Holder<Block> holder) implements DeferredBlock {
         final var itemStack = asItem().getDefaultInstance();
         itemStack.setCount(count);
         return itemStack;
+    }
+
+    @Override
+    public ResourceKey<Block> asResourceKey() {
+        return holder.unwrapKey().orElseThrow();
     }
 
     @Override
