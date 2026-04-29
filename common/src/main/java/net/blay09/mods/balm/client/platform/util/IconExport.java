@@ -6,17 +6,20 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemDisplayContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,21 +79,21 @@ public class IconExport {
             renderTarget = new TextureTarget("balm_icon_export", EXPORT_SIZE, EXPORT_SIZE, true);
             final var colorTexture = Objects.requireNonNull(renderTarget.getColorTexture(), "color texture missing");
             final var depthTexture = Objects.requireNonNull(renderTarget.getDepthTexture(), "depth texture missing");
+            final var offscreenCommandEncoder = RenderSystem.getDevice().createCommandEncoder();
 
             final var projection = new Projection();
             projection.setupOrtho(-1000f, 1000f, EXPORT_SIZE, EXPORT_SIZE, true);
 
-            final var commandEncoder = RenderSystem.getDevice().createCommandEncoder();
-            commandEncoder.clearColorAndDepthTextures(colorTexture, 0, depthTexture, 1.0);
+            offscreenCommandEncoder.clearColorAndDepthTextures(colorTexture, 0, depthTexture, 0.0);
 
             final var gameRenderer = minecraft.gameRenderer;
             final var trackingState = new TrackingItemStackRenderState();
-            minecraft.getItemModelResolver().updateForTopItem(trackingState, itemStack, net.minecraft.world.item.ItemDisplayContext.GUI, minecraft.level, minecraft.player, 0);
+            final var submitNodeStorage = new SubmitNodeStorage();
+            minecraft.getItemModelResolver().updateForTopItem(trackingState, itemStack, ItemDisplayContext.GUI, minecraft.level, minecraft.player, 0);
 
-            final var poseStack = new com.mojang.blaze3d.vertex.PoseStack();
+            final var poseStack = new PoseStack();
             poseStack.translate(EXPORT_SIZE / 2f, EXPORT_SIZE / 2f, 0f);
-            poseStack.scale(ITEM_RENDER_SCALE, ITEM_RENDER_SCALE, -ITEM_RENDER_SCALE);
-            poseStack.scale(1f, -1f, -1f);
+            poseStack.scale(ITEM_RENDER_SCALE, -ITEM_RENDER_SCALE, ITEM_RENDER_SCALE);
 
             final var previousColorOverride = RenderSystem.outputColorTextureOverride;
             final var previousDepthOverride = RenderSystem.outputDepthTextureOverride;
@@ -106,9 +109,9 @@ public class IconExport {
                     gameRenderer.lighting().setupFor(Lighting.Entry.ITEMS_FLAT);
                 }
 
-                trackingState.submit(poseStack, gameRenderer.submitNodeStorage(), LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
-                gameRenderer.featureRenderDispatcher().renderAllFeatures();
-                gameRenderer.renderBuffers().bufferSource().uploadAndDraw();
+                trackingState.submit(poseStack, submitNodeStorage, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
+                gameRenderer.featureRenderDispatcher().renderAllFeatures(submitNodeStorage);
+                gameRenderer.renderBuffers().endFrame();
             } finally {
                 RenderSystem.outputColorTextureOverride = previousColorOverride;
                 RenderSystem.outputDepthTextureOverride = previousDepthOverride;
@@ -122,11 +125,18 @@ public class IconExport {
                     (long) EXPORT_SIZE * EXPORT_SIZE * pixelSize);
 
             final var targetFile = new File(exportFolder, itemId.getPath() + ".png");
+            final var readCommandEncoder = RenderSystem.getDevice().createCommandEncoder();
             final var bufferToRead = screenshotBuffer;
             final var renderTargetToDestroy = renderTarget;
             renderTarget = null;
             screenshotBuffer = null;
-            commandEncoder.copyTextureToBuffer(colorTexture, bufferToRead, 0, () -> writeExportedImage(bufferToRead, renderTargetToDestroy, targetFile), 0);
+            offscreenCommandEncoder.copyTextureToBuffer(
+                    colorTexture,
+                    bufferToRead,
+                    0,
+                    () -> writeExportedImage(readCommandEncoder, bufferToRead, renderTargetToDestroy, targetFile),
+                    0);
+            offscreenCommandEncoder.submit();
         } catch (Exception e) {
             if (screenshotBuffer != null) {
                 screenshotBuffer.close();
@@ -138,9 +148,9 @@ public class IconExport {
         }
     }
 
-    private static void writeExportedImage(GpuBuffer screenshotBuffer, RenderTarget renderTarget, File targetFile) {
+    private static void writeExportedImage(CommandEncoder readCommandEncoder, GpuBuffer screenshotBuffer, RenderTarget renderTarget, File targetFile) {
         try (screenshotBuffer;
-             final var readView = RenderSystem.getDevice().createCommandEncoder().mapBuffer(screenshotBuffer, true, false);
+             final var readView = readCommandEncoder.mapBuffer(screenshotBuffer, true, false);
              final var nativeImage = new NativeImage(EXPORT_SIZE, EXPORT_SIZE, false)) {
             final var byteBuffer = readView.data();
             for (int y = 0; y < EXPORT_SIZE; y++) {
