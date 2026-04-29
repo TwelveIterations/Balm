@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.world.item;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Function;
@@ -21,12 +23,12 @@ public interface DiscriminatedItems<T> extends Map<T, DeferredItem> {
         return sortedEntries().map(Entry::getValue);
     }
 
-    static <T> Function<T, String> prefixWith(String name) {
-        return it -> name + "_" + it;
+    static <T> Function<@Nullable T, String> prefixWith(String name) {
+        return it -> it != null ? name + "_" + it : name;
     }
 
-    static <T> Function<T, String> suffixWith(String name) {
-        return it -> it + "_" + name;
+    static <T> Function<@Nullable T, String> suffixWith(String name) {
+        return it -> it != null ? it + "_" + name : name;
     }
 
     static <T> Function<T, String> surroundWith(String prefix, String suffix) {
