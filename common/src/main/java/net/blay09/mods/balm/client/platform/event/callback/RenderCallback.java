@@ -4,11 +4,12 @@ import com.mojang.blaze3d.platform.Window;
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.state.level.LevelRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jspecify.annotations.Nullable;
 
 public interface RenderCallback {
     @FunctionalInterface
@@ -20,7 +21,7 @@ public interface RenderCallback {
 
     @FunctionalInterface
     interface BlockHighlight {
-        boolean shouldRender(BlockHitResult hitResult, Camera camera, LevelRenderState levelRenderState);
+        @Nullable BlockOutlineRenderState extractRenderState(BlockHitResult hitResult, Camera camera, BlockOutlineRenderState blockOutlineRenderState);
 
         EventMapper<BlockHighlight> EVENT = EventMapper.createUnbound("RenderCallback.BlockHighlight");
     }

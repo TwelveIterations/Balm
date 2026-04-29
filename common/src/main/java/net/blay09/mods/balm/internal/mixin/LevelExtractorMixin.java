@@ -23,10 +23,8 @@ public class LevelExtractorMixin {
     @Inject(method = "extractBlockOutline(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/state/level/LevelRenderState;)V", at = @At("RETURN"))
     public void extractBlockOutline(Camera camera, LevelRenderState levelRenderState, CallbackInfo ci) {
         if (minecraft.hitResult instanceof BlockHitResult blockHitResult && levelRenderState.blockOutlineRenderState != null) {
-            if (!BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT.invoker()
-                    .shouldRender(blockHitResult, camera, levelRenderState)) {
-                levelRenderState.blockOutlineRenderState = null;
-            }
+            levelRenderState.blockOutlineRenderState = BalmSupplementalClientEvents.RENDER_BLOCK_HIGHLIGHT.invoker()
+                    .extractRenderState(blockHitResult, camera, levelRenderState.blockOutlineRenderState);
         }
     }
 
