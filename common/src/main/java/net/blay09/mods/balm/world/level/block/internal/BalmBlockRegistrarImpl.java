@@ -88,30 +88,32 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         private final String namespace;
         private final BalmRegistrar registrar;
         private final Holder<Block> holder;
-        @Nullable
-        private DeferredBlock deferredBlock;
+        private final ResourceKey<Block> blockId;
+
+        private @Nullable DeferredBlock deferredBlock;
+        private @Nullable ResourceKey<Item> itemId;
 
         private BalmBlockRegistrationImpl(String namespace, BalmRegistrar registrar, Holder<Block> holder) {
             this.namespace = namespace;
             this.registrar = registrar;
             this.holder = holder;
+            this.blockId = holder.unwrapKey().orElseThrow();
         }
 
         @Override
         public BalmBlockRegistration withItem(BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
-            final var blockResourceKey = holder.unwrapKey().orElseThrow();
-            return withItem(blockResourceKey.identifier().getPath(), constructor, propertiesBuilder);
+            return withItem(blockId.identifier().getPath(), constructor, propertiesBuilder);
         }
 
         @Override
         public BalmBlockRegistration withItem(String name, BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
             final var itemIdentifier = Identifier.fromNamespaceAndPath(namespace, name);
-            final var itemResourceKey = ResourceKey.create(Registries.ITEM, itemIdentifier);
-            registrar.register(itemResourceKey, (_) -> constructor.apply(holder.value(), propertiesBuilder.apply(defaultItemProperties(itemResourceKey))));
+            itemId = ResourceKey.create(Registries.ITEM, itemIdentifier);
+            registrar.register(itemId, (_) -> constructor.apply(holder.value(), propertiesBuilder.apply(defaultItemProperties(itemId))));
             return this;
         }
 
-        private Item.Properties defaultItemProperties(ResourceKey<Item> itemResourceKey) {
+        private static Item.Properties defaultItemProperties(ResourceKey<Item> itemResourceKey) {
             return new Item.Properties().setId(itemResourceKey).useBlockDescriptionPrefix();
         }
 
@@ -123,7 +125,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         @Override
         public DeferredBlock asDeferredBlock() {
             if (deferredBlock == null) {
-                deferredBlock = new DeferredBlockImpl(holder);
+                deferredBlock = new DeferredBlockImpl(holder, blockId, itemId);
             }
             return deferredBlock;
         }
