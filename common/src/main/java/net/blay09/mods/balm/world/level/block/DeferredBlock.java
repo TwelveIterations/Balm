@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.world.level.block;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public interface DeferredBlock extends BlockLike {
     default ItemStack createStack() {
@@ -8,4 +10,6 @@ public interface DeferredBlock extends BlockLike {
     }
 
     ItemStack createStack(int count);
+
+    ResourceKey<Block> asResourceKey();
 }

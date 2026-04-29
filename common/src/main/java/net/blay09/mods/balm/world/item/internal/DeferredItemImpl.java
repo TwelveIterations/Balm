@@ -2,6 +2,7 @@ package net.blay09.mods.balm.world.item.internal;
 
 import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,5 +22,10 @@ public record DeferredItemImpl(Holder<Item> holder) implements DeferredItem {
     @Override
     public Holder<Item> asHolder() {
         return holder;
+    }
+
+    @Override
+    public ResourceKey<Item> asResourceKey() {
+        return holder.unwrapKey().orElseThrow();
     }
 }
