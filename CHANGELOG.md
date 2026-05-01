@@ -1,1 +1,4 @@
-- Updated for Breaking Changes in NeoForge 26.1.2.21-beta
+- Fixed potential crash during resource reload
+- API: Added `RecipeViewerRegistrar#registerIngredientInfo`
+- API: Changed Balm loot modifiers to run at "neutral", which is 1000, obviously
+- API: Fixed `SimpleProgressRenderer` using wrong blit overload
