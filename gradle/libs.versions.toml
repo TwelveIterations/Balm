@@ -33,7 +33,7 @@ wthitCommon = { module = "mcp.mobius.waila:wthit-api", version = "mojmap-19.0.0"
 jeiCommon = { module = "mezz.jei:jei-26.1-common-api", version = "29.2.0.20" }
 modMenu = { module = "maven.modrinth:modmenu", version = "18.0.0-alpha.8" }
 trinkets = { module = "dev.emi:trinkets", version = "3.10.0" }
-fabricPermissionsApi = { module = "me.lucko:fabric-permissions-api", version = "0.6.1" }
+fabricPermissionsApi = { module = "me.lucko:fabric-permissions-api", version = "0.7.0" }
 rebornEnergy = { module = "teamreborn:energy", version = "5.0.0" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version = "26.1.154" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version = "26.1.154" }
