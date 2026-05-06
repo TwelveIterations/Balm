@@ -312,6 +312,36 @@ public class NeoForgeBalmCommonEvents {
                 }
             });
         });
+
+        events.registerEvent(ChunkLoadingEvent.Load.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (net.neoforged.neoforge.event.level.ChunkEvent.Load orig) -> {
+                final ChunkLoadingEvent.Load event = new ChunkLoadingEvent.Load(orig.getLevel(), orig.getChunk());
+                events.fireEventHandlers(priority, event);
+            });
+        });
+
+        events.registerEvent(ChunkLoadingEvent.Unload.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (net.neoforged.neoforge.event.level.ChunkEvent.Unload orig) -> {
+                final ChunkLoadingEvent.Unload event = new ChunkLoadingEvent.Unload(orig.getLevel(), orig.getChunk());
+                events.fireEventHandlers(priority, event);
+            });
+        });
+
+        events.registerEvent(LevelLoadingEvent.Load.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (net.neoforged.neoforge.event.level.LevelEvent.Load orig) -> {
+                final LevelLoadingEvent.Load event = new LevelLoadingEvent.Load(orig.getLevel());
+                events.fireEventHandlers(priority, event);
+            });
+        });
+
+        events.registerEvent(LevelLoadingEvent.Unload.class, priority -> {
+            NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (net.neoforged.neoforge.event.level.LevelEvent.Unload orig) -> {
+                final LevelLoadingEvent.Unload event = new LevelLoadingEvent.Unload(orig.getLevel());
+                events.fireEventHandlers(priority, event);
+            });
+        });
+
+
     }
 
 }
