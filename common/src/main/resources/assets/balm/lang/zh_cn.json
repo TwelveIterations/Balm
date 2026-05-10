@@ -41,5 +41,9 @@
   "balm.configuration.exampleEnumList": "样例枚举列表类",
   "balm.configuration.exampleCategory.innerField": "样例内部类",
   "balm.configuration.exampleCategory.exampleFloat": "样例浮点数类",
-  "balm.configuration.exampleCategory": "样例分类"
+  "balm.configuration.exampleCategory": "样例分类",
+  "disconnect.balm.mod_missing_on_server": "服务端尚未安装 %s。请从客户端中移除本模组，或在服务端安装本模组。",
+  "disconnect.balm.mod_missing_on_client": "客户端尚未安装 %s 模组。请在客户端中安装 %s (版本 %s) 以正常游玩服务器。",
+  "disconnect.balm.mod_version_mismatch": "模组 %s 的版本不匹配。服务端安装的版本为 %s，客户端安装的版本为 %s。请安装同一版本的模组。",
+  "config.jade.plugin_balm.jade": "Balm"
 }
