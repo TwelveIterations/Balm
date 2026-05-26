@@ -1,15 +1,16 @@
 package net.blay09.mods.balm.client.platform.util;
 
+import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.render.GuiRenderer;
 import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import net.minecraft.client.renderer.SubmitNodeStorage;
@@ -20,13 +21,13 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemDisplayContext;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Objects;
 
 public class IconExport {
     private static final Logger logger = LoggerFactory.getLogger(IconExport.class);
@@ -73,18 +74,20 @@ public class IconExport {
     }
 
     private static void exportItem(Minecraft minecraft, ProjectionMatrixBuffer projectionMatrixBuffer, File exportFolder, Identifier itemId, net.minecraft.world.item.ItemStack itemStack) {
-        RenderTarget renderTarget = null;
+        GpuTexture colorTexture = null;
+        GpuTextureView colorTextureView = null;
+        GpuTexture depthTexture = null;
+        GpuTextureView depthTextureView = null;
         GpuBuffer screenshotBuffer = null;
         try {
-            renderTarget = new TextureTarget("balm_icon_export", EXPORT_SIZE, EXPORT_SIZE, true);
-            final var colorTexture = Objects.requireNonNull(renderTarget.getColorTexture(), "color texture missing");
-            final var depthTexture = Objects.requireNonNull(renderTarget.getDepthTexture(), "depth texture missing");
+            final var device = RenderSystem.getDevice();
+            colorTexture = device.createTexture(() -> "balm_icon_export_color", 13, GpuFormat.RGBA8_UNORM, EXPORT_SIZE, EXPORT_SIZE, 1, 1);
+            colorTextureView = device.createTextureView(colorTexture);
+            depthTexture = device.createTexture(() -> "balm_icon_export_depth", 9, GpuFormat.D32_FLOAT, EXPORT_SIZE, EXPORT_SIZE, 1, 1);
+            depthTextureView = device.createTextureView(depthTexture);
+
             final var offscreenCommandEncoder = RenderSystem.getDevice().createCommandEncoder();
-
-            final var projection = new Projection();
-            projection.setupOrtho(-1000f, 1000f, EXPORT_SIZE, EXPORT_SIZE, true);
-
-            offscreenCommandEncoder.clearColorAndDepthTextures(colorTexture, 0, depthTexture, 0.0);
+            offscreenCommandEncoder.clearColorAndDepthTextures(colorTexture, GuiRenderer.CLEAR_COLOR, depthTexture, 0.0);
 
             final var gameRenderer = minecraft.gameRenderer;
             final var trackingState = new TrackingItemStackRenderState();
@@ -99,9 +102,11 @@ public class IconExport {
             final var previousDepthOverride = RenderSystem.outputDepthTextureOverride;
             try {
                 RenderSystem.backupProjectionMatrix();
+                final var projection = new Projection();
+                projection.setupOrtho(-1000f, 1000f, EXPORT_SIZE, EXPORT_SIZE, true);
                 RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(projection), ProjectionType.ORTHOGRAPHIC);
-                RenderSystem.outputColorTextureOverride = renderTarget.getColorTextureView();
-                RenderSystem.outputDepthTextureOverride = renderTarget.getDepthTextureView();
+                RenderSystem.outputColorTextureOverride = colorTextureView;
+                RenderSystem.outputDepthTextureOverride = depthTextureView;
 
                 if (trackingState.usesBlockLight()) {
                     gameRenderer.lighting().setupFor(Lighting.Entry.ITEMS_3D);
@@ -111,7 +116,6 @@ public class IconExport {
 
                 trackingState.submit(poseStack, submitNodeStorage, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
                 gameRenderer.featureRenderDispatcher().renderAllFeatures(submitNodeStorage);
-                gameRenderer.renderBuffers().endFrame();
             } finally {
                 RenderSystem.outputColorTextureOverride = previousColorOverride;
                 RenderSystem.outputDepthTextureOverride = previousDepthOverride;
@@ -119,38 +123,49 @@ public class IconExport {
             }
 
             final var pixelSize = colorTexture.getFormat().pixelSize();
-            screenshotBuffer = RenderSystem.getDevice().createBuffer(
+            screenshotBuffer = device.createBuffer(
                     () -> "balm_icon_export_buffer",
                     GpuBuffer.USAGE_MAP_READ | GpuBuffer.USAGE_COPY_DST,
                     (long) EXPORT_SIZE * EXPORT_SIZE * pixelSize);
 
             final var targetFile = new File(exportFolder, itemId.getPath() + ".png");
-            final var readCommandEncoder = RenderSystem.getDevice().createCommandEncoder();
             final var bufferToRead = screenshotBuffer;
-            final var renderTargetToDestroy = renderTarget;
-            renderTarget = null;
+            final var colorTextureToDestroy = colorTexture;
+            final var colorTextureViewToDestroy = colorTextureView;
+            final var depthTextureToDestroy = depthTexture;
+            final var depthTextureViewToDestroy = depthTextureView;
+            final var colorTextureToRead = colorTexture;
+            colorTexture = null;
+            colorTextureView = null;
+            depthTexture = null;
+            depthTextureView = null;
             screenshotBuffer = null;
             offscreenCommandEncoder.copyTextureToBuffer(
-                    colorTexture,
+                    colorTextureToRead,
                     bufferToRead,
                     0,
-                    () -> writeExportedImage(readCommandEncoder, bufferToRead, renderTargetToDestroy, targetFile),
+                    () -> writeExportedImage(bufferToRead, colorTextureToDestroy, colorTextureViewToDestroy, depthTextureToDestroy, depthTextureViewToDestroy, targetFile),
                     0);
             offscreenCommandEncoder.submit();
         } catch (Exception e) {
             if (screenshotBuffer != null) {
                 screenshotBuffer.close();
             }
-            if (renderTarget != null) {
-                renderTarget.destroyBuffers();
-            }
+            closeTextureResources(colorTexture, colorTextureView, depthTexture, depthTextureView);
             throw new RuntimeException("Failed to export icon for " + itemId, e);
         }
     }
 
-    private static void writeExportedImage(CommandEncoder readCommandEncoder, GpuBuffer screenshotBuffer, RenderTarget renderTarget, File targetFile) {
+    private static void writeExportedImage(
+            GpuBuffer screenshotBuffer,
+            GpuTexture colorTexture,
+            GpuTextureView colorTextureView,
+            GpuTexture depthTexture,
+            GpuTextureView depthTextureView,
+            File targetFile
+    ) {
         try (screenshotBuffer;
-             final var readView = readCommandEncoder.mapBuffer(screenshotBuffer, true, false);
+             final var readView = screenshotBuffer.map(true, false);
              final var nativeImage = new NativeImage(EXPORT_SIZE, EXPORT_SIZE, false)) {
             final var byteBuffer = readView.data();
             for (int y = 0; y < EXPORT_SIZE; y++) {
@@ -165,7 +180,27 @@ public class IconExport {
         } catch (IOException e) {
             throw new RuntimeException("Failed to write exported icon: " + targetFile, e);
         } finally {
-            renderTarget.destroyBuffers();
+            closeTextureResources(colorTexture, colorTextureView, depthTexture, depthTextureView);
+        }
+    }
+
+    private static void closeTextureResources(
+            @Nullable GpuTexture colorTexture,
+            @Nullable GpuTextureView colorTextureView,
+            @Nullable GpuTexture depthTexture,
+            @Nullable GpuTextureView depthTextureView
+    ) {
+        if (colorTexture != null) {
+            colorTexture.close();
+        }
+        if (colorTextureView != null) {
+            colorTextureView.close();
+        }
+        if (depthTexture != null) {
+            depthTexture.close();
+        }
+        if (depthTextureView != null) {
+            depthTextureView.close();
         }
     }
 
