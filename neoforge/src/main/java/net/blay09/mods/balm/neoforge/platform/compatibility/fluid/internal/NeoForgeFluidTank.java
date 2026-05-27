@@ -18,51 +18,56 @@ public final class NeoForgeFluidTank implements ResourceHandler<FluidResource> {
 
     @Override
     public int size() {
-        return 1;
+        return fluidTank.size();
     }
 
     @Override
     public FluidResource getResource(int i) {
-        return i == 0 ? FluidResource.of(fluidTank.getFluid()) : FluidResource.EMPTY;
+        return FluidResource.of(fluidTank.getFluid(i));
     }
 
     @Override
     public long getAmountAsLong(int i) {
-        return i == 0 ? fluidTank.getAmount() : 0;
+        return fluidTank.getAmount(i);
     }
 
     @Override
     public long getCapacityAsLong(int i, FluidResource fluidResource) {
-        return i == 0 ? fluidTank.getCapacity() : 0;
+        return fluidTank.getCapacity(i);
     }
 
     @Override
     public boolean isValid(int i, FluidResource fluidResource) {
-        return i == 0 && (fluidTank.isEmpty() || fluidResource.is(fluidTank.getFluid()));
+        return fluidTank.isEmpty(i) || fluidResource.is(fluidTank.getFluid(i));
     }
 
     @Override
     public int insert(int i, FluidResource fluidResource, int amount, TransactionContext transaction) {
         fluidJournal.updateSnapshots(transaction);
-        return i == 0 ? fluidTank.fill(fluidResource.getFluid(), amount, false) : amount;
+        return fluidTank.fill(fluidResource.getFluid(i), amount, false);
     }
 
     @Override
     public int extract(int i, FluidResource fluidResource, int amount, TransactionContext transaction) {
         fluidJournal.updateSnapshots(transaction);
-        return i == 0 ? fluidTank.drain(fluidResource.getFluid(), amount, false) : amount;
+        return fluidTank.drain(fluidResource.getFluid(i), amount, false);
     }
 
-    private class FluidJournal extends SnapshotJournal<FluidStack> {
+    private class FluidJournal extends SnapshotJournal<List<FluidStack>> {
         @Override
-        protected FluidStack createSnapshot() {
-            return new FluidStack(NeoForgeFluidTank.this.fluidTank.getFluid(), NeoForgeFluidTank.this.fluidTank.getAmount());
+        protected List<FluidStack> createSnapshot() {
+            return IntStream.range(0, NeoForgeFluidTank.this.fluidTank.getSlotCount())
+                    .mapToObj(slot -> new FluidStack(NeoForgeFluidTank.this.fluidTank.getFluid(slot), NeoForgeFluidTank.this.fluidTank.getAmount(slot));)
+                    .toList();
         }
 
         @Override
-        protected void revertToSnapshot(@Nullable FluidStack snapshot) {
+        protected void revertToSnapshot(@Nullable List<FluidStack> snapshot) {
             if (snapshot != null) {
-                NeoForgeFluidTank.this.fluidTank.setFluid(snapshot.getFluid(), snapshot.getAmount());
+                for (int i = 0; i < snapshot.size(); i++) {
+                    final var fluidStack = snapshot.get(i);
+                    NeoForgeFluidTank.this.fluidTank.setFluid(i, fluidStack.getFluid(), fluidStack.getAmount());
+                }
             }
         }
     }

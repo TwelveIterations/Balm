@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric.internal;
 
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.fabric.platform.fluid.internal.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.platform.internal.FabricBalmProxy;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.blay09.mods.balm.fabric.platform.runtime.internal.FabricBalmRuntime;
@@ -9,7 +10,6 @@ import net.blay09.mods.balm.nbt.BalmDataHolder;
 import net.blay09.mods.balm.platform.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
-import net.blay09.mods.balm.fabric.platform.fluid.internal.BalmFluidStorage;
 import net.blay09.mods.balm.fabric.platform.internal.FabricBalmPlatform;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;

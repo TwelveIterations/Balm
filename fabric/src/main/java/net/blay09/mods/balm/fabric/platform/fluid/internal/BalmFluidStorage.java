@@ -1,90 +1,59 @@
 package net.blay09.mods.balm.fabric.platform.fluid.internal;
 
-import com.google.common.primitives.Ints;
-import net.blay09.mods.balm.platform.fluid.DefaultFluidTank;
 import net.blay09.mods.balm.platform.fluid.FluidTank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 
-public class BalmFluidStorage extends SnapshotParticipant<ResourceAmount<FluidVariant>> implements SingleSlotStorage<FluidVariant> {
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.IntStream;
 
+public class BalmFluidStorage implements SlottedStorage<FluidVariant> {
     private final FluidTank fluidTank;
+    private final List<BalmSingleFluidStorage> slots;
 
     public BalmFluidStorage(FluidTank fluidTank) {
         this.fluidTank = fluidTank;
+        this.slots = IntStream.range(0, fluidTank.getSlotCount())
+                .mapToObj(slot -> new BalmSingleFluidStorage(fluidTank, slot))
+                .toList();
     }
 
     @Override
-    public long insert(FluidVariant fluidVariant, long maxAmount, TransactionContext transaction) {
-        StoragePreconditions.notBlankNotNegative(fluidVariant, maxAmount);
+    public int getSlotCount() {
+        return fluidTank.getSlotCount();
+    }
 
-        if (getAmount() == 0) {
-            updateSnapshots(transaction);
-            return fluidTank.fill(fluidVariant.getFluid(), Ints.saturatedCast(maxAmount), false);
+    @Override
+    public SingleSlotStorage<FluidVariant> getSlot(int slot) {
+        return new BalmSingleFluidStorage(fluidTank, slot);
+    }
+
+    @Override
+    public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        return StorageUtil.insertStacking(slots, resource, maxAmount, transaction);
+    }
+
+    @Override
+    public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        long extracted = 0;
+        for (final var slot : slots) {
+            if (extracted >= maxAmount) break;
+            extracted += slot.extract(resource, maxAmount - extracted, transaction);
         }
 
-        if (fluidVariant.isOf(getResource().getFluid())) {
-            // Otherwise we can only accept the same fluid as the current one.
-            long amountInserted = Math.min(maxAmount, getCapacity() - getAmount());
-            updateSnapshots(transaction);
-            return fluidTank.fill(fluidVariant.getFluid(), Ints.saturatedCast(amountInserted), false);
-        } else {
-            return 0;
-        }
+        return extracted;
     }
 
     @Override
-    public long extract(FluidVariant fluidVariant, long maxAmount, TransactionContext transaction) {
-        StoragePreconditions.notBlankNotNegative(fluidVariant, maxAmount);
-
-        if (fluidVariant.isOf(getResource().getFluid())) {
-            long currentLevel = getAmount();
-            long amountExtracted = Math.min(maxAmount, currentLevel);
-            return fluidTank.drain(fluidVariant.getFluid(), Ints.saturatedCast(amountExtracted), false);
-        }
-
-        return 0;
-    }
-
-    @Override
-    public boolean isResourceBlank() {
-        return getResource().isBlank();
-    }
-
-    @Override
-    public FluidVariant getResource() {
-        return FluidVariant.of(fluidTank.getFluid());
-    }
-
-    @Override
-    public long getAmount() {
-        return fluidTank.getAmount();
-    }
-
-    @Override
-    public long getCapacity() {
-        return fluidTank.getCapacity();
-    }
-
-    @Override
-    protected ResourceAmount<FluidVariant> createSnapshot() {
-        return new ResourceAmount<>(getResource(), getAmount());
-    }
-
-    @Override
-    protected void readSnapshot(ResourceAmount<FluidVariant> snapshot) {
-        fluidTank.setFluid(snapshot.resource().getFluid(), Ints.saturatedCast(snapshot.amount()));
-    }
-
-    @Override
-    public void onFinalCommit() {
-        if (fluidTank instanceof DefaultFluidTank defaultFluidTank) {
-            defaultFluidTank.setChanged();
-        }
+    public Iterator<StorageView<FluidVariant>> iterator() {
+        return slots.stream()
+                .map(slot -> (StorageView<FluidVariant>) slot)
+                .iterator();
     }
 
     @Override

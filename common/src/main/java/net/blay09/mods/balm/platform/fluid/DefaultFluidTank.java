@@ -33,8 +33,9 @@ public class DefaultFluidTank implements FluidTank {
         this.amount = Math.max(0, Math.min(capacity, amount));
     }
 
-    public int fill(Fluid fluid, int maxFill, boolean simulate) {
-        if (!canFill(fluid)) {
+    @Override
+    public int fill(int slot, Fluid fluid, int maxFill, boolean simulate) {
+        if (!canFill(slot, fluid)) {
             return 0;
         }
 
@@ -50,8 +51,9 @@ public class DefaultFluidTank implements FluidTank {
         return filled;
     }
 
-    public int drain(Fluid fluid, int maxDrain, boolean simulate) {
-        if (!canDrain(fluid)) {
+    @Override
+    public int drain(int slot, Fluid fluid, int maxDrain, boolean simulate) {
+        if (!canDrain(slot, fluid)) {
             return 0;
         }
 
@@ -63,38 +65,51 @@ public class DefaultFluidTank implements FluidTank {
         return drained;
     }
 
-    public Fluid getFluid() {
+    @Override
+    public Fluid getFluid(int slot) {
         return amount >= 0 ? fluid : Fluids.EMPTY;
     }
 
-    public void setFluid(Fluid fluid, int amount) {
+    @Override
+    public void setFluid(int slot, Fluid fluid, int amount) {
         this.fluid = fluid;
         this.amount = amount;
         setChanged();
     }
 
-    public int getAmount() {
+    @Override
+    public int getAmount(int slot) {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    @Override
+    public void setAmount(int slot, int amount) {
         this.amount = amount;
     }
 
-    public int getCapacity() {
+    @Override
+    public int getCapacity(int slot) {
         return capacity;
     }
 
-    public boolean canDrain(Fluid fluid) {
+    @Override
+    public boolean canDrain(int slot, Fluid fluid) {
         return (this.fluid.isSame(fluid) || this.fluid.isSame(Fluids.EMPTY)) && maxDrain > 0;
     }
 
-    public boolean canFill(Fluid fluid) {
+    @Override
+    public boolean canFill(int slot, Fluid fluid) {
         return (this.fluid.isSame(fluid) || this.fluid.isSame(Fluids.EMPTY)) && maxFill > 0;
     }
 
-    public boolean isEmpty() {
+    @Override
+    public boolean isEmpty(int slot) {
         return amount <= 0 || fluid.isSame(Fluids.EMPTY);
+    }
+
+    @Override
+    public int getSlotCount() {
+        return 1;
     }
 
     public void serialize(ValueOutput output) {
