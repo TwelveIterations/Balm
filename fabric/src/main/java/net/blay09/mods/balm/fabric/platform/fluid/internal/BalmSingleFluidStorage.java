@@ -46,6 +46,7 @@ public class BalmSingleFluidStorage extends SnapshotParticipant<ResourceAmount<F
         if (fluidVariant.isOf(getResource().getFluid())) {
             long currentLevel = getAmount();
             long amountExtracted = Math.min(maxAmount, currentLevel);
+            updateSnapshots(transaction);
             return fluidTank.drain(slot, fluidVariant.getFluid(), Ints.saturatedCast(amountExtracted), false);
         }
 

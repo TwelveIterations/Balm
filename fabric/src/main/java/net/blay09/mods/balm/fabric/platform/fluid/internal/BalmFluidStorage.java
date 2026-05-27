@@ -30,7 +30,7 @@ public class BalmFluidStorage implements SlottedStorage<FluidVariant> {
 
     @Override
     public SingleSlotStorage<FluidVariant> getSlot(int slot) {
-        return new BalmSingleFluidStorage(fluidTank, slot);
+        return slots.get(slot);
     }
 
     @Override

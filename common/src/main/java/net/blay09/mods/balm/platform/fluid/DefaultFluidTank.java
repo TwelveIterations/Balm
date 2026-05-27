@@ -35,6 +35,10 @@ public class DefaultFluidTank implements FluidTank {
 
     @Override
     public int fill(int slot, Fluid fluid, int maxFill, boolean simulate) {
+        if (slot != 0) {
+            return 0;
+        }
+
         if (!canFill(slot, fluid)) {
             return 0;
         }
@@ -53,6 +57,10 @@ public class DefaultFluidTank implements FluidTank {
 
     @Override
     public int drain(int slot, Fluid fluid, int maxDrain, boolean simulate) {
+        if (slot != 0) {
+            return 0;
+        }
+
         if (!canDrain(slot, fluid)) {
             return 0;
         }
@@ -67,11 +75,19 @@ public class DefaultFluidTank implements FluidTank {
 
     @Override
     public Fluid getFluid(int slot) {
+        if (slot != 0) {
+            return Fluids.EMPTY;
+        }
+
         return amount >= 0 ? fluid : Fluids.EMPTY;
     }
 
     @Override
     public void setFluid(int slot, Fluid fluid, int amount) {
+        if (slot != 0) {
+            return;
+        }
+
         this.fluid = fluid;
         this.amount = amount;
         setChanged();
@@ -79,31 +95,55 @@ public class DefaultFluidTank implements FluidTank {
 
     @Override
     public int getAmount(int slot) {
+        if (slot != 0) {
+            return 0;
+        }
+
         return amount;
     }
 
     @Override
     public void setAmount(int slot, int amount) {
+        if (slot != 0) {
+            return;
+        }
+
         this.amount = amount;
     }
 
     @Override
     public int getCapacity(int slot) {
+        if (slot != 0) {
+            return 0;
+        }
+
         return capacity;
     }
 
     @Override
     public boolean canDrain(int slot, Fluid fluid) {
+        if (slot != 0) {
+            return false;
+        }
+
         return (this.fluid.isSame(fluid) || this.fluid.isSame(Fluids.EMPTY)) && maxDrain > 0;
     }
 
     @Override
     public boolean canFill(int slot, Fluid fluid) {
+        if (slot != 0) {
+            return false;
+        }
+
         return (this.fluid.isSame(fluid) || this.fluid.isSame(Fluids.EMPTY)) && maxFill > 0;
     }
 
     @Override
     public boolean isEmpty(int slot) {
+        if (slot != 0) {
+            return true;
+        }
+
         return amount <= 0 || fluid.isSame(Fluids.EMPTY);
     }
 
