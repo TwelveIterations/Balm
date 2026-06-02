@@ -120,7 +120,7 @@ public class ForgeBalmEventMappings {
         bindSimple(LivingEntityCallback.Heal.Before.EVENT, LivingHealEvent.BUS, (event, it) -> event.setAmount(it.computeHeal(event.getEntity(), event.getAmount())));
         LivingEntityCallback.Fall.Before.EVENT.configureMapping(BalmSupplementalEvents.LIVING_FALL::register);
         bindSimple(LivingEntityCallback.Death.Before.EVENT, LivingDeathEvent.BUS, (event, it) -> it.allowDeath(event.getEntity(), event.getSource()));
-        bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingDamageEvent.BUS, (event, it) -> it.computeDamage(event.getEntity(), event.getSource(), event.getAmount()));
+        bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingDamageEvent.BUS, (event, it) -> event.setAmount(it.computeDamage(event.getEntity(), event.getSource(), event.getAmount())));
 
         bindSimple(LivingEntityCallback.MobEffectCallback.Apply.Before.EVENT, MobEffectEvent.Applicable.BUS, (event, it) -> {
             if (!it.allowApply(event.getEntity(), event.getEffectInstance(), /* source is not supported on Forge */null)) {
