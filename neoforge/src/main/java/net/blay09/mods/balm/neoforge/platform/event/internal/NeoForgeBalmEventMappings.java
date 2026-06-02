@@ -17,10 +17,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
@@ -126,7 +123,7 @@ public class NeoForgeBalmEventMappings {
         bindSimple(LivingEntityCallback.Heal.Before.EVENT, LivingHealEvent.class, (event, it) -> event.setAmount(it.computeHeal(event.getEntity(), event.getAmount())));
         LivingEntityCallback.Fall.Before.EVENT.configureMapping(BalmSupplementalEvents.LIVING_FALL::register);
         bindCancelable(LivingEntityCallback.Death.Before.EVENT, LivingDeathEvent.class, (event, it) -> !it.allowDeath(event.getEntity(), event.getSource()));
-        bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingDamageEvent.Pre.class, (event, it) -> it.computeDamage(event.getEntity(), event.getSource(), event.getNewDamage()));
+        bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingIncomingDamageEvent.class, (event, it) -> event.setAmount(it.computeDamage(event.getEntity(), event.getSource(), event.getAmount())));
 
         bindSimple(LivingEntityCallback.MobEffectCallback.Apply.Before.EVENT, MobEffectEvent.Applicable.class, (event, it) -> it.allowApply(event.getEntity(), event.getEffectInstance(), event.getEffectSource()));
         bindSimple(LivingEntityCallback.MobEffectCallback.Add.Before.EVENT, MobEffectEvent.Added.class, (event, it) -> it.effectAdded(event.getEntity(), event.getEffectInstance(), event.getOldEffectInstance(), event.getEffectSource()));
