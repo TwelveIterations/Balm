@@ -1,15 +1,29 @@
 package net.blay09.mods.balm.neoforge.core.internal;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.AbstractCustomRegistryBuilder;
+import net.blay09.mods.balm.core.CustomRegistryBuilder;
 import net.blay09.mods.balm.neoforge.DeferredRegisters;
+import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class NeoForgeBalmRegistrar implements BalmRegistrar {
+
+    @Override
+    public <T> Registry<T> createCustomRegistry(ResourceKey<? extends Registry<T>> registryKey, Consumer<CustomRegistryBuilder<T>> builderConsumer) {
+        final var builder = new NeoForgeCustomRegistryBuilder<>(registryKey);
+        builderConsumer.accept(builder);
+        final var registry = builder.build();
+        ModBusEventRegisters.getRegistrations(registryKey.location().getNamespace(), NeoForgeCustomRegistryRegistrar.class).add(registry);
+        return registry;
+    }
 
     @Override
     public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<ResourceLocation, T> resourceFunction) {
@@ -36,6 +50,26 @@ public class NeoForgeBalmRegistrar implements BalmRegistrar {
         public Holder<T> register(String name, Function<ResourceLocation, T> resourceFunction) {
             final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
             return deferredRegister.register(name, resourceFunction);
+        }
+    }
+
+    private static class NeoForgeCustomRegistryBuilder<T> extends AbstractCustomRegistryBuilder<T> {
+        private final ResourceKey<? extends Registry<T>> registryKey;
+
+        public NeoForgeCustomRegistryBuilder(ResourceKey<? extends Registry<T>> registryKey) {
+            this.registryKey = registryKey;
+        }
+
+        public Registry<T> build() {
+            final var builder = new RegistryBuilder<T>(registryKey);
+            final var defaultKey = getDefaultKey();
+            if (defaultKey != null) {
+                builder.defaultKey(defaultKey);
+            }
+            if (shouldSync()) {
+                builder.sync(true);
+            }
+            return builder.create();
         }
     }
 
