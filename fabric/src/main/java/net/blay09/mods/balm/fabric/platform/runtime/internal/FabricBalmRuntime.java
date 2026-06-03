@@ -1,6 +1,8 @@
 package net.blay09.mods.balm.fabric.platform.runtime.internal;
 
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.commands.BalmArgumentTypeRegistrar;
+import net.blay09.mods.balm.fabric.commands.internal.FabricBalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.fabric.commands.internal.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.core.internal.FabricBalmRegistrar;
 import net.blay09.mods.balm.fabric.core.particles.internal.FabricBalmParticleTypeRegistrar;
@@ -171,6 +173,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new FabricBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void argumentTypes(String namespace, Consumer<BalmArgumentTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmArgumentTypeRegistrar(namespace));
     }
 
     @Override

@@ -1,10 +1,12 @@
 package net.blay09.mods.balm.forge.platform.runtime.internal;
 
 import net.blay09.mods.balm.commands.BalmCommands;
+import net.blay09.mods.balm.commands.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.forge.platform.attachment.internal.ForgeBalmDataAttachmentTypeRegistrar;
+import net.blay09.mods.balm.forge.commands.internal.ForgeBalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.forge.platform.runtime.ForgeLoadContext;
 import net.blay09.mods.balm.forge.platform.event.internal.ModBusEventRegisters;
 import net.blay09.mods.balm.forge.core.internal.DeferredRegisters;
@@ -172,6 +174,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<ForgeLoadContext> {
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new ForgeBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void argumentTypes(String namespace, Consumer<BalmArgumentTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmArgumentTypeRegistrar(namespace));
     }
 
     @Override

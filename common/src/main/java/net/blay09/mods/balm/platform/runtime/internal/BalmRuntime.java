@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.platform.runtime.internal;
 
 import net.blay09.mods.balm.platform.BalmSafeClientAccess;
+import net.blay09.mods.balm.commands.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
@@ -94,6 +95,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         poiTypes(modId, module::registerPoiTypes);
         module.registerNetworking(getNetworking());
         menuTypes(modId, module::registerMenuTypes);
+        argumentTypes(modId, module::registerArgumentTypes);
         module.registerCapabilities(getCapabilities());
         module.registerCommands(getCommands());
         recipeTypes(modId, module::registerRecipeTypes);
@@ -145,6 +147,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer);
 
     void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer);
+
+    void argumentTypes(String namespace, Consumer<BalmArgumentTypeRegistrar> initializer);
 
     <TEvent> BidirectionalEventMapper<Consumer<TEvent>> createBoundCustomEvent(Class<TEvent> eventClass);
 }

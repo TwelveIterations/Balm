@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.platform.module;
 
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.commands.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.commands.BalmCommands;
@@ -56,6 +57,9 @@ public interface BalmModule {
     }
 
     default void registerCommands(BalmCommands commands) {
+    }
+
+    default void registerArgumentTypes(BalmArgumentTypeRegistrar argumentTypes) {
     }
 
     default void registerEntityTypes(BalmEntityTypeRegistrar entityTypes) {
