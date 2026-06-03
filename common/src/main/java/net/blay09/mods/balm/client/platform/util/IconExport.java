@@ -122,11 +122,11 @@ public class IconExport {
                 RenderSystem.restoreProjectionMatrix();
             }
 
-            final var pixelSize = colorTexture.getFormat().pixelSize();
+            final var blockSize = colorTexture.getFormat().blockSize();
             screenshotBuffer = device.createBuffer(
                     () -> "balm_icon_export_buffer",
                     GpuBuffer.USAGE_MAP_READ | GpuBuffer.USAGE_COPY_DST,
-                    (long) EXPORT_SIZE * EXPORT_SIZE * pixelSize);
+                    (long) EXPORT_SIZE * EXPORT_SIZE * blockSize);
 
             final var targetFile = new File(exportFolder, itemId.getPath() + ".png");
             final var bufferToRead = screenshotBuffer;
