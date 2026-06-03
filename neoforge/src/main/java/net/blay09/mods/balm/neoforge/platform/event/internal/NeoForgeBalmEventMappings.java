@@ -19,7 +19,6 @@ import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
-import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.ChunkWatchEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -131,6 +130,11 @@ public class NeoForgeBalmEventMappings {
         bindCancelable(LivingEntityCallback.MobEffectCallback.Expire.Before.EVENT, MobEffectEvent.Expired.class, (event, it) -> !it.allowExpire(event.getEntity(), event.getEffectInstance()));
 
         bindCancelable(PlayerCallback.Attack.Before.EVENT, AttackEntityEvent.class, (event, it) -> !it.allowAttack(event.getEntity(), event.getTarget()));
+        bindCancelable(PlayerCallback.InteractWithEntity.Before.EVENT, PlayerInteractEvent.EntityInteract.class, (event, it) -> {
+            final var result = it.handle(event.getEntity(), event.getLevel(), event.getHand(), event.getTarget());
+            result.interactionResult().ifPresent(event::setCancellationResult);
+            return result.interactionResult().isPresent();
+        });
 
         bindSimple(ServerPlayerCallback.Join.EVENT, PlayerEvent.PlayerLoggedInEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.Leave.EVENT, PlayerEvent.PlayerLoggedOutEvent.class, (event, it) -> it.handle((ServerPlayer) event.getEntity()));

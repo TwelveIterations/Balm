@@ -132,6 +132,11 @@ public class ForgeBalmEventMappings {
         bindSimple(LivingEntityCallback.MobEffectCallback.Expire.Before.EVENT, MobEffectEvent.Expired.BUS, (event, it) -> /* cannot cancel on Forge */it.allowExpire(event.getEntity(), event.getEffectInstance()));
 
         bindSimple(PlayerCallback.Attack.Before.EVENT, AttackEntityEvent.BUS, (event, it) -> it.allowAttack(event.getEntity(), event.getTarget()));
+        bindCancelable(PlayerCallback.InteractWithEntity.Before.EVENT, PlayerInteractEvent.EntityInteractSpecific.BUS, (event, it) -> {
+            final var result = it.handle(event.getEntity(), event.getLevel(), event.getHand(), event.getTarget());
+            result.interactionResult().ifPresent(event::setCancellationResult);
+            return result.interactionResult().isPresent();
+        });
 
         bindSimple(ServerPlayerCallback.Join.EVENT, PlayerEvent.PlayerLoggedInEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity()));
         bindSimple(ServerPlayerCallback.Leave.EVENT, PlayerEvent.PlayerLoggedOutEvent.BUS, (event, it) -> it.handle((ServerPlayer) event.getEntity()));

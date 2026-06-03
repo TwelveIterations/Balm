@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.*;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
@@ -101,6 +102,8 @@ public class FabricBalmEventMappings {
 
         PlayerCallback.Attack.Before.EVENT.configureMapping((phase, it)
                 -> AttackEntityCallback.EVENT.register(mapPhase(phase), (player, target, hand, entity, entityHitResult) -> !it.allowAttack(player, entity) ? InteractionResult.FAIL : InteractionResult.PASS));
+        PlayerCallback.InteractWithEntity.Before.EVENT.configureMapping((phase, it)
+                -> UseEntityCallback.EVENT.register(mapPhase(phase), (player, level, hand, entity, _) -> mapInteractionResult(it.handle(player, level, hand, entity))));
 
         CropCallback.Grow.Before.EVENT.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_PRE::register);
         CropCallback.Grow.After.EVENT.configureMapping(FabricBalmSupplementalEvents.CROP_GROW_POST::register);
