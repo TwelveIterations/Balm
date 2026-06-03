@@ -1,15 +1,22 @@
 package net.blay09.mods.balm.forge.core.internal;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.CustomRegistryBuilder;
 import net.blay09.mods.balm.core.DeferredHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ForgeBalmRegistrar implements BalmRegistrar {
+
+    @Override
+    public <T> Registry<T> createCustomRegistry(ResourceKey<? extends Registry<T>> registryKey, Consumer<CustomRegistryBuilder<T>> builderConsumer) {
+        throw new UnsupportedOperationException("Custom registries are not yet supported on Forge.");
+    }
 
     @Override
     public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
