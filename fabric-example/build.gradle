@@ -11,6 +11,13 @@ dependencies {
 apply from: rootProject.file('repositories.gradle')
 apply from: 'dependencies.gradle'
 
+processResources {
+    dependsOn(configurations.commonExampleResources)
+    dependsOn(configurations.commonExampleGeneratedResources)
+    from(configurations.commonExampleResources)
+    from(configurations.commonExampleGeneratedResources)
+}
+
 loom {
     def aw = project(":common").file("src/main/resources/${mod_id}.classtweaker")
     if (aw.exists()) {

@@ -1,5 +1,16 @@
+configurations {
+    commonExampleResources {
+        canBeResolved = true
+    }
+    commonExampleGeneratedResources {
+        canBeResolved = true
+    }
+}
+
 dependencies {
     compileOnly project(":common")
     implementation project(":common-example")
+    commonExampleResources project(path: ":common-example", configuration: "commonResources")
+    commonExampleGeneratedResources project(path: ":common-example", configuration: "commonGeneratedResources")
     implementation project(":fabric")
 }
