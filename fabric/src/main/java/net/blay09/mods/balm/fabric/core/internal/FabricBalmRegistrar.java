@@ -1,7 +1,11 @@
 package net.blay09.mods.balm.fabric.core.internal;
 
+import com.mojang.serialization.Codec;
+import net.blay09.mods.balm.core.AbstractDynamicRegistryBuilder;
 import net.blay09.mods.balm.core.CustomRegistryBuilder;
 import net.blay09.mods.balm.core.AbstractCustomRegistryBuilder;
+import net.blay09.mods.balm.core.DynamicRegistryBuilder;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.blay09.mods.balm.core.BalmRegistrar;
@@ -42,6 +46,27 @@ public class FabricBalmRegistrar implements BalmRegistrar {
         }
 
         return fabricBuilder.buildAndRegister();
+    }
+
+    @Override
+    public <T> void createDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec, Consumer<DynamicRegistryBuilder<T>> builderConsumer) {
+        final var builder = new AbstractDynamicRegistryBuilder<T>() {
+        };
+        builderConsumer.accept(builder);
+
+        if (builder.shouldSync()) {
+            final var networkCodec = builder.getNetworkCodec();
+            final var options = builder.shouldSkipSyncWhenEmpty()
+                    ? new DynamicRegistries.SyncOption[]{DynamicRegistries.SyncOption.SKIP_WHEN_EMPTY}
+                    : new DynamicRegistries.SyncOption[0];
+            if (networkCodec != null) {
+                DynamicRegistries.registerSynced(registryKey, codec, networkCodec, options);
+            } else {
+                DynamicRegistries.registerSynced(registryKey, codec, options);
+            }
+        } else {
+            DynamicRegistries.register(registryKey, codec);
+        }
     }
 
     @Override
