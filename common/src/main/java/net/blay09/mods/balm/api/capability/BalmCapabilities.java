@@ -2,6 +2,8 @@ package net.blay09.mods.balm.api.capability;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,6 +18,8 @@ import java.util.function.Supplier;
 public interface BalmCapabilities {
     <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type);
 
+    <TApi, TContext> TApi getCapability(Entity entity, @Nullable TContext context, CapabilityType<Entity, TApi, TContext> type);
+
     <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass);
 
     <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> getType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass);
@@ -28,11 +32,24 @@ public interface BalmCapabilities {
         return getCapability(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, context, type);
     }
 
+    @Nullable
+    default <TApi> TApi getCapability(Entity entity, CapabilityType<Entity, TApi, ?> type) {
+        return getCapability(entity, null, type);
+    }
+
     <TApi, TContext> void registerProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<List<BlockEntityType<?>>> blockEntityTypes);
+
+    <TApi, TContext> void registerEntityProvider(ResourceLocation identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider, Supplier<List<EntityType<?>>> entityTypes);
 
     /**
      * On Fabric and Forge, this registers as a fallback provider.
      * NeoForge does not support fallback providers, so there, this method will register the provider at lowest priority for each block entity individually (sigh).
      */
     <TApi, TContext> void registerFallbackBlockEntityProvider(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider);
+
+    /**
+     * On Fabric and Forge, this registers as a fallback provider.
+     * NeoForge does not support fallback providers, so there, this method will register the provider at lowest priority for each entity type individually.
+     */
+    <TApi, TContext> void registerFallbackEntityProvider(ResourceLocation identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider);
 }

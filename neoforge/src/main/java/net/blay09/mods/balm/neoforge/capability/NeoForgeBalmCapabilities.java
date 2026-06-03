@@ -7,6 +7,8 @@ import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,6 +19,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.BaseCapability;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.IBlockCapabilityProvider;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.Nullable;
@@ -40,9 +43,21 @@ public record NeoForgeBalmCapabilities(NamespaceResolver namespaceResolver) impl
     }
 
     @Override
+    @Nullable
+    public <TApi, TContext> TApi getCapability(Entity entity, @Nullable TContext context, CapabilityType<Entity, TApi, TContext> type) {
+        @SuppressWarnings("unchecked") final var capability = (EntityCapability<TApi, TContext>) type.backingType();
+        return entity.getCapability(capability, context);
+    }
+
+    @Override
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(ResourceLocation identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
         if (scopeClass == Block.class) {
             final var capability = BlockCapability.create(identifier, apiClass, contextClass);
+            final var type = new CapabilityType<>(identifier, scopeClass, apiClass, contextClass, capability);
+            types.put(identifier, type);
+            return type;
+        } else if (scopeClass == Entity.class) {
+            final var capability = EntityCapability.create(identifier, apiClass, contextClass);
             final var type = new CapabilityType<>(identifier, scopeClass, apiClass, contextClass, capability);
             types.put(identifier, type);
             return type;
@@ -82,10 +97,34 @@ public record NeoForgeBalmCapabilities(NamespaceResolver namespaceResolver) impl
         getActiveRegistrations().fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(type, provider));
     }
 
+    @Override
+    public <TApi, TContext> void registerEntityProvider(ResourceLocation identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider, Supplier<List<EntityType<?>>> entityTypes) {
+        getActiveRegistrations().entityProviders.add(new EntityProviderRegistration<>(type, provider, entityTypes));
+    }
+
+    @Override
+    public <TApi, TContext> void registerFallbackEntityProvider(ResourceLocation identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider) {
+        getActiveRegistrations().fallbackEntityProviders.add(new EntityFallbackProviderRegistration<>(type, provider));
+    }
+
     public <TApi, TContext> CapabilityType<Block, TApi, TContext> addExistingType(ResourceLocation identifier, BaseCapability<TApi, TContext> capability) {
         if (capability instanceof BlockCapability) {
             final var type = new CapabilityType<>(identifier,
                     Block.class,
+                    capability.typeClass(),
+                    capability.contextClass(),
+                    capability);
+            types.put(identifier, type);
+            return type;
+        } else {
+            throw new IllegalArgumentException("Unsupported capability type " + capability.getClass());
+        }
+    }
+
+    public <TApi, TContext> CapabilityType<Entity, TApi, TContext> addExistingEntityType(ResourceLocation identifier, BaseCapability<TApi, TContext> capability) {
+        if (capability instanceof EntityCapability) {
+            final var type = new CapabilityType<>(identifier,
+                    Entity.class,
                     capability.typeClass(),
                     capability.contextClass(),
                     capability);
@@ -109,15 +148,29 @@ public record NeoForgeBalmCapabilities(NamespaceResolver namespaceResolver) impl
                                                                    BiFunction<BlockEntity, TContext, TApi> provider) {
     }
 
+    record EntityProviderRegistration<TApi, TContext>(CapabilityType<Entity, TApi, TContext> type,
+                                                      BiFunction<Entity, TContext, TApi> provider,
+                                                      Supplier<List<EntityType<?>>> entityTypes) {
+    }
+
+    record EntityFallbackProviderRegistration<TApi, TContext>(CapabilityType<Entity, TApi, TContext> type,
+                                                              BiFunction<Entity, TContext, TApi> provider) {
+    }
+
     public static class Registrations {
 
         public final List<BlockEntityProviderRegistration<?, ?>> blockEntityProviders = new ArrayList<>();
         public final List<BlockEntityFallbackProviderRegistration<?, ?>> fallbackBlockEntityProviders = new ArrayList<>();
+        public final List<EntityProviderRegistration<?, ?>> entityProviders = new ArrayList<>();
+        public final List<EntityFallbackProviderRegistration<?, ?>> fallbackEntityProviders = new ArrayList<>();
 
         @SubscribeEvent
         public void registerCapabilities(final RegisterCapabilitiesEvent event) {
             for (final var blockEntityProvider : blockEntityProviders) {
                 doRegister(event, blockEntityProvider);
+            }
+            for (final var entityProvider : entityProviders) {
+                doRegister(event, entityProvider);
             }
         }
 
@@ -125,6 +178,9 @@ public record NeoForgeBalmCapabilities(NamespaceResolver namespaceResolver) impl
         public void registerFallbackCapabilities(final RegisterCapabilitiesEvent event) {
             for (final var fallbackBlockEntityProvider : fallbackBlockEntityProviders) {
                 doRegister(event, fallbackBlockEntityProvider);
+            }
+            for (final var fallbackEntityProvider : fallbackEntityProviders) {
+                doRegister(event, fallbackEntityProvider);
             }
         }
 
@@ -148,6 +204,25 @@ public record NeoForgeBalmCapabilities(NamespaceResolver namespaceResolver) impl
                     return blockEntity != null ? registration.provider.apply(blockEntity, context) : null;
                 }
             }, blocks);
+        }
+
+        private <TApi, TContext> void doRegister(RegisterCapabilitiesEvent event, EntityProviderRegistration<TApi, TContext> registration) {
+            @SuppressWarnings("unchecked") final var capability = (EntityCapability<TApi, TContext>) registration.type().backingType();
+            for (final var entityType : registration.entityTypes.get()) {
+                registerEntity(event, capability, entityType, registration.provider);
+            }
+        }
+
+        private <TApi, TContext> void doRegister(RegisterCapabilitiesEvent event, EntityFallbackProviderRegistration<TApi, TContext> registration) {
+            @SuppressWarnings("unchecked") final var capability = (EntityCapability<TApi, TContext>) registration.type().backingType();
+            for (final var entityType : BuiltInRegistries.ENTITY_TYPE) {
+                registerEntity(event, capability, entityType, registration.provider);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private <TApi, TContext, TEntity extends Entity> void registerEntity(RegisterCapabilitiesEvent event, EntityCapability<TApi, TContext> capability, EntityType<?> entityType, BiFunction<Entity, TContext, TApi> provider) {
+            event.registerEntity(capability, (EntityType<TEntity>) entityType, (entity, context) -> provider.apply(entity, context));
         }
     }
 

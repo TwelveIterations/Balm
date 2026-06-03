@@ -9,6 +9,8 @@ import net.blay09.mods.balm.forge.ModBusEventRegisters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,8 +36,11 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
     private static final Map<ResourceLocation, CapabilityType<?, ?, ?>> types = new ConcurrentHashMap<>();
     private static final List<BlockEntityProviderRegistration<?, ?>> blockEntityProviders = new CopyOnWriteArrayList<>();
     private static final List<BlockEntityFallbackProviderRegistration<?, ?>> fallbackBlockEntityProviders = new CopyOnWriteArrayList<>();
+    private static final List<EntityProviderRegistration<?, ?>> entityProviders = new CopyOnWriteArrayList<>();
+    private static final List<EntityFallbackProviderRegistration<?, ?>> fallbackEntityProviders = new CopyOnWriteArrayList<>();
 
-    private static Multimap<BlockEntityType<?>, BlockEntityProviderRegistration<?, ?>> flattenedBlockEntityProviders;
+    private static @Nullable Multimap<BlockEntityType<?>, BlockEntityProviderRegistration<?, ?>> flattenedBlockEntityProviders;
+    private static @Nullable Multimap<EntityType<?>, EntityProviderRegistration<?, ?>> flattenedEntityProviders;
 
     @Override
     public <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, TContext context, CapabilityType<Block, TApi, TContext> type) {
@@ -46,6 +51,18 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
             } else if (context instanceof Direction direction) {
                 return blockEntity.getCapability(capability, direction).resolve().orElse(null);
             }
+        }
+        return null;
+    }
+
+    @Override
+    @Nullable
+    public <TApi, TContext> TApi getCapability(Entity entity, @Nullable TContext context, CapabilityType<Entity, TApi, TContext> type) {
+        @SuppressWarnings("unchecked") final var capability = (Capability<TApi>) type.backingType();
+        if (context == null) {
+            return entity.getCapability(capability).resolve().orElse(null);
+        } else if (context instanceof Direction direction) {
+            return entity.getCapability(capability, direction).resolve().orElse(null);
         }
         return null;
     }
@@ -118,6 +135,17 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
         fallbackBlockEntityProviders.add(new BlockEntityFallbackProviderRegistration<>(identifier, type, provider));
     }
 
+    @Override
+    public <TApi, TContext> void registerEntityProvider(ResourceLocation identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider, Supplier<List<EntityType<?>>> entityTypes) {
+        entityProviders.add(new EntityProviderRegistration<>(identifier, type, provider, entityTypes));
+        flattenedEntityProviders = null;
+    }
+
+    @Override
+    public <TApi, TContext> void registerFallbackEntityProvider(ResourceLocation identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider) {
+        fallbackEntityProviders.add(new EntityFallbackProviderRegistration<>(identifier, type, provider));
+    }
+
     @SubscribeEvent
     public void attachBlockEntityCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         if (flattenedBlockEntityProviders == null) {
@@ -141,6 +169,31 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
         for (final var fallbackBlockEntityProvider : fallbackBlockEntityProviders) {
             event.addCapability(fallbackBlockEntityProvider.identifier().withSuffix("_" + i++),
                     new BlockEntityCapabilityProvider(blockEntity, fallbackBlockEntityProvider.type(), fallbackBlockEntityProvider.provider()));
+        }
+    }
+
+    @SubscribeEvent
+    public void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        if (flattenedEntityProviders == null) {
+            flattenedEntityProviders = ArrayListMultimap.create();
+            for (final var entityProvider : entityProviders) {
+                for (final var entityType : entityProvider.entityTypes.get()) {
+                    flattenedEntityProviders.put(entityType, entityProvider);
+                }
+            }
+        }
+
+        final var entity = event.getObject();
+        int i = 0;
+        for (final var entityProvider : flattenedEntityProviders.get(entity.getType())) {
+            event.addCapability(entityProvider.identifier().withSuffix("_" + i++),
+                    new EntityCapabilityProvider(entity, entityProvider.type(), entityProvider.provider()));
+        }
+
+        i = 0;
+        for (final var fallbackEntityProvider : fallbackEntityProviders) {
+            event.addCapability(fallbackEntityProvider.identifier().withSuffix("_" + i++),
+                    new EntityCapabilityProvider(entity, fallbackEntityProvider.type(), fallbackEntityProvider.provider()));
         }
     }
 
@@ -177,6 +230,27 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
         }
     }
 
+    record EntityCapabilityProvider(Entity entity, CapabilityType<Entity, ?, ?> type,
+                                    BiFunction<Entity, ?, ?> provider) implements ICapabilityProvider {
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+            final var capability = (Capability<?>) type.backingType();
+            if (cap == capability) {
+                final T result;
+                if (side != null && type.contextClass() == Direction.class) {
+                    result = ((BiFunction<Entity, Direction, T>) provider).apply(entity, side);
+                } else {
+                    result = ((BiFunction<Entity, ?, T>) provider).apply(entity, null);
+                }
+                if (result != null) {
+                    return LazyOptional.of(() -> result);
+                }
+            }
+            return LazyOptional.empty();
+        }
+    }
+
     record BlockEntityProviderRegistration<TApi, TContext>(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type,
                                                            BiFunction<BlockEntity, TContext, TApi> provider,
                                                            Supplier<Set<BlockEntityType<?>>> blockEntityTypes) {
@@ -184,6 +258,15 @@ public record ForgeBalmCapabilities(NamespaceResolver namespaceResolver) impleme
 
     record BlockEntityFallbackProviderRegistration<TApi, TContext>(ResourceLocation identifier, CapabilityType<Block, TApi, TContext> type,
                                                                    BiFunction<BlockEntity, TContext, TApi> provider) {
+    }
+
+    record EntityProviderRegistration<TApi, TContext>(ResourceLocation identifier, CapabilityType<Entity, TApi, TContext> type,
+                                                      BiFunction<Entity, TContext, TApi> provider,
+                                                      Supplier<List<EntityType<?>>> entityTypes) {
+    }
+
+    record EntityFallbackProviderRegistration<TApi, TContext>(ResourceLocation identifier, CapabilityType<Entity, TApi, TContext> type,
+                                                              BiFunction<Entity, TContext, TApi> provider) {
     }
 
 
