@@ -3,8 +3,11 @@ package net.blay09.mods.balm.fabric.platform.capabilities.internal;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.platform.capabilities.CapabilityType;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import net.fabricmc.fabric.api.lookup.v1.entity.EntityApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -12,7 +15,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,8 +53,22 @@ public class FabricBalmCapabilities implements BalmCapabilities {
     }
 
     @Override
+    @Nullable
+    public <TApi, TContext> TApi getCapability(Entity entity, @Nullable TContext context, CapabilityType<Entity, TApi, TContext> type) {
+        @SuppressWarnings("unchecked") final var lookup = (EntityApiLookup<TApi, TContext>) type.backingType();
+        return lookup.find(entity, context);
+    }
+
+    @Override
     public <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass) {
-        final var lookup = BlockApiLookup.get(identifier, apiClass, contextClass);
+        final Object lookup;
+        if (scopeClass == Block.class) {
+            lookup = BlockApiLookup.get(identifier, apiClass, contextClass);
+        } else if (scopeClass == Entity.class) {
+            lookup = EntityApiLookup.get(identifier, apiClass, contextClass);
+        } else {
+            throw new IllegalArgumentException("Unsupported scope class: " + scopeClass);
+        }
         final var type = new CapabilityType<>(identifier, scopeClass, apiClass, contextClass, lookup);
         types.put(identifier, type);
         return type;
@@ -65,6 +81,12 @@ public class FabricBalmCapabilities implements BalmCapabilities {
     }
 
     @Override
+    public <TApi, TContext> void registerEntityProvider(Identifier identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider, Supplier<Set<EntityType<?>>> entityTypes) {
+        @SuppressWarnings("unchecked") final var lookup = (EntityApiLookup<TApi, TContext>) type.backingType();
+        lookup.registerForTypes(provider::apply, entityTypes.get().toArray(EntityType[]::new));
+    }
+
+    @Override
     public <TApi, TContext> void registerFallbackBlockEntityProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider) {
         @SuppressWarnings("unchecked") final var lookup = (BlockApiLookup<TApi, TContext>) type.backingType();
         lookup.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
@@ -73,6 +95,12 @@ public class FabricBalmCapabilities implements BalmCapabilities {
                 return blockEntity != null ? provider.apply(blockEntity, context) : null;
             }
         });
+    }
+
+    @Override
+    public <TApi, TContext> void registerFallbackEntityProvider(Identifier identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider) {
+        @SuppressWarnings("unchecked") final var lookup = (EntityApiLookup<TApi, TContext>) type.backingType();
+        lookup.registerFallback(provider::apply);
     }
 
 }

@@ -2,6 +2,8 @@ package net.blay09.mods.balm.platform.capabilities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,6 +17,8 @@ import java.util.function.Supplier;
 
 public interface BalmCapabilities {
     <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable TContext context, CapabilityType<Block, TApi, TContext> type);
+
+    <TApi, TContext> TApi getCapability(Entity entity, @Nullable TContext context, CapabilityType<Entity, TApi, TContext> type);
 
     <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass);
 
@@ -33,11 +37,24 @@ public interface BalmCapabilities {
         return null;
     }
 
+    @Nullable
+    default <TApi> TApi getCapability(Entity entity, CapabilityType<Entity, TApi, ?> type) {
+        return getCapability(entity, null, type);
+    }
+
     <TApi, TContext> void registerProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, TContext, TApi> provider, Supplier<Set<BlockEntityType<?>>> blockEntityTypes);
+
+    <TApi, TContext> void registerEntityProvider(Identifier identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, TContext, TApi> provider, Supplier<Set<EntityType<?>>> entityTypes);
 
     /**
      * On Fabric and Forge, this registers as a fallback provider.
      * NeoForge does not support fallback providers, so there, this method will register the provider at lowest priority for each block entity individually (sigh).
      */
     <TApi, TContext> void registerFallbackBlockEntityProvider(Identifier identifier, CapabilityType<Block, TApi, TContext> type, BiFunction<BlockEntity, @Nullable TContext, @Nullable TApi> provider);
+
+    /**
+     * On Fabric and Forge, this registers as a fallback provider.
+     * NeoForge does not support fallback providers, so there, this method will register the provider at lowest priority for each entity type individually.
+     */
+    <TApi, TContext> void registerFallbackEntityProvider(Identifier identifier, CapabilityType<Entity, TApi, TContext> type, BiFunction<Entity, @Nullable TContext, @Nullable TApi> provider);
 }
