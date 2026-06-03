@@ -1,8 +1,11 @@
 package net.blay09.mods.balm.neoforge.core.internal;
 
+import com.mojang.serialization.Codec;
+import net.blay09.mods.balm.core.AbstractDynamicRegistryBuilder;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.AbstractCustomRegistryBuilder;
 import net.blay09.mods.balm.core.CustomRegistryBuilder;
+import net.blay09.mods.balm.core.DynamicRegistryBuilder;
 import net.blay09.mods.balm.neoforge.DeferredRegisters;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.Holder;
@@ -23,6 +26,14 @@ public class NeoForgeBalmRegistrar implements BalmRegistrar {
         final var registry = builder.build();
         ModBusEventRegisters.getRegistrations(registryKey.location().getNamespace(), NeoForgeCustomRegistryRegistrar.class).add(registry);
         return registry;
+    }
+
+    @Override
+    public <T> void createDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec, Consumer<DynamicRegistryBuilder<T>> builderConsumer) {
+        final var builder = new AbstractDynamicRegistryBuilder<T>() {
+        };
+        builderConsumer.accept(builder);
+        ModBusEventRegisters.getRegistrations(registryKey.location().getNamespace(), NeoForgeDynamicRegistryRegistrar.class).add(registryKey, codec, builder);
     }
 
     @Override

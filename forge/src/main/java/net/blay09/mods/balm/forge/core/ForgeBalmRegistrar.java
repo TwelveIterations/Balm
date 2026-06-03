@@ -1,8 +1,10 @@
 package net.blay09.mods.balm.forge.core;
 
+import com.mojang.serialization.Codec;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.CustomRegistryBuilder;
 import net.blay09.mods.balm.core.DeferredHolder;
+import net.blay09.mods.balm.core.DynamicRegistryBuilder;
 import net.blay09.mods.balm.forge.DeferredRegisters;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -18,6 +20,11 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
     @Override
     public <T> Registry<T> createCustomRegistry(ResourceKey<? extends Registry<T>> registryKey, Consumer<CustomRegistryBuilder<T>> builderConsumer) {
         throw new UnsupportedOperationException("Custom registries are not yet supported on Forge.");
+    }
+
+    @Override
+    public <T> void createDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec, Consumer<DynamicRegistryBuilder<T>> builderConsumer) {
+        throw new UnsupportedOperationException("Dynamic registries are not yet supported on Forge.");
     }
 
     @Override
