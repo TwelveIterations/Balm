@@ -3,6 +3,7 @@ package net.blay09.mods.balm.core;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmRuntime;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.api.command.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.api.module.BalmModule;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
@@ -72,6 +73,15 @@ public class BalmRegistrars {
      */
     public void customStats(Consumer<BalmCustomStatRegistrar> initializer) {
         runtime.customStats(namespace, initializer);
+    }
+
+    /**
+     * Use this to register argument types using the registrar provided in the consumer callback.
+     *
+     * @param initializer Callback that receives a scoped registrar for registering argument types.
+     */
+    public void argumentTypes(Consumer<BalmArgumentTypeRegistrar> initializer) {
+        runtime.argumentTypes(namespace, initializer);
     }
 
     /**

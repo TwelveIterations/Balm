@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.*;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
+import net.blay09.mods.balm.api.command.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
@@ -31,6 +32,7 @@ import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.neoforge.block.NeoForgeBalmBlocks;
 import net.blay09.mods.balm.neoforge.block.entity.NeoForgeBalmBlockEntities;
 import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
+import net.blay09.mods.balm.neoforge.command.NeoForgeBalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.neoforge.command.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.compat.NeoForgeBalmModSupport;
 import net.blay09.mods.balm.neoforge.component.NeoForgeBalmComponents;
@@ -349,6 +351,11 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new NeoForgeBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void argumentTypes(String namespace, Consumer<BalmArgumentTypeRegistrar> initializer) {
+        initializer.accept(new NeoForgeBalmArgumentTypeRegistrar(namespace));
     }
 
     @Override

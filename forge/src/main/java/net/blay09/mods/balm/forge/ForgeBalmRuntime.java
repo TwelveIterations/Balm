@@ -8,6 +8,7 @@ import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
+import net.blay09.mods.balm.api.command.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
@@ -34,6 +35,7 @@ import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.forge.block.ForgeBalmBlocks;
 import net.blay09.mods.balm.forge.block.entity.ForgeBalmBlockEntities;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
+import net.blay09.mods.balm.forge.command.ForgeBalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.forge.command.ForgeBalmCommands;
 import net.blay09.mods.balm.forge.compat.ForgeBalmModSupport;
 import net.blay09.mods.balm.forge.component.ForgeBalmComponents;
@@ -373,6 +375,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new ForgeBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void argumentTypes(String namespace, Consumer<BalmArgumentTypeRegistrar> initializer) {
+        initializer.accept(new ForgeBalmArgumentTypeRegistrar(namespace));
     }
 
     @Override

@@ -3,6 +3,7 @@ package net.blay09.mods.balm.api;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
+import net.blay09.mods.balm.api.command.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
@@ -161,6 +162,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerNetworking(getNetworking());
         module.registerMenus(getMenus());
         menuTypes(modId, module::registerMenuTypes);
+        argumentTypes(modId, module::registerArgumentTypes);
         module.registerCapabilities(getCapabilities());
         module.registerCommands(getCommands());
         module.registerRecipes(getRecipes());
@@ -233,4 +235,5 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
 
     void resourceConditions(String namespace, Consumer<BalmResourceConditionRegistrar> initializer);
 
+    void argumentTypes(String namespace, Consumer<BalmArgumentTypeRegistrar> initializer);
 }

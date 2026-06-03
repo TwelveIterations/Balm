@@ -4,6 +4,7 @@ import net.blay09.mods.balm.api.BalmRegistries;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
+import net.blay09.mods.balm.api.command.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.component.BalmComponents;
 import net.blay09.mods.balm.api.config.BalmConfig;
@@ -78,6 +79,9 @@ public interface BalmModule {
     }
 
     default void registerCommands(BalmCommands commands) {
+    }
+
+    default void registerArgumentTypes(BalmArgumentTypeRegistrar argumentTypes) {
     }
 
     /**

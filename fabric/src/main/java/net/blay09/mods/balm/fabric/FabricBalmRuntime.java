@@ -4,6 +4,7 @@ import net.blay09.mods.balm.api.*;
 import net.blay09.mods.balm.api.block.BalmBlockEntities;
 import net.blay09.mods.balm.api.block.BalmBlocks;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
+import net.blay09.mods.balm.api.command.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.api.command.BalmCommands;
 import net.blay09.mods.balm.api.compat.BalmModSupport;
 import net.blay09.mods.balm.api.component.BalmComponents;
@@ -31,6 +32,7 @@ import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
 import net.blay09.mods.balm.fabric.block.FabricBalmBlocks;
 import net.blay09.mods.balm.fabric.block.entity.FabricBalmBlockEntities;
 import net.blay09.mods.balm.fabric.capability.FabricBalmCapabilities;
+import net.blay09.mods.balm.fabric.command.FabricBalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.fabric.command.FabricBalmCommands;
 import net.blay09.mods.balm.fabric.compat.FabricBalmModSupport;
 import net.blay09.mods.balm.fabric.component.FabricBalmComponents;
@@ -374,6 +376,11 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new FabricBalmCustomStatRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void argumentTypes(String namespace, Consumer<BalmArgumentTypeRegistrar> initializer) {
+        initializer.accept(new FabricBalmArgumentTypeRegistrar(namespace));
     }
 
     @Override
