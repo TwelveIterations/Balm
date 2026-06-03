@@ -8,6 +8,7 @@ public class BalmExample {
 
     public static void initialize(BalmRegistrars registrars) {
         registrars.registerModule(new CustomRegistryTestModule());
+        registrars.registerModule(new DynamicRegistryTestModule());
         registrars.registerModule(new EntityCapabilityTestModule());
         registrars.registerModule(new MiscTestModule());
     }
