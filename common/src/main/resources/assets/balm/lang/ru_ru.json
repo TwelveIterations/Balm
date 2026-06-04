@@ -34,3 +34,4 @@
   "disconnect.balm.mod_missing_on_client": "У вас не установлен %s. Пожалуйста, установите версию %s, чтобы играть на этом сервере.",
   "disconnect.balm.mod_version_mismatch": "Несоответствие версии для %s. Сервер ожидает версию %s, но у вас уже установлена %s. Пожалуйста, установите правильную версию.",
   "config.jade.plugin_balm.jade": "Balm"
+}
