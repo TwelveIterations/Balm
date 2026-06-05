@@ -12,7 +12,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -32,7 +32,7 @@ public class BalmExample {
 
         final var capabilities = Balm.capabilities();
         ENTITY_TEST_MESSAGE = capabilities.registerType(id("entity_test_message"), Entity.class, TestMessageCapability.class, Void.class);
-        capabilities.registerEntityProvider(id("entity_test_message"), ENTITY_TEST_MESSAGE, (entity, ignored) -> new TestMessageCapability("This entity has the balm_example:entity_test_message capability"), () -> Set.of(EntityType.PIG));
+        capabilities.registerEntityProvider(id("entity_test_message"), ENTITY_TEST_MESSAGE, (entity, ignored) -> new TestMessageCapability("This entity has the balm_example:entity_test_message capability"), () -> Set.of(EntityTypes.PIG));
 
         Balm.lootModifiers().registerLootModifier(id("loot_modifier"), new BalmLootModifier() {
             @Override
