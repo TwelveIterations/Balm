@@ -121,7 +121,7 @@ public class NeoForgeBalmEventMappings {
 
         bindSimple(LivingEntityCallback.Heal.Before.EVENT, LivingHealEvent.class, (event, it) -> event.setAmount(it.computeHeal(event.getEntity(), event.getAmount())));
         LivingEntityCallback.Fall.Before.EVENT.configureMapping(BalmSupplementalEvents.LIVING_FALL::register);
-        bindCancelable(LivingEntityCallback.Death.Before.EVENT, LivingDeathEvent.class, (event, it) -> !it.allowDeath(event.getEntity(), event.getSource()));
+        LivingEntityCallback.Death.Before.EVENT.configureMapping(NeoForgeBalmSupplementalEvents.BEFORE_DEATH::register);
         bindSimple(LivingEntityCallback.Damage.Before.EVENT, LivingIncomingDamageEvent.class, (event, it) -> event.setAmount(it.computeDamage(event.getEntity(), event.getSource(), event.getAmount())));
 
         bindSimple(LivingEntityCallback.MobEffectCallback.Apply.Before.EVENT, MobEffectEvent.Applicable.class, (event, it) -> it.allowApply(event.getEntity(), event.getEffectInstance(), event.getEffectSource()));
