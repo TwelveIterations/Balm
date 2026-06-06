@@ -31,7 +31,7 @@ public interface LivingEntityCallback {
     interface Death {
         @FunctionalInterface
         interface Before {
-            boolean allowDeath(LivingEntity entity, DamageSource damageSource);
+            boolean allowDeath(LivingEntity entity, DamageSource damageSource, float damage);
 
             EventMapper<Before> EVENT = EventMapper.createUnbound("LivingEntityCallback.Death.Before");
         }
