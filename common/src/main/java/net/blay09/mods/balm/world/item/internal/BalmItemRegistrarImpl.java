@@ -1,8 +1,10 @@
 package net.blay09.mods.balm.world.item.internal;
 
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.world.item.BalmDiscriminatedItemRegistration;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistration;
+import net.blay09.mods.balm.world.item.DiscriminatedItems;
 import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -10,8 +12,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class BalmItemRegistrarImpl implements BalmItemRegistrar {
 
@@ -29,6 +36,35 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
         final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(properties.get()));
         return new BalmItemRegistrationImpl(holder);
+    }
+
+    @Override
+    public <T> BalmDiscriminatedItemRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, Item.Properties, Item> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesFunction) {
+        final var map = new BalmDiscriminatedItemRegistrationImpl<T>();
+        for (final var value : values) {
+            final var name = nameFunction.apply(value);
+            final var registration = register(name, (properties) -> constructor.apply(value, properties), properties -> propertiesFunction.apply(value, properties));
+            map.put(value, registration);
+        }
+        return map;
+    }
+
+    private static class DiscriminatedItemsImpl<T> extends HashMap<T, DeferredItem> implements DiscriminatedItems<T> {
+        @Override
+        public Stream<Entry<T, DeferredItem>> sortedEntries(Comparator<T> comparator) {
+            return entrySet().stream().sorted(Entry.comparingByKey(comparator));
+        }
+    }
+
+    private static class BalmDiscriminatedItemRegistrationImpl<T> extends HashMap<T, BalmItemRegistration> implements BalmDiscriminatedItemRegistration<T> {
+
+        @Override
+        public DiscriminatedItems<T> asDiscriminatedItems() {
+            final var map = new DiscriminatedItemsImpl<T>();
+            forEach((key, registration) -> map.put(key, registration.asDeferredItem()));
+            return map;
+        }
+
     }
 
     private static class BalmItemRegistrationImpl implements BalmItemRegistration {
