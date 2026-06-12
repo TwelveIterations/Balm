@@ -1,1 +1,6 @@
-- API: Fixed Chunk and Level Load events not firing on NeoForge
+- API: Added `BalmRegistrar#createCustomRegistry`
+- API: Added `BalmRegistrar#createDynamicRegistry`
+- API: Added entity support to `BalmCapabilities`
+- API: Backported `DataAttachmentTypeRegistrar` and `DataAttachmentLookup`
+- API: Backported `BalmItemRegistrar#registerDiscriminated` 
+- API: Backported `DiscriminatedBlocks#prefixWith`, `#suffixWith` and `#surroundWith`
