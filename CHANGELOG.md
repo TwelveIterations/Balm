@@ -1,1 +1,6 @@
-- Fixed error log about missing `FabricPermissionsAPIIntegration`
+- Fixed `LivingEntityCallback.Damage` not actually applying modified damage on Neo/Forge
+- API: Added `BalmArgumentTypeRegistrar` for registering custom command argument types
+- API: Added `BalmRegistrar#createCustomRegistry`
+- API: Added `BalmRegistrar#createDynamicRegistry`
+- API: Added `PlayerCallback.InteractWithEntity` event mapper
+- API: Added entity support to `BalmCapabilities`
