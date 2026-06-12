@@ -1,6 +1,7 @@
 - API: Added `BalmRegistrar#createCustomRegistry`
 - API: Added `BalmRegistrar#createDynamicRegistry`
+- API: Added `BalmArgumentTypeRegistrar` for registering custom command argument types
 - API: Added entity support to `BalmCapabilities`
 - API: Backported `DataAttachmentTypeRegistrar` and `DataAttachmentLookup`
-- API: Backported `BalmItemRegistrar#registerDiscriminated` 
+- API: Backported `BalmItemRegistrar#registerDiscriminated`
 - API: Backported `DiscriminatedBlocks#prefixWith`, `#suffixWith` and `#surroundWith`
