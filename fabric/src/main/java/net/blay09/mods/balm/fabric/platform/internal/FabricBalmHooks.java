@@ -94,22 +94,22 @@ public class FabricBalmHooks implements BalmHooks {
         if (fluidTank != null) {
             ItemStack handItem = player.getItemInHand(hand);
             if (handItem.getItem() == Items.BUCKET) {
-                int drained = fluidTank.drain(fluidTank.getFluid(), 1000, true);
+                int drained = fluidTank.drain(0, fluidTank.getFluid(0), 1000, true);
                 if (drained >= 1000) {
-                    Item bucketItem = fluidTank.getFluid().getBucket();
+                    Item bucketItem = fluidTank.getFluid(0).getBucket();
                     if (bucketItem != Items.AIR) {
                         ItemStack bucketItemStack = new ItemStack(bucketItem);
                         if (handItem.getCount() > 1) {
                             if (player.addItem(bucketItemStack)) {
-                                fluidTank.getFluid().getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
+                                fluidTank.getFluid(0).getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
                                 handItem.shrink(1);
-                                fluidTank.drain(fluidTank.getFluid(), 1000, false);
+                                fluidTank.drain(0, fluidTank.getFluid(0), 1000, false);
                                 return true;
                             }
                         } else {
-                            fluidTank.getFluid().getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
+                            fluidTank.getFluid(0).getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
                             player.setItemInHand(hand, bucketItemStack);
-                            fluidTank.drain(fluidTank.getFluid(), 1000, false);
+                            fluidTank.drain(0, fluidTank.getFluid(0), 1000, false);
                             return true;
                         }
                     }
@@ -117,21 +117,21 @@ public class FabricBalmHooks implements BalmHooks {
             } else {
                 Fluid fluid = BuiltInRegistries.FLUID.stream().filter(it -> it.getBucket() == handItem.getItem()).findFirst().orElse(null);
                 if (fluid != null && !fluid.isSame(Fluids.EMPTY)) {
-                    int filled = fluidTank.fill(fluid, 1000, true);
+                    int filled = fluidTank.fill(0, fluid, 1000, true);
                     if (filled >= 1000) {
                         if (handItem.getCount() > 1) {
                             final var restItem = Balm.hooks().getCraftingRemainingItem(handItem);
                             if (player.addItem(restItem.create())) {
                                 player.playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
-                                fluidTank.getFluid().getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
+                                fluidTank.getFluid(0).getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
                                 handItem.shrink(1);
-                                fluidTank.fill(fluid, 1000, false);
+                                fluidTank.fill(0, fluid, 1000, false);
                                 return true;
                             }
                         } else {
                             player.playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
                             player.setItemInHand(hand, Balm.hooks().getCraftingRemainingItem(handItem).create());
-                            fluidTank.fill(fluid, 1000, false);
+                            fluidTank.fill(0, fluid, 1000, false);
                             return true;
                         }
                     }

@@ -14,38 +14,66 @@ public class ForgeFluidTank implements IFluidHandler {
 
     @Override
     public int getTanks() {
-        return 1;
+        return fluidTank.getSlotCount();
     }
 
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return new FluidStack(fluidTank.getFluid(), fluidTank.getAmount());
+        return new FluidStack(fluidTank.getFluid(tank), fluidTank.getAmount(tank));
     }
 
     @Override
     public int getTankCapacity(int tank) {
-        return fluidTank.getCapacity();
+        return fluidTank.getCapacity(tank);
     }
 
     @Override
     public boolean isFluidValid(int tank, FluidStack stack) {
-        return fluidTank.canFill(stack.getFluid());
+        return fluidTank.canFill(tank, stack.getFluid());
     }
 
     @Override
     public int fill(FluidStack resource, FluidAction action) {
-        return fluidTank.fill(resource.getFluid(), resource.getAmount(), action.simulate());
+        int filled = 0;
+        for (int i = 0; i < fluidTank.getSlotCount(); i++) {
+            if (filled >= resource.getAmount()) {
+                break;
+            }
+
+            if (fluidTank.canFill(i, resource.getFluid())) {
+                filled += fluidTank.fill(i, resource.getFluid(), resource.getAmount() - filled, action.simulate());
+            }
+        }
+
+        return filled;
     }
 
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        int drained = fluidTank.drain(resource.getFluid(), resource.getAmount(), action.simulate());
-        return new FluidStack(fluidTank.getFluid(), drained);
+        int drained = 0;
+        for (int i = 0; i < fluidTank.getSlotCount(); i++) {
+            if (drained >= resource.getAmount()) {
+                break;
+            }
+
+            if (fluidTank.canDrain(i, resource.getFluid())) {
+                drained += fluidTank.drain(i, resource.getFluid(), resource.getAmount() - drained, action.simulate());
+            }
+        }
+
+        return drained > 0 ? new FluidStack(resource.getFluid(), drained) : FluidStack.EMPTY;
     }
 
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        int drained = fluidTank.drain(fluidTank.getFluid(), maxDrain, action.simulate());
-        return new FluidStack(fluidTank.getFluid(), drained);
+        for (int i = 0; i < fluidTank.getSlotCount(); i++) {
+            final var fluid = fluidTank.getFluid(i);
+            int drained = fluidTank.drain(i, fluid, maxDrain, action.simulate());
+            if (drained > 0) {
+                return new FluidStack(fluid, drained);
+            }
+        }
+
+        return FluidStack.EMPTY;
     }
 }

@@ -3,23 +3,25 @@ package net.blay09.mods.balm.platform.fluid;
 import net.minecraft.world.level.material.Fluid;
 
 public interface FluidTank {
-    int fill(Fluid fluid, int maxFill, boolean simulate);
+    int fill(int slot, Fluid fluid, int maxFill, boolean simulate);
 
-    int drain(Fluid fluid, int maxDrain, boolean simulate);
+    int drain(int slot, Fluid fluid, int maxDrain, boolean simulate);
 
-    Fluid getFluid();
+    Fluid getFluid(int slot);
 
-    void setFluid(Fluid fluid, int amount);
+    void setFluid(int slot, Fluid fluid, int amount);
 
-    int getAmount();
+    int getAmount(int slot);
 
-    void setAmount(int amount);
+    void setAmount(int slot, int amount);
 
-    int getCapacity();
+    int getCapacity(int slot);
 
-    boolean canDrain(Fluid fluid);
+    boolean canDrain(int slot, Fluid fluid);
 
-    boolean canFill(Fluid fluid);
+    boolean canFill(int slot, Fluid fluid);
 
-    boolean isEmpty();
+    boolean isEmpty(int slot);
+
+    int getSlotCount();
 }

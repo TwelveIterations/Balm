@@ -33,8 +33,13 @@ public class DefaultFluidTank implements FluidTank {
         this.amount = Math.max(0, Math.min(capacity, amount));
     }
 
-    public int fill(Fluid fluid, int maxFill, boolean simulate) {
-        if (!canFill(fluid)) {
+    @Override
+    public int fill(int slot, Fluid fluid, int maxFill, boolean simulate) {
+        if (slot != 0) {
+            return 0;
+        }
+
+        if (!canFill(slot, fluid)) {
             return 0;
         }
 
@@ -50,8 +55,13 @@ public class DefaultFluidTank implements FluidTank {
         return filled;
     }
 
-    public int drain(Fluid fluid, int maxDrain, boolean simulate) {
-        if (!canDrain(fluid)) {
+    @Override
+    public int drain(int slot, Fluid fluid, int maxDrain, boolean simulate) {
+        if (slot != 0) {
+            return 0;
+        }
+
+        if (!canDrain(slot, fluid)) {
             return 0;
         }
 
@@ -63,38 +73,83 @@ public class DefaultFluidTank implements FluidTank {
         return drained;
     }
 
-    public Fluid getFluid() {
+    @Override
+    public Fluid getFluid(int slot) {
+        if (slot != 0) {
+            return Fluids.EMPTY;
+        }
+
         return amount >= 0 ? fluid : Fluids.EMPTY;
     }
 
-    public void setFluid(Fluid fluid, int amount) {
+    @Override
+    public void setFluid(int slot, Fluid fluid, int amount) {
+        if (slot != 0) {
+            return;
+        }
+
         this.fluid = fluid;
         this.amount = amount;
         setChanged();
     }
 
-    public int getAmount() {
+    @Override
+    public int getAmount(int slot) {
+        if (slot != 0) {
+            return 0;
+        }
+
         return amount;
     }
 
-    public void setAmount(int amount) {
+    @Override
+    public void setAmount(int slot, int amount) {
+        if (slot != 0) {
+            return;
+        }
+
         this.amount = amount;
     }
 
-    public int getCapacity() {
+    @Override
+    public int getCapacity(int slot) {
+        if (slot != 0) {
+            return 0;
+        }
+
         return capacity;
     }
 
-    public boolean canDrain(Fluid fluid) {
+    @Override
+    public boolean canDrain(int slot, Fluid fluid) {
+        if (slot != 0) {
+            return false;
+        }
+
         return (this.fluid.isSame(fluid) || this.fluid.isSame(Fluids.EMPTY)) && maxDrain > 0;
     }
 
-    public boolean canFill(Fluid fluid) {
+    @Override
+    public boolean canFill(int slot, Fluid fluid) {
+        if (slot != 0) {
+            return false;
+        }
+
         return (this.fluid.isSame(fluid) || this.fluid.isSame(Fluids.EMPTY)) && maxFill > 0;
     }
 
-    public boolean isEmpty() {
+    @Override
+    public boolean isEmpty(int slot) {
+        if (slot != 0) {
+            return true;
+        }
+
         return amount <= 0 || fluid.isSame(Fluids.EMPTY);
+    }
+
+    @Override
+    public int getSlotCount() {
+        return 1;
     }
 
     public void serialize(ValueOutput output) {

@@ -66,6 +66,10 @@ public interface BalmHooks {
 
     void firePlayerCraftingEvent(Player player, ItemStack crafted, Container craftMatrix);
 
+    /**
+     * @deprecated This method's implementation is fairly old and has not been updated to modern transfer APIs.
+     */
+    @Deprecated
     boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult);
 
     void setForcedPose(Player player, @Nullable Pose pose);
