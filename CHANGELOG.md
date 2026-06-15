@@ -1,6 +1,1 @@
-- Fixed Balm no longer being able to be run client-side only
-- Fixed crash if mod proxy is unable to be instantiated - use fallback instead
-- API: Added `BalmSafeClientAccess#getConnection` and `BalmSafeClientAccess#getPacketListener`
-- API: Fixed `LivingEntityCallback.Fall.Before` event not firing
-- API: Fixed `LivingEntityCallback.Death.Before.EVENT` result being inverted on Fabric
-- API: Fixed tags not being available in NeoForge resource reload listeners
+- Fixed `LivingEntityCallback.Damage` not actually applying modified damage on Neo/Forge
