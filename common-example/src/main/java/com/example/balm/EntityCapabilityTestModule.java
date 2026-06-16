@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public class EntityCapabilityTestModule implements BalmModule {
         capabilities.registerEntityProvider(BalmExample.id("entity_test_message"),
                 ENTITY_TEST_MESSAGE,
                 (entity, ignored) -> new TestMessageCapability("This entity has the balm_example:entity_test_message capability"),
-                () -> Set.of(EntityType.PIG));
+                () -> Set.of(EntityTypes.PIG));
     }
 
     @Override
