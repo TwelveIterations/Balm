@@ -11,7 +11,6 @@ import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
-import net.blay09.mods.balm.client.renderer.block.model.internal.MissingBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmClientTooltipComponentRegistrar;
@@ -23,6 +22,7 @@ import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalC
 import net.blay09.mods.balm.fabric.client.internal.gui.screens.inventory.FabricBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.model.geom.FabricBalmModelLayerRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.particle.FabricBalmParticleProviderRegistrar;
+import net.blay09.mods.balm.fabric.client.internal.renderer.block.model.FabricBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.renderer.blockentity.FabricBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.renderer.entity.FabricBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
@@ -31,6 +31,7 @@ import net.blay09.mods.balm.platform.config.BalmConfig;
 import net.blay09.mods.balm.platform.config.internal.BalmConfigScreenProviders;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 
 import java.util.TreeSet;
 import java.util.function.Consumer;
@@ -81,8 +82,8 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
 
     @Override
     public void blockStateModels(String namespace, Consumer<BalmBlockStateModelRegistrar> initializer) {
-        initializer.accept(new MissingBalmBlockStateModelRegistrar());
-        // TODO ModelLoadingPlugin.register(context -> initializer.accept(new FabricBalmBlockStateModelRegistrar(context)));
+        // initializer.accept(new MissingBalmBlockStateModelRegistrar());
+        ModelLoadingPlugin.register(context -> initializer.accept(new FabricBalmBlockStateModelRegistrar(context)));
     }
 
     @Override
