@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.client;
 
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.platform.BalmClientHooks;
 import net.blay09.mods.balm.client.platform.runtime.internal.BalmClientRuntime;
 import net.blay09.mods.balm.client.platform.runtime.internal.BalmClientRuntimeSpi;
@@ -87,6 +88,15 @@ public class BalmClient {
      */
     public static BalmClientHooks clientHooks() {
         return runtime.clientHooks();
+    }
+
+    /**
+     * Provides access to client command registration.
+     *
+     * @return implementation of {@link BalmClientCommands} for the mod loader Balm is running on.
+     */
+    public static BalmClientCommands clientCommands() {
+        return runtime.clientCommands();
     }
 
 }

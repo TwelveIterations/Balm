@@ -6,6 +6,7 @@ import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -16,6 +17,7 @@ import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmRangeSelectItemModelPropertyRegistrar;
+import net.blay09.mods.balm.fabric.client.internal.commands.FabricBalmClientCommands;
 import net.blay09.mods.balm.fabric.client.internal.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmClientEventMappings;
 import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
@@ -37,6 +39,8 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadContext> {
+
+    private final BalmClientCommands clientCommands = new FabricBalmClientCommands();
 
     public FabricBalmClientRuntime() {
         FabricBalmSupplementalClientEvents.initialize();
@@ -68,6 +72,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
         BalmLoadContexts.register(modId, context);
 
         initializer.accept(new BalmClientRegistrars(this, modId));
+    }
+
+    @Override
+    public BalmClientCommands clientCommands() {
+        return clientCommands;
     }
 
     @Override

@@ -4,6 +4,7 @@ import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
+import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.platform.BalmClientHooks;
@@ -34,6 +35,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         keyMappings(modId, module::registerKeyMappings);
         clientTooltipComponents(modId, module::registerClientTooltipComponents);
         rangeSelectItemModelProperties(modId, module::registerRangeSelectItemModelProperties);
+        module.registerClientCommands(clientCommands());
 
         module.initialize();
     }
@@ -43,6 +45,8 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void onRuntimeAvailable(Runnable callback);
 
     BalmClientHooks clientHooks();
+
+    BalmClientCommands clientCommands();
 
     void registerModule(BalmClientRegistrars registrars, BalmClientModule module);
 
