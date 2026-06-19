@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.api.client;
 
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.api.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
@@ -144,4 +145,14 @@ public class BalmClient {
     public static BalmTextures getTextures() {
         return runtime.getTextures();
     }
+
+    /**
+     * Provides access to client command registration.
+     *
+     * @return implementation of {@link BalmClientCommands} for the mod loader Balm is running on.
+     */
+    public static BalmClientCommands clientCommands() {
+        return runtime.clientCommands();
+    }
+
 }

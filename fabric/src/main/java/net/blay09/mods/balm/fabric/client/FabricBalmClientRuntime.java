@@ -2,6 +2,7 @@ package net.blay09.mods.balm.fabric.client;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.EmptyLoadContext;
+import net.blay09.mods.balm.api.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
@@ -25,6 +26,7 @@ import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.FabricBalmKeyMappingRegistrar;
+import net.blay09.mods.balm.fabric.client.internal.commands.FabricBalmClientCommands;
 import net.blay09.mods.balm.fabric.client.internal.color.block.FabricBalmBlockColorRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.color.item.FabricBalmItemColorRegistrar;
 import net.blay09.mods.balm.fabric.client.internal.gui.screens.inventory.FabricBalmMenuScreenRegistrar;
@@ -73,6 +75,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     @Deprecated
     private final BalmKeyMappings keyMappings = createKeyMappingsBindings();
     private final BalmModels models = new FabricBalmModels(legacyNamespaceResolver);
+    private final BalmClientCommands clientCommands = new FabricBalmClientCommands();
 
     public FabricBalmClientRuntime() {
         FabricBalmClientEvents.registerEvents(((FabricBalmEvents) Balm.getEvents()));
@@ -122,6 +125,11 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<EmptyLoadCo
     @Override
     public BalmModels getModels() {
         return models;
+    }
+
+    @Override
+    public BalmClientCommands clientCommands() {
+        return clientCommands;
     }
 
     @Override

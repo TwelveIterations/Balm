@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api.client;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.api.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
@@ -64,6 +65,8 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         particleProviders(modId, module::registerParticleProviders);
         modelLayers(modId, module::registerModelLayers);
         blockStateModels(modId, module::registerBlockStateModels);
+        module.registerClientCommands(clientCommands());
+
         module.initialize();
     }
 
@@ -75,6 +78,8 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     default void registerModule(BalmClientModule module) {
         registerModule(new BalmClientRegistrars(this, module.getId().getNamespace()), module);
     }
+
+    BalmClientCommands clientCommands();
 
     void registerModule(BalmClientRegistrars registrars, BalmClientModule module);
 

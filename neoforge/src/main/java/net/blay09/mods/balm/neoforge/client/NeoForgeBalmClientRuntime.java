@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.neoforge.client;
 
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
@@ -29,6 +30,7 @@ import net.blay09.mods.balm.neoforge.client.color.item.internal.NeoForgeBalmItem
 import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.internal.NeoForgeBalmMenuScreenRegistrar;
 import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmKeyMappingRegistrar;
+import net.blay09.mods.balm.neoforge.client.internal.commands.NeoForgeBalmClientCommands;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.model.geom.internal.NeoForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.neoforge.client.particle.internal.NeoForgeBalmParticleProviderRegistrar;
@@ -66,6 +68,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Deprecated
     private final BalmKeyMappings keyMappings = new NeoForgeBalmKeyMappings(legacyNamespaceResolver);
     private final BalmModels models = new NeoForgeBalmModels(legacyNamespaceResolver);
+    private final BalmClientCommands clientCommands = new NeoForgeBalmClientCommands();
 
     public NeoForgeBalmClientRuntime() {
         NeoForgeBalmClientEvents.registerEvents(((NeoForgeBalmEvents) Balm.getEvents()));
@@ -91,6 +94,11 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
     @Override
     public BalmModels getModels() {
         return models;
+    }
+
+    @Override
+    public BalmClientCommands clientCommands() {
+        return clientCommands;
     }
 
     @Override

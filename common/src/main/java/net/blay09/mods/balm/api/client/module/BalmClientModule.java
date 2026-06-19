@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.api.client.module;
 
+import net.blay09.mods.balm.api.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
@@ -83,5 +84,8 @@ public interface BalmClientModule {
     }
 
     default void registerClientTooltipComponents(BalmClientTooltipComponentRegistrar clientTooltipComponents) {
+    }
+
+    default void registerClientCommands(BalmClientCommands commands) {
     }
 }
