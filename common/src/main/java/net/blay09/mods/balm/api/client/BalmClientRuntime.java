@@ -2,6 +2,7 @@ package net.blay09.mods.balm.api.client;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.api.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
@@ -29,6 +30,7 @@ public interface BalmClientRuntime {
         module.registerScreens(getScreens().scoped(modId));
         module.registerModels(getModels().scoped(modId));
         module.registerKeyMappings(getKeyMappings().scoped(modId));
+        module.registerClientCommands(clientCommands());
         module.initialize();
     }
 
@@ -37,6 +39,8 @@ public interface BalmClientRuntime {
     void onRuntimeAvailable(Runnable callback);
 
     void registerModule(BalmClientModule module);
+
+    BalmClientCommands clientCommands();
 
     void addResourceReloadListener(ResourceLocation identifier, PreparableReloadListener reloadListener);
 

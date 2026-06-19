@@ -2,6 +2,7 @@ package net.blay09.mods.balm.forge.client;
 
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.BalmRuntimeLoadContext;
+import net.blay09.mods.balm.api.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.api.client.keymappings.BalmKeyMappings;
 import net.blay09.mods.balm.api.client.rendering.BalmModels;
 import net.blay09.mods.balm.api.client.rendering.BalmRenderers;
@@ -13,6 +14,7 @@ import net.blay09.mods.balm.common.NamespaceResolver;
 import net.blay09.mods.balm.common.client.CommonBalmClientRuntime;
 import net.blay09.mods.balm.forge.ForgeLoadContext;
 import net.blay09.mods.balm.forge.ModBusEventRegisters;
+import net.blay09.mods.balm.forge.client.internal.commands.ForgeBalmClientCommands;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmModels;
 import net.blay09.mods.balm.forge.client.rendering.ForgeBalmRenderers;
@@ -34,6 +36,7 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     private final BalmScreens screens = new ForgeBalmScreens(legacyNamespaceResolver);
     private final BalmKeyMappings keyMappings = new ForgeBalmKeyMappings(legacyNamespaceResolver);
     private final BalmModels models = new ForgeBalmModels(legacyNamespaceResolver);
+    private final BalmClientCommands clientCommands = new ForgeBalmClientCommands();
 
     @Deprecated(forRemoval = true, since = "1.21.5")
     private final BalmTextures textures = new ForgeBalmTextures();
@@ -61,6 +64,11 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     @Override
     public BalmModels getModels() {
         return models;
+    }
+
+    @Override
+    public BalmClientCommands clientCommands() {
+        return clientCommands;
     }
 
     @Override
