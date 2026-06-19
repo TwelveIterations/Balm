@@ -6,6 +6,7 @@ import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
+import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
@@ -18,6 +19,7 @@ import net.blay09.mods.balm.neoforge.client.gui.screens.inventory.internal.NeoFo
 import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmKeyMappingRegistrar;
 import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmRangeSelectItemModelPropertyRegistrar;
+import net.blay09.mods.balm.neoforge.client.internal.commands.NeoForgeBalmClientCommands;
 import net.blay09.mods.balm.neoforge.client.model.geom.internal.NeoForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.neoforge.client.particle.internal.NeoForgeBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.neoforge.client.platform.event.internal.NeoForgeBalmClientEventMappings;
@@ -41,6 +43,8 @@ import java.util.function.Consumer;
 
 public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeLoadContext> {
 
+    private final BalmClientCommands clientCommands = new NeoForgeBalmClientCommands();
+
     public NeoForgeBalmClientRuntime() {
         NeoForgeBalmClientEventMappings.bind();
 
@@ -63,6 +67,11 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
 
         final var modEventBus = context.modBus();
         ModBusEventRegisters.register(modId, modEventBus);
+    }
+
+    @Override
+    public BalmClientCommands clientCommands() {
+        return clientCommands;
     }
 
     @Override
