@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -39,11 +38,6 @@ public class NeoForgeBalmHooks implements BalmHooks {
         if (found != null) {
             event.setBurnTime(found);
         }
-    }
-
-    @Override
-    public boolean blockGrowFeature(Level level, RandomSource random, BlockPos pos, @Nullable Holder<ConfiguredFeature<?, ?>> holder) {
-        return !EventHooks.fireBlockGrowFeature(level, random, pos, holder).isCanceled();
     }
 
     @Override
