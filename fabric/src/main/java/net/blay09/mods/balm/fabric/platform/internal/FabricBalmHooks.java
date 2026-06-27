@@ -23,7 +23,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -32,11 +31,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 public class FabricBalmHooks implements BalmHooks {
-
-    @Override
-    public boolean blockGrowFeature(Level level, RandomSource random, BlockPos pos, @Nullable Holder<ConfiguredFeature<?, ?>> holder) {
-        return true;
-    }
 
     @Override
     public boolean growCrop(ItemStack itemStack, Level level, BlockPos pos, @Nullable Player player) {

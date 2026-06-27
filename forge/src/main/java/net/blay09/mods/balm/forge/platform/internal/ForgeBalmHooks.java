@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.util.Result;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -39,11 +38,6 @@ public class ForgeBalmHooks implements BalmHooks {
         if (found != null) {
             event.setBurnTime(found);
         }
-    }
-
-    @Override
-    public boolean blockGrowFeature(Level level, RandomSource random, BlockPos pos, @Nullable Holder<ConfiguredFeature<?, ?>> holder) {
-        return !ForgeEventFactory.blockGrowFeature(level, random, pos, holder).getResult().equals(Result.DENY);
     }
 
     @Override
