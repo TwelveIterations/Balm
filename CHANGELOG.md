@@ -1,1 +1,1 @@
-- Fixed custom recipe types not being registered for syncing
+- Updated to Minecraft 26.3
