@@ -8,6 +8,7 @@ import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.platform.BalmClientHooks;
+import net.blay09.mods.balm.client.platform.config.BalmCustomConfigControlRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
@@ -35,6 +36,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         keyMappings(modId, module::registerKeyMappings);
         clientTooltipComponents(modId, module::registerClientTooltipComponents);
         rangeSelectItemModelProperties(modId, module::registerRangeSelectItemModelProperties);
+        module.registerCustomConfigControls(new BalmCustomConfigControlRegistrar(modId));
         module.registerClientCommands(clientCommands());
 
         module.initialize();

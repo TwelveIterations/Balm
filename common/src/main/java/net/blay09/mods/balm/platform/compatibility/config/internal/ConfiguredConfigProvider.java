@@ -4,12 +4,10 @@ import com.mrcrayfish.configured.api.*;
 import com.mrcrayfish.configured.api.util.ConfigScreenHelper;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
+import net.blay09.mods.balm.client.platform.config.ConfigControlRegistry;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredDouble;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredFloat;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredInt;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredLong;
+import net.blay09.mods.balm.platform.config.schema.ConfigControlContext;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
@@ -145,7 +143,15 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
     }
 
     private static <T> IConfigEntry mapConfigProperty(MutableLoadedConfig config, ConfiguredProperty<T> property) {
+        final var customEntry = mapCustomControlConfigProperty(config, property);
+        if (customEntry != null) {
+            return customEntry;
+        }
+
         final var initialValue = config.getRaw(property);
+        final var displayName = Component.translatable(ConfigLocalization.forProperty(property));
+        final var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
+        final var context = new ConfigControlContext<>(property, config, displayName, tooltip);
         return new IConfigEntry() {
             @Override
             public List<IConfigEntry> getChildren() {
@@ -164,89 +170,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public IConfigValue<?> getValue() {
-                return new IConfigValue<T>() {
-                    @Override
-                    public T get() {
-                        return config.getRaw(property);
-                    }
-
-                    @Override
-                    public T getDefault() {
-                        return property.defaultValue();
-                    }
-
-                    @Override
-                    public void set(T o) {
-                        config.setRaw(property, property.validateValue(o).getOrThrow());
-                    }
-
-                    @Override
-                    public boolean isValid(T o) {
-                        if (!ClassUtils.isAssignable(o.getClass(), property.type(), true)) {
-                            return false;
-                        }
-                        return property.validateValue(o).isSuccess();
-                    }
-
-                    @Override
-                    public boolean isDefault() {
-                        return Objects.equals(property.defaultValue(), config.getRaw(property));
-                    }
-
-                    @Override
-                    public boolean isChanged() {
-                        return !Objects.equals(config.getRaw(property), initialValue);
-                    }
-
-                    @Override
-                    public void restore() {
-                        config.setRaw(property, property.defaultValue());
-                    }
-
-                    @Override
-                    public Component getComment() {
-                        return Component.translatable(ConfigLocalization.forPropertyTooltip(property));
-                    }
-
-                    @Override
-                    public String getTranslationKey() {
-                        return ConfigLocalization.forProperty(property);
-                    }
-
-                    @Override
-                    public @Nullable Component getValidationHint() {
-                        return switch (property) {
-                            case ConfiguredInt configuredInt when (configuredInt.minValue().isPresent() || configuredInt.maxValue().isPresent()) ->
-                                    Component.literal("Range: " + configuredInt.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredInt.maxValue().map(String::valueOf).orElse("+inf"));
-                            case ConfiguredLong configuredLong when (configuredLong.minValue().isPresent() || configuredLong.maxValue().isPresent()) ->
-                                    Component.literal("Range: " + configuredLong.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredLong.maxValue().map(String::valueOf).orElse("+inf"));
-                            case ConfiguredFloat configuredFloat when (configuredFloat.minValue().isPresent() || configuredFloat.maxValue().isPresent()) ->
-                                    Component.literal("Range: " + configuredFloat.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredFloat.maxValue().map(String::valueOf).orElse("+inf"));
-                            case ConfiguredDouble configuredDouble when (configuredDouble.minValue().isPresent() || configuredDouble.maxValue().isPresent()) ->
-                                    Component.literal("Range: " + configuredDouble.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredDouble.maxValue().map(String::valueOf).orElse("+inf"));
-                            default -> null;
-                        };
-                    }
-
-                    @Override
-                    public String getName() {
-                        return property.name();
-                    }
-
-                    @Override
-                    public void cleanCache() {
-                    }
-
-                    @Override
-                    public boolean requiresWorldRestart() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean requiresGameRestart() {
-                        return false;
-                    }
-                };
+                return createConfigValue(config, property, context, initialValue);
             }
 
             @Override
@@ -264,6 +188,120 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                 return ConfigLocalization.forPropertyTooltip(property);
             }
         };
+    }
+
+    @Nullable
+    private static <T> IConfigEntry mapCustomControlConfigProperty(MutableLoadedConfig config, ConfiguredProperty<T> property) {
+        final var customControlId = property.customControl().orElse(null);
+        if (customControlId == null) {
+            return null;
+        }
+
+        final var displayName = Component.translatable(ConfigLocalization.forProperty(property));
+        final var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
+        final var context = new ConfigControlContext<>(property, config, displayName, tooltip);
+        final var entry = ConfigControlRegistry.createElement(customControlId, context).orElse(null);
+        switch (entry) {
+            case IConfigEntry configEntry -> {
+                return configEntry;
+            }
+            case IConfigValue<?> configValue -> {
+                return new ValueEntry(configValue);
+            }
+            case null -> {
+                final var initialValue = config.getRaw(property);
+                return new ValueEntry(createConfigValue(config, property, context, initialValue));
+            }
+            default ->
+                    throw new IllegalStateException("Configured control for " + property.parentSchema().identifier() + "/" + property.category() + "." + property.name() + " must return IConfigEntry or IConfigValue, got " + entry.getClass().getName());
+        }
+    }
+
+    private static <T> IConfigValue<T> createConfigValue(MutableLoadedConfig config, ConfiguredProperty<T> property, ConfigControlContext<T> context, T initialValue) {
+        return new IConfigValue<>() {
+            @Override
+            public T get() {
+                return config.getRaw(property);
+            }
+
+            @Override
+            public T getDefault() {
+                return property.defaultValue();
+            }
+
+            @Override
+            public void set(T o) {
+                context.set(o);
+            }
+
+            @Override
+            public boolean isValid(@Nullable T o) {
+                if (o == null || !ClassUtils.isAssignable(o.getClass(), property.type(), true)) {
+                    return false;
+                }
+                return property.customControl()
+                        .flatMap(ConfigControlRegistry::<T>get)
+                        .map(control -> control.validate(context, o))
+                        .orElseGet(() -> property.validateValue(o))
+                        .isSuccess();
+            }
+
+            @Override
+            public boolean isDefault() {
+                return Objects.equals(property.defaultValue(), config.getRaw(property));
+            }
+
+            @Override
+            public boolean isChanged() {
+                return !Objects.equals(config.getRaw(property), initialValue);
+            }
+
+            @Override
+            public void restore() {
+                context.set(property.defaultValue());
+            }
+
+            @Override
+            public Component getComment() {
+                return Component.translatable(ConfigLocalization.forPropertyTooltip(property));
+            }
+
+            @Override
+            public String getTranslationKey() {
+                return ConfigLocalization.forProperty(property);
+            }
+
+            @Override
+            public @Nullable Component getValidationHint() {
+                return property.customControl()
+                        .flatMap(ConfigControlRegistry::<T>get)
+                        .flatMap(control -> control.getValidationHint(context))
+                        .orElseGet(() -> ConfiguredConfigProvider.getValidationHint(property));
+            }
+
+            @Override
+            public String getName() {
+                return property.name();
+            }
+
+            @Override
+            public void cleanCache() {
+            }
+
+            @Override
+            public boolean requiresWorldRestart() {
+                return false;
+            }
+
+            @Override
+            public boolean requiresGameRestart() {
+                return false;
+            }
+        };
+    }
+
+    private static @Nullable Component getValidationHint(ConfiguredProperty<?> property) {
+        return null;
     }
 
     public static BalmConfigScreenFactory getConfigScreenFactory(String modId) {
