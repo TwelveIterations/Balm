@@ -29,6 +29,7 @@ ftbUltimineNeoForge = { module = "dev.ftb.mods:ftb-ultimine-neoforge", version.r
 mixin = { module = "org.spongepowered:mixin", version = "0.8.7" }
 mixinExtras = { module = "io.github.llamalad7:mixinextras-common", version = "0.5.2" }
 
+vivecraftCommon = { module = "curse.maven:vivecraft-667903", version = "8320962" }
 wthitCommon = { module = "mcp.mobius.waila:wthit-api", version = "mojmap-19.0.0" }
 jeiCommon = { module = "mezz.jei:jei-26.1-common-api", version = "29.2.0.20" }
 modMenu = { module = "maven.modrinth:modmenu", version = "18.0.0-alpha.8" }

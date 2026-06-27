@@ -9,4 +9,5 @@ dependencies {
     compileOnly libs.clothConfigNeoForge
     compileOnly libs.jadeNeoForge
     compileOnly libs.ftbUltimineCommon
+    compileOnly libs.vivecraftCommon
 }

@@ -11,4 +11,5 @@ dependencies {
     compileOnly libs.clothConfigFabric
     compileOnly libs.configuredFabric
     compileOnly libs.ftbUltimineFabric
+    compileOnly libs.vivecraftCommon
 }

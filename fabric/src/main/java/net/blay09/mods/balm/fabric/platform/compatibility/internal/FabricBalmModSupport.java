@@ -2,6 +2,9 @@ package net.blay09.mods.balm.fabric.platform.compatibility.internal;
 
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.BalmModSupportRecipeViewer;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.CommonBalmModSupportRecipeViewer;
+import net.blay09.mods.balm.platform.compatibility.vr.BalmModSupportVR;
+import net.blay09.mods.balm.platform.compatibility.vr.internal.NoopVR;
+import net.blay09.mods.balm.platform.compatibility.vr.internal.VRMultiplexer;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
 import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.BalmModSupportHudInfo;
@@ -20,6 +23,7 @@ import java.util.function.Supplier;
 public class FabricBalmModSupport implements BalmModSupport {
     private final Supplier<BalmModSupportMultiMiners> multiminers;
     private final Supplier<BalmModSupportTrinkets> trinkets;
+    private final Supplier<BalmModSupportVR> vr;
     private final CommonBalmModSupportHudInfo hudInfo = new CommonBalmModSupportHudInfo();
     private final CommonBalmModSupportRecipeViewer recipeViewers = new CommonBalmModSupportRecipeViewer();
     private final BalmModSupportMilkFluid milkFluid = new FabricModSupportMilkFluid();
@@ -34,6 +38,11 @@ public class FabricBalmModSupport implements BalmModSupport {
                 .with("trinkets", "net.blay09.mods.balm.fabric.platform.compatibility.trinkets.internal.TrinketsIntegration")
                 .withMultiplexer(TrinketsMultiplexer::new)
                 .withFallback(new NoopTrinkets())
+                .buildLazily();
+        vr = runtime.<BalmModSupportVR>modProxy()
+                .with("vivecraft", "net.blay09.mods.balm.platform.compatibility.vr.internal.VivecraftIntegration")
+                .withMultiplexer(VRMultiplexer::new)
+                .withFallback(new NoopVR())
                 .buildLazily();
     }
 
@@ -60,5 +69,10 @@ public class FabricBalmModSupport implements BalmModSupport {
     @Override
     public BalmModSupportRecipeViewer recipeViewers() {
         return recipeViewers;
+    }
+
+    @Override
+    public BalmModSupportVR vr() {
+        return vr.get();
     }
 }

@@ -13,6 +13,9 @@ import net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.CommonB
 import net.blay09.mods.balm.platform.compatibility.trinkets.BalmModSupportTrinkets;
 import net.blay09.mods.balm.platform.compatibility.trinkets.internal.NoopTrinkets;
 import net.blay09.mods.balm.platform.compatibility.trinkets.internal.TrinketsMultiplexer;
+import net.blay09.mods.balm.platform.compatibility.vr.BalmModSupportVR;
+import net.blay09.mods.balm.platform.compatibility.vr.internal.NoopVR;
+import net.blay09.mods.balm.platform.compatibility.vr.internal.VRMultiplexer;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
 
 import java.util.function.Supplier;
@@ -20,6 +23,7 @@ import java.util.function.Supplier;
 public class NeoForgeBalmModSupport implements BalmModSupport {
     private final Supplier<BalmModSupportMultiMiners> multiminers;
     private final Supplier<BalmModSupportTrinkets> trinkets;
+    private final Supplier<BalmModSupportVR> vr;
     private final CommonBalmModSupportHudInfo hudInfo = new CommonBalmModSupportHudInfo();
     private final CommonBalmModSupportRecipeViewer recipeViewers = new CommonBalmModSupportRecipeViewer();
     private final BalmModSupportMilkFluid milkFluid = new NeoForgeBalmModSupportMilkFluid();
@@ -34,6 +38,11 @@ public class NeoForgeBalmModSupport implements BalmModSupport {
                 .with("curios", "net.blay09.mods.balm.neoforge.platform.compatibility.trinkets.internal.CuriosIntegration")
                 .withMultiplexer(TrinketsMultiplexer::new)
                 .withFallback(new NoopTrinkets())
+                .buildLazily();
+        vr = runtime.<BalmModSupportVR>modProxy()
+                .with("vivecraft", "net.blay09.mods.balm.platform.compatibility.vr.internal.VivecraftIntegration")
+                .withMultiplexer(VRMultiplexer::new)
+                .withFallback(new NoopVR())
                 .buildLazily();
     }
 
@@ -60,5 +69,10 @@ public class NeoForgeBalmModSupport implements BalmModSupport {
     @Override
     public BalmModSupportRecipeViewer recipeViewers() {
         return recipeViewers;
+    }
+
+    @Override
+    public BalmModSupportVR vr() {
+        return vr.get();
     }
 }
