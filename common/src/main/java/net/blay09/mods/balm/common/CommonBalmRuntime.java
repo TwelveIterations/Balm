@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public abstract class CommonBalmRuntime implements BalmRuntime {
@@ -61,8 +62,10 @@ public abstract class CommonBalmRuntime implements BalmRuntime {
 
     @Override
     public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>(this::isModLoaded);
+        return new ModProxyImpl<>(this::getModVersion);
     }
+
+    protected abstract Optional<String> getModVersion(String modId);
 
     public void initializeRuntime() {
         ready = true;

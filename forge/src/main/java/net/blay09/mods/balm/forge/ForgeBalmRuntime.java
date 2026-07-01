@@ -197,6 +197,12 @@ public class ForgeBalmRuntime extends CommonBalmRuntime {
     }
 
     @Override
+    protected Optional<String> getModVersion(String modId) {
+        return ModList.get().getModContainerById(modId)
+                .map(it -> it.getModInfo().getVersion().toString());
+    }
+
+    @Override
     public String getModName(String modId) {
         return ModList.get().getModContainerById(modId).map(it -> it.getModInfo().getDisplayName()).orElse(modId);
     }

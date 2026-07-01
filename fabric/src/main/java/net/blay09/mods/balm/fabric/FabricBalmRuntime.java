@@ -194,6 +194,12 @@ public class FabricBalmRuntime extends CommonBalmRuntime {
     }
 
     @Override
+    protected Optional<String> getModVersion(String modId) {
+        return FabricLoader.getInstance().getModContainer(modId)
+                .map(it -> it.getMetadata().getVersion().getFriendlyString());
+    }
+
+    @Override
     public String getModName(String modId) {
         return FabricLoader.getInstance().getModContainer(modId).map(it -> it.getMetadata().getName()).orElse(modId);
     }
