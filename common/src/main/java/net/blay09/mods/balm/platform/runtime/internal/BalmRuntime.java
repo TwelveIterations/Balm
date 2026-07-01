@@ -37,6 +37,7 @@ import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 
 import java.util.function.Consumer;
@@ -77,6 +78,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     <T> PlatformProxy<T> platformProxy();
 
     <T> ModProxy<T> modProxy();
+
+    <T> ModProxy<T> modProxy(Identifier identifier);
 
     default void initializeModule(BalmModule module) {
         final var modId = module.getId().getNamespace();

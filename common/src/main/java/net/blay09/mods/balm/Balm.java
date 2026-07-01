@@ -21,6 +21,7 @@ import net.blay09.mods.balm.platform.BalmSafeClientAccess;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
 import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntimeSpi;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 
@@ -105,6 +106,17 @@ public class Balm {
      */
     public static <T> ModProxy<T> modProxy() {
         return runtime.modProxy();
+    }
+
+    /**
+     * Creates a mod proxy, which you can use to provide differing implementations depending on which mods are loaded under a common interface.
+     *
+     * @param identifier the identifier for this mod proxy.
+     * @param <T>        the type of the common interface.
+     * @return a builder for a mod proxy.
+     */
+    public static <T> ModProxy<T> modProxy(Identifier identifier) {
+        return runtime.modProxy(identifier);
     }
 
     /**

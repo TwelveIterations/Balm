@@ -2,6 +2,7 @@ package net.blay09.mods.balm.platform.internal;
 
 import net.blay09.mods.balm.platform.ModProxy;
 import net.blay09.mods.balm.platform.ModInfo;
+import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,18 @@ public class ModProxyImpl<T> implements ModProxy<T> {
 
     private final Function<String, Optional<ModInfo>> modInfoProvider;
     private final List<ModEntry<T>> proxies = new ArrayList<>();
+    private final @Nullable Identifier identifier;
     @Nullable
     private Function<List<T>, T> multiplexer;
     private @Nullable T fallback;
 
     public ModProxyImpl(Function<String, Optional<ModInfo>> modInfoProvider) {
+        this(modInfoProvider, null);
+    }
+
+    public ModProxyImpl(Function<String, Optional<ModInfo>> modInfoProvider, @Nullable Identifier identifier) {
         this.modInfoProvider = modInfoProvider;
+        this.identifier = identifier;
     }
 
     @Override
@@ -72,20 +79,31 @@ public class ModProxyImpl<T> implements ModProxy<T> {
                     logger.error("Failed to instantiate proxy", e);
                 }
             }
-            if(effectiveProxies.size() > 1) {
-                return multiplexer.apply(effectiveProxies);
+            if (effectiveProxies.size() > 1) {
+                final var proxy = multiplexer.apply(effectiveProxies);
+                logger.info("Mod proxy {} resolved as {}", identifier != null ? identifier : "<unnamed>", proxy);
+                return proxy;
             }
-            return effectiveProxies.getFirst();
+            final var proxy = effectiveProxies.getFirst();
+            logger.info("Mod proxy {} resolved as {}", identifier != null ? identifier : "<unnamed>", proxy);
+            return proxy;
         }
 
         for (final var applicableProxy : applicableProxies) {
             try {
-                return applicableProxy.proxy.get();
+                final var proxy = applicableProxy.proxy.get();
+                logger.info("Mod proxy {} resolved as {}", identifier != null ? identifier : "<unnamed>", proxy);
+                return proxy;
             } catch (Exception e) {
-                logger.error("Failed to instantiate proxy", e);
+                logger.error("Failed to instantiate proxy {}", identifier != null ? identifier : "<unnamed>", e);
             }
         }
 
+        if (fallback != null) {
+            logger.info("Mod proxy {} resolved as {}", identifier != null ? identifier : "<unnamed>", fallback);
+        } else {
+            logger.warn("No applicable proxy found for {}", identifier != null ? identifier : "<unnamed>");
+        }
         return fallback;
     }
 
