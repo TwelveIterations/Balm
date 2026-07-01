@@ -99,6 +99,10 @@ public class Balm {
         return runtime.modProxy();
     }
 
+    public static <T> ModProxy<T> modProxy(ResourceLocation identifier) {
+        return runtime.modProxy(identifier);
+    }
+
     public static <T> SidedProxy<T> sidedProxy(String commonName, String clientName) {
         return runtime.sidedProxy(commonName, clientName);
     }

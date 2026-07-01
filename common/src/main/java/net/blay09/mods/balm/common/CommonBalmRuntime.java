@@ -10,6 +10,7 @@ import net.blay09.mods.balm.api.proxy.SidedProxy;
 import net.blay09.mods.balm.common.config.ConfigSync;
 import net.blay09.mods.balm.common.proxy.ModProxyImpl;
 import net.blay09.mods.balm.common.proxy.PlatformProxyImpl;
+import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -63,6 +64,11 @@ public abstract class CommonBalmRuntime implements BalmRuntime {
     @Override
     public <T> ModProxy<T> modProxy() {
         return new ModProxyImpl<>(this::getModVersion);
+    }
+
+    @Override
+    public <T> ModProxy<T> modProxy(ResourceLocation identifier) {
+        return new ModProxyImpl<>(this::getModVersion, identifier);
     }
 
     protected abstract Optional<String> getModVersion(String modId);

@@ -97,6 +97,8 @@ public interface BalmRuntime {
 
     <T> ModProxy<T> modProxy();
 
+    <T> ModProxy<T> modProxy(ResourceLocation identifier);
+
     String getPlatform();
 
     default void initializeModule(BalmModule module) {
