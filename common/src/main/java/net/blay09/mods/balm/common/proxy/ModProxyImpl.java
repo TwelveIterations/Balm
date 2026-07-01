@@ -1,7 +1,10 @@
 package net.blay09.mods.balm.common.proxy;
 
 import net.blay09.mods.balm.api.proxy.ModProxy;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -9,18 +12,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ModProxyImpl<T> implements ModProxy<T> {
 
+    private final Logger logger = LoggerFactory.getLogger(ModProxyImpl.class);
+
     private final Function<String, Optional<String>> modVersionProvider;
     private final List<ModEntry<T>> proxies = new ArrayList<>();
+    private final @Nullable ResourceLocation identifier;
     @Nullable
     private Function<List<T>, T> multiplexer;
     private @Nullable T fallback;
 
     public ModProxyImpl(Function<String, Optional<String>> modVersionProvider) {
+        this(modVersionProvider, null);
+    }
+
+    public ModProxyImpl(Function<String, Optional<String>> modVersionProvider, @Nullable ResourceLocation identifier) {
         this.modVersionProvider = modVersionProvider;
+        this.identifier = identifier;
     }
 
     @Override
@@ -60,14 +70,40 @@ public class ModProxyImpl<T> implements ModProxy<T> {
     public T build() {
         final var applicableProxies = proxies.stream().filter(this::isApplicable).toList();
         if (multiplexer != null && applicableProxies.size() > 1) {
-            return multiplexer.apply(applicableProxies.stream().map(ModEntry::proxy).map(Supplier::get).collect(Collectors.toList()));
+            final var effectiveProxies = new ArrayList<T>();
+            for (final var applicableProxy : applicableProxies) {
+                try {
+                    effectiveProxies.add(applicableProxy.proxy.get());
+                } catch (Exception e) {
+                    logger.error("Failed to instantiate proxy", e);
+                }
+            }
+            if (effectiveProxies.size() > 1) {
+                final var proxy = multiplexer.apply(effectiveProxies);
+                logger.info("Mod proxy {} resolved as {}", identifier != null ? identifier : "<unnamed>", proxy);
+                return proxy;
+            }
+            final var proxy = effectiveProxies.getFirst();
+            logger.info("Mod proxy {} resolved as {}", identifier != null ? identifier : "<unnamed>", proxy);
+            return proxy;
         }
 
-        if (applicableProxies.isEmpty()) {
-            return fallback;
+        for (final var applicableProxy : applicableProxies) {
+            try {
+                final var proxy = applicableProxy.proxy.get();
+                logger.info("Mod proxy {} resolved as {}", identifier != null ? identifier : "<unnamed>", proxy);
+                return proxy;
+            } catch (Exception e) {
+                logger.error("Failed to instantiate proxy {}", identifier != null ? identifier : "<unnamed>", e);
+            }
         }
 
-        return applicableProxies.getFirst().proxy().get();
+        if (fallback != null) {
+            logger.info("Mod proxy {} resolved as {}", identifier != null ? identifier : "<unnamed>", fallback);
+        } else {
+            logger.warn("No applicable proxy found for {}", identifier != null ? identifier : "<unnamed>");
+        }
+        return fallback;
     }
 
     private boolean isApplicable(ModEntry<T> proxy) {

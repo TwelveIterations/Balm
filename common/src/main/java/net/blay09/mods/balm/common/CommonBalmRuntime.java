@@ -20,6 +20,7 @@ import net.blay09.mods.balm.world.item.internal.BalmItemRegistrarImpl;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.internal.BalmBlockRegistrarImpl;
 import net.minecraft.SharedConstants;
+import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -80,6 +81,11 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public <T> ModProxy<T> modProxy() {
         return new ModProxyImpl<>(this::getModVersion);
+    }
+
+    @Override
+    public <T> ModProxy<T> modProxy(ResourceLocation identifier) {
+        return new ModProxyImpl<>(this::getModVersion, identifier);
     }
 
     protected abstract Optional<String> getModVersion(String modId);
