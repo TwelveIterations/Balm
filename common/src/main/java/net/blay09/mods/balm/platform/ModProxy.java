@@ -8,6 +8,8 @@ public interface ModProxy<T> {
 
     ModProxy<T> with(String modId, String clazzName);
 
+    ModProxy<T> with(String modId, String versionRange, String clazzName);
+
     ModProxy<T> withMultiplexer(Function<List<T>, T> multiplexer);
 
     ModProxy<T> withFallback(T fallback);
