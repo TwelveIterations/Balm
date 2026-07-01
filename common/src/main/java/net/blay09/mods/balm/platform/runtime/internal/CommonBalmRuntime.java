@@ -81,7 +81,7 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
 
     @Override
     public <T> ModProxy<T> modProxy() {
-        return new ModProxyImpl<>((modId) -> platform().isModLoaded(modId));
+        return new ModProxyImpl<>((modId) -> platform().getModInfo(modId));
     }
 
     public void initializeRuntime() {

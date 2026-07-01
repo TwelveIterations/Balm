@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.platform.internal;
 
 import net.blay09.mods.balm.platform.ModProxy;
+import net.blay09.mods.balm.platform.ModInfo;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,28 +9,33 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ModProxyImpl<T> implements ModProxy<T> {
 
     private final Logger logger = LoggerFactory.getLogger(ModProxyImpl.class);
 
-    private final Predicate<String> modLoadedPredicate;
+    private final Function<String, Optional<ModInfo>> modInfoProvider;
     private final List<ModEntry<T>> proxies = new ArrayList<>();
     @Nullable
     private Function<List<T>, T> multiplexer;
-    private T fallback;
+    private @Nullable T fallback;
 
-    public ModProxyImpl(Predicate<String> modLoadedPredicate) {
-        this.modLoadedPredicate = modLoadedPredicate;
+    public ModProxyImpl(Function<String, Optional<ModInfo>> modInfoProvider) {
+        this.modInfoProvider = modInfoProvider;
+    }
+
+    @Override
+    public ModProxy<T> with(String modId, String clazzName) {
+        return with(modId, null, clazzName);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ModProxy<T> with(String modId, String clazzName) {
-        proxies.add(new ModEntry<>(modId, clazzName, () -> {
+    public ModProxy<T> with(String modId, @Nullable String versionRange, String clazzName) {
+        proxies.add(new ModEntry<>(modId, versionRange != null ? VersionRange.parse(versionRange.trim()) : null, clazzName, () -> {
             try {
                 return (T) Class.forName(clazzName).getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
@@ -56,7 +62,7 @@ public class ModProxyImpl<T> implements ModProxy<T> {
 
     @Override
     public T build() {
-        final var applicableProxies = proxies.stream().filter(proxy -> modLoadedPredicate.test(proxy.modId)).toList();
+        final var applicableProxies = proxies.stream().filter(this::isApplicable).toList();
         if (multiplexer != null && applicableProxies.size() > 1) {
             final var effectiveProxies = new ArrayList<T>();
             for (final var applicableProxy : applicableProxies) {
@@ -83,6 +89,11 @@ public class ModProxyImpl<T> implements ModProxy<T> {
         return fallback;
     }
 
+    private boolean isApplicable(ModEntry<T> proxy) {
+        final var modInfo = modInfoProvider.apply(proxy.modId);
+        return modInfo.isPresent() && (proxy.versionRange == null || proxy.versionRange.contains(modInfo.get().versionString()));
+    }
+
     public Supplier<T> buildLazily() {
         return new Supplier<>() {
             @Nullable
@@ -98,6 +109,6 @@ public class ModProxyImpl<T> implements ModProxy<T> {
         };
     }
 
-    public record ModEntry<T>(String modId, String clazzName, Supplier<T> proxy) {
+    public record ModEntry<T>(String modId, @Nullable VersionRange versionRange, String clazzName, Supplier<T> proxy) {
     }
 }
