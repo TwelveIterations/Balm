@@ -24,6 +24,7 @@ import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.blay09.mods.balm.core.component.internal.BalmDataComponentTypeRegistrarImpl;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.internal.BalmBlockRegistrarImpl;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,6 +83,11 @@ public abstract class CommonBalmRuntime<TLoadContext extends BalmRuntimeLoadCont
     @Override
     public <T> ModProxy<T> modProxy() {
         return new ModProxyImpl<>((modId) -> platform().getModInfo(modId));
+    }
+
+    @Override
+    public <T> ModProxy<T> modProxy(Identifier identifier) {
+        return new ModProxyImpl<>((modId) -> platform().getModInfo(modId), identifier);
     }
 
     public void initializeRuntime() {

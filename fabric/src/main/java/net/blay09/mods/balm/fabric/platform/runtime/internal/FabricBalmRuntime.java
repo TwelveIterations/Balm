@@ -53,6 +53,7 @@ import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTabl
 import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.fabric.platform.attachment.internal.FabricBalmDataAttachmentTypeRegistrar;
 import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -68,7 +69,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
     private final BalmLootTables lootTables = new CommonBalmLootTables();
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
     private final BalmPlatform platform = new FabricBalmPlatform();
-    private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy()
+    private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy(Identifier.fromNamespaceAndPath("balm", "permissions"))
             .with("fabric-permissions-api-v0", "[0.7,)", "net.blay09.mods.balm.fabric.platform.compatibility.permissions.internal.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
             .buildLazily();
