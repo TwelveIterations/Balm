@@ -127,7 +127,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<EmptyLoadContext> {
     @Deprecated
     private final BalmParticles particles = new FabricBalmParticles();
     private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy()
-            .with("fabric-permissions-api-v0", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
+            .with("fabric-permissions-api-v0", "[0.3,0.4)", "net.blay09.mods.balm.fabric.compat.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
             .buildLazily();
     @Deprecated
