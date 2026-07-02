@@ -31,11 +31,11 @@ import java.util.function.Supplier;
 
 public class BalmBlockEntity extends BalmBlockEntityBase implements BalmProviderHolder {
 
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     private final Map<Class<?>, BalmProvider<?>> providers = new HashMap<>();
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     private final Map<Pair<Direction, Class<?>>, BalmProvider<?>> sidedProviders = new HashMap<>();
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     private boolean providersInitialized;
 
     public BalmBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
@@ -56,7 +56,7 @@ public class BalmBlockEntity extends BalmBlockEntityBase implements BalmProvider
     /**
      * @deprecated See {@link net.blay09.mods.balm.api.capability.BalmCapabilities}
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     @SuppressWarnings("unchecked")
     public <T> T getProvider(Class<T> clazz) {
         if (!providersInitialized) {
@@ -86,7 +86,7 @@ public class BalmBlockEntity extends BalmBlockEntityBase implements BalmProvider
      * @deprecated Use {@link net.blay09.mods.balm.api.capability.BalmCapabilities#registerProvider(ResourceLocation, CapabilityType, BiFunction, Supplier)} instead.
      */
     @Override
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     public void buildProviders(List<Object> providers) {
         providers.add(this);
 

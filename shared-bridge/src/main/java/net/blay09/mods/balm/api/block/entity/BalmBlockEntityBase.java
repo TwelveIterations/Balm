@@ -15,6 +15,6 @@ public abstract class BalmBlockEntityBase extends BlockEntity {
     /**
      * @deprecated Use <code>BalmCapabilities#registerProvider(ResourceLocation, CapabilityType, BiFunction, Supplier)</code> instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     protected abstract void buildProviders(List<Object> providers);
 }

@@ -19,7 +19,7 @@ public class ModMenuUtils {
     /**
      * @deprecated Use {@link #getConfigScreen(String)} or remove your mod menu integration to fall back to Balm's default implementation.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     public static <T extends BalmConfigData> ConfigScreenFactory<?> getConfigScreen(Class<T> clazz) {
         if (Balm.isModLoaded("cloth-config")) {
             return ClothConfigUtils.getConfigScreen(clazz);

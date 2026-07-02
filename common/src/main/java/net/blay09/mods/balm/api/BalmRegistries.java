@@ -20,7 +20,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.ITEM.getKey(item) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default ResourceLocation getKey(Item item) {
         return BuiltInRegistries.ITEM.getKey(item);
     }
@@ -28,7 +28,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.BLOCK.getKey(block) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default ResourceLocation getKey(Block block) {
         return BuiltInRegistries.BLOCK.getKey(block);
     }
@@ -36,7 +36,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.FLUID.getKey(fluid) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default ResourceLocation getKey(Fluid fluid) {
         return BuiltInRegistries.FLUID.getKey(fluid);
     }
@@ -44,7 +44,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.ENTITY_TYPE.getKey(mobEffect) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default ResourceLocation getKey(EntityType<?> entityType) {
         return BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
     }
@@ -52,7 +52,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.MENU.getKey(menuType) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default ResourceLocation getKey(MenuType<?> menuType) {
         return BuiltInRegistries.MENU.getKey(menuType);
     }
@@ -60,7 +60,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.ITEM.keySet() instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default Collection<ResourceLocation> getItemKeys() {
         return BuiltInRegistries.ITEM.keySet();
     }
@@ -68,7 +68,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.ITEM.get(key) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default Item getItem(ResourceLocation key) {
         return BuiltInRegistries.ITEM.get(key);
     }
@@ -76,7 +76,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.BLOCK.get(key) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default Block getBlock(ResourceLocation key) {
         return BuiltInRegistries.BLOCK.get(key);
     }
@@ -84,7 +84,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.FLUID.get(key) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default Fluid getFluid(ResourceLocation key) {
         return BuiltInRegistries.FLUID.get(key);
     }
@@ -92,7 +92,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.MOB_EFFECT.get(key) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default MobEffect getMobEffect(ResourceLocation key) {
         return BuiltInRegistries.MOB_EFFECT.get(key);
     }
@@ -100,7 +100,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use TagKey.create(Registries.ITEM, key) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default TagKey<Item> getItemTag(ResourceLocation key) {
         return TagKey.create(Registries.ITEM, key);
     }
@@ -108,7 +108,7 @@ public interface BalmRegistries {
     /**
      * @deprecated Use BuiltInRegistries.ATTRIBUTE.get(key) instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     default Attribute getAttribute(ResourceLocation key) {
         return BuiltInRegistries.ATTRIBUTE.get(key);
     }

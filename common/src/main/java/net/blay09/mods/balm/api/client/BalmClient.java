@@ -28,7 +28,7 @@ public class BalmClient {
     /**
      * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated(since = "1.21.1")
     public static void initialize(String modId, Runnable initializer) {
         initializeMod(modId, EmptyLoadContext.INSTANCE, initializer);
     }
@@ -36,7 +36,7 @@ public class BalmClient {
     /**
      * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated(since = "1.21.1")
     public static void initialize(String modId) {
         initialize(modId, () -> {});
     }
@@ -44,7 +44,7 @@ public class BalmClient {
     /**
      * @deprecated Use Balm.getProxy() for extra side-safety
      */
-    @Deprecated(forRemoval = true, since = "1.21.1")
+    @Deprecated(since = "1.21.1")
     public static Player getClientPlayer() {
         return Minecraft.getInstance().player;
     }
@@ -52,7 +52,7 @@ public class BalmClient {
     /**
      * @deprecated Use {@link #initializeMod(String, BalmRuntimeLoadContext, Runnable)} instead.
      */
-    @Deprecated(forRemoval = true, since = "1.22")
+    @Deprecated(since = "1.22")
     public static <T extends BalmRuntimeLoadContext> void initialize(String modId, T context, Runnable initializer) {
         initializeMod(modId, context, initializer);
     }
@@ -100,7 +100,7 @@ public class BalmClient {
     /**
      * @deprecated No functionality left here.
      */
-    @Deprecated(forRemoval = true, since = "1.21.5")
+    @Deprecated(since = "1.21.5")
     public static BalmTextures getTextures() {
         return runtime.getTextures();
     }
