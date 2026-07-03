@@ -45,7 +45,7 @@ curios = { module = "top.theillusivec4.curios:curios-neoforge", version = "15.0.
 theOneProbe = { module = "curse.maven:the-one-probe-245211", version = "6106996" }
 
 [plugins]
-fabricLoom = { id = "net.fabricmc.fabric-loom", version = "1.14-SNAPSHOT" }
+fabricLoom = { id = "net.fabricmc.fabric-loom", version = "1.17-SNAPSHOT" }
 modDevGradle = { id = "net.neoforged.moddev", version = "2.0.141" }
 forgeGradle = { id = "net.minecraftforge.gradle", version = "[7,8)" }
 forgeJarJar = { id = "net.minecraftforge.jarjar", version = "0.2.3" }
