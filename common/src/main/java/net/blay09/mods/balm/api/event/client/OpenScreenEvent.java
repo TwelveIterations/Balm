@@ -22,6 +22,6 @@ public class OpenScreenEvent extends BalmEvent {
     }
 
     public @Nullable Screen getNewScreen() {
-        return newScreen;
+        return newScreen != screen ? newScreen : null;
     }
 }
