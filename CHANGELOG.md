@@ -1,7 +1,4 @@
-- API: Added `BalmRegistrar#createCustomRegistry`
-- API: Added `BalmRegistrar#createDynamicRegistry`
-- API: Added `BalmArgumentTypeRegistrar` for registering custom command argument types
-- API: Added entity support to `BalmCapabilities`
-- API: Backported `DataAttachmentTypeRegistrar` and `DataAttachmentLookup`
-- API: Backported `BalmItemRegistrar#registerDiscriminated`
-- API: Backported `DiscriminatedBlocks#prefixWith`, `#suffixWith` and `#surroundWith`
+- Fixed errors and crashes that would happen when other mods bundled an invalid version Fabric Permissions API
+- API: Added version range support to `ModProxy#with`
+- API: Added `BalmClient#clientCommands`
+- API: Add optional `Identifier` argument to `modProxy` to make it identifiable/addressable
