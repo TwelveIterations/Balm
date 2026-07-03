@@ -33,7 +33,7 @@ public class MinecraftMixin {
     public Screen modifyScreen(Screen screen) {
         OpenScreenEvent event = new OpenScreenEvent(screen);
         Balm.getEvents().fireEvent(event);
-        return event.getNewScreen() != null ? event.getNewScreen() : screen;
+        return !event.isCanceled() ? event.getNewScreen() : null;
     }
 
     @Inject(method = "startUseItem()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), cancellable = true)
