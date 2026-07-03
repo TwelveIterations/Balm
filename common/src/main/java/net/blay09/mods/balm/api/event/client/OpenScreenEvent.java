@@ -5,23 +5,23 @@ import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
 public class OpenScreenEvent extends BalmEvent {
-    private Screen screen;
+    private final Screen screen;
     private Screen newScreen;
 
     public OpenScreenEvent(Screen screen) {
         this.screen = screen;
+        this.newScreen = screen;
     }
 
     public Screen getScreen() {
         return screen;
     }
 
-    public void setScreen(Screen screen) {
+    public void setScreen(@Nullable Screen screen) {
         this.newScreen = screen;
     }
 
-    @Nullable
-    public Screen getNewScreen() {
+    public @Nullable Screen getNewScreen() {
         return newScreen;
     }
 }
