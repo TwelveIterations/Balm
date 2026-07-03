@@ -127,6 +127,14 @@ repositories {
         }
     }
 
+    maven {
+        name = 'Trinkets'
+        url = 'https://maven.nucleoid.xyz/releases'
+        content {
+            includeGroup "eu.pb4"
+        }
+    }
+
     exclusiveContent {
         forRepository {
             maven {

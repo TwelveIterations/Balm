@@ -32,6 +32,7 @@ public class NeoForgeBalmModSupport implements BalmModSupport {
                 .buildLazily();
         trinkets = runtime.<BalmModSupportTrinkets>modProxy()
                 .with("curios", "net.blay09.mods.balm.neoforge.platform.compatibility.trinkets.internal.CuriosIntegration")
+                .with("trinkets_updated", "net.blay09.mods.balm.platform.compatibility.trinkets.internal.TrinketsUpdatedIntegration")
                 .withMultiplexer(TrinketsMultiplexer::new)
                 .withFallback(new NoopTrinkets())
                 .buildLazily();
