@@ -14,6 +14,7 @@ import net.blay09.mods.balm.platform.compatibility.trinkets.BalmModSupportTrinke
 import net.blay09.mods.balm.platform.compatibility.trinkets.internal.NoopTrinkets;
 import net.blay09.mods.balm.platform.compatibility.trinkets.internal.TrinketsMultiplexer;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Supplier;
 
@@ -25,11 +26,11 @@ public class ForgeBalmModSupport implements BalmModSupport {
     private final BalmModSupportMilkFluid milkFluid = new ForgeBalmModSupportMilkFluid();
 
     public ForgeBalmModSupport(BalmRuntime<?> runtime) {
-        multiminers = runtime.<BalmModSupportMultiMiners>modProxy()
+        multiminers = runtime.<BalmModSupportMultiMiners>modProxy(Identifier.fromNamespaceAndPath("balm", "multiminers"))
                 .withMultiplexer(MultiMinersMultiplexer::new)
                 .withFallback(new NoopMultiMiners())
                 .buildLazily();
-        trinkets = runtime.<BalmModSupportTrinkets>modProxy()
+        trinkets = runtime.<BalmModSupportTrinkets>modProxy(Identifier.fromNamespaceAndPath("balm", "trinkets"))
                 .withMultiplexer(TrinketsMultiplexer::new)
                 .withFallback(new NoopTrinkets())
                 .buildLazily();

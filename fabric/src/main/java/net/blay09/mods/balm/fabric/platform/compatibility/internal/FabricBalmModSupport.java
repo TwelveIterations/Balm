@@ -14,6 +14,7 @@ import net.blay09.mods.balm.platform.compatibility.trinkets.internal.NoopTrinket
 import net.blay09.mods.balm.platform.compatibility.trinkets.internal.TrinketsMultiplexer;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.internal.CommonBalmModSupportHudInfo;
 import net.blay09.mods.balm.fabric.platform.compatibility.milk.internal.FabricModSupportMilkFluid;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Supplier;
 
@@ -25,12 +26,12 @@ public class FabricBalmModSupport implements BalmModSupport {
     private final BalmModSupportMilkFluid milkFluid = new FabricModSupportMilkFluid();
 
     public FabricBalmModSupport(BalmRuntime<?> runtime) {
-        multiminers = runtime.<BalmModSupportMultiMiners>modProxy()
+        multiminers = runtime.<BalmModSupportMultiMiners>modProxy(Identifier.fromNamespaceAndPath("balm", "multiminers"))
                 .with("ftbultimine", "net.blay09.mods.balm.platform.compatibility.multiminers.internal.FTBUltimineIntegration")
                 .withMultiplexer(MultiMinersMultiplexer::new)
                 .withFallback(new NoopMultiMiners())
                 .buildLazily();
-        trinkets = runtime.<BalmModSupportTrinkets>modProxy()
+        trinkets = runtime.<BalmModSupportTrinkets>modProxy(Identifier.fromNamespaceAndPath("balm", "trinkets"))
                 .with("trinkets_updated", "net.blay09.mods.balm.platform.compatibility.trinkets.internal.TrinketsUpdatedIntegration")
                 .withMultiplexer(TrinketsMultiplexer::new)
                 .withFallback(new NoopTrinkets())
