@@ -1,13 +1,5 @@
-- Updated to Minecraft 26.2
-- API: Added `DeferredBlock#asBlockItemId`
-- API: Added `DeferredBlock#asResourceKey` and `DeferredItem#asResourceKey`
-- API: Added slot parameters and `getSlotCount` to `FluidTank`
-- API: Changed `LivingEntityCallback.Death.Before` to fire before totem checks on Neo/Forge too
-- API: Changed `RenderCallback.BlockHighlight` to take and return a `BlockOutlineRenderState`
-- API: Remove `BalmBlockRegistrar#enableBlockDescriptionPrefixForItems`, it is now default
-- API: Remove deprecated `BalmLootModifier` overload, now always takes a nullable `lootTableId` as third parameter
-- API: Remove deprecated `UnpackedLootTableHolder`
-- API: Remove deprecated `BalmDiscriminatedBlockRegistration#withItems` and `BalmDiscriminatedBlockRegistration#withDefaultItems` overloads
-- API: Remove deprecated `BalmBlockRegistration#withItem` and `BalmBlockRegistration#withDefaultItem` overloads
-- API: Remove deprecated `SimpleRecipeTransferRegistration` in favor of `IdentifiableRecipeTypeTransferRegistration`
-- API: Remove deprecated prefix/suffix methods in `DiscriminatedBlocks` and `DiscriminatedItems`
+- Fixed errors and crashes that would happen when other mods bundled an invalid version Fabric Permissions API
+- API: Added version range support to `ModProxy#with`
+- API: Added `BalmClient#clientCommands`
+- API: Add optional `Identifier` argument to `modProxy` to make it identifiable/addressable
+- API: Added `BalmModSupport.vr().isInVR()` with Vivecraft support
