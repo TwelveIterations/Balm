@@ -1,3 +1,4 @@
-- Fixed Amecs support failing to initialize
-- Fixed various potential concurrency issues in Balm wrappers and registrars
-- Fixed `/balm export icons` not working sometimes
+- Fixed errors and crashes that would happen when other mods bundled an invalid version Fabric Permissions API
+- API: Added version range support to `ModProxy#with`
+- API: Added `BalmClient#clientCommands`
+- API: Add optional `Identifier` argument to `modProxy` to make it identifiable/addressable
