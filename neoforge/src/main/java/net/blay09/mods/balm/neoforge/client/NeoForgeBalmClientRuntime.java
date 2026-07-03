@@ -14,6 +14,7 @@ import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.model.item.BalmItemPropertyRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
@@ -33,6 +34,7 @@ import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmKeyMappingRegis
 import net.blay09.mods.balm.neoforge.client.internal.commands.NeoForgeBalmClientCommands;
 import net.blay09.mods.balm.neoforge.client.keymappings.NeoForgeBalmKeyMappings;
 import net.blay09.mods.balm.neoforge.client.model.geom.internal.NeoForgeBalmModelLayerRegistrar;
+import net.blay09.mods.balm.neoforge.client.model.item.internal.NeoForgeBalmItemPropertyRegistrar;
 import net.blay09.mods.balm.neoforge.client.particle.internal.NeoForgeBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.block.model.internal.NeoForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.internal.NeoForgeBalmBlockEntityRendererRegistrar;
@@ -192,6 +194,15 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
         BalmLoadContexts.get(namespace).ifPresent(context -> {
             if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
                 modBus.addListener((RegisterColorHandlersEvent.Item event) -> initializer.accept(new NeoForgeBalmItemColorRegistrar(event)));
+            }
+        });
+    }
+
+    @Override
+    public void itemProperties(String namespace, Consumer<BalmItemPropertyRegistrar> initializer) {
+        BalmLoadContexts.get(namespace).ifPresent(context -> {
+            if (context instanceof NeoForgeLoadContext(IEventBus modBus)) {
+                modBus.addListener((FMLClientSetupEvent event) -> event.enqueueWork(() -> initializer.accept(NeoForgeBalmItemPropertyRegistrar.INSTANCE)));
             }
         });
     }

@@ -15,6 +15,7 @@ import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.model.item.BalmItemPropertyRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
@@ -33,6 +34,7 @@ import net.blay09.mods.balm.forge.client.internal.ForgeBalmClientTooltipComponen
 import net.blay09.mods.balm.forge.client.internal.commands.ForgeBalmClientCommands;
 import net.blay09.mods.balm.forge.client.keymappings.ForgeBalmKeyMappings;
 import net.blay09.mods.balm.forge.client.model.geom.ForgeBalmModelLayerRegistrar;
+import net.blay09.mods.balm.forge.client.model.item.ForgeBalmItemPropertyRegistrar;
 import net.blay09.mods.balm.forge.client.particle.ForgeBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.block.model.ForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.blockentity.ForgeBalmBlockEntityRendererRegistrar;
@@ -188,6 +190,14 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<BalmRuntimeL
         ModBusEventRegisters.register(namespace, (bus)
                 -> bus.addListener((RegisterColorHandlersEvent.Item event)
                 -> initializer.accept(new ForgeBalmItemColorRegistrar(event))));
+    }
+
+    @Override
+    public void itemProperties(String namespace, Consumer<BalmItemPropertyRegistrar> initializer) {
+        ModBusEventRegisters.register(namespace, (bus)
+                -> bus.addListener((FMLClientSetupEvent event)
+                -> event.enqueueWork(()
+                -> initializer.accept(ForgeBalmItemPropertyRegistrar.INSTANCE))));
     }
 
     @Override

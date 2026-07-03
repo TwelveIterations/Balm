@@ -7,6 +7,7 @@ import net.blay09.mods.balm.api.client.module.BalmClientModule;
 import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.model.item.BalmItemPropertyRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
@@ -74,6 +75,15 @@ public class BalmClientRegistrars {
      */
     public void modelLayers(Consumer<BalmModelLayerRegistrar> initializer) {
         runtime.modelLayers(namespace, initializer);
+    }
+
+    /**
+     * Use this to register item model properties using the registrar provided in the consumer callback.
+     *
+     * @param initializer Callback that receives a scoped registrar for item properties.
+     */
+    public void itemProperties(Consumer<BalmItemPropertyRegistrar> initializer) {
+        runtime.itemProperties(namespace, initializer);
     }
 
     /**

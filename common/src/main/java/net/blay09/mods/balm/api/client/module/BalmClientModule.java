@@ -12,6 +12,7 @@ import net.blay09.mods.balm.client.color.block.BalmBlockColorRegistrar;
 import net.blay09.mods.balm.client.color.item.BalmItemColorRegistrar;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
+import net.blay09.mods.balm.client.model.item.BalmItemPropertyRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
@@ -60,6 +61,9 @@ public interface BalmClientModule {
     }
 
     default void registerItemColors(BalmItemColorRegistrar blockColors) {
+    }
+
+    default void registerItemProperties(BalmItemPropertyRegistrar itemProperties) {
     }
 
     default void registerParticleProviders(BalmParticleProviderRegistrar particles) {
