@@ -4,6 +4,7 @@ dependencies {
     compileOnly libs.jeiCommon
     compileOnly libs.mixinExtras
     compileOnly libs.jadeNeoForge
+    compileOnly libs.trinketsUpdated
     compileOnly libs.clothConfigNeoForge
     compileOnly libs.configuredNeoForge
     compileOnly libs.ftbUltimineCommon
