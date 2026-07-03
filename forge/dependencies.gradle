@@ -8,5 +8,6 @@ dependencies {
     compileOnly libs.configuredNeoForge
     compileOnly libs.clothConfigNeoForge
     compileOnly libs.jadeNeoForge
+    compileOnly libs.trinketsUpdated
     compileOnly libs.ftbUltimineCommon
 }

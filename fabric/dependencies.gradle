@@ -5,6 +5,7 @@ dependencies {
     compileOnly libs.jeiCommon
     compileOnly libs.wthitCommon
     compileOnly libs.jadeFabric
+    compileOnly libs.trinketsUpdated
     compileOnly libs.fabricPermissionsApi
     compileOnly libs.rebornEnergy
     compileOnly libs.clothConfigFabric

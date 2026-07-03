@@ -32,7 +32,7 @@ mixinExtras = { module = "io.github.llamalad7:mixinextras-common", version = "0.
 wthitCommon = { module = "mcp.mobius.waila:wthit-api", version = "mojmap-19.0.0" }
 jeiCommon = { module = "mezz.jei:jei-26.1-common-api", version = "29.2.0.20" }
 modMenu = { module = "maven.modrinth:modmenu", version = "18.0.0-alpha.8" }
-trinkets = { module = "eu.pb4:trinkets", version = "4.0.0-beta.3+26.1" }
+trinketsUpdated = { module = "eu.pb4:trinkets", version = "4.0.0-beta.3+26.1" }
 fabricPermissionsApi = { module = "me.lucko:fabric-permissions-api", version = "0.7.0" }
 rebornEnergy = { module = "teamreborn:energy", version = "5.0.0" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version = "26.1.154" }
