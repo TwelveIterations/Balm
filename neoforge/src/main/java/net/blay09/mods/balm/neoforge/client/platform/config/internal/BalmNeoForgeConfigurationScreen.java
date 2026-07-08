@@ -2,7 +2,7 @@ package net.blay09.mods.balm.neoforge.client.platform.config.internal;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import net.blay09.mods.balm.Balm;
-import net.blay09.mods.balm.client.platform.config.ConfigControlRegistry;
+import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
 import net.blay09.mods.balm.neoforge.platform.config.internal.NeoForgeBalmConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.schema.ConfigControlContext;

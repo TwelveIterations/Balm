@@ -1,5 +1,6 @@
-package net.blay09.mods.balm.client.platform.config;
+package net.blay09.mods.balm.client.platform.config.internal;
 
+import net.blay09.mods.balm.client.platform.config.ConfigControl;
 import net.blay09.mods.balm.platform.config.schema.ConfigControlContext;
 import net.minecraft.resources.Identifier;
 
