@@ -1,19 +1,20 @@
 package net.blay09.mods.balm.client.platform.util;
 
-import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.ProjectionType;
-import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTexture;
-import com.mojang.blaze3d.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.renderpearl.api.GpuFormat;
+import com.mojang.renderpearl.api.buffers.GpuBuffer;
+import com.mojang.renderpearl.api.textures.GpuTexture;
+import com.mojang.renderpearl.api.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.GuiRenderer;
 import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import net.minecraft.client.renderer.SubmitNodeStorage;
+import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 public class IconExport {
     private static final Logger logger = LoggerFactory.getLogger(IconExport.class);
@@ -98,15 +101,11 @@ public class IconExport {
             poseStack.translate(EXPORT_SIZE / 2f, EXPORT_SIZE / 2f, 0f);
             poseStack.scale(ITEM_RENDER_SCALE, -ITEM_RENDER_SCALE, ITEM_RENDER_SCALE);
 
-            final var previousColorOverride = RenderSystem.outputColorTextureOverride;
-            final var previousDepthOverride = RenderSystem.outputDepthTextureOverride;
             try {
                 RenderSystem.backupProjectionMatrix();
                 final var projection = new Projection();
                 projection.setupOrtho(-1000f, 1000f, EXPORT_SIZE, EXPORT_SIZE, true);
                 RenderSystem.setProjectionMatrix(projectionMatrixBuffer.getBuffer(projection), ProjectionType.ORTHOGRAPHIC);
-                RenderSystem.outputColorTextureOverride = colorTextureView;
-                RenderSystem.outputDepthTextureOverride = depthTextureView;
 
                 if (trackingState.usesBlockLight()) {
                     gameRenderer.lighting().setupFor(Lighting.Entry.ITEMS_3D);
@@ -115,10 +114,17 @@ public class IconExport {
                 }
 
                 trackingState.submit(poseStack, submitNodeStorage, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
-                gameRenderer.featureRenderDispatcher().renderAllFeatures(submitNodeStorage);
+                try (final var frame = gameRenderer.featureRenderDispatcher().prepareFrame(submitNodeStorage);
+                     final var renderPass = offscreenCommandEncoder.createRenderPass(
+                             () -> "Balm icon export",
+                             colorTextureView,
+                             Optional.empty(),
+                             depthTextureView,
+                             OptionalDouble.empty())) {
+                    RenderSystem.bindDefaultUniforms(renderPass);
+                    FeatureRenderDispatcher.renderAllFeatures(renderPass, frame);
+                }
             } finally {
-                RenderSystem.outputColorTextureOverride = previousColorOverride;
-                RenderSystem.outputDepthTextureOverride = previousDepthOverride;
                 RenderSystem.restoreProjectionMatrix();
             }
 
