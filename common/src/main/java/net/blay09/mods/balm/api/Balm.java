@@ -204,7 +204,15 @@ public class Balm {
         return runtime.getNetworking();
     }
 
+    /**
+     * @deprecated Renamed to {@link #biomeModifications()}.
+     */
+    @Deprecated
     public static BalmWorldGen getWorldGen() {
+        return runtime.getWorldGen();
+    }
+
+    public static BalmWorldGen biomeModifications() {
         return runtime.getWorldGen();
     }
 
