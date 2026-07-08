@@ -1,9 +1,9 @@
 [versions]
-minecraft = "26.3-snapshot-1"
-neoForm = "26.3-snapshot-1-1"
+minecraft = "26.3-snapshot-3"
+neoForm = "26.3-snapshot-3-1"
 neoForge = "26.2.0.0-beta"
 forge = "64.0.4"
-fabricApi = "0.153.1+26.3"
+fabricApi = "0.154.3+26.3"
 fabricLoader = "0.19.3"
 kuma = "26.3.0.1-SNAPSHOT"
 ftbUltimine = "26.1.0.1-SNAPSHOT"
