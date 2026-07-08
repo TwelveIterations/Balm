@@ -29,6 +29,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistra
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
 import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
@@ -112,6 +113,9 @@ public interface BalmModule {
     }
 
     default void registerWorldGen(BalmWorldGen worldGen) {
+    }
+
+    default void registerPoiTypes(BalmPoiTypeRegistrar poiTypes) {
     }
 
     default void registerNetworking(BalmNetworking networking) {

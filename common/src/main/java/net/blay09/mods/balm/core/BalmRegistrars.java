@@ -12,6 +12,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistra
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
 import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
@@ -163,6 +164,15 @@ public class BalmRegistrars {
      */
     public void blockEntityTypes(Consumer<BalmBlockEntityTypeRegistrar> initializer) {
         runtime.blockEntityTypes(namespace, initializer);
+    }
+
+    /**
+     * Use this to register point of interest types using the registrar provided in the consumer callback.
+     *
+     * @param initializer Callback that receives a scoped registrar for registering point of interest types.
+     */
+    public void poiTypes(Consumer<BalmPoiTypeRegistrar> initializer) {
+        runtime.poiTypes(namespace, initializer);
     }
 
     /**

@@ -26,7 +26,7 @@ public interface BalmWorldGen {
     <T extends PlacementModifierType<?>> DeferredObject<T> registerPlacementModifier(ResourceLocation identifier, Supplier<T> supplier);
 
     /**
-     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#poiTypes) instead.
+     * @deprecated Use {@link net.blay09.mods.balm.core.BalmRegistrars#poiTypes(Consumer)} instead.
      */
     @Deprecated
     <T extends PoiType> DeferredObject<T> registerPoiType(ResourceLocation identifier, Supplier<T> supplier);

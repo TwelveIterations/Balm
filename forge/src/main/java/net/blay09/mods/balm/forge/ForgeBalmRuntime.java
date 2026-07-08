@@ -70,6 +70,8 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistra
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
+import net.blay09.mods.balm.world.entity.ai.village.poi.internal.BalmPoiTypeRegistrarImpl;
 import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
@@ -366,6 +368,11 @@ public class ForgeBalmRuntime extends CommonBalmRuntime<BalmRuntimeLoadContext> 
     @Override
     public void entityTypes(String namespace, Consumer<BalmEntityTypeRegistrar> initializer) {
         initializer.accept(new ForgeBalmEntityTypeRegistrar(registrar(), namespace));
+    }
+
+    @Override
+    public void poiTypes(String namespace, Consumer<BalmPoiTypeRegistrar> initializer) {
+        initializer.accept(new BalmPoiTypeRegistrarImpl(registrar(), namespace));
     }
 
     @Override

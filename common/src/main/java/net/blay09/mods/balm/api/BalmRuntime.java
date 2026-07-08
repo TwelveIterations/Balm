@@ -34,6 +34,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistra
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
+import net.blay09.mods.balm.world.entity.ai.village.poi.BalmPoiTypeRegistrar;
 import net.blay09.mods.balm.world.entity.npc.villager.BalmVillagerTradeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
@@ -161,6 +162,7 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         module.registerEntities(getEntities());
         entityTypes(modId, module::registerEntityTypes);
         module.registerWorldGen(getWorldGen());
+        poiTypes(modId, module::registerPoiTypes);
         module.registerNetworking(getNetworking());
         module.registerMenus(getMenus());
         menuTypes(modId, module::registerMenuTypes);
@@ -232,6 +234,8 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer);
 
     void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer);
+
+    void poiTypes(String namespace, Consumer<BalmPoiTypeRegistrar> initializer);
 
     void resourceReloadListeners(String namespace, Consumer<BalmResourceReloadListenerRegistrar> initializer);
 
