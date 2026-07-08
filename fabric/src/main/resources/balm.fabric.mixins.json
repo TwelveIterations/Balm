@@ -15,7 +15,8 @@
     "ResultSlotMixin",
     "ServerPlayerMixin",
     "CommandsMixin",
-    "PoiTypesAccessor"
+    "PoiTypesAccessor",
+    "RecipeMapAccessor"
   ],
   "client": [
     "AbstractClientPlayerMixin",
