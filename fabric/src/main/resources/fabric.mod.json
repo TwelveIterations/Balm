@@ -30,6 +30,9 @@
     ],
     "jade": [
       "net.blay09.mods.balm.fabric.compat.hudinfo.FabricJadeModCompat"
+    ],
+    "jei_mod_plugin": [
+      "net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.jei.CommonJeiPlugin"
     ]
   },
   "mixins": [
