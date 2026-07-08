@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -48,6 +49,11 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     }
 
     private static class DiscriminatedBlocksImpl<T> extends HashMap<T, DeferredBlock> implements DiscriminatedBlocks<T> {
+        @Override
+        public Stream<Entry<T, DeferredBlock>> sortedEntries(Comparator<T> comparator) {
+            return entrySet().stream().sorted(Entry.comparingByKey(comparator));
+        }
+
         @Override
         public Stream<Entry<T, DeferredBlock>> filterNonNullDiscriminatorEntries() {
             return entrySet().stream().filter(it -> it.getKey() != null);
