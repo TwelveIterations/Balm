@@ -2,7 +2,6 @@ package com.example.balm;
 
 import net.blay09.mods.balm.platform.config.BalmConfig;
 import net.blay09.mods.balm.platform.module.BalmModule;
-import net.blay09.mods.balm.world.item.BalmCompostableRegistrar;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootModifier;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
 import net.minecraft.resources.Identifier;
@@ -24,11 +23,6 @@ public class MiscTestModule implements BalmModule {
     @Override
     public void registerConfig(BalmConfig config) {
         config.registerConfig(ExampleConfig.class);
-    }
-
-    @Override
-    public void registerCompostables(BalmCompostableRegistrar compostables) {
-        compostables.register(Items.DIAMOND, 1f);
     }
 
     @Override

@@ -21,7 +21,6 @@ import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
-import net.blay09.mods.balm.world.item.BalmCompostableRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
@@ -69,9 +68,6 @@ public interface BalmModule {
     }
 
     default void registerItems(BalmItemRegistrar items) {
-    }
-
-    default void registerCompostables(BalmCompostableRegistrar compostables) {
     }
 
     default void registerCreativeModeTabs(BalmCreativeModeTabRegistrar creativeModeTabs) {

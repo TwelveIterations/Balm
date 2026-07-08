@@ -28,7 +28,6 @@ import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.platform.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
-import net.blay09.mods.balm.world.item.BalmCompostableRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.crafting.BalmRecipeTypeRegistrar;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
@@ -91,7 +90,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
         blocks(modId, module::registerBlocks);
         blockEntityTypes(modId, module::registerBlockEntityTypes);
         items(modId, module::registerItems);
-        compostables(modId, module::registerCompostables);
         creativeModeTabs(modId, module::registerCreativeModeTabs);
         entityTypes(modId, module::registerEntityTypes);
         module.registerWorldGen(getWorldGen());
@@ -130,8 +128,6 @@ public interface BalmRuntime<TLoadContext extends BalmRuntimeLoadContext> {
     void blocks(String namespace, Consumer<BalmBlockRegistrar> initializer);
 
     void items(String namespace, Consumer<BalmItemRegistrar> initializer);
-
-    void compostables(String namespace, Consumer<BalmCompostableRegistrar> initializer);
 
     void recipeTypes(String namespace, Consumer<BalmRecipeTypeRegistrar> initializer);
 
