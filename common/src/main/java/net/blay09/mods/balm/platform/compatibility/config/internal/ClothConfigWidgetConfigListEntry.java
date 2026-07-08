@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-class ClothConfigWidgetConfigListEntry<T> extends AbstractConfigListEntry<T> {
+public class ClothConfigWidgetConfigListEntry<T> extends AbstractConfigListEntry<T> {
     private final ConfigControlContext<T> context;
     private final AbstractWidget widget;
     private final T originalValue;

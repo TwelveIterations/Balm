@@ -46,15 +46,9 @@ public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.Configu
 
         final var path = context.keylist();
         if (path.isEmpty()) {
-            return schema.rootProperties().stream().filter(it -> it.name().equals(key)).findFirst().orElse(null);
+            return schema.findRootProperty(key);
         } else if (path.size() == 1) {
-            final var categoryName = path.getFirst();
-            return schema.categories().stream()
-                    .filter(it -> it.name().equals(categoryName))
-                    .flatMap(it -> it.properties().stream())
-                    .filter(it -> it.name().equals(key))
-                    .findFirst()
-                    .orElse(null);
+            return schema.findProperty(path.getFirst(), key);
         }
 
         return null;
