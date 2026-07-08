@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.fabric.platform.runtime.internal;
 
-import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.commands.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.fabric.commands.internal.FabricBalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.fabric.commands.internal.FabricBalmCommands;
@@ -43,11 +42,9 @@ import net.blay09.mods.balm.fabric.platform.internal.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.world.inventory.internal.FabricBalmMenuTypeRegistrar;
 import net.blay09.mods.balm.server.packs.resources.BalmResourceConditionRegistrar;
 import net.blay09.mods.balm.fabric.world.item.internal.FabricBalmCreativeModeTabRegistrar;
-import net.blay09.mods.balm.fabric.world.item.internal.FabricBalmCompostableRegistrar;
 import net.blay09.mods.balm.fabric.server.packs.resources.internal.FabricBalmResourceReloadListenerRegistrar;
 import net.blay09.mods.balm.platform.BalmPlatform;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
-import net.blay09.mods.balm.world.item.BalmCompostableRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
 import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrar;
@@ -139,11 +136,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
     @Override
     public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
         initializer.accept(new FabricBalmCreativeModeTabRegistrar(registrar(), namespace));
-    }
-
-    @Override
-    public void compostables(String namespace, Consumer<BalmCompostableRegistrar> initializer) {
-        initializer.accept(new FabricBalmCompostableRegistrar());
     }
 
     @Override

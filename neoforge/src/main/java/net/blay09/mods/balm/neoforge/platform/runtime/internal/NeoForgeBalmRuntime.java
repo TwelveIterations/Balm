@@ -26,7 +26,6 @@ import net.blay09.mods.balm.neoforge.server.packs.resources.internal.NeoForgeBal
 import net.blay09.mods.balm.neoforge.stats.internal.NeoForgeBalmCustomStatRegistrar;
 import net.blay09.mods.balm.neoforge.world.entity.internal.NeoForgeBalmEntityTypeRegistrar;
 import net.blay09.mods.balm.neoforge.world.inventory.internal.NeoForgeBalmMenuTypeRegistrar;
-import net.blay09.mods.balm.neoforge.world.item.internal.NeoForgeBalmCompostableRegistrar;
 import net.blay09.mods.balm.neoforge.world.item.internal.NeoForgeBalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.neoforge.world.level.block.entity.internal.NeoForgeBalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.neoforge.world.level.levelgen.NeoForgeBalmWorldGen;
@@ -45,7 +44,6 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerReg
 import net.blay09.mods.balm.stats.BalmCustomStatRegistrar;
 import net.blay09.mods.balm.world.entity.BalmEntityTypeRegistrar;
 import net.blay09.mods.balm.world.inventory.BalmMenuTypeRegistrar;
-import net.blay09.mods.balm.world.item.BalmCompostableRegistrar;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
@@ -140,15 +138,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public void creativeModeTabs(String namespace, Consumer<BalmCreativeModeTabRegistrar> initializer) {
         initializer.accept(new NeoForgeBalmCreativeModeTabRegistrar(registrar(), namespace));
-    }
-
-    @Override
-    public void compostables(String namespace, Consumer<BalmCompostableRegistrar> initializer) {
-        NeoForge.EVENT_BUS.addListener(DataMapsUpdatedEvent.class, event -> {
-            if (event.getCause() == DataMapsUpdatedEvent.UpdateCause.SERVER_RELOAD) {
-                event.ifRegistry(Registries.ITEM, registry -> initializer.accept(new NeoForgeBalmCompostableRegistrar(registry)));
-            }
-        });
     }
 
     public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
