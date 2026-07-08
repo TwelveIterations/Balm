@@ -34,7 +34,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         final var identifier = ResourceLocation.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.BLOCK, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(properties.get()));
-        return new BalmBlockRegistrationImpl(registrar, holder);
+        return new BalmBlockRegistrationImpl(namespace, registrar, holder);
     }
 
     @Override
@@ -77,11 +77,13 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     }
 
     private static final class BalmBlockRegistrationImpl implements BalmBlockRegistration {
+        private final String namespace;
         private final BalmRegistrar registrar;
         private final Holder<Block> holder;
         private DeferredBlock deferredBlock;
 
-        private BalmBlockRegistrationImpl(BalmRegistrar registrar, Holder<Block> holder) {
+        private BalmBlockRegistrationImpl(String namespace, BalmRegistrar registrar, Holder<Block> holder) {
+            this.namespace = namespace;
             this.registrar = registrar;
             this.holder = holder;
         }
@@ -91,6 +93,14 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
             final var blockResourceKey = holder.unwrapKey().orElseThrow();
             final var itemResourceKey = ResourceKey.create(Registries.ITEM, blockResourceKey.location());
             registrar.register(itemResourceKey, (id) -> constructor.apply(holder.value(), properties.get()));
+            return this;
+        }
+
+        @Override
+        public BalmBlockRegistration withItem(String name, BiFunction<Block, Item.Properties, BlockItem> constructor, Function<Item.Properties, Item.Properties> propertiesBuilder) {
+            final var itemIdentifier = ResourceLocation.fromNamespaceAndPath(namespace, name);
+            final var itemResourceKey = ResourceKey.create(Registries.ITEM, itemIdentifier);
+            registrar.register(itemResourceKey, (id) -> constructor.apply(holder.value(), propertiesBuilder.apply(new Item.Properties())));
             return this;
         }
 

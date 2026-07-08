@@ -58,5 +58,10 @@ public interface BalmDiscriminatedBlockRegistration<T> extends Map<T, BalmBlockR
         return this;
     }
 
+    default BalmDiscriminatedBlockRegistration<T> withItems(Function<T, String> nameFunction, BiFunction<Block, Item.Properties, BlockItem> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesBuilder) {
+        forEach((discrimination, it) -> it.withItem(nameFunction.apply(discrimination), constructor, (properties) -> propertiesBuilder.apply(discrimination, properties)));
+        return this;
+    }
+
     DiscriminatedBlocks<T> asDiscriminatedBlocks();
 }
