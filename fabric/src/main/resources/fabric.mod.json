@@ -14,7 +14,7 @@
     "issues": "https://github.com/TwelveIterations/Balm/issues"
   },
   "license": "All Rights Reserved",
-  "icon": "balm-icon.png",
+  "icon": "balm.png",
   "environment": "*",
   "entrypoints": {
     "main": [
