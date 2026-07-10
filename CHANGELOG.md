@@ -1,3 +1,5 @@
+- Hotfixed crash on startup on Fabric
+
 - API: Fixed `OpenScreenEvent` not supporting cancellation on Fabric
 - API: Backported `BalmBlockRegistration#withItem()` and `BalmDiscriminatedBlockRegistration#withItems()` overloads with name function
 - API: Backported `DiscriminatedBlocks#sortedValues()` etc.
