@@ -32,10 +32,8 @@ public class ForgeBalmClientEventMappings extends ForgeBalmEventMappings {
         ScreenCallback.Init.After.EVENT.configureMapping(ForgeBalmSupplementalClientEvents.SCREEN_INIT_POST::register);
         ScreenCallback.Opening.EVENT.configureMapping((phase, it)
                 -> ScreenEvent.Opening.BUS.addListener(mapPriority(phase), (orig) -> {
-            final var newScreen = it.modifyScreen(orig.getScreen());
-            if (newScreen != null) {
-                orig.setNewScreen(newScreen);
-            }
+            //noinspection DataFlowIssue // javadocs say "may be null"
+            orig.setNewScreen(it.modifyScreen(orig.getNewScreen()));
             return false;
         }));
         bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.BUS, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));

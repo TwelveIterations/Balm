@@ -31,7 +31,7 @@ public class MinecraftMixin {
     public ClientLevel level;
 
     @ModifyVariable(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;", opcode = Opcodes.GETFIELD, shift = At.Shift.AFTER), argsOnly = true)
-    public Screen modifyScreen(Screen screen) {
+    public @Nullable Screen modifyScreen(Screen screen) {
         return FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().modifyScreen(screen);
     }
 
