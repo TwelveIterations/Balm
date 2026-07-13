@@ -1,4 +1,2 @@
-- Fixed errors and crashes that would happen when other mods bundled an invalid version Fabric Permissions API
-- API: Added version range support to `ModProxy#with`
-- API: Added `BalmClient#clientCommands`
-- API: Add optional `Identifier` argument to `modProxy` to make it identifiable/addressable
+- Added support for Trinkets Updated
+- Fixed preventing screen overrides from other mods (like Catalogue) from being applied when Balm's `OpenScreenEvent` was used
