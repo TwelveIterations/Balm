@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.neoforge.client.platform.event.internal;
 
-import net.blay09.mods.balm.client.platform.event.internal.BalmSupplementalClientEvents;
 import net.blay09.mods.balm.client.platform.event.callback.*;
+import net.blay09.mods.balm.client.platform.event.internal.BalmSupplementalClientEvents;
 import net.blay09.mods.balm.neoforge.platform.event.internal.NeoForgeBalmEventMappings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -32,12 +32,7 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
 
         ScreenCallback.Init.Before.EVENT.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_PRE::register);
         ScreenCallback.Init.After.EVENT.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_POST::register);
-        bindSimple(ScreenCallback.Opening.EVENT, ScreenEvent.Opening.class, (event, it) -> {
-            final var newScreen = it.modifyScreen(event.getScreen());
-            if (newScreen != null) {
-                event.setNewScreen(newScreen);
-            }
-        });
+        bindSimple(ScreenCallback.Opening.EVENT, ScreenEvent.Opening.class, (event, it) -> event.setNewScreen(it.modifyScreen(event.getNewScreen())));
 
         bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
         bindSimple(ScreenCallback.Render.AFTER_BACKGROUND, ScreenEvent.Render.Background.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));

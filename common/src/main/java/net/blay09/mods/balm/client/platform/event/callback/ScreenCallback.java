@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import org.jspecify.annotations.Nullable;
 
 public interface ScreenCallback {
     @FunctionalInterface
@@ -18,7 +19,7 @@ public interface ScreenCallback {
 
     @FunctionalInterface
     interface Opening {
-        Screen modifyScreen(Screen screen);
+        @Nullable Screen modifyScreen(@Nullable Screen screen);
 
         EventMapper<Opening> EVENT = EventMapper.createUnbound("ScreenCallback.Opening");
     }
