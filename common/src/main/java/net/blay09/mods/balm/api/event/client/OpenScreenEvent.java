@@ -13,6 +13,11 @@ public class OpenScreenEvent extends BalmEvent {
         this.newScreen = screen;
     }
 
+    public OpenScreenEvent(Screen screen, @Nullable Screen newScreen) {
+        this.screen = screen;
+        this.newScreen = newScreen;
+    }
+
     public Screen getScreen() {
         return screen;
     }

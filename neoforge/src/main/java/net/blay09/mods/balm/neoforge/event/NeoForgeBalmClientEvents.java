@@ -320,7 +320,7 @@ public class NeoForgeBalmClientEvents {
 
         events.registerEvent(OpenScreenEvent.class, priority -> {
             NeoForge.EVENT_BUS.addListener(NeoForgeBalmEvents.toForge(priority), (ScreenEvent.Opening orig) -> {
-                final OpenScreenEvent event = new OpenScreenEvent(orig.getScreen());
+                final OpenScreenEvent event = new OpenScreenEvent(orig.getScreen(), orig.getNewScreen());
                 events.fireEventHandlers(priority, event);
                 if (event.getNewScreen() != null) {
                     orig.setNewScreen(event.getNewScreen());
