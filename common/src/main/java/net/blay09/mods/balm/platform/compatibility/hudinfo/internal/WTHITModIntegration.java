@@ -27,7 +27,7 @@ public class WTHITModIntegration implements IWailaClientPlugin {
 
             final var output = new WTHITHudInfoOutput(tooltip);
             final var context = new BlockInfoContext(
-                    accessor.getWorld(),
+                    accessor.getLevel(),
                     accessor.getPosition(),
                     accessor.getBlockState(),
                     accessor.getBlockEntity(),
