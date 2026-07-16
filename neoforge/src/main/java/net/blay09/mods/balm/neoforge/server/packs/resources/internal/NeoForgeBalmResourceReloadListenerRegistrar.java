@@ -15,18 +15,8 @@ import java.util.function.Consumer;
 public class NeoForgeBalmResourceReloadListenerRegistrar implements BalmResourceReloadListenerRegistrar {
     private static final VanillaKeys VANILLA_KEYS = new VanillaKeys() {
         @Override
-        public Identifier advancements() {
-            return VanillaServerListeners.ADVANCEMENTS;
-        }
-
-        @Override
         public Identifier functions() {
             return VanillaServerListeners.FUNCTIONS;
-        }
-
-        @Override
-        public Identifier recipes() {
-            return VanillaServerListeners.RECIPES;
         }
     };
 

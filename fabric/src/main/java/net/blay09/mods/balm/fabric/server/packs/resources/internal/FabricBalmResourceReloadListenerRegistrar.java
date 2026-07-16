@@ -20,18 +20,8 @@ import java.util.function.Function;
 public class FabricBalmResourceReloadListenerRegistrar implements BalmResourceReloadListenerRegistrar {
     private static final VanillaKeys VANILLA_KEYS = new VanillaKeys() {
         @Override
-        public Identifier advancements() {
-            return ResourceReloaderKeys.Server.ADVANCEMENTS;
-        }
-
-        @Override
         public Identifier functions() {
             return ResourceReloaderKeys.Server.FUNCTIONS;
-        }
-
-        @Override
-        public Identifier recipes() {
-            return ResourceReloaderKeys.Server.RECIPES;
         }
     };
 
