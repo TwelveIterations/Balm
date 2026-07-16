@@ -174,7 +174,86 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
             @Override
             public IConfigValue<?> getValue() {
-                return createConfigValue(config, property, context, initialValue);
+                return new IConfigValue<T>() {
+                    @Override
+                    public T get() {
+                        return config.getRaw(property);
+                    }
+
+                    @Override
+                    public T getDefault() {
+                        return property.defaultValue();
+                    }
+
+                    @Override
+                    public void set(T o) {
+                        context.set(o);
+                    }
+
+                    @Override
+                    public boolean isValid(@Nullable T o) {
+                        if (o == null || !ClassUtils.isAssignable(o.getClass(), property.type(), true)) {
+                            return false;
+                        }
+                        return property.customControl()
+                                .flatMap(ConfigControlRegistry::<T>get)
+                                .map(control -> control.validate(context, o))
+                                .orElseGet(() -> property.validateValue(o))
+                                .isSuccess();
+                    }
+
+                    @Override
+                    public boolean isDefault() {
+                        return Objects.equals(property.defaultValue(), config.getRaw(property));
+                    }
+
+                    @Override
+                    public boolean isChanged() {
+                        return !Objects.equals(config.getRaw(property), initialValue);
+                    }
+
+                    @Override
+                    public void restore() {
+                        context.set(property.defaultValue());
+                    }
+
+                    @Override
+                    public Component getComment() {
+                        return Component.translatable(ConfigLocalization.forPropertyTooltip(property));
+                    }
+
+                    @Override
+                    public String getTranslationKey() {
+                        return ConfigLocalization.forProperty(property);
+                    }
+
+                    @Override
+                    public @Nullable Component getValidationHint() {
+                        return property.customControl()
+                                .flatMap(ConfigControlRegistry::<T>get)
+                                .flatMap(control -> control.getValidationHint(context))
+                                .orElseGet(() -> ConfiguredConfigProvider.getValidationHint(property));
+                    }
+
+                    @Override
+                    public String getName() {
+                        return property.name();
+                    }
+
+                    @Override
+                    public void cleanCache() {
+                    }
+
+                    @Override
+                    public boolean requiresWorldRestart() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean requiresGameRestart() {
+                        return false;
+                    }
+                };
             }
 
             @Override
@@ -223,91 +302,8 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         }
     }
 
-    private static <T> IConfigValue<T> createConfigValue(MutableLoadedConfig config, ConfiguredProperty<T> property, ConfigControlBinding<T> context, T initialValue) {
-        return new IConfigValue<>() {
-            @Override
-            public T get() {
-                return config.getRaw(property);
-            }
-
-            @Override
-            public T getDefault() {
-                return property.defaultValue();
-            }
-
-            @Override
-            public void set(T o) {
-                context.set(o);
-            }
-
-            @Override
-            public boolean isValid(@Nullable T o) {
-                if (o == null || !ClassUtils.isAssignable(o.getClass(), property.type(), true)) {
-                    return false;
-                }
-                return property.customControl()
-                        .flatMap(ConfigControlRegistry::<T>get)
-                        .map(control -> control.validate(context, o))
-                        .orElseGet(() -> property.validateValue(o))
-                        .isSuccess();
-            }
-
-            @Override
-            public boolean isDefault() {
-                return Objects.equals(property.defaultValue(), config.getRaw(property));
-            }
-
-            @Override
-            public boolean isChanged() {
-                return !Objects.equals(config.getRaw(property), initialValue);
-            }
-
-            @Override
-            public void restore() {
-                context.set(property.defaultValue());
-            }
-
-            @Override
-            public Component getComment() {
-                return Component.translatable(ConfigLocalization.forPropertyTooltip(property));
-            }
-
-            @Override
-            public String getTranslationKey() {
-                return ConfigLocalization.forProperty(property);
-            }
-
-            @Override
-            public @Nullable Component getValidationHint() {
-                return property.customControl()
-                        .flatMap(ConfigControlRegistry::<T>get)
-                        .flatMap(control -> control.getValidationHint(context))
-                        .orElseGet(() -> ConfiguredConfigProvider.getValidationHint(property));
-            }
-
-            @Override
-            public String getName() {
-                return property.name();
-            }
-
-            @Override
-            public void cleanCache() {
-            }
-
-            @Override
-            public boolean requiresWorldRestart() {
-                return false;
-            }
-
-            @Override
-            public boolean requiresGameRestart() {
-                return false;
-            }
-        };
-    }
-
     private static @Nullable Component getValidationHint(ConfiguredProperty<?> property) {
-        return null;
+        return null; // no default for now
     }
 
     public static BalmConfigScreenFactory getConfigScreenFactory(String modId) {
