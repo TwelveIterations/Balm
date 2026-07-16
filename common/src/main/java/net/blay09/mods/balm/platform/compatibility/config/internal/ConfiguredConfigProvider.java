@@ -153,7 +153,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         final var initialValue = config.getRaw(property);
         final var displayName = Component.translatable(ConfigLocalization.forProperty(property));
         final var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
-        final var context = new ConfigControlBinding<>(property, config, displayName, tooltip);
+        final var binding = new ConfigControlBinding<>(property, config, displayName, tooltip);
         return new IConfigEntry() {
             @Override
             public List<IConfigEntry> getChildren() {
@@ -185,7 +185,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public void set(T o) {
-                        context.set(o);
+                        binding.set(o);
                     }
 
                     @Override
@@ -195,7 +195,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                         }
                         return property.customControl()
                                 .flatMap(ConfigControlRegistry::<T>get)
-                                .map(control -> control.validate(context, o))
+                                .map(control -> control.validate(binding, o))
                                 .orElseGet(() -> property.validateValue(o))
                                 .isSuccess();
                     }
@@ -212,7 +212,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public void restore() {
-                        context.set(property.defaultValue());
+                        binding.set(property.defaultValue());
                     }
 
                     @Override
@@ -229,7 +229,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                     public @Nullable Component getValidationHint() {
                         return property.customControl()
                                 .flatMap(ConfigControlRegistry::<T>get)
-                                .flatMap(control -> control.getValidationHint(context))
+                                .flatMap(control -> control.getValidationHint(binding))
                                 .orElseGet(() -> ConfiguredConfigProvider.getValidationHint(property));
                     }
 
