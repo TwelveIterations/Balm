@@ -3,9 +3,7 @@ package net.blay09.mods.balm.neoforge.platform.internal;
 import net.blay09.mods.balm.nbt.BalmDataHolder;
 import net.blay09.mods.balm.platform.BalmHooks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +16,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -28,17 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NeoForgeBalmHooks implements BalmHooks {
 
     public final Map<Item, Integer> burnTimes = new ConcurrentHashMap<>();
-
-    public NeoForgeBalmHooks() {
-        NeoForge.EVENT_BUS.addListener(this::furnaceFuelBurnTime);
-    }
-
-    private void furnaceFuelBurnTime(FurnaceFuelBurnTimeEvent event) {
-        final var found = burnTimes.get(event.getItemStack().getItem());
-        if (found != null) {
-            event.setBurnTime(found);
-        }
-    }
 
     @Override
     public boolean growCrop(ItemStack itemStack, Level level, BlockPos pos, @Nullable Player player) {
@@ -87,11 +73,6 @@ public class NeoForgeBalmHooks implements BalmHooks {
     @Override
     public @Nullable DyeColor getColor(ItemStack itemStack) {
         return DyeColor.getColor(itemStack);
-    }
-
-    @Override
-    public void setBurnTime(Item item, int burnTime) {
-        burnTimes.put(item, burnTime);
     }
 
     @Override

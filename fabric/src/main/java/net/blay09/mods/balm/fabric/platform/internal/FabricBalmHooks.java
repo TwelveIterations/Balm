@@ -6,14 +6,11 @@ import net.blay09.mods.balm.nbt.BalmDataHolder;
 import net.blay09.mods.balm.world.entity.BalmForcedPoseHolder;
 import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
 import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -70,11 +67,6 @@ public class FabricBalmHooks implements BalmHooks {
     @Override
     public @Nullable DyeColor getColor(ItemStack itemStack) {
         return itemStack.get(DataComponents.DYE);
-    }
-
-    @Override
-    public void setBurnTime(Item item, int burnTime) {
-        FuelValueEvents.BUILD.register((builder, context) -> builder.add(item, burnTime));
     }
 
     @Override
