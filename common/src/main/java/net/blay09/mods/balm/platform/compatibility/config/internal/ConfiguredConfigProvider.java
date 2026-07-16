@@ -21,9 +21,6 @@ import java.util.stream.Collectors;
 
 public class ConfiguredConfigProvider implements IModConfigProvider {
     private static final Logger logger = LoggerFactory.getLogger(ConfiguredConfigProvider.class);
-    private static final String VALIDATION_HINT_RANGE = "balm.configuration.validation.range";
-    private static final String VALIDATION_HINT_NEGATIVE_INFINITY = "balm.configuration.validation.negative_infinity";
-    private static final String VALIDATION_HINT_POSITIVE_INFINITY = "balm.configuration.validation.positive_infinity";
 
     @Nullable
     private static IModConfig mapConfig(BalmConfigSchema schema, @Nullable MutableLoadedConfig config) {
@@ -319,9 +316,9 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private static Component getRangeValidationHint(Optional<?> minValue, Optional<?> maxValue) {
-        return Component.translatable(VALIDATION_HINT_RANGE,
-                minValue.map(it -> Component.literal(String.valueOf(it))).orElseGet(() -> Component.translatable(VALIDATION_HINT_NEGATIVE_INFINITY)),
-                maxValue.map(it -> Component.literal(String.valueOf(it))).orElseGet(() -> Component.translatable(VALIDATION_HINT_POSITIVE_INFINITY)));
+        return Component.translatable("gui.balm.configuration.validation.range",
+                minValue.map(it -> Component.literal(String.valueOf(it))).orElseGet(() -> Component.translatable("gui.balm.configuration.validation.negative_infinity")),
+                maxValue.map(it -> Component.literal(String.valueOf(it))).orElseGet(() -> Component.translatable("gui.balm.configuration.validation.positive_infinity")));
     }
 
     public static BalmConfigScreenFactory getConfigScreenFactory(String modId) {
