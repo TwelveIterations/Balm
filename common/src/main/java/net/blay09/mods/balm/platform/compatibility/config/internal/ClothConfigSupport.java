@@ -13,11 +13,15 @@ import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClothConfigSupport {
+    private static final Logger logger = LoggerFactory.getLogger(ClothConfigSupport.class);
+
     public ClothConfigSupport() {
         BalmConfigScreenProviders.register("cloth-config", ClothConfigSupport::getConfigScreenFactory);
     }
@@ -227,8 +231,11 @@ public class ClothConfigSupport {
                 categoryInstance.addEntry(new ClothConfigWidgetConfigListEntry<>(new ConfigControlBinding<>(property, config, displayName, tooltip), widget));
                 return true;
             }
-            default ->
-                    throw new IllegalStateException("Config control for " + property.parentSchema().identifier() + "/" + property.category() + "." + property.name() + " must return AbstractConfigListEntry or AbstractWidget for Cloth Config, got " + entry.getClass().getName());
+            default -> {
+                logger.warn("Config control for {}/{}.{} must return AbstractConfigListEntry or AbstractWidget for Cloth Config, got {}. Falling back to default control.",
+                        property.parentSchema().identifier(), property.category(), property.name(), entry.getClass().getName());
+                return false;
+            }
         }
     }
 

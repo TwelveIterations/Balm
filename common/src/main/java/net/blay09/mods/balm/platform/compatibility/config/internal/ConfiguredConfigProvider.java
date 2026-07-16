@@ -15,11 +15,15 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ClassUtils;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfiguredConfigProvider implements IModConfigProvider {
+    private static final Logger logger = LoggerFactory.getLogger(ConfiguredConfigProvider.class);
+
     @Nullable
     private static IModConfig mapConfig(BalmConfigSchema schema, @Nullable MutableLoadedConfig config) {
         if(config == null) {
@@ -211,8 +215,11 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
             case null -> {
                 return null;
             }
-            default ->
-                    throw new IllegalStateException("Configured control for " + property.parentSchema().identifier() + "/" + property.category() + "." + property.name() + " must return IConfigEntry or IConfigValue, got " + entry.getClass().getName());
+            default -> {
+                logger.warn("Configured control for {}/{}.{} must return IConfigEntry or IConfigValue for Configured, got {}. Falling back to default control.",
+                        property.parentSchema().identifier(), property.category(), property.name(), entry.getClass().getName());
+                return null;
+            }
         }
     }
 

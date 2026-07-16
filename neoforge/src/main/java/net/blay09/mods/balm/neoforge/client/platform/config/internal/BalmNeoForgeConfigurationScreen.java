@@ -85,8 +85,11 @@ public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.Configu
                     new Element(getTranslationComponent(key), getTooltipComponent(key, null), widget);
             case OptionInstance<?> option ->
                     new Element(getTranslationComponent(key), getTooltipComponent(key, null), option);
-            default ->
-                    throw new IllegalStateException("Config control for " + property.parentSchema().identifier() + "/" + property.category() + "." + property.name() + " must return ConfigurationSectionScreen.Element, AbstractWidget, or OptionInstance for NeoForge, got " + element.getClass().getName());
+            default -> {
+                logger.warn("Config control for {}/{}.{} must return ConfigurationSectionScreen.Element, AbstractWidget, or OptionInstance for NeoForge, got {}. Falling back to default control.",
+                        property.parentSchema().identifier(), property.category(), property.name(), element.getClass().getName());
+                yield null;
+            }
         };
 
     }
