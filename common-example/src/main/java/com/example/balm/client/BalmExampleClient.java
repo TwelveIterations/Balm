@@ -16,16 +16,16 @@ public class BalmExampleClient {
     }
 
     private static class FancyConfigButton extends Button.Plain {
-        private final ConfigControlBinding<Boolean> context;
+        private final ConfigControlBinding<Boolean> binding;
 
-        public FancyConfigButton(ConfigControlBinding<Boolean> context) {
-            super(0, 0, 150, 20, Component.empty(), (_) -> context.set(!context.get()), DEFAULT_NARRATION);
-            this.context = context;
+        public FancyConfigButton(ConfigControlBinding<Boolean> binding) {
+            super(0, 0, 150, 20, Component.empty(), (_) -> binding.set(!binding.get()), DEFAULT_NARRATION);
+            this.binding = binding;
         }
 
         @Override
         public Component getMessage() {
-            return Component.literal("Custom: " + context.get());
+            return Component.literal("Custom: " + binding.get());
         }
     }
 }

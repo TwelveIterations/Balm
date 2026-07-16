@@ -12,31 +12,31 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ClothConfigWidgetConfigListEntry<T> extends AbstractConfigListEntry<T> {
-    private final ConfigControlBinding<T> context;
+    private final ConfigControlBinding<T> binding;
     private final AbstractWidget widget;
     private final T originalValue;
 
-    public ClothConfigWidgetConfigListEntry(ConfigControlBinding<T> context, AbstractWidget widget) {
-        super(context.label(), false);
-        this.context = context;
+    public ClothConfigWidgetConfigListEntry(ConfigControlBinding<T> binding, AbstractWidget widget) {
+        super(binding.label(), false);
+        this.binding = binding;
         this.widget = widget;
-        originalValue = context.get();
-        saveCallback = context::set;
+        originalValue = binding.get();
+        saveCallback = binding::set;
     }
 
     @Override
     public T getValue() {
-        return context.get();
+        return binding.get();
     }
 
     @Override
     public Optional<T> getDefaultValue() {
-        return Optional.of(context.defaultValue());
+        return Optional.of(binding.defaultValue());
     }
 
     @Override
     public boolean isEdited() {
-        return !Objects.equals(originalValue, context.get());
+        return !Objects.equals(originalValue, binding.get());
     }
 
     @Override

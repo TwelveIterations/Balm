@@ -20,20 +20,20 @@ public class ConfigControl<T> {
         this.validationHint = validationHint;
     }
 
-    private static <T> @Nullable Object noElement(ConfigControlBinding<T> context) {
+    private static <T> @Nullable Object noElement(ConfigControlBinding<T> binding) {
         return null;
     }
 
-    public Optional<Object> createElement(ConfigControlBinding<T> context) {
-        return Optional.ofNullable(elementFactory.create(context));
+    public Optional<Object> createElement(ConfigControlBinding<T> binding) {
+        return Optional.ofNullable(elementFactory.create(binding));
     }
 
-    public DataResult<T> validate(ConfigControlBinding<T> context, T value) {
-        return validator.apply(context, value);
+    public DataResult<T> validate(ConfigControlBinding<T> binding, T value) {
+        return validator.apply(binding, value);
     }
 
-    public Optional<Component> getValidationHint(ConfigControlBinding<T> context) {
-        return validationHint.apply(context);
+    public Optional<Component> getValidationHint(ConfigControlBinding<T> binding) {
+        return validationHint.apply(binding);
     }
 
     public static <T> Builder<T> builder() {
@@ -73,6 +73,6 @@ public class ConfigControl<T> {
     @FunctionalInterface
     public interface ElementFactory<T> {
         @Nullable
-        Object create(ConfigControlBinding<T> context);
+        Object create(ConfigControlBinding<T> binding);
     }
 }

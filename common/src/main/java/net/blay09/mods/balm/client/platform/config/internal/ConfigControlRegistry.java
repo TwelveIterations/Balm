@@ -23,7 +23,7 @@ public final class ConfigControlRegistry {
         return Optional.ofNullable((ConfigControl<T>) controls.get(identifier));
     }
 
-    public static <T> Optional<Object> createElement(Identifier identifier, ConfigControlBinding<T> context) {
-        return ConfigControlRegistry.<T>get(identifier).flatMap(control -> control.createElement(context));
+    public static <T> Optional<Object> createElement(Identifier identifier, ConfigControlBinding<T> binding) {
+        return ConfigControlRegistry.<T>get(identifier).flatMap(control -> control.createElement(binding));
     }
 }
