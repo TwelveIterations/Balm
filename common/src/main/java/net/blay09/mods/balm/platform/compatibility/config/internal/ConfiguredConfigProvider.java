@@ -4,6 +4,7 @@ import com.mrcrayfish.configured.api.*;
 import com.mrcrayfish.configured.api.util.ConfigScreenHelper;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
+import net.blay09.mods.balm.client.platform.config.internal.ConfigControlContextImpl;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.schema.*;
@@ -268,10 +269,9 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
             return null;
         }
 
-        final var displayName = Component.translatable(ConfigLocalization.forProperty(property));
-        final var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
-        final var context = new ConfigControlBinding<>(property, config, displayName, tooltip);
-        final var entry = ConfigControlRegistry.createElement(customControlId, context).orElse(null);
+        final var binding = new ConfigControlBinding<>(property, config);
+        final var context = new ConfigControlContextImpl(46, 20);
+        final var entry = ConfigControlRegistry.createElement(customControlId, binding, context).orElse(null);
         switch (entry) {
             case IConfigEntry configEntry -> {
                 return configEntry;

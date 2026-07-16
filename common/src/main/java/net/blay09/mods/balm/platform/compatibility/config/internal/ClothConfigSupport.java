@@ -5,6 +5,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
+import net.blay09.mods.balm.client.platform.config.internal.ConfigControlContextImpl;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.internal.BalmConfigScreenProviders;
@@ -68,22 +69,22 @@ public class ClothConfigSupport {
 
     @SuppressWarnings("unchecked")
     private static void addPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<?> property, ConfigCategory categoryInstance, ConfigBuilder builder) {
-        var displayName = Component.translatable(ConfigLocalization.forProperty(property));
-        var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
-        if (addCustomControlPropertyToBuilder(config, property, categoryInstance, displayName, tooltip)) {
+        if (addCustomControlPropertyToBuilder(config, property, categoryInstance)) {
             return;
         }
 
+        final var label = Component.translatable(ConfigLocalization.forProperty(property));
+        final var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
         switch (property) {
             case ConfiguredString stringProperty -> categoryInstance.addEntry(
-                    builder.entryBuilder().startStrField(displayName, stringProperty.get(config))
+                    builder.entryBuilder().startStrField(label, stringProperty.get(config))
                             .setDefaultValue(stringProperty.defaultValue())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> stringProperty.set(config, value))
                             .build()
             );
             case ConfiguredInt intProperty -> {
-                var fieldBuilder = builder.entryBuilder().startIntField(displayName, intProperty.get(config))
+                var fieldBuilder = builder.entryBuilder().startIntField(label, intProperty.get(config))
                         .setDefaultValue(intProperty.defaultValue())
                         .setTooltip(tooltip)
                         .setSaveConsumer(value -> intProperty.set(config, value));
@@ -92,7 +93,7 @@ public class ClothConfigSupport {
                 categoryInstance.addEntry(fieldBuilder.build());
             }
             case ConfiguredFloat floatProperty -> {
-                var fieldBuilder = builder.entryBuilder().startFloatField(displayName, floatProperty.get(config))
+                var fieldBuilder = builder.entryBuilder().startFloatField(label, floatProperty.get(config))
                         .setDefaultValue(floatProperty.defaultValue())
                         .setTooltip(tooltip)
                         .setSaveConsumer(value -> floatProperty.set(config, value));
@@ -101,92 +102,92 @@ public class ClothConfigSupport {
                 categoryInstance.addEntry(fieldBuilder.build());
             }
             case ConfiguredBoolean booleanProperty -> categoryInstance.addEntry(
-                    builder.entryBuilder().startBooleanToggle(displayName, booleanProperty.get(config))
+                    builder.entryBuilder().startBooleanToggle(label, booleanProperty.get(config))
                             .setDefaultValue(booleanProperty.defaultValue())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> booleanProperty.set(config, value))
                             .build()
             );
-            case ConfiguredEnum<?> enumProperty -> addEnumPropertyToBuilder(config, enumProperty, categoryInstance, builder, displayName, tooltip);
+            case ConfiguredEnum<?> enumProperty -> addEnumPropertyToBuilder(config, enumProperty, categoryInstance, builder, label, tooltip);
             case ConfiguredList<?> listProperty when listProperty.nestedType() == String.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startStrList(displayName, (List<String>) listProperty.get(config))
+                    builder.entryBuilder().startStrList(label, (List<String>) listProperty.get(config))
                             .setDefaultValue((List<String>) listProperty.defaultValue())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredList<String>) listProperty).set(config, value))
                             .build()
             );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Integer.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startIntList(displayName, (List<Integer>) listProperty.get(config))
+                    builder.entryBuilder().startIntList(label, (List<Integer>) listProperty.get(config))
                             .setDefaultValue((List<Integer>) listProperty.defaultValue())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredList<Integer>) listProperty).set(config, value))
                             .build()
             );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Long.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startLongList(displayName, (List<Long>) listProperty.get(config))
+                    builder.entryBuilder().startLongList(label, (List<Long>) listProperty.get(config))
                             .setDefaultValue((List<Long>) listProperty.defaultValue())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredList<Long>) listProperty).set(config, value))
                             .build()
             );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Float.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startFloatList(displayName, (List<Float>) listProperty.get(config))
+                    builder.entryBuilder().startFloatList(label, (List<Float>) listProperty.get(config))
                             .setDefaultValue((List<Float>) listProperty.defaultValue())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredList<Float>) listProperty).set(config, value))
                             .build()
             );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Double.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startDoubleList(displayName, (List<Double>) listProperty.get(config))
+                    builder.entryBuilder().startDoubleList(label, (List<Double>) listProperty.get(config))
                             .setDefaultValue((List<Double>) listProperty.defaultValue())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredList<Double>) listProperty).set(config, value))
                             .build()
             );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Identifier.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startStrList(displayName, listProperty.get(config).stream().map(Objects::toString).toList())
+                    builder.entryBuilder().startStrList(label, listProperty.get(config).stream().map(Objects::toString).toList())
                             .setDefaultValue(listProperty.defaultValue().stream().map(Objects::toString).toList())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredList<Identifier>) listProperty).set(config, value.stream().map(Identifier::tryParse).filter(Objects::nonNull).collect(Collectors.toList())))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == String.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startStrList(displayName, new ArrayList<>((Set<String>) setProperty.get(config)))
+                    builder.entryBuilder().startStrList(label, new ArrayList<>((Set<String>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<String>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredSet<String>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Integer.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startIntList(displayName, new ArrayList<>((Set<Integer>) setProperty.get(config)))
+                    builder.entryBuilder().startIntList(label, new ArrayList<>((Set<Integer>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Integer>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredSet<Integer>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Long.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startLongList(displayName, new ArrayList<>((Set<Long>) setProperty.get(config)))
+                    builder.entryBuilder().startLongList(label, new ArrayList<>((Set<Long>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Long>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredSet<Long>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Float.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startFloatList(displayName, new ArrayList<>((Set<Float>) setProperty.get(config)))
+                    builder.entryBuilder().startFloatList(label, new ArrayList<>((Set<Float>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Float>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredSet<Float>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Double.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startDoubleList(displayName, new ArrayList<>((Set<Double>) setProperty.get(config)))
+                    builder.entryBuilder().startDoubleList(label, new ArrayList<>((Set<Double>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Double>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredSet<Double>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Identifier.class -> categoryInstance.addEntry(
-                    builder.entryBuilder().startStrList(displayName, setProperty.get(config).stream().map(Objects::toString).toList())
+                    builder.entryBuilder().startStrList(label, setProperty.get(config).stream().map(Objects::toString).toList())
                             .setDefaultValue(setProperty.defaultValue().stream().map(Objects::toString).toList())
                             .setTooltip(tooltip)
                             .setSaveConsumer(value -> ((ConfiguredSet<Identifier>) setProperty).set(config, value.stream().map(Identifier::tryParse).filter(Objects::nonNull).collect(Collectors.toSet())))
@@ -197,13 +198,15 @@ public class ClothConfigSupport {
         }
     }
 
-    private static <T> boolean addCustomControlPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<T> property, ConfigCategory categoryInstance, Component displayName, Component tooltip) {
+    private static <T> boolean addCustomControlPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<T> property, ConfigCategory categoryInstance) {
         final var customControlId = property.customControl().orElse(null);
         if (customControlId == null) {
             return false;
         }
 
-        final var entry = ConfigControlRegistry.createElement(customControlId, new ConfigControlBinding<>(property, config, displayName, tooltip)).orElse(null);
+        final var binding = new ConfigControlBinding<>(property, config);
+        final var context = new ConfigControlContextImpl(148, 18);
+        final var entry = ConfigControlRegistry.createElement(customControlId, binding, context).orElse(null);
         switch (entry) {
             case null -> {
                 return false;
@@ -213,7 +216,7 @@ public class ClothConfigSupport {
                 return true;
             }
             case AbstractWidget widget -> {
-                categoryInstance.addEntry(new ClothConfigWidgetConfigListEntry<>(new ConfigControlBinding<>(property, config, displayName, tooltip), widget));
+                categoryInstance.addEntry(new ClothConfigWidgetConfigListEntry<>(binding, widget, context.label(property)));
                 return true;
             }
             default -> {
