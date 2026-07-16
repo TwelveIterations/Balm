@@ -6,6 +6,9 @@ import io.netty.buffer.ByteBuf;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+
+import java.util.Optional;
 
 public interface ConfiguredProperty<T> {
     BalmConfigSchema parentSchema();
@@ -17,6 +20,8 @@ public interface ConfiguredProperty<T> {
     String comment();
 
     boolean synced();
+
+    Optional<Identifier> customControl();
 
     Class<?> type();
 

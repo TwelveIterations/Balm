@@ -1,0 +1,148 @@
+package net.blay09.mods.balm.neoforge.client.platform.config.internal;
+
+import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.client.platform.config.internal.ConfigControlContextImpl;
+import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
+import net.blay09.mods.balm.neoforge.platform.config.internal.NeoForgeBalmConfig;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.ConfigurationSectionScreen {
+
+    private static final Logger logger = LoggerFactory.getLogger(BalmNeoForgeConfigurationScreen.class);
+
+    private final @Nullable BalmConfigSchema schema;
+
+    public BalmNeoForgeConfigurationScreen(Screen parent, ModConfig.Type type, ModConfig modConfig, Component title) {
+        super(parent, type, modConfig, title);
+        schema = Balm.config().getSchema(Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension()));
+    }
+
+    private BalmNeoForgeConfigurationScreen(Context parentContext, Screen parent, @Nullable BalmConfigSchema schema, UnmodifiableConfig valueSpecs, String key, UnmodifiableConfig subsection, Component title) {
+        super(parentContext, parent, valueSpecs.valueMap(), key, subsection.entrySet(), title);
+        this.schema = schema;
+    }
+
+    @Nullable
+    private ConfiguredProperty<?> findProperty(String key) {
+        if (schema == null) {
+            return null;
+        }
+
+        final var path = context.keylist();
+        if (path.isEmpty()) {
+            return schema.findRootProperty(key);
+        } else if (path.size() == 1) {
+            return schema.findProperty(path.getFirst(), key);
+        } else {
+            logger.warn("Balm only supports a single level of nesting for config categories. Skipping property {}", key);
+        }
+
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    private <R, T> Element createCustomElement(String key, Supplier<R> source, Consumer<R> target) {
+        final var property = (ConfiguredProperty<T>) findProperty(key);
+        if (property == null) {
+            return null;
+        }
+
+        final var customControlId = property.customControl().orElse(null);
+        if (customControlId == null) {
+            return null;
+        }
+
+        final Supplier<T> getter = () -> (T) NeoForgeBalmConfig.mapConfigValueFromNeoForge(property, source.get());
+        final Consumer<T> setter = value -> {
+            target.accept((R) NeoForgeBalmConfig.mapConfigValueToNeoForge(value));
+            onChanged(key);
+        };
+        final var binding = new ConfigControlBinding<>(property, getter, setter);
+        final var context = new ConfigControlContextImpl(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT);
+        final var element = ConfigControlRegistry.createElement(customControlId, binding, context).orElse(null);
+        return switch (element) {
+            case null -> null;
+            case Element neoForgeElement -> neoForgeElement;
+            case AbstractWidget widget ->
+                    new Element(getTranslationComponent(key), getTooltipComponent(key, null), widget);
+            case OptionInstance<?> option ->
+                    new Element(getTranslationComponent(key), getTooltipComponent(key, null), option);
+            default -> {
+                logger.warn("Config control for {}/{}.{} must return ConfigurationSectionScreen.Element, AbstractWidget, or OptionInstance for NeoForge, got {}. Falling back to default control.",
+                        property.parentSchema().identifier(), property.category(), property.name(), element.getClass().getName());
+                yield null;
+            }
+        };
+
+    }
+
+    @Override
+    protected @Nullable Element createStringValue(String key, java.util.function.Predicate<String> tester, Supplier<String> source, Consumer<String> target) {
+        final var element = createCustomElement(key, source, target);
+        return element != null ? element : super.createStringValue(key, tester, source, target);
+    }
+
+    @Override
+    protected @Nullable Element createBooleanValue(String key, ModConfigSpec.ValueSpec spec, Supplier<Boolean> source, Consumer<Boolean> target) {
+        final var element = createCustomElement(key, source, target);
+        return element != null ? element : super.createBooleanValue(key, spec, source, target);
+    }
+
+    @Override
+    protected <T extends Enum<T>> @Nullable Element createEnumValue(String key, ModConfigSpec.ValueSpec spec, Supplier<T> source, Consumer<T> target) {
+        final var element = createCustomElement(key, source, target);
+        return element != null ? element : super.createEnumValue(key, spec, source, target);
+    }
+
+    @Override
+    protected @Nullable Element createIntegerValue(String key, ModConfigSpec.ValueSpec spec, Supplier<Integer> source, Consumer<Integer> target) {
+        final var element = createCustomElement(key, source, target);
+        return element != null ? element : super.createIntegerValue(key, spec, source, target);
+    }
+
+    @Override
+    protected @Nullable Element createLongValue(String key, ModConfigSpec.ValueSpec spec, Supplier<Long> source, Consumer<Long> target) {
+        final var element = createCustomElement(key, source, target);
+        return element != null ? element : super.createLongValue(key, spec, source, target);
+    }
+
+    @Override
+    protected @Nullable Element createDoubleValue(String key, ModConfigSpec.ValueSpec spec, Supplier<Double> source, Consumer<Double> target) {
+        final var element = createCustomElement(key, source, target);
+        return element != null ? element : super.createDoubleValue(key, spec, source, target);
+    }
+
+    @Override
+    protected <T> @Nullable Element createList(String key, ModConfigSpec.ListValueSpec spec, ModConfigSpec.ConfigValue<List<T>> list) {
+        final var element = createCustomElement(key, list::getRaw, list::set);
+        return element != null ? element : super.createList(key, spec, list);
+    }
+
+    @Override
+    protected Element createSection(String key, UnmodifiableConfig valueSpecs, UnmodifiableConfig subsection) {
+        return new Element(Component.translatable("gui.balm.configuration.title", getTranslationComponent(key)), getTooltipComponent(key, null),
+                Button.builder(Component.translatable("gui.balm.configuration.edit"),
+                        _ -> minecraft.gui.setScreen(sectionCache.computeIfAbsent(key,
+                                _ -> new BalmNeoForgeConfigurationScreen(context, this, schema, valueSpecs, key, subsection, Component.translatable(getTranslationKey(key))).rebuild()))).build(), false);
+    }
+}

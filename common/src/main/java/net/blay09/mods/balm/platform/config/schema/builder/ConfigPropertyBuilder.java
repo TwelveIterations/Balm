@@ -3,6 +3,7 @@ package net.blay09.mods.balm.platform.config.schema.builder;
 import net.blay09.mods.balm.platform.config.schema.internal.ConfigSchemaImpl;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ public class ConfigPropertyBuilder {
     protected final String name;
     protected String comment = "";
     protected boolean synced;
+    protected @Nullable Identifier customControl;
 
     public ConfigPropertyBuilder(ConfigSchemaImpl schema, String name) {
         this.schema = schema;
@@ -33,6 +35,11 @@ public class ConfigPropertyBuilder {
 
     public ConfigPropertyBuilder synced() {
         this.synced = true;
+        return this;
+    }
+
+    public ConfigPropertyBuilder customControl(Identifier customControlId) {
+        this.customControl = customControlId;
         return this;
     }
 

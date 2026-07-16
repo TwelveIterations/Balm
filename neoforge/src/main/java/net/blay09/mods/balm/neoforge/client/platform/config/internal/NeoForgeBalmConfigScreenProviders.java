@@ -14,7 +14,7 @@ public class NeoForgeBalmConfigScreenProviders {
                     return factory.create(modListScreen);
                 }
 
-                return new ConfigurationScreen(targetModContainer, modListScreen);
+                return new ConfigurationScreen(targetModContainer, modListScreen, BalmNeoForgeConfigurationScreen::new);
             });
         }
     }
