@@ -107,7 +107,7 @@ public class FabricBalmHooks implements BalmHooks {
                     if (filled >= 1000) {
                         if (handItem.getCount() > 1) {
                             final var restItem = Balm.hooks().getCraftingRemainingItem(handItem);
-                            if (player.addItem(restItem.create())) {
+                            if (restItem != null && player.addItem(restItem.create())) {
                                 player.playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
                                 fluidTank.getFluid(0).getPickupSound().ifPresent(sound -> player.playSound(sound, 1f, 1f));
                                 handItem.shrink(1);
@@ -116,7 +116,8 @@ public class FabricBalmHooks implements BalmHooks {
                             }
                         } else {
                             player.playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
-                            player.setItemInHand(hand, Balm.hooks().getCraftingRemainingItem(handItem).create());
+                            final var restItem = Balm.hooks().getCraftingRemainingItem(handItem);
+                            player.setItemInHand(hand, restItem != null ? restItem.create() : ItemStack.EMPTY);
                             fluidTank.fill(0, fluid, 1000, false);
                             return true;
                         }
