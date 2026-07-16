@@ -6,9 +6,7 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
-import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.schema.*;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
 import net.minecraft.client.gui.screens.Screen;
@@ -23,6 +21,9 @@ import java.util.stream.Collectors;
 
 public class ConfiguredConfigProvider implements IModConfigProvider {
     private static final Logger logger = LoggerFactory.getLogger(ConfiguredConfigProvider.class);
+    private static final String VALIDATION_HINT_RANGE = "balm.configuration.validation.range";
+    private static final String VALIDATION_HINT_NEGATIVE_INFINITY = "balm.configuration.validation.negative_infinity";
+    private static final String VALIDATION_HINT_POSITIVE_INFINITY = "balm.configuration.validation.positive_infinity";
 
     @Nullable
     private static IModConfig mapConfig(BalmConfigSchema schema, @Nullable MutableLoadedConfig config) {
@@ -303,7 +304,24 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
     }
 
     private static @Nullable Component getValidationHint(ConfiguredProperty<?> property) {
-        return null; // no default for now
+        return switch (property) {
+            case ConfiguredInt configuredInt when (configuredInt.minValue().isPresent() || configuredInt.maxValue().isPresent()) ->
+                    getRangeValidationHint(configuredInt.minValue(), configuredInt.maxValue());
+            case ConfiguredLong configuredLong when (configuredLong.minValue().isPresent() || configuredLong.maxValue().isPresent()) ->
+                    getRangeValidationHint(configuredLong.minValue(), configuredLong.maxValue());
+            case ConfiguredFloat configuredFloat when (configuredFloat.minValue().isPresent() || configuredFloat.maxValue().isPresent()) ->
+                    getRangeValidationHint(configuredFloat.minValue(), configuredFloat.maxValue());
+            case ConfiguredDouble configuredDouble when (configuredDouble.minValue().isPresent() || configuredDouble.maxValue().isPresent()) ->
+                    getRangeValidationHint(configuredDouble.minValue(), configuredDouble.maxValue());
+            default -> null;
+        };
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private static Component getRangeValidationHint(Optional<?> minValue, Optional<?> maxValue) {
+        return Component.translatable(VALIDATION_HINT_RANGE,
+                minValue.map(it -> Component.literal(String.valueOf(it))).orElseGet(() -> Component.translatable(VALIDATION_HINT_NEGATIVE_INFINITY)),
+                maxValue.map(it -> Component.literal(String.valueOf(it))).orElseGet(() -> Component.translatable(VALIDATION_HINT_POSITIVE_INFINITY)));
     }
 
     public static BalmConfigScreenFactory getConfigScreenFactory(String modId) {
