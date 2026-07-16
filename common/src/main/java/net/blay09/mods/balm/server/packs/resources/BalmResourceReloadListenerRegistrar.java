@@ -22,8 +22,6 @@ public interface BalmResourceReloadListenerRegistrar {
     VanillaKeys vanillaKeys();
 
     interface VanillaKeys {
-        Identifier advancements();
         Identifier functions();
-        Identifier recipes();
     }
 }
