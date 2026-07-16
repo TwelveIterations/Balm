@@ -50,6 +50,10 @@ public class ConfigReflection {
             if (field.getAnnotation(Synced.class) != null) {
                 property.synced();
             }
+            final var controlAnnotation = field.getAnnotation(CustomControl.class);
+            if (controlAnnotation != null) {
+                property.customControl(parseDefaultedIdentifier(controlAnnotation.value(), getIdentifier(clazz).getNamespace()));
+            }
             final var rangeAnnotation = field.getAnnotation(Range.class);
             final var type = field.getType();
             final var nestedTypeAnnotation = field.getAnnotation(NestedType.class);
@@ -111,6 +115,10 @@ public class ConfigReflection {
                 throw new RuntimeException("Error accessing config field " + field.getName() + " in class " + clazz.getName(), e);
             }
         }
+    }
+
+    private static Identifier parseDefaultedIdentifier(String identifier, String defaultNamespace) {
+        return identifier.contains(":") ? Identifier.parse(identifier) : Identifier.fromNamespaceAndPath(defaultNamespace, identifier);
     }
 
     private static <T extends Enum<T> & StringRepresentable> void propertyOfEnum(ConfigPropertyBuilder property, @Nullable Object obj) {

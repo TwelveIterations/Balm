@@ -4,24 +4,25 @@ import com.mrcrayfish.configured.api.*;
 import com.mrcrayfish.configured.api.util.ConfigScreenHelper;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
+import net.blay09.mods.balm.client.platform.config.internal.ConfigControlContextImpl;
+import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
-import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredDouble;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredFloat;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredInt;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredLong;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.schema.*;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ClassUtils;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfiguredConfigProvider implements IModConfigProvider {
+    private static final Logger logger = LoggerFactory.getLogger(ConfiguredConfigProvider.class);
+
     @Nullable
     private static IModConfig mapConfig(BalmConfigSchema schema, @Nullable MutableLoadedConfig config) {
         if(config == null) {
@@ -145,6 +146,11 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
     }
 
     private static <T> IConfigEntry mapConfigProperty(MutableLoadedConfig config, ConfiguredProperty<T> property) {
+        final var customEntry = mapCustomControlConfigProperty(config, property);
+        if (customEntry != null) {
+            return customEntry;
+        }
+
         final var initialValue = config.getRaw(property);
         return new IConfigEntry() {
             @Override
@@ -215,17 +221,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public @Nullable Component getValidationHint() {
-                        return switch (property) {
-                            case ConfiguredInt configuredInt when (configuredInt.minValue().isPresent() || configuredInt.maxValue().isPresent()) ->
-                                    Component.literal("Range: " + configuredInt.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredInt.maxValue().map(String::valueOf).orElse("+inf"));
-                            case ConfiguredLong configuredLong when (configuredLong.minValue().isPresent() || configuredLong.maxValue().isPresent()) ->
-                                    Component.literal("Range: " + configuredLong.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredLong.maxValue().map(String::valueOf).orElse("+inf"));
-                            case ConfiguredFloat configuredFloat when (configuredFloat.minValue().isPresent() || configuredFloat.maxValue().isPresent()) ->
-                                    Component.literal("Range: " + configuredFloat.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredFloat.maxValue().map(String::valueOf).orElse("+inf"));
-                            case ConfiguredDouble configuredDouble when (configuredDouble.minValue().isPresent() || configuredDouble.maxValue().isPresent()) ->
-                                    Component.literal("Range: " + configuredDouble.minValue().map(String::valueOf).orElse("-inf") + " to " + configuredDouble.maxValue().map(String::valueOf).orElse("+inf"));
-                            default -> null;
-                        };
+                        return ConfiguredConfigProvider.getValidationHint(property);
                     }
 
                     @Override
@@ -264,6 +260,55 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                 return ConfigLocalization.forPropertyTooltip(property);
             }
         };
+    }
+
+    @Nullable
+    private static <T> IConfigEntry mapCustomControlConfigProperty(MutableLoadedConfig config, ConfiguredProperty<T> property) {
+        final var customControlId = property.customControl().orElse(null);
+        if (customControlId == null) {
+            return null;
+        }
+
+        final var binding = new ConfigControlBinding<>(property, config);
+        final var context = new ConfigControlContextImpl(46, 20);
+        final var entry = ConfigControlRegistry.createElement(customControlId, binding, context).orElse(null);
+        switch (entry) {
+            case IConfigEntry configEntry -> {
+                return configEntry;
+            }
+            case IConfigValue<?> configValue -> {
+                return new ValueEntry(configValue);
+            }
+            case null -> {
+                return null;
+            }
+            default -> {
+                logger.warn("Configured control for {}/{}.{} must return IConfigEntry or IConfigValue for Configured, got {}. Falling back to default control.",
+                        property.parentSchema().identifier(), property.category(), property.name(), entry.getClass().getName());
+                return null;
+            }
+        }
+    }
+
+    private static @Nullable Component getValidationHint(ConfiguredProperty<?> property) {
+        return switch (property) {
+            case ConfiguredInt configuredInt when (configuredInt.minValue().isPresent() || configuredInt.maxValue().isPresent()) ->
+                    getRangeValidationHint(configuredInt.minValue(), configuredInt.maxValue());
+            case ConfiguredLong configuredLong when (configuredLong.minValue().isPresent() || configuredLong.maxValue().isPresent()) ->
+                    getRangeValidationHint(configuredLong.minValue(), configuredLong.maxValue());
+            case ConfiguredFloat configuredFloat when (configuredFloat.minValue().isPresent() || configuredFloat.maxValue().isPresent()) ->
+                    getRangeValidationHint(configuredFloat.minValue(), configuredFloat.maxValue());
+            case ConfiguredDouble configuredDouble when (configuredDouble.minValue().isPresent() || configuredDouble.maxValue().isPresent()) ->
+                    getRangeValidationHint(configuredDouble.minValue(), configuredDouble.maxValue());
+            default -> null;
+        };
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private static Component getRangeValidationHint(Optional<?> minValue, Optional<?> maxValue) {
+        return Component.translatable("gui.balm.configuration.validation.range",
+                minValue.map(it -> Component.literal(String.valueOf(it))).orElseGet(() -> Component.translatable("gui.balm.configuration.validation.negative_infinity")),
+                maxValue.map(it -> Component.literal(String.valueOf(it))).orElseGet(() -> Component.translatable("gui.balm.configuration.validation.positive_infinity")));
     }
 
     public static BalmConfigScreenFactory getConfigScreenFactory(String modId) {

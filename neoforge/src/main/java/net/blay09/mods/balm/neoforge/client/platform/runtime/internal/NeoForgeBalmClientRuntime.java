@@ -22,6 +22,7 @@ import net.blay09.mods.balm.neoforge.client.internal.NeoForgeBalmRangeSelectItem
 import net.blay09.mods.balm.neoforge.client.internal.commands.NeoForgeBalmClientCommands;
 import net.blay09.mods.balm.neoforge.client.model.geom.internal.NeoForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.neoforge.client.particle.internal.NeoForgeBalmParticleProviderRegistrar;
+import net.blay09.mods.balm.neoforge.client.platform.config.internal.BalmNeoForgeConfigurationScreen;
 import net.blay09.mods.balm.neoforge.client.platform.event.internal.NeoForgeBalmClientEventMappings;
 import net.blay09.mods.balm.neoforge.client.renderer.block.model.internal.NeoForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.internal.NeoForgeBalmBlockEntityRendererRegistrar;
@@ -54,7 +55,7 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
             }
 
             return parent -> ModList.get().getModContainerById(modId)
-                    .map(modContainer -> new ConfigurationScreen(modContainer, parent))
+                    .map(modContainer -> new ConfigurationScreen(modContainer, parent, BalmNeoForgeConfigurationScreen::new))
                     .orElse(null);
         });
     }
