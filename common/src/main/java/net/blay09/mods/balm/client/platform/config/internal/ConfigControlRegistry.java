@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.client.platform.config.internal;
 
 import net.blay09.mods.balm.client.platform.config.ConfigControl;
-import net.blay09.mods.balm.platform.config.schema.ConfigControlContext;
+import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.minecraft.resources.Identifier;
 
 import java.util.Map;
@@ -23,7 +23,7 @@ public final class ConfigControlRegistry {
         return Optional.ofNullable((ConfigControl<T>) controls.get(identifier));
     }
 
-    public static <T> Optional<Object> createElement(Identifier identifier, ConfigControlContext<T> context) {
+    public static <T> Optional<Object> createElement(Identifier identifier, ConfigControlBinding<T> context) {
         return ConfigControlRegistry.<T>get(identifier).flatMap(control -> control.createElement(context));
     }
 }

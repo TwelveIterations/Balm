@@ -7,7 +7,7 @@ import net.blay09.mods.balm.client.platform.config.BalmConfigScreenFactory;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.platform.config.schema.ConfigControlContext;
+import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
@@ -151,7 +151,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         final var initialValue = config.getRaw(property);
         final var displayName = Component.translatable(ConfigLocalization.forProperty(property));
         final var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
-        final var context = new ConfigControlContext<>(property, config, displayName, tooltip);
+        final var context = new ConfigControlBinding<>(property, config, displayName, tooltip);
         return new IConfigEntry() {
             @Override
             public List<IConfigEntry> getChildren() {
@@ -199,7 +199,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
         final var displayName = Component.translatable(ConfigLocalization.forProperty(property));
         final var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
-        final var context = new ConfigControlContext<>(property, config, displayName, tooltip);
+        final var context = new ConfigControlBinding<>(property, config, displayName, tooltip);
         final var entry = ConfigControlRegistry.createElement(customControlId, context).orElse(null);
         switch (entry) {
             case IConfigEntry configEntry -> {
@@ -217,7 +217,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         }
     }
 
-    private static <T> IConfigValue<T> createConfigValue(MutableLoadedConfig config, ConfiguredProperty<T> property, ConfigControlContext<T> context, T initialValue) {
+    private static <T> IConfigValue<T> createConfigValue(MutableLoadedConfig config, ConfiguredProperty<T> property, ConfigControlBinding<T> context, T initialValue) {
         return new IConfigValue<>() {
             @Override
             public T get() {

@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.platform.compatibility.config.internal;
 
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
-import net.blay09.mods.balm.platform.config.schema.ConfigControlContext;
+import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -12,11 +12,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ClothConfigWidgetConfigListEntry<T> extends AbstractConfigListEntry<T> {
-    private final ConfigControlContext<T> context;
+    private final ConfigControlBinding<T> context;
     private final AbstractWidget widget;
     private final T originalValue;
 
-    public ClothConfigWidgetConfigListEntry(ConfigControlContext<T> context, AbstractWidget widget) {
+    public ClothConfigWidgetConfigListEntry(ConfigControlBinding<T> context, AbstractWidget widget) {
         super(context.displayName(), false);
         this.context = context;
         this.widget = widget;
@@ -31,7 +31,7 @@ public class ClothConfigWidgetConfigListEntry<T> extends AbstractConfigListEntry
 
     @Override
     public Optional<T> getDefaultValue() {
-        return Optional.of(context.property().defaultValue());
+        return Optional.of(context.defaultValue());
     }
 
     @Override

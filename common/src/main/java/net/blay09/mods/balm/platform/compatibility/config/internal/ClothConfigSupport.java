@@ -205,7 +205,7 @@ public class ClothConfigSupport {
     }
 
     private static <T> void setValue(MutableLoadedConfig config, ConfiguredProperty<T> property, Component displayName, Component tooltip, T value) {
-        new ConfigControlContext<>(property, config, displayName, tooltip).set(value);
+        new ConfigControlBinding<>(property, config, displayName, tooltip).set(value);
     }
 
     private static <T> boolean addCustomControlPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<T> property, ConfigCategory categoryInstance, Component displayName, Component tooltip) {
@@ -214,7 +214,7 @@ public class ClothConfigSupport {
             return false;
         }
 
-        final var entry = ConfigControlRegistry.createElement(customControlId, new ConfigControlContext<>(property, config, displayName, tooltip)).orElse(null);
+        final var entry = ConfigControlRegistry.createElement(customControlId, new ConfigControlBinding<>(property, config, displayName, tooltip)).orElse(null);
         switch (entry) {
             case null -> {
                 return false;
@@ -224,7 +224,7 @@ public class ClothConfigSupport {
                 return true;
             }
             case AbstractWidget widget -> {
-                categoryInstance.addEntry(new ClothConfigWidgetConfigListEntry<>(new ConfigControlContext<>(property, config, displayName, tooltip), widget));
+                categoryInstance.addEntry(new ClothConfigWidgetConfigListEntry<>(new ConfigControlBinding<>(property, config, displayName, tooltip), widget));
                 return true;
             }
             default ->

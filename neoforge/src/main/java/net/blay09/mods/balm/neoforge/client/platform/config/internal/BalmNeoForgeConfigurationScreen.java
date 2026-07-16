@@ -5,7 +5,7 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
 import net.blay09.mods.balm.neoforge.platform.config.internal.NeoForgeBalmConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.platform.config.schema.ConfigControlContext;
+import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -76,7 +76,7 @@ public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.Configu
             target.accept((R) NeoForgeBalmConfig.mapConfigValueToNeoForge(value));
             onChanged(key);
         };
-        final var context = new ConfigControlContext<>(property, getter, setter, getTranslationComponent(key), getTooltipComponent(key, null));
+        final var context = new ConfigControlBinding<>(property, getter, setter, getTranslationComponent(key), getTooltipComponent(key, null));
         final var element = ConfigControlRegistry.createElement(customControlId, context).orElse(null);
         return switch (element) {
             case null -> null;

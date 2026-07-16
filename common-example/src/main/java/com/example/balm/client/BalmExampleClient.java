@@ -2,7 +2,7 @@ package com.example.balm.client;
 
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.platform.config.ConfigControl;
-import net.blay09.mods.balm.platform.config.schema.ConfigControlContext;
+import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -16,9 +16,9 @@ public class BalmExampleClient {
     }
 
     private static class FancyConfigButton extends Button.Plain {
-        private final ConfigControlContext<Boolean> context;
+        private final ConfigControlBinding<Boolean> context;
 
-        public FancyConfigButton(ConfigControlContext<Boolean> context) {
+        public FancyConfigButton(ConfigControlBinding<Boolean> context) {
             super(0, 0, 150, 20, Component.empty(), (_) -> context.set(!context.get()), DEFAULT_NARRATION);
             this.context = context;
         }
