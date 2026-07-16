@@ -17,14 +17,16 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.ConfigurationSectionScreen {
-    private static final String SECTION = "neoforge.configuration.uitext.section";
-    private static final String SECTION_TEXT = "neoforge.configuration.uitext.sectiontext";
+
+    private static final Logger logger = LoggerFactory.getLogger(BalmNeoForgeConfigurationScreen.class);
 
     private final @Nullable BalmConfigSchema schema;
 
@@ -49,6 +51,8 @@ public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.Configu
             return schema.findRootProperty(key);
         } else if (path.size() == 1) {
             return schema.findProperty(path.getFirst(), key);
+        } else {
+            logger.warn("Balm only supports a single level of nesting for config categories. Skipping property {}", key);
         }
 
         return null;
@@ -131,8 +135,8 @@ public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.Configu
 
     @Override
     protected Element createSection(String key, UnmodifiableConfig valueSpecs, UnmodifiableConfig subsection) {
-        return new Element(Component.translatable(SECTION, getTranslationComponent(key)), getTooltipComponent(key, null),
-                Button.builder(Component.translatable(SECTION_TEXT),
+        return new Element(Component.translatable("gui.balm.configuration.title", getTranslationComponent(key)), getTooltipComponent(key, null),
+                Button.builder(Component.translatable("gui.balm.configuration.edit"),
                         _ -> minecraft.setScreen(sectionCache.computeIfAbsent(key,
                                 _ -> new BalmNeoForgeConfigurationScreen(context, this, schema, valueSpecs, key, subsection, Component.translatable(getTranslationKey(key))).rebuild()))).build(), false);
     }
