@@ -151,9 +151,6 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         }
 
         final var initialValue = config.getRaw(property);
-        final var displayName = Component.translatable(ConfigLocalization.forProperty(property));
-        final var tooltip = Component.translatable(ConfigLocalization.forPropertyTooltip(property));
-        final var binding = new ConfigControlBinding<>(property, config, displayName, tooltip);
         return new IConfigEntry() {
             @Override
             public List<IConfigEntry> getChildren() {
@@ -185,19 +182,15 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public void set(T o) {
-                        binding.set(o);
+                        config.setRaw(property, property.validateValue(o).getOrThrow());
                     }
 
                     @Override
-                    public boolean isValid(@Nullable T o) {
-                        if (o == null || !ClassUtils.isAssignable(o.getClass(), property.type(), true)) {
+                    public boolean isValid(T o) {
+                        if (!ClassUtils.isAssignable(o.getClass(), property.type(), true)) {
                             return false;
                         }
-                        return property.customControl()
-                                .flatMap(ConfigControlRegistry::<T>get)
-                                .map(control -> control.validate(binding, o))
-                                .orElseGet(() -> property.validateValue(o))
-                                .isSuccess();
+                        return property.validateValue(o).isSuccess();
                     }
 
                     @Override
@@ -212,7 +205,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public void restore() {
-                        binding.set(property.defaultValue());
+                        config.setRaw(property, property.defaultValue());
                     }
 
                     @Override
@@ -227,10 +220,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
 
                     @Override
                     public @Nullable Component getValidationHint() {
-                        return property.customControl()
-                                .flatMap(ConfigControlRegistry::<T>get)
-                                .flatMap(control -> control.getValidationHint(binding))
-                                .orElseGet(() -> ConfiguredConfigProvider.getValidationHint(property));
+                        return ConfiguredConfigProvider.getValidationHint(property);
                     }
 
                     @Override
