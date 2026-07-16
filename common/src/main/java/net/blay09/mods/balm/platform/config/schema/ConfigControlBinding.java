@@ -4,7 +4,6 @@ import com.mojang.serialization.DataResult;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.minecraft.network.chat.Component;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -12,24 +11,24 @@ public class ConfigControlBinding<T> {
     private final ConfiguredProperty<T> property;
     private final Supplier<T> getter;
     private final Consumer<T> setter;
-    private final Component displayName;
+    private final Component label;
     private final Component tooltip;
 
     public ConfigControlBinding(
             ConfiguredProperty<T> property,
             Supplier<T> getter,
             Consumer<T> setter,
-            Component displayName,
+            Component label,
             Component tooltip) {
         this.property = property;
         this.getter = getter;
         this.setter = setter;
-        this.displayName = displayName;
+        this.label = label;
         this.tooltip = tooltip;
     }
 
-    public ConfigControlBinding(ConfiguredProperty<T> property, MutableLoadedConfig config, Component displayName, Component tooltip) {
-        this(property, () -> property.getRaw(config), value -> property.setRaw(config, property.validateValue(value).getOrThrow()), displayName, tooltip);
+    public ConfigControlBinding(ConfiguredProperty<T> property, MutableLoadedConfig config, Component label, Component tooltip) {
+        this(property, () -> property.getRaw(config), value -> property.setRaw(config, property.validateValue(value).getOrThrow()), label, tooltip);
     }
 
     public T get() {
@@ -48,8 +47,8 @@ public class ConfigControlBinding<T> {
         return setter;
     }
 
-    public Component displayName() {
-        return displayName;
+    public Component label() {
+        return label;
     }
 
     public Component tooltip() {

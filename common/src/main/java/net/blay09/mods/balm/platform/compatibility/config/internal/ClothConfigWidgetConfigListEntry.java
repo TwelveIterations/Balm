@@ -17,7 +17,7 @@ public class ClothConfigWidgetConfigListEntry<T> extends AbstractConfigListEntry
     private final T originalValue;
 
     public ClothConfigWidgetConfigListEntry(ConfigControlBinding<T> context, AbstractWidget widget) {
-        super(context.displayName(), false);
+        super(context.label(), false);
         this.context = context;
         this.widget = widget;
         originalValue = context.get();
