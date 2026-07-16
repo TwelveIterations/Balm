@@ -1,8 +1,7 @@
 package net.blay09.mods.balm.fabric.server.packs.resources.internal;
 
 import net.blay09.mods.balm.server.packs.resources.BalmResourceReloadListenerRegistrar;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.DataResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.minecraft.core.HolderLookup;
@@ -10,10 +9,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -34,35 +31,13 @@ public class FabricBalmResourceReloadListenerRegistrar implements BalmResourceRe
     @Override
     public void register(String name, Function<HolderLookup.Provider, PreparableReloadListener> listenerFactory) {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(identifier, providers -> new IdentifiableResourceReloadListener() {
-            private final PreparableReloadListener listener = listenerFactory.apply(providers);
-
-            @Override
-            public Identifier getFabricId() {
-                return identifier;
-            }
-
-            @Override
-            public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier preparationBarrier, Executor executor2) {
-                return listener.reload(sharedState, executor, preparationBarrier, executor2);
-            }
-        });
+        DataResourceLoader.get().registerReloadListener(identifier, listenerFactory);
     }
 
     @Override
     public void register(String name, Consumer<ResourceManager> reloadListener) {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-            @Override
-            public void onResourceManagerReload(ResourceManager resourceManager) {
-                reloadListener.accept(resourceManager);
-            }
-
-            @Override
-            public Identifier getFabricId() {
-                return identifier;
-            }
-        });
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(identifier, (ResourceManagerReloadListener) reloadListener::accept);
     }
 
     @Override
