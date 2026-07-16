@@ -209,8 +209,7 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
                 return new ValueEntry(configValue);
             }
             case null -> {
-                final var initialValue = config.getRaw(property);
-                return new ValueEntry(createConfigValue(config, property, context, initialValue));
+                return null;
             }
             default ->
                     throw new IllegalStateException("Configured control for " + property.parentSchema().identifier() + "/" + property.category() + "." + property.name() + " must return IConfigEntry or IConfigValue, got " + entry.getClass().getName());
