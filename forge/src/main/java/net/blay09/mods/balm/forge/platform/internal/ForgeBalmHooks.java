@@ -3,10 +3,8 @@ package net.blay09.mods.balm.forge.platform.internal;
 import net.blay09.mods.balm.nbt.BalmDataHolder;
 import net.blay09.mods.balm.platform.BalmHooks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.util.Result;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fluids.FluidUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -26,19 +23,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ForgeBalmHooks implements BalmHooks {
-
-    public final Map<Item, Integer> burnTimes = new ConcurrentHashMap<>();
-
-    public ForgeBalmHooks() {
-        FurnaceFuelBurnTimeEvent.BUS.addListener(this::furnaceFuelBurnTime);
-    }
-
-    private void furnaceFuelBurnTime(FurnaceFuelBurnTimeEvent event) {
-        final var found = burnTimes.get(event.getItemStack().getItem());
-        if (found != null) {
-            event.setBurnTime(found);
-        }
-    }
 
     @Override
     public boolean growCrop(ItemStack itemStack, Level level, BlockPos pos, @Nullable Player player) {
@@ -87,11 +71,6 @@ public class ForgeBalmHooks implements BalmHooks {
     @Override
     public @Nullable DyeColor getColor(ItemStack itemStack) {
         return DyeColor.getColor(itemStack);
-    }
-
-    @Override
-    public void setBurnTime(Item item, int burnTime) {
-        burnTimes.put(item, burnTime);
     }
 
     @Override
