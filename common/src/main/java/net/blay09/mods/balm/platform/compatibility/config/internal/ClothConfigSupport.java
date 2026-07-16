@@ -79,14 +79,14 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startStrField(displayName, stringProperty.get(config))
                             .setDefaultValue(stringProperty.defaultValue())
                             .setTooltip(tooltip)
-                            .setSaveConsumer(value -> setValue(config, stringProperty, displayName, tooltip, value))
+                            .setSaveConsumer(value -> stringProperty.setRaw(config, value))
                             .build()
             );
             case ConfiguredInt intProperty -> {
                 var fieldBuilder = builder.entryBuilder().startIntField(displayName, intProperty.get(config))
                         .setDefaultValue(intProperty.defaultValue())
                         .setTooltip(tooltip)
-                        .setSaveConsumer(value -> setValue(config, intProperty, displayName, tooltip, value));
+                        .setSaveConsumer(value -> intProperty.setRaw(config, value));
                 fieldBuilder = intProperty.minValue().map(fieldBuilder::setMin).orElse(fieldBuilder);
                 fieldBuilder = intProperty.maxValue().map(fieldBuilder::setMax).orElse(fieldBuilder);
                 categoryInstance.addEntry(fieldBuilder.build());
@@ -95,7 +95,7 @@ public class ClothConfigSupport {
                 var fieldBuilder = builder.entryBuilder().startFloatField(displayName, floatProperty.get(config))
                         .setDefaultValue(floatProperty.defaultValue())
                         .setTooltip(tooltip)
-                        .setSaveConsumer(value -> setValue(config, floatProperty, displayName, tooltip, value));
+                        .setSaveConsumer(value -> floatProperty.setRaw(config, value));
                 fieldBuilder = floatProperty.minValue().map(fieldBuilder::setMin).orElse(fieldBuilder);
                 fieldBuilder = floatProperty.maxValue().map(fieldBuilder::setMax).orElse(fieldBuilder);
                 categoryInstance.addEntry(fieldBuilder.build());
@@ -104,7 +104,7 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startBooleanToggle(displayName, booleanProperty.get(config))
                             .setDefaultValue(booleanProperty.defaultValue())
                             .setTooltip(tooltip)
-                            .setSaveConsumer(value -> setValue(config, booleanProperty, displayName, tooltip, value))
+                            .setSaveConsumer(value -> booleanProperty.setRaw(config, value))
                             .build()
             );
             case ConfiguredEnum<?> enumProperty ->
@@ -114,7 +114,7 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startStrList(displayName, (List<String>) listProperty.get(config))
                                     .setDefaultValue((List<String>) listProperty.defaultValue())
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredList<String>) listProperty, displayName, tooltip, value))
+                                    .setSaveConsumer(value -> ((ConfiguredList<String>) listProperty).setRaw(config, value))
                                     .build()
                     );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Integer.class ->
@@ -122,7 +122,7 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startIntList(displayName, (List<Integer>) listProperty.get(config))
                                     .setDefaultValue((List<Integer>) listProperty.defaultValue())
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredList<Integer>) listProperty, displayName, tooltip, value))
+                                    .setSaveConsumer(value -> ((ConfiguredList<Integer>) listProperty).setRaw(config, value))
                                     .build()
                     );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Long.class ->
@@ -130,7 +130,7 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startLongList(displayName, (List<Long>) listProperty.get(config))
                                     .setDefaultValue((List<Long>) listProperty.defaultValue())
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredList<Long>) listProperty, displayName, tooltip, value))
+                                    .setSaveConsumer(value -> ((ConfiguredList<Long>) listProperty).setRaw(config, value))
                                     .build()
                     );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Float.class ->
@@ -138,7 +138,7 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startFloatList(displayName, (List<Float>) listProperty.get(config))
                                     .setDefaultValue((List<Float>) listProperty.defaultValue())
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredList<Float>) listProperty, displayName, tooltip, value))
+                                    .setSaveConsumer(value -> ((ConfiguredList<Float>) listProperty).setRaw(config, value))
                                     .build()
                     );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Double.class ->
@@ -146,7 +146,7 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startDoubleList(displayName, (List<Double>) listProperty.get(config))
                                     .setDefaultValue((List<Double>) listProperty.defaultValue())
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredList<Double>) listProperty, displayName, tooltip, value))
+                                    .setSaveConsumer(value -> ((ConfiguredList<Double>) listProperty).setRaw(config, value))
                                     .build()
                     );
             case ConfiguredList<?> listProperty when listProperty.nestedType() == Identifier.class ->
@@ -154,7 +154,7 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startStrList(displayName, listProperty.get(config).stream().map(Objects::toString).toList())
                                     .setDefaultValue(listProperty.defaultValue().stream().map(Objects::toString).toList())
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredList<Identifier>) listProperty, displayName, tooltip, value.stream().map(Identifier::tryParse).filter(Objects::nonNull).collect(Collectors.toList())))
+                                    .setSaveConsumer(value -> ((ConfiguredList<Identifier>) listProperty).setRaw(config, value.stream().map(Identifier::tryParse).filter(Objects::nonNull).collect(Collectors.toList())))
                                     .build()
                     );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == String.class ->
@@ -162,7 +162,7 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startStrList(displayName, new ArrayList<>((Set<String>) setProperty.get(config)))
                                     .setDefaultValue(new ArrayList<>((Set<String>) setProperty.defaultValue()))
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredSet<String>) setProperty, displayName, tooltip, new HashSet<>(value)))
+                                    .setSaveConsumer(value -> ((ConfiguredSet<String>) setProperty).setRaw(config, new HashSet<>(value)))
                                     .build()
                     );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Integer.class ->
@@ -170,21 +170,21 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startIntList(displayName, new ArrayList<>((Set<Integer>) setProperty.get(config)))
                                     .setDefaultValue(new ArrayList<>((Set<Integer>) setProperty.defaultValue()))
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredSet<Integer>) setProperty, displayName, tooltip, new HashSet<>(value)))
+                                    .setSaveConsumer(value -> ((ConfiguredSet<Integer>) setProperty).setRaw(config, new HashSet<>(value)))
                                     .build()
                     );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Long.class -> categoryInstance.addEntry(
                     builder.entryBuilder().startLongList(displayName, new ArrayList<>((Set<Long>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Long>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
-                            .setSaveConsumer(value -> setValue(config, (ConfiguredSet<Long>) setProperty, displayName, tooltip, new HashSet<>(value)))
+                            .setSaveConsumer(value -> ((ConfiguredSet<Long>) setProperty).setRaw(config, new HashSet<>(value)))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Float.class -> categoryInstance.addEntry(
                     builder.entryBuilder().startFloatList(displayName, new ArrayList<>((Set<Float>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Float>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
-                            .setSaveConsumer(value -> setValue(config, (ConfiguredSet<Float>) setProperty, displayName, tooltip, new HashSet<>(value)))
+                            .setSaveConsumer(value -> ((ConfiguredSet<Float>) setProperty).setRaw(config, new HashSet<>(value)))
                             .build()
             );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Double.class ->
@@ -192,7 +192,7 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startDoubleList(displayName, new ArrayList<>((Set<Double>) setProperty.get(config)))
                                     .setDefaultValue(new ArrayList<>((Set<Double>) setProperty.defaultValue()))
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredSet<Double>) setProperty, displayName, tooltip, new HashSet<>(value)))
+                                    .setSaveConsumer(value -> ((ConfiguredSet<Double>) setProperty).setRaw(config, new HashSet<>(value)))
                                     .build()
                     );
             case ConfiguredSet<?> setProperty when setProperty.nestedType() == Identifier.class ->
@@ -200,16 +200,12 @@ public class ClothConfigSupport {
                             builder.entryBuilder().startStrList(displayName, setProperty.get(config).stream().map(Objects::toString).toList())
                                     .setDefaultValue(setProperty.defaultValue().stream().map(Objects::toString).toList())
                                     .setTooltip(tooltip)
-                                    .setSaveConsumer(value -> setValue(config, (ConfiguredSet<Identifier>) setProperty, displayName, tooltip, value.stream().map(Identifier::tryParse).filter(Objects::nonNull).collect(Collectors.toSet())))
+                                    .setSaveConsumer(value -> ((ConfiguredSet<Identifier>) setProperty).setRaw(config, value.stream().map(Identifier::tryParse).filter(Objects::nonNull).collect(Collectors.toSet())))
                                     .build()
                     );
             default -> {
             }
         }
-    }
-
-    private static <T> void setValue(MutableLoadedConfig config, ConfiguredProperty<T> property, Component displayName, Component tooltip, T value) {
-        new ConfigControlBinding<>(property, config, displayName, tooltip).set(value);
     }
 
     private static <T> boolean addCustomControlPropertyToBuilder(MutableLoadedConfig config, ConfiguredProperty<T> property, ConfigCategory categoryInstance, Component displayName, Component tooltip) {
@@ -246,7 +242,7 @@ public class ClothConfigSupport {
                         .startEnumSelector(displayName, (Class<T>) property.type(), property.get(config))
                         .setDefaultValue(property.defaultValue())
                         .setTooltip(tooltip)
-                        .setSaveConsumer(value -> setValue(config, property, displayName, tooltip, value))
+                        .setSaveConsumer(value -> property.setRaw(config, value))
                         .build()
         );
     }
