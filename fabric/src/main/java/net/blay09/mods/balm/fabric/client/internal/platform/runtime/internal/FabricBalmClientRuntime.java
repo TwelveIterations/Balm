@@ -35,7 +35,7 @@ import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 
-import java.util.TreeSet;
+import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
 public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadContext> {
@@ -51,7 +51,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
                 return null;
             }
 
-            final var defaultFallbackOrder = new TreeSet<String>();
+            final var defaultFallbackOrder = new LinkedHashSet<String>();
             defaultFallbackOrder.add("cloth-config");
             defaultFallbackOrder.add("configured");
             defaultFallbackOrder.addAll(BalmConfigScreenProviders.getProviderIds());
