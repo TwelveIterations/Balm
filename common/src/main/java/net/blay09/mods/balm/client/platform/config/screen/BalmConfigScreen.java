@@ -1,0 +1,218 @@
+package net.blay09.mods.balm.client.platform.config.screen;
+
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.client.platform.config.screen.internal.*;
+import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+
+public class BalmConfigScreen extends Screen implements BalmConfigScreenContext {
+
+    private static final Component SEARCH_LABEL = Component.translatable("gui.balm.configuration.search");
+    private static final Component SEARCH_HINT = SEARCH_LABEL.copy().withStyle(EditBox.SEARCH_HINT_STYLE);
+
+    private final @Nullable Screen parent;
+    private final HeaderAndFooterLayout layout;
+    private final List<BalmConfigScreenSection> sections;
+    private final BalmConfigScreenState state;
+    private final BalmConfigScreenControlFactory controlFactory;
+
+    private @Nullable EditBox searchBox;
+    private @Nullable BalmConfigScreenList list;
+    private @Nullable Button doneButton;
+    private List<BalmConfigScreenRow> visibleRows = List.of();
+
+    public static BalmConfigScreen forMod(@Nullable Screen parent, String modId) {
+        return forSchemas(parent, ConfigLocalization.componentForTitle(modId), Balm.config().getSchemasByNamespace(modId));
+    }
+
+    public static BalmConfigScreen forSchema(@Nullable Screen parent, BalmConfigSchema schema) {
+        return forSchemas(parent, ConfigLocalization.componentForTitle(schema), List.of(schema));
+    }
+
+    public static BalmConfigScreen forSchemas(@Nullable Screen parent, Component title, Collection<BalmConfigSchema> schemas) {
+        return applySchemas(builder().title(title), schemas).build(parent);
+    }
+
+    public BalmConfigScreen(@Nullable Screen parent, Component title, List<BalmConfigScreenSection> sections) {
+        super(title);
+        this.parent = parent;
+        this.sections = sections;
+        this.layout = new HeaderAndFooterLayout(this, 36, 33);
+        this.state = new BalmConfigScreenState(this::onStateChanged);
+        this.controlFactory = new BalmConfigScreenControlFactory(font, state);
+    }
+
+    public static BalmConfigScreenBuilder builder() {
+        return new BalmConfigScreenBuilderImpl();
+    }
+
+    public static BalmConfigScreenBuilder builder(String modId) {
+        return new BalmConfigScreenBuilderImpl().title(ConfigLocalization.componentForTitle(modId));
+    }
+
+    @Override
+    protected void init() {
+        final var header = layout.addToHeader(LinearLayout.vertical().spacing(4));
+        header.defaultCellSetting().alignHorizontallyCenter();
+        header.addChild(new StringWidget(title, font));
+        searchBox = header.addChild(new EditBox(font, 200, 15, SEARCH_LABEL));
+        searchBox.setHint(SEARCH_HINT);
+        searchBox.setResponder(this::filterConfigs);
+
+        list = layout.addToContents(new BalmConfigScreenList(this, controlFactory, sections));
+        visibleRows = computeVisibleRows();
+
+        final var footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
+        doneButton = footer.addChild(Button.builder(CommonComponents.GUI_DONE, _ -> saveAndClose()).build());
+        footer.addChild(Button.builder(CommonComponents.GUI_CANCEL, _ -> onClose()).build());
+        layout.visitWidgets(this::addRenderableWidget);
+        repositionElements();
+        updateDoneButton();
+    }
+
+    @Override
+    public void onClose() {
+        minecraft.gui.setScreen(parent);
+    }
+
+    @Override
+    protected void repositionElements() {
+        layout.arrangeElements();
+        if (list != null) {
+            list.updateSize(width, layout);
+        }
+    }
+
+    @Override
+    protected void setInitialFocus() {
+        if (searchBox != null) {
+            setInitialFocus(searchBox);
+        }
+    }
+
+    private void saveAndClose() {
+        if (state.hasValidationErrors()) {
+            return;
+        }
+
+        state.save();
+        onClose();
+    }
+
+    private void updateDoneButton() {
+        if (doneButton != null) {
+            doneButton.active = !state.hasValidationErrors();
+        }
+    }
+
+    private void updateVisibleRows() {
+        final var newVisibleRows = computeVisibleRows();
+        if (!newVisibleRows.equals(visibleRows)) {
+            clearHiddenValidationErrors(newVisibleRows);
+            visibleRows = newVisibleRows;
+            repopulateList();
+        }
+    }
+
+    private void onStateChanged() {
+        updateDoneButton();
+        updateVisibleRows();
+    }
+
+    private void filterConfigs(String filter) {
+        repopulateList();
+        if (list != null) {
+            list.setScrollAmount(0);
+        }
+    }
+
+    private void repopulateList() {
+        if (list != null) {
+            list.populateChildren(searchBox != null ? searchBox.getValue() : "");
+            repositionElements();
+        }
+    }
+
+    private List<BalmConfigScreenRow> computeVisibleRows() {
+        final var rows = new ArrayList<BalmConfigScreenRow>();
+        for (final var section : sections) {
+            for (final var row : section.rows()) {
+                if (row.isVisible(this)) {
+                    rows.add(row);
+                }
+            }
+        }
+        return rows;
+    }
+
+    private void clearHiddenValidationErrors(List<BalmConfigScreenRow> newVisibleRows) {
+        final var visibleProperties = newVisibleRows.stream()
+                .flatMap(row -> row.properties().stream())
+                .toList();
+        sections.stream()
+                .flatMap(section -> section.rows().stream())
+                .filter(row -> !newVisibleRows.contains(row))
+                .flatMap(row -> row.properties().stream())
+                .filter(property -> !visibleProperties.contains(property))
+                .forEach(state::clearValidationError);
+        updateDoneButton();
+    }
+
+    public int headerHeight() {
+        return layout.getHeaderHeight();
+    }
+
+    public int contentHeight() {
+        return layout.getContentHeight();
+    }
+
+    private static BalmConfigScreenBuilder applySchemas(BalmConfigScreenBuilder builder, Collection<BalmConfigSchema> schemas) {
+        final var sortedSchemas = schemas.stream()
+                .sorted(Comparator.comparing(schema -> schema.identifier().toString()))
+                .toList();
+        final var includeSchemaHeadings = sortedSchemas.size() > 1;
+        for (final var schema : sortedSchemas) {
+            final var schemaTitle = Component.translatable(ConfigLocalization.forTitle(schema));
+            if (!schema.rootProperties().isEmpty()) {
+                builder.section(includeSchemaHeadings ? schemaTitle : Component.empty(), section -> section.properties(schema.rootProperties()));
+            }
+            for (final var category : schema.categories()) {
+                final var categoryTitle = Component.translatable(ConfigLocalization.forCategory(category));
+                builder.section(categoryTitle, section -> section.properties(category));
+            }
+        }
+        return builder;
+    }
+
+    @Override
+    public Font font() {
+        return getFont();
+    }
+
+    @Override
+    public @Nullable Component getValidationError(ConfiguredProperty<?> property) {
+        return state.getValidationError(property);
+    }
+
+    @Override
+    public <T> ConfigControlBinding<T> bindingFor(ConfiguredProperty<T> property) {
+        return state.bindingFor(property);
+    }
+}

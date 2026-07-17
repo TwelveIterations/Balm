@@ -9,8 +9,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.List;
+
 public class EnumConfigProperty<T extends Enum<T> & StringRepresentable> extends AbstractConfigProperty<T> implements ConfiguredEnum<T> {
     private final T defaultValue;
+    private final List<T> validValues;
     private final Codec<T> codec;
     private final StreamCodec<ByteBuf, T> streamCodec;
 
@@ -18,8 +21,10 @@ public class EnumConfigProperty<T extends Enum<T> & StringRepresentable> extends
         super(parent);
         this.defaultValue = defaultValue;
         final var enumClass = defaultValue.getDeclaringClass();
-        final var byIdMapper = ByIdMap.continuous(Enum::ordinal, enumClass.getEnumConstants(), ByIdMap.OutOfBoundsStrategy.ZERO);
-        this.codec = LenientEnumCodecs.fromValues(enumClass::getEnumConstants);
+        final var enumConstants = enumClass.getEnumConstants();
+        this.validValues = List.of(enumConstants);
+        final var byIdMapper = ByIdMap.continuous(Enum::ordinal, enumConstants, ByIdMap.OutOfBoundsStrategy.ZERO);
+        this.codec = LenientEnumCodecs.fromValues(() -> enumConstants);
         this.streamCodec = ByteBufCodecs.idMapper(byIdMapper, Enum::ordinal).cast();
     }
 
@@ -36,6 +41,11 @@ public class EnumConfigProperty<T extends Enum<T> & StringRepresentable> extends
     @Override
     public StreamCodec<ByteBuf, T> streamCodec() {
         return streamCodec;
+    }
+
+    @Override
+    public List<T> validValues() {
+        return validValues;
     }
 
     @Override

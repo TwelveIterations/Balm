@@ -4,7 +4,11 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 
+import java.util.List;
+
 public interface ConfiguredEnum<T extends Enum<T>> extends ConfiguredProperty<T> {
+    List<T> validValues();
+
     default T get(LoadedConfig config) {
         return getRaw(config);
     }

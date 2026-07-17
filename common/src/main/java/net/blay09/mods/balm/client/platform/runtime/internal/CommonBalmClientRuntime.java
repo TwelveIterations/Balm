@@ -1,12 +1,16 @@
 package net.blay09.mods.balm.client.platform.runtime.internal;
 
-import net.blay09.mods.balm.client.platform.BalmClientHooks;
-import net.blay09.mods.balm.client.platform.internal.CommonBalmClientHooks;
-import net.blay09.mods.balm.client.platform.module.internal.InternalsClientModule;
-import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
-import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.platform.BalmClientHooks;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigSyncClient;
+import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreen;
+import net.blay09.mods.balm.client.platform.internal.CommonBalmClientHooks;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.balm.client.platform.module.internal.InternalsClientModule;
+import net.blay09.mods.balm.platform.config.BalmConfig;
+import net.blay09.mods.balm.platform.config.internal.BalmConfigScreenProviders;
+import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +23,13 @@ public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLo
 
     private final BalmClientHooks clientHooks = new CommonBalmClientHooks();
     private boolean ready;
+
+    protected CommonBalmClientRuntime() {
+        BalmConfigScreenProviders.register(BalmConfig.BALM_CONFIG_SCREEN_PROVIDER_ID, modId -> {
+            final var schemas = Balm.config().getSchemasByNamespace(modId);
+            return schemas.isEmpty() ? null : parent -> BalmConfigScreen.forMod(parent, modId);
+        });
+    }
 
     @Override
     public boolean isReady() {
