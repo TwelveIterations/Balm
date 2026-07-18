@@ -144,9 +144,11 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
 
     @Override
     public void compostables(String namespace, Consumer<BalmCompostableRegistrar> initializer) {
-        NeoForge.EVENT_BUS.addListener(DataMapsUpdatedEvent.class, event
-                -> event.ifRegistry(Registries.ITEM, (registry)
-                -> initializer.accept(new NeoForgeBalmCompostableRegistrar(registry))));
+        NeoForge.EVENT_BUS.addListener(DataMapsUpdatedEvent.class, event -> {
+            if (event.getCause() == DataMapsUpdatedEvent.UpdateCause.SERVER_RELOAD) {
+                event.ifRegistry(Registries.ITEM, registry -> initializer.accept(new NeoForgeBalmCompostableRegistrar(registry)));
+            }
+        });
     }
 
     public void blockEntityTypes(String namespace, Consumer<BalmBlockEntityTypeRegistrar> initializer) {
