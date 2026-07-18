@@ -9,6 +9,7 @@ import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenRegistrar;
 import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
@@ -28,9 +29,12 @@ import net.blay09.mods.balm.forge.client.renderer.block.model.internal.ForgeBalm
 import net.blay09.mods.balm.forge.client.renderer.blockentity.internal.ForgeBalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.client.renderer.entity.internal.ForgeBalmEntityRendererRegistrar;
 import net.blay09.mods.balm.forge.server.packs.resources.internal.ForgeBalmClientResourceReloadListenerRegistrar;
+import net.blay09.mods.balm.platform.config.internal.BalmConfigScreenProviders;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
 import net.blay09.mods.balm.server.packs.resources.BalmClientResourceReloadListenerRegistrar;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.function.Consumer;
@@ -114,5 +118,21 @@ public class ForgeBalmClientRuntime extends CommonBalmClientRuntime<ForgeLoadCon
     @Override
     public void rangeSelectItemModelProperties(String namespace, Consumer<BalmRangeSelectItemModelPropertyRegistrar> initializer) {
         initializer.accept(ForgeBalmRangeSelectItemModelPropertyRegistrar.INSTANCE);
+    }
+
+    @Override
+    public void configScreens(String namespace, Consumer<BalmConfigScreenRegistrar> initializer) {
+        super.configScreen(namespace, initializer);
+
+        if (BalmConfigScreenProviders.hasModOverride(namespace)) {
+            ModList.get().getModContainerById(namespace).ifPresent(modContainer -> {
+                if (modContainer.getCustomExtension(ConfigScreenHandler.ConfigScreenFactory.class).isEmpty()) {
+                    modContainer.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(parent -> {
+                        final var factory = BalmConfigScreenProviders.getFactory(namespace);
+                        return factory != null ? factory.create(parent) : null;
+                    }));
+                }
+            });
+        }
     }
 }

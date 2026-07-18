@@ -10,6 +10,8 @@ import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenRegistrar;
+import net.blay09.mods.balm.client.platform.config.internal.BalmConfigScreenRegistrarImpl;
 import net.blay09.mods.balm.client.platform.runtime.internal.CommonBalmClientRuntime;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
@@ -23,6 +25,7 @@ import net.blay09.mods.balm.neoforge.client.internal.commands.NeoForgeBalmClient
 import net.blay09.mods.balm.neoforge.client.model.geom.internal.NeoForgeBalmModelLayerRegistrar;
 import net.blay09.mods.balm.neoforge.client.particle.internal.NeoForgeBalmParticleProviderRegistrar;
 import net.blay09.mods.balm.neoforge.client.platform.config.internal.BalmNeoForgeConfigurationScreen;
+import net.blay09.mods.balm.neoforge.client.platform.config.internal.NeoForgeBalmConfigScreenProviders;
 import net.blay09.mods.balm.neoforge.client.platform.event.internal.NeoForgeBalmClientEventMappings;
 import net.blay09.mods.balm.neoforge.client.renderer.block.model.internal.NeoForgeBalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.neoforge.client.renderer.blockentity.internal.NeoForgeBalmBlockEntityRendererRegistrar;
@@ -172,5 +175,14 @@ public class NeoForgeBalmClientRuntime extends CommonBalmClientRuntime<NeoForgeL
                 modBus.addListener((RegisterRangeSelectItemModelPropertyEvent event) -> initializer.accept(new NeoForgeBalmRangeSelectItemModelPropertyRegistrar(event)));
             }
         });
+    }
+
+    @Override
+    public void configScreen(String namespace, Consumer<BalmConfigScreenRegistrar> initializer) {
+        super.configScreen(namespace, initializer);
+
+        if (BalmConfigScreenProviders.hasModOverride(namespace)) {
+            ModList.get().getModContainerById(namespace).ifPresent(NeoForgeBalmConfigScreenProviders::initializeConfigurationScreen);
+        }
     }
 }

@@ -22,6 +22,9 @@ public class ModMenuIntegration implements ModMenuApi {
                 result.put(namespace, screenFactory::create);
             }
         }
+        for (final var entry : BalmConfigScreenProviders.getModOverrides()) {
+            result.put(entry.getKey(), entry.getValue()::create);
+        }
         return result;
     }
 }

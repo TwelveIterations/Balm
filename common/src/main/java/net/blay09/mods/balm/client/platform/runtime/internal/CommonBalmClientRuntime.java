@@ -3,6 +3,8 @@ package net.blay09.mods.balm.client.platform.runtime.internal;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.platform.BalmClientHooks;
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenRegistrar;
+import net.blay09.mods.balm.client.platform.config.internal.BalmConfigScreenRegistrarImpl;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigSyncClient;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreen;
 import net.blay09.mods.balm.client.platform.internal.CommonBalmClientHooks;
@@ -15,6 +17,7 @@ import net.blay09.mods.balm.platform.runtime.BalmRuntimeLoadContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> implements BalmClientRuntime<TLoadContext> {
 
@@ -65,4 +68,8 @@ public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLo
         registerModule(new BalmClientRegistrars(this, "balm"), new InternalsClientModule());
     }
 
+    @Override
+    public void configScreen(String namespace, Consumer<BalmConfigScreenRegistrar> initializer) {
+        initializer.accept(new BalmConfigScreenRegistrarImpl(namespace));
+    }
 }

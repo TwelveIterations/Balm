@@ -8,17 +8,27 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class BalmConfigScreenProviders {
 
     private static final Map<String, BalmConfigScreenProvider> providers = new ConcurrentHashMap<>();
+    private static final Map<String, BalmConfigScreenFactory> modOverrides = new ConcurrentHashMap<>();
 
     private BalmConfigScreenProviders() {
     }
 
     public static void register(String providerId, BalmConfigScreenProvider provider) {
         providers.put(providerId, provider);
+    }
+
+    public static void registerModOverride(String modId, BalmConfigScreenFactory factory) {
+        modOverrides.put(modId, factory);
+    }
+
+    public static boolean hasModOverride(String modId) {
+        return modOverrides.containsKey(modId);
     }
 
     @Nullable
@@ -29,6 +39,11 @@ public final class BalmConfigScreenProviders {
 
     @Nullable
     public static BalmConfigScreenFactory getFactory(String modId, List<String> providerIds) {
+        final var modFactory = modOverrides.get(modId);
+        if (modFactory != null) {
+            return modFactory;
+        }
+
         for (final var providerId : providerIds) {
             final var factory = getFactory(modId, providerId);
             if (factory != null) {
@@ -46,5 +61,9 @@ public final class BalmConfigScreenProviders {
 
     public static Collection<String> getProviderIds() {
         return providers.keySet();
+    }
+
+    public static Set<Map.Entry<String, BalmConfigScreenFactory>> getModOverrides() {
+        return modOverrides.entrySet();
     }
 }

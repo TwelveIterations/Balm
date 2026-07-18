@@ -8,6 +8,7 @@ import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
 import net.blay09.mods.balm.client.particle.BalmParticleProviderRegistrar;
 import net.blay09.mods.balm.client.platform.config.BalmCustomConfigControlRegistrar;
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenRegistrar;
 import net.blay09.mods.balm.client.platform.config.internal.BalmCustomConfigControlRegistrarImpl;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
@@ -137,6 +138,15 @@ public class BalmClientRegistrars {
      */
     public void customConfigControls(Consumer<BalmCustomConfigControlRegistrar> initializer) {
         initializer.accept(new BalmCustomConfigControlRegistrarImpl(namespace));
+    }
+
+    /**
+     * Use this to register a custom config screen for this mod.
+     *
+     * @param initializer Callback that receives a scoped registrar for this mod's config screen.
+     */
+    public void configScreen(Consumer<BalmConfigScreenRegistrar> initializer) {
+        runtime.configScreen(namespace, initializer);
     }
 
     public void registerModule(BalmClientModule module) {
