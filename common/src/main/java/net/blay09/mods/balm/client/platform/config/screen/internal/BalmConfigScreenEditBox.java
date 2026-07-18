@@ -12,6 +12,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.Nullable;
 
 public class BalmConfigScreenEditBox<T> extends EditBox {
 
@@ -40,8 +41,27 @@ public class BalmConfigScreenEditBox<T> extends EditBox {
         try {
             final JsonElement json = value.startsWith("[") || value.startsWith("{") || value.startsWith("\"") ? JsonParser.parseString(value) : new JsonPrimitive(value);
             return property.codec().parse(JsonOps.INSTANCE, json);
+        } catch (NumberFormatException e) {
+            final var expectedType = expectedNumberType(property.type());
+            if (expectedType != null) {
+                return DataResult.error(() -> "Invalid value for " + property.name() + ": expected " + expectedType + ", got \"" + value + "\"");
+            }
+            return DataResult.error(() -> String.valueOf(e.getMessage()));
         } catch (RuntimeException e) {
             return DataResult.error(() -> String.valueOf(e.getMessage()));
         }
+    }
+
+    private static @Nullable String expectedNumberType(Class<?> type) {
+        if (type == Integer.class || type == int.class) {
+            return "a whole number";
+        } else if (type == Long.class || type == long.class) {
+            return "a whole number";
+        } else if (type == Float.class || type == float.class) {
+            return "a decimal number";
+        } else if (type == Double.class || type == double.class) {
+            return "a decimal number";
+        }
+        return null;
     }
 }
