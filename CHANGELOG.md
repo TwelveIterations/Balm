@@ -1,2 +1,2 @@
-- Added support for Trinkets Updated
-- Fixed preventing screen overrides from other mods (like Catalogue) from being applied when Balm's `OpenScreenEvent` was used
+- Fixed connection failure when trying to join a server with mods that modify compostables (e.g. Pantry for Blockheads)
+- API: Added support for specifying custom controls on config properties
