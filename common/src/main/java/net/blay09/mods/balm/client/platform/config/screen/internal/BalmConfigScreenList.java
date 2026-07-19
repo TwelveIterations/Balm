@@ -39,13 +39,14 @@ public class BalmConfigScreenList extends ContainerObjectSelectionList<BalmConfi
     }
 
     private BalmConfigScreenEntry createEntry(BalmConfigScreenRow row) {
+        final var rowState = screen.stateFor(row);
         return switch (row) {
             case BalmConfigScreenPropertyRow propertyRow ->
-                    new BalmConfigScreenPropertyEntry(screen, propertyRow.property(), controlFactory.createControl(propertyRow.property(), propertyRow.state()));
+                    new BalmConfigScreenPropertyEntry(screen, propertyRow.property(), controlFactory.createControl(screen, propertyRow.property(), rowState));
             case BalmConfigScreenMergedPropertiesRow mergedPropertiesRow ->
-                    new BalmConfigScreenMergedPropertiesEntry(screen, mergedPropertiesRow, controlFactory.createMergedPropertiesControl(mergedPropertiesRow));
+                    new BalmConfigScreenMergedPropertiesEntry(screen, mergedPropertiesRow, controlFactory.createMergedPropertiesControl(mergedPropertiesRow, rowState));
             case BalmConfigScreenCustomEntryRow customEntryRow ->
-                    customEntryRow.entryFactory().apply(screen, customEntryRow.state());
+                    customEntryRow.entryFactory().apply(screen, rowState);
             default ->
                     throw new IllegalStateException("Unsupported configuration row type: " + row.getClass().getName());
         };

@@ -47,4 +47,8 @@ public class ConfigControlBinding<T> {
     public DataResult<T> validateValue(T value) {
         return property.validateValue(value);
     }
+
+    public ConfiguredProperty<T> property() {
+        return property;
+    }
 }

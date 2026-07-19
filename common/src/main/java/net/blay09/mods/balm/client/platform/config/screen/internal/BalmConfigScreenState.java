@@ -28,7 +28,9 @@ public class BalmConfigScreenState {
     }
 
     public <T> ConfigControlBinding<T> bindingFor(ConfiguredProperty<T> property) {
-        return new ConfigControlBinding<>(property, () -> property.getRaw(configFor(property)), value -> trySetValue(property, value));
+        return new ConfigControlBinding<>(property,
+                () -> property.getRaw(configFor(property)),
+                value -> trySetValue(property, value));
     }
 
     public <T> void trySetValue(ConfiguredProperty<T> property, T value) {
@@ -46,7 +48,9 @@ public class BalmConfigScreenState {
     }
 
     public void clearValidationError(ConfiguredProperty<?> property) {
-        validationErrors.remove(property);
+        if (validationErrors.remove(property) != null) {
+            onValidationChanged.run();
+        }
     }
 
     @Nullable
