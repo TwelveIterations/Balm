@@ -62,6 +62,12 @@ public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
 
     @Override
     @Nullable
+    public ConfigCategory findCategory(String category) {
+        return categories.get(category);
+    }
+
+    @Override
+    @Nullable
     public ConfiguredProperty<?> findProperty(String category, String property) {
         return properties.get(category, property);
     }

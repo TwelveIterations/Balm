@@ -22,6 +22,9 @@ public interface BalmConfigSchema {
     Collection<ConfigCategory> categories();
 
     @Nullable
+    ConfigCategory findCategory(String category);
+
+    @Nullable
     ConfiguredProperty<?> findProperty(String category, String property);
 
     @Nullable
