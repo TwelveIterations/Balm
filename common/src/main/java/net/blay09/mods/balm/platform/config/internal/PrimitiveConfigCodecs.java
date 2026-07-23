@@ -51,14 +51,11 @@ public class PrimitiveConfigCodecs {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T> DataResult<T> parse(ConfiguredProperty<T> property, String value) {
-        if (!(property instanceof NestedTypeHolder<?> nestedTypeHolder)) {
-            return DataResult.error(() -> "Cannot edit collection value for " + property.name() + ": property is not a configured collection");
-        }
-
+        final var type = property instanceof NestedTypeHolder<?> nestedTypeHolder ? nestedTypeHolder.nestedType() : property.type();
         try {
-            return PrimitiveConfigCodecs.codec((Class) nestedTypeHolder.nestedType()).parse(JavaOps.INSTANCE, value);
+            return PrimitiveConfigCodecs.codec((Class) type).parse(JavaOps.INSTANCE, value);
         } catch (NumberFormatException e) {
-            final var expectedType = expectedNumberType(nestedTypeHolder.nestedType());
+            final var expectedType = expectedNumberType(type);
             if (expectedType != null) {
                 return DataResult.error(() -> "Invalid value for " + property.name() + ": expected " + expectedType + ", got \"" + value + "\"");
             }
