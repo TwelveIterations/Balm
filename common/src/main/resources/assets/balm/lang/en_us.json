@@ -56,6 +56,9 @@
   "gui.balm.configuration.list.empty": "No entries",
   "gui.balm.configuration.list.drag_to_reorder": "Drag to reorder. Double-click to move to top. Shift-double-click to move to bottom.",
   "gui.balm.configuration.search": "Search",
+  "gui.balm.configuration.discard_changes.title": "Discard changes?",
+  "gui.balm.configuration.discard_changes.message": "There are unsaved changes that will be discarded if you proceed.",
+  "gui.balm.configuration.discard_changes.confirm": "Discard Changes",
   "gui.balm.configuration.validation.range": "Range: %s to %s",
   "gui.balm.configuration.validation.negative_infinity": "-inf",
   "gui.balm.configuration.validation.positive_infinity": "+inf"

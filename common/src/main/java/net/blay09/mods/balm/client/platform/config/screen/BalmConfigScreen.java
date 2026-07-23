@@ -13,6 +13,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
@@ -121,7 +122,26 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == InputConstants.KEY_F && event.hasControlDownWithQuirk() && !event.hasShiftDown() && !event.hasAltDown()) {
+        if (event.isEscape() && shouldCloseOnEsc()) {
+            if (state.hasValidationErrors()) {
+                minecraft.gui.setScreen(new ConfirmScreen(confirmed -> {
+                    if (confirmed) {
+                        minecraft.gui.setScreen(parent);
+                    } else {
+                        minecraft.gui.setScreen(this);
+                    }
+                }, Component.translatable("gui.balm.configuration.discard_changes.title"),
+                        Component.translatable("gui.balm.configuration.discard_changes.message"),
+                        Component.translatable("gui.balm.configuration.discard_changes.confirm"),
+                        CommonComponents.GUI_CANCEL));
+            } else {
+                saveAndClose();
+            }
+            return true;
+        } else if (event.hasControlDownWithQuirk()
+                && event.key() == InputConstants.KEY_F
+                && !event.hasShiftDown()
+                && !event.hasAltDown()) {
             focusSearchBox();
             return true;
         }
