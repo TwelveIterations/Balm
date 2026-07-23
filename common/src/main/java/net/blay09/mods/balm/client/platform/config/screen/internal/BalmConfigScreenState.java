@@ -20,6 +20,12 @@ public class BalmConfigScreenState {
         this.onValidationChanged = onValidationChanged;
     }
 
+    public BalmConfigScreenState(BalmConfigScreenState parent, Runnable onValidationChanged) {
+        this.onValidationChanged = onValidationChanged;
+        parent.configs.forEach((schema, config) -> configs.put(schema, config.copy()));
+        validationErrors.putAll(parent.validationErrors);
+    }
+
     public <T> MutableLoadedConfig configFor(ConfiguredProperty<T> property) {
         return configs.computeIfAbsent(property.parentSchema(), schema -> {
             final var localConfig = Balm.config().getLocalConfig(schema);
@@ -51,6 +57,14 @@ public class BalmConfigScreenState {
         if (validationErrors.remove(property) != null) {
             onValidationChanged.run();
         }
+    }
+
+    public void applyTo(BalmConfigScreenState parent) {
+        parent.configs.clear();
+        configs.forEach((schema, config) -> parent.configs.put(schema, config.copy()));
+        parent.validationErrors.clear();
+        parent.validationErrors.putAll(validationErrors);
+        parent.onValidationChanged.run();
     }
 
     @Nullable
