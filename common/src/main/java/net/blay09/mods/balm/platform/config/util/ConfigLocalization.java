@@ -1,16 +1,27 @@
 package net.blay09.mods.balm.platform.config.util;
 
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredEnum;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 
 public class ConfigLocalization {
     public static String forTitle(BalmConfigSchema schema) {
         return schema.identifier().getNamespace() + ".configuration." + schema.identifier().getPath() + ".title";
     }
 
+    public static Component componentForTitle(BalmConfigSchema schema) {
+        return Component.translatable(forTitle(schema));
+    }
+
     public static String forTitle(String modId) {
         return modId + ".configuration.title";
+    }
+
+    public static Component componentForTitle(String modId) {
+        return Component.translatable(forTitle(modId));
     }
 
     public static String forRootCategory(BalmConfigSchema schema) {
@@ -19,6 +30,10 @@ public class ConfigLocalization {
 
     public static String forCategory(ConfigCategory category) {
         return category.parentSchema().identifier().getNamespace() + ".configuration." + category.name();
+    }
+
+    public static String forCategoryTooltip(ConfigCategory category) {
+        return forCategory(category) + ".tooltip";
     }
 
     public static String forProperty(ConfiguredProperty<?> property) {
@@ -31,5 +46,13 @@ public class ConfigLocalization {
 
     public static String forPropertyTooltip(ConfiguredProperty<?> property) {
         return forProperty(property) + ".tooltip";
+    }
+
+    public static Component forEnumValue(ConfiguredEnum<?> property, Enum<?> value) {
+        if (value instanceof StringRepresentable stringRepresentable) {
+            return Component.translatableWithFallback(forProperty(property) + "." + stringRepresentable.getSerializedName(), stringRepresentable.getSerializedName());
+        }
+
+        return Component.translatableWithFallback(forProperty(property) + "." + value.name(), value.name());
     }
 }

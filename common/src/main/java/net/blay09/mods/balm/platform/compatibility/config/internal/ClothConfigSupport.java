@@ -205,7 +205,9 @@ public class ClothConfigSupport {
         }
 
         final var binding = new ConfigControlBinding<>(property, config);
-        final var context = new ConfigControlContextImpl(148, 18);
+        final var context = new ConfigControlContextImpl(148, 18, _ -> {
+            throw new IllegalArgumentException("No configuration bindings are available in this context");
+        });
         final var entry = ConfigControlRegistry.createElement(customControlId, binding, context).orElse(null);
         switch (entry) {
             case null -> {

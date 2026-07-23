@@ -8,6 +8,8 @@ import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.platform.BalmClientHooks;
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenRegistrar;
+import net.blay09.mods.balm.client.platform.config.internal.BalmConfigScreenRegistrarImpl;
 import net.blay09.mods.balm.client.platform.config.internal.BalmCustomConfigControlRegistrarImpl;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;
@@ -37,6 +39,7 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
         clientTooltipComponents(modId, module::registerClientTooltipComponents);
         rangeSelectItemModelProperties(modId, module::registerRangeSelectItemModelProperties);
         module.registerCustomConfigControls(new BalmCustomConfigControlRegistrarImpl(modId));
+        configScreen(modId, module::registerConfigScreen);
         module.registerClientCommands(clientCommands());
 
         module.initialize();
@@ -73,4 +76,6 @@ public interface BalmClientRuntime<TLoadContext extends BalmRuntimeLoadContext> 
     void clientTooltipComponents(String namespace, Consumer<BalmClientTooltipComponentRegistrar> initializer);
 
     void rangeSelectItemModelProperties(String namespace, Consumer<BalmRangeSelectItemModelPropertyRegistrar> initializer);
+
+    void configScreen(String namespace, Consumer<BalmConfigScreenRegistrar> initializer);
 }

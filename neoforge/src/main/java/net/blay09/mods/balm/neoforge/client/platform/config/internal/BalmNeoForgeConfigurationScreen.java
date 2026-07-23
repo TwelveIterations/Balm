@@ -78,7 +78,9 @@ public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.Configu
             onChanged(key);
         };
         final var binding = new ConfigControlBinding<>(property, getter, setter);
-        final var context = new ConfigControlContextImpl(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT);
+        final var context = new ConfigControlContextImpl(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT, _ -> {
+            throw new IllegalArgumentException("No configuration bindings are available in this context");
+        });
         final var element = ConfigControlRegistry.createElement(customControlId, binding, context).orElse(null);
         return switch (element) {
             case null -> null;

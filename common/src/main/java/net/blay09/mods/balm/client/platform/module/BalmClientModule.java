@@ -7,6 +7,7 @@ import net.blay09.mods.balm.client.BalmClientTooltipComponentRegistrar;
 import net.blay09.mods.balm.client.BalmRangeSelectItemModelPropertyRegistrar;
 import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
+import net.blay09.mods.balm.client.platform.config.BalmConfigScreenRegistrar;
 import net.blay09.mods.balm.client.platform.config.BalmCustomConfigControlRegistrar;
 import net.blay09.mods.balm.client.renderer.blockentity.BalmBlockEntityRendererRegistrar;
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
@@ -63,6 +64,9 @@ public interface BalmClientModule {
     }
 
     default void registerCustomConfigControls(BalmCustomConfigControlRegistrar customConfigControls) {
+    }
+
+    default void registerConfigScreen(BalmConfigScreenRegistrar configScreens) {
     }
 
     default void registerClientCommands(BalmClientCommands commands) {

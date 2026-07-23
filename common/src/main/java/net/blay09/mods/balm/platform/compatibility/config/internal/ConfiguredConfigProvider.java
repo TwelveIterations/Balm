@@ -270,7 +270,9 @@ public class ConfiguredConfigProvider implements IModConfigProvider {
         }
 
         final var binding = new ConfigControlBinding<>(property, config);
-        final var context = new ConfigControlContextImpl(46, 20);
+        final var context = new ConfigControlContextImpl(46, 20, _ -> {
+            throw new IllegalArgumentException("No configuration bindings are available in this context");
+        });
         final var entry = ConfigControlRegistry.createElement(customControlId, binding, context).orElse(null);
         switch (entry) {
             case IConfigEntry configEntry -> {

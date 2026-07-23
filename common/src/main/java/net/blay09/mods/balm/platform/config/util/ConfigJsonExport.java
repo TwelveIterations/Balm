@@ -40,7 +40,11 @@ public class ConfigJsonExport {
     private static String@Nullable[] getValidValues(ConfiguredProperty<?> property) {
         Class<?> enumType = null;
         switch (property) {
-            case ConfiguredEnum<?> enumProperty -> enumType = enumProperty.type();
+            case ConfiguredEnum<?> enumProperty -> {
+                return enumProperty.validValues().stream()
+                        .map(Object::toString)
+                        .toArray(String[]::new);
+            }
             case ConfiguredList<?> listProperty when listProperty.nestedType().isEnum() ->
                     enumType = listProperty.nestedType();
             case ConfiguredSet<?> setProperty when setProperty.nestedType().isEnum() ->
