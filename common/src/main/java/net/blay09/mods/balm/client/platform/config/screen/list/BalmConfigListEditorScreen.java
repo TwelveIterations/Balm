@@ -147,7 +147,7 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
             focusSearchBox();
             return true;
         } else if (event.hasControlDownWithQuirk()
-                && event.key() == InputConstants.KEY_Z
+                && (event.key() == InputConstants.KEY_Z || event.key() == InputConstants.KEY_Y)
                 && !event.hasShiftDown()
                 && !event.hasAltDown()) {
             if (state.restoreDeletedValue()) {
