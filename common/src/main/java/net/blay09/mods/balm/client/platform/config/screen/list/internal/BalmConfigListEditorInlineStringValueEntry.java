@@ -8,6 +8,7 @@ import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -64,11 +65,7 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
         valueHolder.entryState(new EditState(initialText));
         final var editBox = ensureEditBox();
         editBox.setValue(initialText);
-        editBox.setFocused(true);
-        editBox.setCursorPosition(0);
-        editBox.setHighlightPos(editBox.getValue().length());
-        setFocused(editBox);
-        context.focusEntry(this);
+        focusEditBox(editBox);
     }
 
     @Override
@@ -119,6 +116,16 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
         }
 
         return super.keyPressed(event);
+    }
+
+    @Override
+    public void setFocused(@Nullable GuiEventListener focused) {
+        if (focused == editButton && editBox != null) {
+            super.setFocused(editBox);
+            return;
+        }
+
+        super.setFocused(focused);
     }
 
     @Override
@@ -206,6 +213,12 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
         editBox.setWidth(Math.max(1, getContentRightBeforeActions() - x));
         editBox.setHeight(EDIT_BOX_HEIGHT);
         return editBox;
+    }
+
+    private void focusEditBox(EditBox editBox) {
+        editBox.setFocused(true);
+        setFocused(editBox);
+        context.focusEntry(this);
     }
 
     protected record EditState(String value) {
