@@ -48,6 +48,7 @@
   "config.jade.plugin_balm.jade": "Balm",
   "gui.balm.configuration.title": "%s...",
   "gui.balm.configuration.edit": "Edit",
+  "gui.balm.configuration.open": "Open",
   "gui.balm.configuration.add": "Add",
   "gui.balm.configuration.delete": "Delete",
   "gui.balm.configuration.reset": "Reset",

@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class BalmConfigScreenSectionBuilderImpl implements BalmConfigScreenSectionBuilder {
@@ -30,6 +31,12 @@ public class BalmConfigScreenSectionBuilderImpl implements BalmConfigScreenSecti
             throw new IllegalArgumentException("Merged property rows must declare at least one property");
         }
         rows.add(new BalmConfigScreenMergedPropertiesRow(label, tooltip, List.copyOf(properties), widgetFactory, visibilityPredicate));
+        return this;
+    }
+
+    @Override
+    public BalmConfigScreenSectionBuilder button(Component label, Component tooltip, Component buttonLabel, Consumer<BalmConfigScreen> onPress, Predicate<String> filterPredicate, Predicate<BalmConfigScreenContext> visibilityPredicate) {
+        rows.add(new BalmConfigScreenButtonRow(label, tooltip, buttonLabel, onPress, filterPredicate, visibilityPredicate));
         return this;
     }
 
