@@ -11,7 +11,13 @@ public interface BalmConfigScreenContext {
 
     @Nullable Component getValidationError(ConfiguredProperty<?> property);
 
+    void setValidationError(ConfiguredProperty<?> property, Component error);
+
+    void clearValidationError(ConfiguredProperty<?> property);
+
     <T> ConfigControlBinding<T> bindingFor(ConfiguredProperty<T> property);
+
+    BalmConfigScreenRowState stateFor(ConfiguredProperty<?> property);
 
     default <T> T valueFor(ConfiguredProperty<T> property) {
         return bindingFor(property).get();

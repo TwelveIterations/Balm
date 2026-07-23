@@ -17,10 +17,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class BalmConfigScreen extends Screen implements BalmConfigScreenContext {
 
@@ -31,6 +28,8 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
     private final HeaderAndFooterLayout layout;
     private final List<BalmConfigScreenSection> sections;
     private final BalmConfigScreenState state;
+    private final Map<BalmConfigScreenRow, BalmConfigScreenRowState> rowStates = new HashMap<>();
+    private final Map<ConfiguredProperty<?>, BalmConfigScreenRowState> propertyRowStates = new HashMap<>();
     private final BalmConfigScreenControlFactory controlFactory;
 
     private @Nullable EditBox searchBox;
@@ -56,6 +55,13 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
         this.sections = sections;
         this.layout = new HeaderAndFooterLayout(this, 36, 33);
         this.state = new BalmConfigScreenState(this::onStateChanged);
+        for (final var section : sections) {
+            for (final var row : section.rows()) {
+                final var rowState = new BalmConfigScreenRowState();
+                rowStates.put(row, rowState);
+                row.properties().forEach(property -> propertyRowStates.putIfAbsent(property, rowState));
+            }
+        }
         this.controlFactory = new BalmConfigScreenControlFactory(font, state);
     }
 
@@ -150,6 +156,10 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
         }
     }
 
+    public void refreshControls() {
+        repopulateList();
+    }
+
     private List<BalmConfigScreenRow> computeVisibleRows() {
         final var rows = new ArrayList<BalmConfigScreenRow>();
         for (final var section : sections) {
@@ -212,7 +222,34 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
     }
 
     @Override
+    public void setValidationError(ConfiguredProperty<?> property, Component error) {
+        state.setValidationError(property, error);
+    }
+
+    @Override
+    public void clearValidationError(ConfiguredProperty<?> property) {
+        state.clearValidationError(property);
+    }
+
+    @Override
     public <T> ConfigControlBinding<T> bindingFor(ConfiguredProperty<T> property) {
         return state.bindingFor(property);
+    }
+
+    public BalmConfigScreenRowState stateFor(BalmConfigScreenRow row) {
+        final var rowState = rowStates.get(row);
+        if (rowState == null) {
+            throw new IllegalArgumentException("No row state found for configuration row " + row.getClass().getName());
+        }
+        return rowState;
+    }
+
+    @Override
+    public BalmConfigScreenRowState stateFor(ConfiguredProperty<?> property) {
+        final var rowState = propertyRowStates.get(property);
+        if (rowState == null) {
+            throw new IllegalArgumentException("No configuration row found for property " + property.name());
+        }
+        return rowState;
     }
 }

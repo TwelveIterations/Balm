@@ -1,10 +1,7 @@
 package net.blay09.mods.balm.client.platform.config.screen.internal;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.JavaOps;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenRowState;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
@@ -31,16 +28,15 @@ public class BalmConfigScreenEditBox<T> extends EditBox {
     }
 
     private static <T> String serialize(ConfiguredProperty<T> property, T value) {
-        return property.codec().encodeStart(JsonOps.INSTANCE, value)
+        return property.codec().encodeStart(JavaOps.INSTANCE, value)
                 .result()
-                .map(json -> json.isJsonPrimitive() && json.getAsJsonPrimitive().isString() ? json.getAsString() : json.toString())
+                .map(String::valueOf)
                 .orElse(String.valueOf(value));
     }
 
     private static <T> DataResult<T> parse(ConfiguredProperty<T> property, String value) {
         try {
-            final JsonElement json = value.startsWith("[") || value.startsWith("{") || value.startsWith("\"") ? JsonParser.parseString(value) : new JsonPrimitive(value);
-            return property.codec().parse(JsonOps.INSTANCE, json);
+            return property.codec().parse(JavaOps.INSTANCE, value);
         } catch (NumberFormatException e) {
             final var expectedType = expectedNumberType(property.type());
             if (expectedType != null) {
