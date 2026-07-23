@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.client.platform.config.screen.internal;
 
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenContext;
+import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenSearch;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 
 import java.util.List;

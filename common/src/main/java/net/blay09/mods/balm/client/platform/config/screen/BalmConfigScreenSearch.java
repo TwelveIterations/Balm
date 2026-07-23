@@ -1,7 +1,8 @@
-package net.blay09.mods.balm.client.platform.config.screen.internal;
+package net.blay09.mods.balm.client.platform.config.screen;
 
-import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenContext;
+import net.blay09.mods.balm.client.platform.config.screen.internal.BalmConfigScreenSection;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
 import net.minecraft.network.chat.Component;
 
@@ -19,6 +20,13 @@ public class BalmConfigScreenSearch {
                 || componentMatches(Component.translatable(ConfigLocalization.forProperty(property)), query)
                 || componentMatches(Component.translatable(ConfigLocalization.forPropertyTooltip(property)), query)
                 || property.name().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT));
+    }
+
+    public static boolean categoryMatches(ConfigCategory category, String query) {
+        return query.isEmpty()
+                || componentMatches(Component.translatable(ConfigLocalization.forCategory(category)), query)
+                || componentMatches(Component.translatable(ConfigLocalization.forCategoryTooltip(category)), query)
+                || category.name().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT));
     }
 
     public static List<BalmConfigScreenSection> filterSections(List<BalmConfigScreenSection> sections, String query, BalmConfigScreenContext context) {

@@ -2,6 +2,7 @@ package net.blay09.mods.balm.client.platform.config.screen.internal;
 
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreen;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenEntry;
+import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenSearch;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;

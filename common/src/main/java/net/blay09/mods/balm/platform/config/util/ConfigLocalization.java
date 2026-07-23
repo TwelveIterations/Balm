@@ -32,6 +32,10 @@ public class ConfigLocalization {
         return category.parentSchema().identifier().getNamespace() + ".configuration." + category.name();
     }
 
+    public static String forCategoryTooltip(ConfigCategory category) {
+        return forCategory(category) + ".tooltip";
+    }
+
     public static String forProperty(ConfiguredProperty<?> property) {
         if (property.category().isEmpty()) {
             return property.parentSchema().identifier().getNamespace() + ".configuration." + property.name();
