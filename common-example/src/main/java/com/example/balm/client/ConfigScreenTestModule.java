@@ -8,10 +8,14 @@ import net.blay09.mods.balm.client.platform.config.ConfigControl;
 import net.blay09.mods.balm.client.platform.config.ConfigControlContext;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreen;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenContext;
+import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenSearch;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
+import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -49,6 +53,7 @@ public class ConfigScreenTestModule implements BalmClientModule {
         final var experimentalEnabled = categoryProperty(schema, "experimental", "enabled");
         final var experimentalChance = categoryProperty(schema, "experimental", "chance");
         final var experimentalMaxPower = categoryProperty(schema, "experimental", "maxPower");
+        final var childScreen = category(schema, "childScreen");
 
         return BalmConfigScreen.builder()
                 .title(Component.translatable("balm_example.configuration.custom.title"))
@@ -59,8 +64,21 @@ public class ConfigScreenTestModule implements BalmClientModule {
                         .property(experimentalEnabled)
                         .property(experimentalChance, context -> isEnabled(context, experimentalEnabled))
                         .property(experimentalMaxPower, context -> isEnabled(context, experimentalEnabled)))
+                .section(Component.translatable("balm_example.configuration.section.child_screens"), section -> section
+                        .button(Component.translatable(ConfigLocalization.forCategory(childScreen)),
+                                Component.translatable(ConfigLocalization.forCategoryTooltip(childScreen)),
+                                Component.translatable("gui.balm.configuration.open"),
+                                screen -> Minecraft.getInstance().gui.setScreen(createChildConfigScreen(screen, childScreen)),
+                                filter -> BalmConfigScreenSearch.categoryMatches(childScreen, filter)))
                 .section(Component.translatable("balm_example.configuration.section.collections"), section -> section
                         .properties(favoriteItems, luckyNumbers))
+                .build(parent);
+    }
+
+    private static Screen createChildConfigScreen(Screen parent, ConfigCategory category) {
+        return BalmConfigScreen.builder()
+                .title(Component.translatable("balm_example.configuration.child_screen.title"))
+                .section(Component.translatable(ConfigLocalization.forCategory(category)), section -> section.properties(category))
                 .build(parent);
     }
 
@@ -75,6 +93,10 @@ public class ConfigScreenTestModule implements BalmClientModule {
 
     private static ConfiguredProperty<?> categoryProperty(BalmConfigSchema schema, String category, String name) {
         return Objects.requireNonNull(schema.findProperty(category, name), "Missing config property: " + category + "." + name);
+    }
+
+    private static ConfigCategory category(BalmConfigSchema schema, String name) {
+        return Objects.requireNonNull(schema.findCategory(name), "Missing config category: " + name);
     }
 
     private static class FancyConfigButton extends Button.Plain {

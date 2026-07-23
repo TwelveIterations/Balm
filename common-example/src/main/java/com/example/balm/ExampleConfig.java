@@ -41,6 +41,9 @@ public class ExampleConfig {
     @Comment("Example category for experimental settings.")
     public Experimental experimental = new Experimental();
 
+    @Comment("Example category shown as a child config screen.")
+    public ChildScreen childScreen = new ChildScreen();
+
     public enum SpawnMode implements StringRepresentable {
         NEAR_PLAYER("near_player"),
         WORLD_SPAWN("world_spawn"),
@@ -69,5 +72,16 @@ public class ExampleConfig {
         @Comment("Example long config value.")
         @Range(min = "0", max = "1000000")
         public long maxPower = 9001;
+    }
+
+    public static class ChildScreen {
+        @Comment("Example child screen toggle.")
+        public boolean enabled = true;
+
+        @Comment("Example child screen message.")
+        public String message = "Configured from a child screen";
+
+        @Comment("Example child screen number.")
+        public int number = 987;
     }
 }
