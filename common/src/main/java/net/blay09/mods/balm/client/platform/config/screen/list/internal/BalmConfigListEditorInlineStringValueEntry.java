@@ -101,7 +101,7 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
         valueHolder.entryState(new EditState(value));
         PrimitiveConfigCodecs.parse(context.property(), value).ifSuccess(validValue -> {
             valueHolder.value(validValue);
-            context.revalidate(this);
+            context.revalidate();
         }).ifError(error -> context.setValidationError(this, Component.literal(error.message())));
     }
 

@@ -146,6 +146,15 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
         if (event.key() == InputConstants.KEY_F && event.hasControlDownWithQuirk() && !event.hasShiftDown() && !event.hasAltDown()) {
             focusSearchBox();
             return true;
+        } else if (event.hasControlDownWithQuirk()
+                && event.key() == InputConstants.KEY_Z
+                && !event.hasShiftDown()
+                && !event.hasAltDown()) {
+            if (state.restoreDeletedValue()) {
+                refreshList();
+                revalidate();
+            }
+            return true;
         }
 
         return super.keyPressed(event);
@@ -273,7 +282,7 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
 
     @Override
     @SuppressWarnings("unchecked")
-    public void revalidate(BalmConfigListEditorEntry<T> entry) {
+    public void revalidate() {
         if (list != null) {
             final var results = list.children().stream().map(listEntry -> listEntry.validate((ConfigControlBinding<Collection<?>>) binding));
             results.filter(DataResult::isError)

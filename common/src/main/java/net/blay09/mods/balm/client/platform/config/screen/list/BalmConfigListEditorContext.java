@@ -18,7 +18,7 @@ public interface BalmConfigListEditorContext<T> {
 
     void setValidationError(BalmConfigListEditorEntry<T> entry, Component error);
 
-    void revalidate(BalmConfigListEditorEntry<T> entry);
+    void revalidate();
 
     void delete(BalmConfigListEditorEntry<T> entry);
 
