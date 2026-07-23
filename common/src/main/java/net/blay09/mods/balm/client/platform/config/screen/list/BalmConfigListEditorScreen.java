@@ -65,7 +65,7 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
         this.parent = parent;
         this.context = context;
         this.binding = binding;
-        this.state = context.stateFor(binding.property()).getOrCreate(() -> new BalmConfigListEditorState<>((Collection<T>) binding.get()));
+        this.state = context.stateFor(binding.property()).getOrCreate(() -> BalmConfigListEditorState.wrap((Collection<T>) binding.get()));
         this.layout = new HeaderAndFooterLayout(this, 36, DEFAULT_FOOTER_HEIGHT);
         this.entryFactory = entryFactory;
         this.filterPredicate = filterPredicate;

@@ -37,7 +37,7 @@ public class BalmConfigListEditorScreenBuilderImpl<T> implements BalmConfigListE
     }
 
     @Override
-    public BalmConfigListEditorScreenBuilder<T> displayAsLabels(Function<T, Component> labelFactory) {
+    public BalmConfigListEditorScreenBuilder<T> customizeLabels(Function<T, Component> labelFactory) {
         entryFactory = (context, value) -> new BalmConfigListEditorInlineStringValueEntry<>(context, value,
                 value.value() != null ? labelFactory.apply(value.value()) : Component.empty());
         filterPredicate = (value, filter) -> labelFactory.apply(value).getString().toLowerCase().contains(filter);
@@ -45,7 +45,7 @@ public class BalmConfigListEditorScreenBuilderImpl<T> implements BalmConfigListE
     }
 
     @Override
-    public BalmConfigListEditorScreenBuilder<T> displayAsEntries(BiFunction<BalmConfigListEditorContext<T>, BalmConfigListEditorValue<T>, ? extends BalmConfigListEditorEntry<T>> entryFactory) {
+    public BalmConfigListEditorScreenBuilder<T> customizeEntries(BiFunction<BalmConfigListEditorContext<T>, BalmConfigListEditorValue<T>, ? extends BalmConfigListEditorEntry<T>> entryFactory) {
         this.entryFactory = entryFactory;
         return this;
     }

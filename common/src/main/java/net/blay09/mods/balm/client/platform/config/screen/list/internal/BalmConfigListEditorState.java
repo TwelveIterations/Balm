@@ -5,12 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 public record BalmConfigListEditorState<T>(List<BalmConfigListEditorValue<T>> values) {
-    public BalmConfigListEditorState(Collection<T> values) {
+    public static <T> BalmConfigListEditorState<T> wrap(Collection<T> values) {
         final var wrappedValues = new ArrayList<BalmConfigListEditorValue<T>>();
         for (final T value : values) {
             wrappedValues.add(new BalmConfigListEditorValue<>(value));
         }
-        this(wrappedValues);
+        return new BalmConfigListEditorState<>(wrappedValues);
     }
 
     public Collection<T> rawValues() {

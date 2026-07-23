@@ -35,7 +35,6 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
     private @Nullable EditBox searchBox;
     private @Nullable BalmConfigScreenList list;
     private @Nullable Button doneButton;
-    private List<BalmConfigScreenRow> visibleRows = List.of();
 
     public static BalmConfigScreen forMod(@Nullable Screen parent, String modId) {
         return forSchemas(parent, ConfigLocalization.componentForTitle(modId), Balm.config().getSchemasByNamespace(modId));
@@ -80,10 +79,14 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
         header.addChild(new StringWidget(title, font));
         searchBox = header.addChild(new EditBox(font, 200, 15, SEARCH_LABEL));
         searchBox.setHint(SEARCH_HINT);
-        searchBox.setResponder(this::filterConfigs);
+        searchBox.setResponder(filter -> {
+            refreshList(filter);
+            if (list != null) {
+                list.setScrollAmount(0);
+            }
+        });
 
         list = layout.addToContents(new BalmConfigScreenList(this, controlFactory, sections));
-        visibleRows = computeVisibleRows();
 
         final var footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
         doneButton = footer.addChild(Button.builder(CommonComponents.GUI_DONE, _ -> saveAndClose()).build());
@@ -128,60 +131,23 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
         }
     }
 
-    private void updateVisibleRows() {
-        final var newVisibleRows = computeVisibleRows();
-        if (!newVisibleRows.equals(visibleRows)) {
-            clearHiddenValidationErrors(newVisibleRows);
-            visibleRows = newVisibleRows;
-            repopulateList();
-        }
-    }
-
     private void onStateChanged() {
         updateDoneButton();
-        updateVisibleRows();
     }
 
-    private void filterConfigs(String filter) {
-        repopulateList();
-        if (list != null) {
-            list.setScrollAmount(0);
-        }
+    private void refreshList() {
+        refreshList(searchBox != null ? searchBox.getValue() : "");
     }
 
-    private void repopulateList() {
+    public void refreshList(String filter) {
         if (list != null) {
-            list.populateChildren(searchBox != null ? searchBox.getValue() : "");
+            list.populateChildren(filter);
             repositionElements();
         }
     }
 
     public void refreshControls() {
-        repopulateList();
-    }
-
-    private List<BalmConfigScreenRow> computeVisibleRows() {
-        final var rows = new ArrayList<BalmConfigScreenRow>();
-        for (final var section : sections) {
-            for (final var row : section.rows()) {
-                if (row.isVisible(this)) {
-                    rows.add(row);
-                }
-            }
-        }
-        return rows;
-    }
-
-    private void clearHiddenValidationErrors(List<BalmConfigScreenRow> newVisibleRows) {
-        final var visibleProperties = newVisibleRows.stream()
-                .flatMap(row -> row.properties().stream())
-                .toList();
-        sections.stream()
-                .flatMap(section -> section.rows().stream())
-                .filter(row -> !newVisibleRows.contains(row))
-                .flatMap(row -> row.properties().stream())
-                .filter(property -> !visibleProperties.contains(property))
-                .forEach(state::clearValidationError);
+        refreshList();
         updateDoneButton();
     }
 

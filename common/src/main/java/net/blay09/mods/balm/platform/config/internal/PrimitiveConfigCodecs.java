@@ -42,6 +42,13 @@ public class PrimitiveConfigCodecs {
         return LenientEnumCodecs.fromValues(type::getEnumConstants);
     }
 
+    public static <T> String serializeToString(ConfiguredProperty<T> property, T value) {
+        return property.codec().encodeStart(JavaOps.INSTANCE, value)
+                .result()
+                .map(String::valueOf)
+                .orElse(String.valueOf(value));
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T> DataResult<T> parse(ConfiguredProperty<T> property, String value) {
         if (!(property instanceof NestedTypeHolder<?> nestedTypeHolder)) {

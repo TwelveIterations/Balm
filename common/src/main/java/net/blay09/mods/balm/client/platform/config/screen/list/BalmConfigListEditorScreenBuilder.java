@@ -10,9 +10,9 @@ import java.util.function.Function;
 public interface BalmConfigListEditorScreenBuilder<T> {
     BalmConfigListEditorScreenBuilder<T> title(Component title);
 
-    BalmConfigListEditorScreenBuilder<T> displayAsLabels(Function<T, Component> labelFactory);
+    BalmConfigListEditorScreenBuilder<T> customizeLabels(Function<T, Component> labelFactory);
 
-    BalmConfigListEditorScreenBuilder<T> displayAsEntries(BiFunction<BalmConfigListEditorContext<T>, BalmConfigListEditorValue<T>, ? extends BalmConfigListEditorEntry<T>> entryFactory);
+    BalmConfigListEditorScreenBuilder<T> customizeEntries(BiFunction<BalmConfigListEditorContext<T>, BalmConfigListEditorValue<T>, ? extends BalmConfigListEditorEntry<T>> entryFactory);
 
     BalmConfigListEditorScreenBuilder<T> searchable(BiPredicate<T, String> filterPredicate);
 

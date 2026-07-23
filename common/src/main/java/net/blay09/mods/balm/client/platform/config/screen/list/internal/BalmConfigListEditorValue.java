@@ -5,7 +5,7 @@ import org.jspecify.annotations.Nullable;
 public class BalmConfigListEditorValue<T> {
     private final @Nullable T originalValue;
     private @Nullable T value;
-    private @Nullable Object objectState;
+    private @Nullable Object entryState;
 
     public BalmConfigListEditorValue(@Nullable T value) {
         this.originalValue = value;
@@ -25,11 +25,11 @@ public class BalmConfigListEditorValue<T> {
     }
 
     public @Nullable Object entryState() {
-        return objectState;
+        return entryState;
     }
 
     public void entryState(@Nullable Object entryState) {
-        this.objectState = entryState;
+        this.entryState = entryState;
     }
 
     public void reset() {
