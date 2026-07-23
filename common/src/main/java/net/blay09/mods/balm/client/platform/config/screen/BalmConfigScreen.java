@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.client.platform.config.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.platform.config.screen.internal.*;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
@@ -13,6 +14,7 @@ import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
@@ -113,6 +115,24 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
     protected void setInitialFocus() {
         if (searchBox != null) {
             setInitialFocus(searchBox);
+        }
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == InputConstants.KEY_F && event.hasControlDownWithQuirk() && !event.hasShiftDown() && !event.hasAltDown()) {
+            focusSearchBox();
+            return true;
+        }
+
+        return super.keyPressed(event);
+    }
+
+    private void focusSearchBox() {
+        if (searchBox != null) {
+            setInitialFocus(searchBox);
+            searchBox.moveCursorToEnd(false);
+            searchBox.setHighlightPos(0);
         }
     }
 

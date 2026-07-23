@@ -17,6 +17,7 @@ import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -137,6 +138,24 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
     protected void setInitialFocus() {
         if (searchBox != null) {
             setInitialFocus(searchBox);
+        }
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == InputConstants.KEY_F && event.hasControlDownWithQuirk() && !event.hasShiftDown() && !event.hasAltDown()) {
+            focusSearchBox();
+            return true;
+        }
+
+        return super.keyPressed(event);
+    }
+
+    private void focusSearchBox() {
+        if (searchBox != null) {
+            setInitialFocus(searchBox);
+            searchBox.moveCursorToEnd(false);
+            searchBox.setHighlightPos(0);
         }
     }
 
