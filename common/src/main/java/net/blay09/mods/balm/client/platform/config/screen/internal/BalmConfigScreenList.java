@@ -45,7 +45,7 @@ public class BalmConfigScreenList extends ContainerObjectSelectionList<BalmConfi
             case BalmConfigScreenPropertyRow propertyRow ->
                     new BalmConfigScreenPropertyEntry(screen, propertyRow.property(), controlFactory.createControl(screen, propertyRow.property(), rowState));
             case BalmConfigScreenMergedPropertiesRow mergedPropertiesRow ->
-                    new BalmConfigScreenMergedPropertiesEntry(screen, mergedPropertiesRow, controlFactory.createMergedPropertiesControl(mergedPropertiesRow, rowState));
+                    new BalmConfigScreenMergedPropertiesEntry(screen, mergedPropertiesRow, controlFactory.createMergedPropertiesControl(screen, mergedPropertiesRow, rowState));
             case BalmConfigScreenButtonRow buttonRow ->
                     new BalmConfigScreenButtonEntry(screen, buttonRow);
             case BalmConfigScreenCustomEntryRow customEntryRow ->

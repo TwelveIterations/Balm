@@ -74,9 +74,9 @@ public class BalmConfigScreenControlFactory {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public AbstractWidget createMergedPropertiesControl(BalmConfigScreenMergedPropertiesRow row, BalmConfigScreenRowState rowState) {
+    public AbstractWidget createMergedPropertiesControl(BalmConfigScreen screen, BalmConfigScreenMergedPropertiesRow row, BalmConfigScreenRowState rowState) {
         final var context = new ConfigControlContextImpl(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT, property -> state.bindingFor((ConfiguredProperty) property));
-        final var widget = row.widgetFactory().apply(context, rowState);
+        final var widget = row.widgetFactory().create(screen, context, rowState);
         widget.setWidth(Button.DEFAULT_WIDTH);
         widget.setHeight(Button.DEFAULT_HEIGHT);
         return widget;

@@ -1,9 +1,7 @@
 package net.blay09.mods.balm.client.platform.config.screen;
 
-import net.blay09.mods.balm.client.platform.config.ConfigControlContext;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
@@ -32,19 +30,19 @@ public interface BalmConfigScreenSectionBuilder {
         return this;
     }
 
-    default BalmConfigScreenSectionBuilder mergedProperties(Component label, List<ConfiguredProperty<?>> properties, BiFunction<ConfigControlContext, BalmConfigScreenRowState, AbstractWidget> widgetFactory) {
+    default BalmConfigScreenSectionBuilder mergedProperties(Component label, List<ConfiguredProperty<?>> properties, BalmConfigScreenWidgetFactory widgetFactory) {
         return mergedProperties(label, Component.empty(), properties, widgetFactory);
     }
 
-    default BalmConfigScreenSectionBuilder mergedProperties(Component label, List<ConfiguredProperty<?>> properties, BiFunction<ConfigControlContext, BalmConfigScreenRowState, AbstractWidget> widgetFactory, Predicate<BalmConfigScreenContext> visibilityPredicate) {
+    default BalmConfigScreenSectionBuilder mergedProperties(Component label, List<ConfiguredProperty<?>> properties, BalmConfigScreenWidgetFactory widgetFactory, Predicate<BalmConfigScreenContext> visibilityPredicate) {
         return mergedProperties(label, Component.empty(), properties, widgetFactory, visibilityPredicate);
     }
 
-    default BalmConfigScreenSectionBuilder mergedProperties(Component label, Component tooltip, List<ConfiguredProperty<?>> properties, BiFunction<ConfigControlContext, BalmConfigScreenRowState, AbstractWidget> widgetFactory) {
+    default BalmConfigScreenSectionBuilder mergedProperties(Component label, Component tooltip, List<ConfiguredProperty<?>> properties, BalmConfigScreenWidgetFactory widgetFactory) {
         return mergedProperties(label, tooltip, properties, widgetFactory, _ -> true);
     }
 
-    BalmConfigScreenSectionBuilder mergedProperties(Component label, Component tooltip, List<ConfiguredProperty<?>> properties, BiFunction<ConfigControlContext, BalmConfigScreenRowState, AbstractWidget> widgetFactory, Predicate<BalmConfigScreenContext> visibilityPredicate);
+    BalmConfigScreenSectionBuilder mergedProperties(Component label, Component tooltip, List<ConfiguredProperty<?>> properties, BalmConfigScreenWidgetFactory widgetFactory, Predicate<BalmConfigScreenContext> visibilityPredicate);
 
     default BalmConfigScreenSectionBuilder button(Component label, Component buttonLabel, Consumer<BalmConfigScreen> onPress) {
         return button(label, Component.empty(), buttonLabel, onPress);

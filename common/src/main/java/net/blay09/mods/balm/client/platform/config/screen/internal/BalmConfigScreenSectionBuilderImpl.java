@@ -1,13 +1,12 @@
 package net.blay09.mods.balm.client.platform.config.screen.internal;
 
-import net.blay09.mods.balm.client.platform.config.ConfigControlContext;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreen;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenContext;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenSectionBuilder;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenEntry;
+import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenWidgetFactory;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenRowState;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class BalmConfigScreenSectionBuilderImpl implements BalmConfigScreenSecti
     }
 
     @Override
-    public BalmConfigScreenSectionBuilder mergedProperties(Component label, Component tooltip, List<ConfiguredProperty<?>> properties, BiFunction<ConfigControlContext, BalmConfigScreenRowState, AbstractWidget> widgetFactory, Predicate<BalmConfigScreenContext> visibilityPredicate) {
+    public BalmConfigScreenSectionBuilder mergedProperties(Component label, Component tooltip, List<ConfiguredProperty<?>> properties, BalmConfigScreenWidgetFactory widgetFactory, Predicate<BalmConfigScreenContext> visibilityPredicate) {
         if (properties.isEmpty()) {
             throw new IllegalArgumentException("Merged property rows must declare at least one property");
         }
