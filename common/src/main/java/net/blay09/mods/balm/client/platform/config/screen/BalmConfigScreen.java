@@ -57,7 +57,9 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
         this.sections = sections;
         this.layout = new HeaderAndFooterLayout(this, 36, 33);
         final var parentState = parentState();
-        this.state = parentState != null ? new BalmConfigScreenState(parentState, this::onStateChanged) : new BalmConfigScreenState(this::onStateChanged);
+        this.state = parentState != null
+                ? new BalmConfigScreenState(parentState, this::onValidationChanged, this::onValueChanged)
+                : new BalmConfigScreenState(this::onValidationChanged, this::onValueChanged);
         for (final var section : sections) {
             for (final var row : section.rows()) {
                 final var rowState = new BalmConfigScreenRowState();
@@ -177,8 +179,12 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
         }
     }
 
-    private void onStateChanged() {
+    private void onValidationChanged() {
         updateDoneButton();
+    }
+
+    private void onValueChanged() {
+        refreshControls();
     }
 
     private @Nullable BalmConfigScreenState parentState() {

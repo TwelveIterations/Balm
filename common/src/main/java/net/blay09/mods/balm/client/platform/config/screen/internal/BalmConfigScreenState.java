@@ -10,18 +10,22 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class BalmConfigScreenState {
     private final Map<BalmConfigSchema, MutableLoadedConfig> configs = new HashMap<>();
     private final Map<ConfiguredProperty<?>, Component> validationErrors = new HashMap<>();
     private final Runnable onValidationChanged;
+    private final Runnable onValueChanged;
 
-    public BalmConfigScreenState(Runnable onValidationChanged) {
+    public BalmConfigScreenState(Runnable onValidationChanged, Runnable onValueChanged) {
         this.onValidationChanged = onValidationChanged;
+        this.onValueChanged = onValueChanged;
     }
 
-    public BalmConfigScreenState(BalmConfigScreenState parent, Runnable onValidationChanged) {
+    public BalmConfigScreenState(BalmConfigScreenState parent, Runnable onValidationChanged, Runnable onValueChanged) {
         this.onValidationChanged = onValidationChanged;
+        this.onValueChanged = onValueChanged;
         parent.configs.forEach((schema, config) -> configs.put(schema, config.copy()));
         validationErrors.putAll(parent.validationErrors);
     }
@@ -42,8 +46,14 @@ public class BalmConfigScreenState {
     public <T> void trySetValue(ConfiguredProperty<T> property, T value) {
         final var result = property.validateValue(value);
         result.error().ifPresentOrElse(error -> validationErrors.put(property, Component.literal(error.message())), () -> {
+            final var config = configFor(property);
+            final var oldValue = property.getRaw(config);
+            final var validatedValue = result.getOrThrow();
             validationErrors.remove(property);
-            property.setRaw(configFor(property), result.getOrThrow());
+            property.setRaw(config, validatedValue);
+            if (!Objects.equals(oldValue, validatedValue)) {
+                onValueChanged.run();
+            }
         });
         onValidationChanged.run();
     }
@@ -64,6 +74,7 @@ public class BalmConfigScreenState {
         configs.forEach((schema, config) -> parent.configs.put(schema, config.copy()));
         parent.validationErrors.clear();
         parent.validationErrors.putAll(validationErrors);
+        parent.onValueChanged.run();
         parent.onValidationChanged.run();
     }
 
