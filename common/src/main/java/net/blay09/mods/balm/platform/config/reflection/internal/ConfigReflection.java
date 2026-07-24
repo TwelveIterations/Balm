@@ -63,7 +63,7 @@ public class ConfigReflection {
                 if (type == String.class) {
                     property.stringOf((String) defaultValue);
                 } else if (type == Identifier.class) {
-                    property.IdentifierOf((Identifier) defaultValue);
+                    property.identifierOf((Identifier) defaultValue);
                 } else if (type == Integer.class || type == int.class) {
                     if (rangeAnnotation != null) {
                         property.intOf((int) defaultValue, Integer.parseInt(rangeAnnotation.min()), Integer.parseInt(rangeAnnotation.max()));

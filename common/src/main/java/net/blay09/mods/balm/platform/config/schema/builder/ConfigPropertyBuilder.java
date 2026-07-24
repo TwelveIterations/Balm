@@ -95,6 +95,14 @@ public class ConfigPropertyBuilder {
         return schema.addAndReturn(new SetConfigProperty<>(this, nestedType, defaultValue));
     }
 
+    public IdentifierConfigProperty identifierOf(Identifier defaultValue) {
+        return schema.addAndReturn(new IdentifierConfigProperty(this, defaultValue));
+    }
+
+    /**
+     * @deprecated Use {@link #identifierOf(Identifier)} instead.
+     */
+    @Deprecated
     public IdentifierConfigProperty IdentifierOf(Identifier defaultValue) {
         return schema.addAndReturn(new IdentifierConfigProperty(this, defaultValue));
     }
