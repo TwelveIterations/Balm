@@ -5,10 +5,12 @@ import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
+import java.util.Collection;
+
 public interface BalmConfigListEditorContext<T> {
     Font font();
 
-    ConfiguredProperty<T> property();
+    ConfiguredProperty<? extends Collection<T>> property();
 
     BalmConfigListDragController dragController();
 

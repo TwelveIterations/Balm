@@ -42,7 +42,7 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
 
     private final @Nullable Screen parent;
     private final BalmConfigScreenContext context;
-    private final ConfigControlBinding<T> binding;
+    private final ConfigControlBinding<? extends Collection<T>> binding;
     private final BalmConfigListEditorState<T> state;
     private final HeaderAndFooterLayout layout;
     private final BiFunction<BalmConfigListEditorContext<T>, BalmConfigListEditorValue<T>, ? extends BalmConfigListEditorEntry<T>> entryFactory;
@@ -55,10 +55,9 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
     private @Nullable Button addButton;
     private @Nullable Button doneButton;
 
-    @SuppressWarnings("unchecked")
     public BalmConfigListEditorScreen(@Nullable Screen parent,
                                       BalmConfigScreenContext context,
-                                      ConfigControlBinding<T> binding,
+                                      ConfigControlBinding<? extends Collection<T>> binding,
                                       Component title,
                                       BiFunction<BalmConfigListEditorContext<T>, BalmConfigListEditorValue<T>, ? extends BalmConfigListEditorEntry<T>> entryFactory,
                                       BiPredicate<T, String> filterPredicate) {
@@ -66,13 +65,13 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
         this.parent = parent;
         this.context = context;
         this.binding = binding;
-        this.state = context.stateFor(binding.property()).getOrCreate(() -> BalmConfigListEditorState.wrap((Collection<T>) binding.get()));
+        this.state = context.stateFor(binding.property()).getOrCreate(() -> BalmConfigListEditorState.wrap(binding.get()));
         this.layout = new HeaderAndFooterLayout(this, 36, DEFAULT_FOOTER_HEIGHT);
         this.entryFactory = entryFactory;
         this.filterPredicate = filterPredicate;
     }
 
-    public static <T> BalmConfigListEditorScreenBuilder<T> builder(Screen parent, BalmConfigScreenContext context, ConfigControlBinding<T> binding) {
+    public static <T> BalmConfigListEditorScreenBuilder<T> builder(Screen parent, BalmConfigScreenContext context, ConfigControlBinding<? extends Collection<T>> binding) {
         return new BalmConfigListEditorScreenBuilderImpl<>(parent, context, binding);
     }
 
@@ -209,7 +208,7 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
     }
 
     @Override
-    public ConfiguredProperty<T> property() {
+    public ConfiguredProperty<? extends Collection<T>> property() {
         return binding.property();
     }
 
@@ -223,14 +222,13 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
     public void commit() {
         final var rawValues = state.rawValues();
-        final var pendingCommitValues = (Collection<T>) (binding.property() instanceof ConfiguredSet<?>
+        final var pendingCommitValues = binding.property() instanceof ConfiguredSet<?>
                 ? new LinkedHashSet<>(rawValues)
-                : List.copyOf(rawValues));
-        if (((ConfigControlBinding<Collection<?>>) binding).validateValue(pendingCommitValues).isSuccess()) {
-            ((ConfigControlBinding<Collection<?>>) binding).set(pendingCommitValues);
+                : List.copyOf(rawValues);
+        if (validateValues(pendingCommitValues).isSuccess()) {
+            setValues(pendingCommitValues);
             refreshList();
         }
     }
@@ -281,10 +279,9 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void revalidate() {
         if (list != null) {
-            final var results = list.children().stream().map(listEntry -> listEntry.validate((ConfigControlBinding<Collection<?>>) binding));
+            final var results = list.children().stream().map(listEntry -> listEntry.validate(binding));
             results.filter(DataResult::isError)
                     .map(DataResult::error)
                     .map(Optional::orElseThrow)
@@ -296,6 +293,16 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
         }
 
         updateWidgets();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private DataResult<?> validateValues(Collection<T> values) {
+        return ((ConfigControlBinding) binding).validateValue(values);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void setValues(Collection<T> values) {
+        ((ConfigControlBinding) binding).set(values);
     }
 
     private void updateWidgets() {

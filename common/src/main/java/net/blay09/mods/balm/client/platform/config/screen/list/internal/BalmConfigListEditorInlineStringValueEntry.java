@@ -5,6 +5,7 @@ import net.blay09.mods.balm.client.platform.config.screen.list.BalmConfigListEdi
 import net.blay09.mods.balm.client.platform.config.screen.list.BalmConfigListEditorEntry;
 import net.blay09.mods.balm.platform.config.internal.PrimitiveConfigCodecs;
 import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -90,9 +91,9 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
     }
 
     @Override
-    public DataResult<?> validate(ConfigControlBinding<Collection<?>> binding) {
+    public DataResult<?> validate(ConfigControlBinding<? extends Collection<T>> binding) {
         if (valueHolder.entryState() instanceof EditState(String value)) {
-            return PrimitiveConfigCodecs.parse(context.property(), value);
+            return parseValue(value);
         }
 
         return super.validate(binding);
@@ -100,7 +101,7 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
 
     public void setValue(String value) {
         valueHolder.entryState(new EditState(value));
-        PrimitiveConfigCodecs.parse(context.property(), value).ifSuccess(validValue -> {
+        parseValue(value).ifSuccess(validValue -> {
             valueHolder.value(validValue);
             context.revalidate();
         }).ifError(error -> context.setValidationError(this, Component.literal(error.message())));
@@ -171,7 +172,12 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
     }
 
     public boolean canCommit() {
-        return PrimitiveConfigCodecs.parse(context.property(), getPendingValue()).isSuccess();
+        return parseValue(getPendingValue()).isSuccess();
+    }
+
+    @SuppressWarnings("unchecked")
+    private DataResult<T> parseValue(String value) {
+        return PrimitiveConfigCodecs.parse((ConfiguredProperty<T>) context.property(), value);
     }
 
     protected void onDoneButton(Button button) {

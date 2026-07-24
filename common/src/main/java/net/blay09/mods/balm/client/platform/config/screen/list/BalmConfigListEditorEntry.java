@@ -104,16 +104,21 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
     public void stopEditing() {
     }
 
-    public DataResult<?> validate(ConfigControlBinding<Collection<?>> binding) {
+    public DataResult<?> validate(ConfigControlBinding<? extends Collection<T>> binding) {
         final var value = valueHolder.value();
         if (value == null) {
             return DataResult.success(null);
         }
 
         return binding.property().type() == Set.class
-                ? binding.validateValue(Set.of(value))
-                : binding.validateValue(List.of(value));
+                ? validateValue(binding, Set.of(value))
+                : validateValue(binding, List.of(value));
 
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private DataResult<?> validateValue(ConfigControlBinding<? extends Collection<T>> binding, Collection<T> value) {
+        return ((ConfigControlBinding) binding).validateValue(value);
     }
 
     private int getActionWidgetsWidth() {

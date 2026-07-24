@@ -10,6 +10,7 @@ import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
+import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -17,13 +18,13 @@ import java.util.function.Function;
 public class BalmConfigListEditorScreenBuilderImpl<T> implements BalmConfigListEditorScreenBuilder<T> {
     private final Screen parent;
     private final BalmConfigScreenContext context;
-    private final ConfigControlBinding<T> binding;
+    private final ConfigControlBinding<? extends Collection<T>> binding;
 
     private Component title;
     private BiFunction<BalmConfigListEditorContext<T>, BalmConfigListEditorValue<T>, ? extends BalmConfigListEditorEntry<T>> entryFactory = BalmConfigListEditorInlineStringValueEntry::new;
     private BiPredicate<T, String> filterPredicate = (value, filter) -> String.valueOf(value).toLowerCase().contains(filter);
 
-    public BalmConfigListEditorScreenBuilderImpl(Screen parent, BalmConfigScreenContext context, ConfigControlBinding<T> binding) {
+    public BalmConfigListEditorScreenBuilderImpl(Screen parent, BalmConfigScreenContext context, ConfigControlBinding<? extends Collection<T>> binding) {
         this.parent = parent;
         this.context = context;
         this.binding = binding;
