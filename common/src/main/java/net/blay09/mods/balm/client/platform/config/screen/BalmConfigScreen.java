@@ -216,11 +216,8 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
     }
 
     private static BalmConfigScreenBuilder applySchemas(BalmConfigScreenBuilder builder, Collection<BalmConfigSchema> schemas) {
-        final var sortedSchemas = schemas.stream()
-                .sorted(Comparator.comparing(schema -> schema.identifier().toString()))
-                .toList();
-        final var includeSchemaHeadings = sortedSchemas.size() > 1;
-        for (final var schema : sortedSchemas) {
+        final var includeSchemaHeadings = schemas.size() > 1;
+        for (final var schema : schemas) {
             final var schemaTitle = Component.translatable(ConfigLocalization.forTitle(schema));
             if (!schema.rootProperties().isEmpty()) {
                 builder.section(includeSchemaHeadings ? schemaTitle : Component.empty(), section -> section.properties(schema.rootProperties()));

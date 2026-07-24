@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.platform.config.schema.internal;
 
-import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.common.collect.Tables;
 import net.blay09.mods.balm.platform.config.internal.DefaultedConfig;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
@@ -14,15 +14,15 @@ import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ConfigSchemaImpl implements BalmConfigSchema, ConfigSchemaBuilder {
 
     private final Identifier identifier;
-    private final Map<String, ConfigCategory> categories = new HashMap<>();
-    private final Map<String, ConfiguredProperty<?>> rootProperties = new HashMap<>();
-    private final Table<String, String, ConfiguredProperty<?>> properties = HashBasedTable.create();
+    private final Map<String, ConfigCategory> categories = new LinkedHashMap<>();
+    private final Map<String, ConfiguredProperty<?>> rootProperties = new LinkedHashMap<>();
+    private final Table<String, String, ConfiguredProperty<?>> properties = Tables.newCustomTable(new LinkedHashMap<>(), LinkedHashMap::new);
 
     public ConfigSchemaImpl(Identifier identifier) {
         this.identifier = identifier;
