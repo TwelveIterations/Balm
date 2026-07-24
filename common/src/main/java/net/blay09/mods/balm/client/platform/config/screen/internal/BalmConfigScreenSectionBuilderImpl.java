@@ -41,8 +41,8 @@ public class BalmConfigScreenSectionBuilderImpl implements BalmConfigScreenSecti
     }
 
     @Override
-    public BalmConfigScreenSectionBuilder customEntry(BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory, Predicate<String> filterPredicate, Predicate<BalmConfigScreenContext> visibilityPredicate) {
-        rows.add(new BalmConfigScreenCustomEntryRow(entryFactory::apply, filterPredicate, visibilityPredicate));
+    public BalmConfigScreenSectionBuilder customEntry(List<ConfiguredProperty<?>> properties, BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory, Predicate<String> filterPredicate, Predicate<BalmConfigScreenContext> visibilityPredicate) {
+        rows.add(new BalmConfigScreenCustomEntryRow(List.copyOf(properties), entryFactory::apply, filterPredicate, visibilityPredicate));
         return this;
     }
 

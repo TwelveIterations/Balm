@@ -61,13 +61,25 @@ public interface BalmConfigScreenSectionBuilder {
 
     BalmConfigScreenSectionBuilder button(Component label, Component tooltip, Component buttonLabel, Consumer<BalmConfigScreen> onPress, Predicate<String> filterPredicate, Predicate<BalmConfigScreenContext> visibilityPredicate);
 
-    default BalmConfigScreenSectionBuilder customEntry(BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory) {
-        return customEntry(entryFactory, String::isEmpty);
+    default BalmConfigScreenSectionBuilder customEntry(ConfiguredProperty<?> property, BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory) {
+        return customEntry(List.of(property), entryFactory);
     }
 
-    default BalmConfigScreenSectionBuilder customEntry(BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory, Predicate<String> filterPredicate) {
-        return customEntry(entryFactory, filterPredicate, _ -> true);
+    default BalmConfigScreenSectionBuilder customEntry(List<ConfiguredProperty<?>> properties, BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory) {
+        return customEntry(properties, entryFactory, String::isEmpty);
     }
 
-    BalmConfigScreenSectionBuilder customEntry(BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory, Predicate<String> filterPredicate, Predicate<BalmConfigScreenContext> visibilityPredicate);
+    default BalmConfigScreenSectionBuilder customEntry(ConfiguredProperty<?> property, BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory, Predicate<String> filterPredicate) {
+        return customEntry(List.of(property), entryFactory, filterPredicate);
+    }
+
+    default BalmConfigScreenSectionBuilder customEntry(List<ConfiguredProperty<?>> properties, BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory, Predicate<String> filterPredicate) {
+        return customEntry(properties, entryFactory, filterPredicate, _ -> true);
+    }
+
+    default BalmConfigScreenSectionBuilder customEntry(ConfiguredProperty<?> property, BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory, Predicate<String> filterPredicate, Predicate<BalmConfigScreenContext> visibilityPredicate) {
+        return customEntry(List.of(property), entryFactory, filterPredicate, visibilityPredicate);
+    }
+
+    BalmConfigScreenSectionBuilder customEntry(List<ConfiguredProperty<?>> properties, BiFunction<BalmConfigScreen, BalmConfigScreenRowState, ? extends BalmConfigScreenEntry> entryFactory, Predicate<String> filterPredicate, Predicate<BalmConfigScreenContext> visibilityPredicate);
 }
