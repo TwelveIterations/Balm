@@ -70,7 +70,7 @@ public class BalmConfigScreenControlFactory {
                     .build();
         }
 
-        return new BalmConfigScreenEditBox<>(font, (ConfiguredProperty) property, state, rowState);
+        return new BalmConfigScreenEditBox<>(font, (ConfiguredProperty) property, screen, rowState);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
