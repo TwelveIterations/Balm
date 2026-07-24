@@ -1,7 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    {"id":"#forge:eggs", "required": false},
-    "minecraft:egg"
-  ]
-}
