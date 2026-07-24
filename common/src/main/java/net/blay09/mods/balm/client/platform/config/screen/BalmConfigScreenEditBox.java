@@ -1,6 +1,6 @@
-package net.blay09.mods.balm.client.platform.config.screen.internal;
+package net.blay09.mods.balm.client.platform.config.screen;
 
-import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenRowState;
+import net.blay09.mods.balm.client.platform.config.screen.internal.BalmConfigScreenState;
 import net.blay09.mods.balm.platform.config.internal.PrimitiveConfigCodecs;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;

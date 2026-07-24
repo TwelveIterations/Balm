@@ -3,6 +3,7 @@ package net.blay09.mods.balm.client.platform.config.screen.internal;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigControlContextImpl;
 import net.blay09.mods.balm.client.platform.config.internal.ConfigControlRegistry;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreen;
+import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenEditBox;
 import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreenRowState;
 import net.blay09.mods.balm.client.platform.config.screen.list.BalmConfigListEditorScreen;
 import net.blay09.mods.balm.client.platform.config.screen.list.internal.BalmConfigListEditorState;
