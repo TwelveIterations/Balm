@@ -21,6 +21,7 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
     private static final Component EDIT_LABEL = Component.translatable("gui.balm.configuration.edit");
     private static final Component DELETE_LABEL = Component.translatable("gui.balm.configuration.delete");
     private static final Component RESET_LABEL = Component.translatable("gui.balm.configuration.reset");
+    private static final String ELLIPSIS = "...";
     private static final int EDIT_BOX_HEIGHT = 20;
 
     private final Button editButton;
@@ -133,8 +134,27 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
         if (isEditing()) {
             ensureEditBox().extractRenderState(graphics, mouseX, mouseY, partialTick);
         } else {
-            graphics.text(context.font(), label, getContentLeftAfterDragHandle(), getContentY() + 5, 0xFFFFFFFF);
+            final var x = getContentLeftAfterDragHandle();
+            final var maxWidth = getContentRightBeforeActions() - x;
+            if (maxWidth > 0) {
+                graphics.text(context.font(), truncateLabel(label, maxWidth), x, getContentY() + 5, 0xFFFFFFFF);
+            }
         }
+    }
+
+    private Component truncateLabel(Component label, int maxWidth) {
+        final var font = context.font();
+        if (font.width(label) <= maxWidth) {
+            return label;
+        }
+
+        final var ellipsisWidth = font.width(ELLIPSIS);
+        if (maxWidth <= ellipsisWidth) {
+            return Component.literal(font.plainSubstrByWidth(ELLIPSIS, maxWidth));
+        }
+
+        final var truncatedLabel = font.plainSubstrByWidth(label.getString(), maxWidth - ellipsisWidth);
+        return Component.literal(truncatedLabel + ELLIPSIS);
     }
 
     @Override
