@@ -90,4 +90,14 @@ public abstract class BalmConfigScreenLabeledEntry extends BalmConfigScreenEntry
     protected void extractValidationError(GuiGraphicsExtractor graphics, Component error, int x, int y) {
         graphics.text(font, Component.literal("!").withColor(TextColor.DARK_RED), x, y + 2, 0xFFFFFFFF);
     }
+
+    @Override
+    public void setFocused(@Nullable GuiEventListener focused) {
+        // This is a workaround to avoid breaking focus on nested container widgets,
+        // where unfocusing and refocusing would unfocus the parent control
+        if (getFocused() != focused) {
+            super.setFocused(focused);
+        }
+    }
+
 }
