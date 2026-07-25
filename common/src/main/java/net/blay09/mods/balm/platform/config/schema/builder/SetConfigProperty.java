@@ -23,6 +23,7 @@ public class SetConfigProperty<T> extends AbstractConfigProperty<Set<T>> impleme
         this.defaultValue = defaultValue;
         this.codec = PrimitiveConfigCodecs.codec(nestedType).listOf();
         this.streamCodec = ByteBufCodecs.collection(ArrayList::new, PrimitiveConfigCodecs.streamCodec(nestedType));
+        validateValue(defaultValue).getOrThrow();
     }
 
     @Override
@@ -32,7 +33,7 @@ public class SetConfigProperty<T> extends AbstractConfigProperty<Set<T>> impleme
 
     @Override
     public Codec<Set<T>> codec() {
-        return codec.xmap(Set::copyOf, List::copyOf);
+        return codec.xmap(Set::copyOf, List::copyOf).validate(this::validateValue);
     }
 
     @Override

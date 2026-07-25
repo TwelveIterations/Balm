@@ -12,6 +12,7 @@ public class IdentifierConfigProperty extends AbstractConfigProperty<Identifier>
     public IdentifierConfigProperty(ConfigPropertyBuilder parent, Identifier defaultValue) {
         super(parent);
         this.defaultValue = defaultValue;
+        validateValue(defaultValue).getOrThrow();
     }
 
     @Override
@@ -21,7 +22,7 @@ public class IdentifierConfigProperty extends AbstractConfigProperty<Identifier>
 
     @Override
     public Codec<Identifier> codec() {
-        return Identifier.CODEC;
+        return Identifier.CODEC.validate(this::validateValue);
     }
 
     @Override

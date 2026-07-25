@@ -22,6 +22,7 @@ public class BooleanConfigProperty extends AbstractConfigProperty<Boolean> imple
     public BooleanConfigProperty(ConfigPropertyBuilder parent, boolean defaultValue) {
         super(parent);
         this.defaultValue = defaultValue;
+        validateValue(defaultValue).getOrThrow();
     }
 
     @Override
@@ -31,7 +32,7 @@ public class BooleanConfigProperty extends AbstractConfigProperty<Boolean> imple
 
     @Override
     public Codec<Boolean> codec() {
-        return CODEC;
+        return CODEC.validate(this::validateValue);
     }
 
     @Override

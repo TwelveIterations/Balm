@@ -22,6 +22,7 @@ public class ListConfigProperty<T> extends AbstractConfigProperty<List<T>> imple
         this.defaultValue = defaultValue;
         this.codec = PrimitiveConfigCodecs.codec(nestedType).listOf();
         this.streamCodec = ByteBufCodecs.collection(ArrayList::new, PrimitiveConfigCodecs.streamCodec(nestedType));
+        validateValue(defaultValue).getOrThrow();
     }
 
     @Override
@@ -31,7 +32,7 @@ public class ListConfigProperty<T> extends AbstractConfigProperty<List<T>> imple
 
     @Override
     public Codec<List<T>> codec() {
-        return codec;
+        return codec.validate(this::validateValue);
     }
 
     @Override

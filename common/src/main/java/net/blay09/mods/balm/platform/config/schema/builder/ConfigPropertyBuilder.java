@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.platform.config.schema.builder;
 
 import net.blay09.mods.balm.platform.config.schema.internal.ConfigSchemaImpl;
+import net.blay09.mods.balm.platform.config.schema.ConfigValidator;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import org.jspecify.annotations.Nullable;
@@ -15,6 +16,7 @@ public class ConfigPropertyBuilder {
     protected String comment = "";
     protected boolean synced;
     protected @Nullable Identifier customControl;
+    protected @Nullable Class<? extends ConfigValidator<?>> validatorClass;
 
     public ConfigPropertyBuilder(ConfigSchemaImpl schema, String name) {
         this.schema = schema;
@@ -40,6 +42,11 @@ public class ConfigPropertyBuilder {
 
     public ConfigPropertyBuilder customControl(Identifier customControlId) {
         this.customControl = customControlId;
+        return this;
+    }
+
+    public ConfigPropertyBuilder validateWith(Class<? extends ConfigValidator<?>> validatorClass) {
+        this.validatorClass = validatorClass;
         return this;
     }
 

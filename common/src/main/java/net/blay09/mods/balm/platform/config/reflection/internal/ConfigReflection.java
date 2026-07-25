@@ -54,6 +54,10 @@ public class ConfigReflection {
             if (controlAnnotation != null) {
                 property.customControl(parseDefaultedIdentifier(controlAnnotation.value(), getIdentifier(clazz).getNamespace()));
             }
+            final var validateWithAnnotation = field.getAnnotation(ValidateWith.class);
+            if (validateWithAnnotation != null) {
+                property.validateWith(validateWithAnnotation.value());
+            }
             final var rangeAnnotation = field.getAnnotation(Range.class);
             final var type = field.getType();
             final var nestedTypeAnnotation = field.getAnnotation(NestedType.class);
