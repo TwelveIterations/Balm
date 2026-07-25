@@ -7,8 +7,11 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+
+import java.util.function.Supplier;
 
 public class BalmConfigListDragHandleButton extends Button {
     public static final int WIDTH = 16;
@@ -24,9 +27,9 @@ public class BalmConfigListDragHandleButton extends Button {
     private final Object entry;
     private boolean keyboardDragActive;
 
-    public BalmConfigListDragHandleButton(BalmConfigListDragController list, Object entry) {
+    public BalmConfigListDragHandleButton(BalmConfigListDragController list, Object entry, Supplier<Component> message) {
         super(0, 0, WIDTH, HEIGHT, LABEL, _ -> {
-        }, Button.DEFAULT_NARRATION);
+        }, defaultNarration -> CommonComponents.joinForNarration(message.get(), defaultNarration.get()));
         this.list = list;
         this.entry = entry;
         updateTooltip();

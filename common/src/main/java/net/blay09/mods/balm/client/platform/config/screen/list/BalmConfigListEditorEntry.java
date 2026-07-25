@@ -7,6 +7,7 @@ import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
     protected BalmConfigListEditorEntry(BalmConfigListEditorContext<T> context, BalmConfigListEditorValue<T> valueHolder) {
         this.context = context;
         this.valueHolder = valueHolder;
-        dragHandleButton = new BalmConfigListDragHandleButton(context.dragController(), this);
+        dragHandleButton = new BalmConfigListDragHandleButton(context.dragController(), this, () -> getMessage());
         if (context.canReorderValues()) {
             children.add(dragHandleButton);
         }
@@ -148,6 +149,10 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
     }
 
     protected void updateActionWidgets() {
+    }
+
+    protected Component getMessage() {
+        return Component.literal(String.valueOf(valueHolder.value()));
     }
 
 }
