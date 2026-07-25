@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -58,8 +59,15 @@ public class ConfigReflection {
             if (validateWithAnnotation != null) {
                 property.validateWith(validateWithAnnotation.value());
             }
+            final var validateCollectionWithAnnotation = field.getAnnotation(ValidateCollectionWith.class);
+            if (validateCollectionWithAnnotation != null) {
+                property.validateCollectionWith(validateCollectionWithAnnotation.value());
+            }
             final var rangeAnnotation = field.getAnnotation(Range.class);
             final var type = field.getType();
+            if (validateCollectionWithAnnotation != null && !Collection.class.isAssignableFrom(type)) {
+                throw new IllegalArgumentException("@ValidateCollectionWith can only be used on collection fields: " + field.getName() + " in class " + clazz.getName());
+            }
             final var nestedTypeAnnotation = field.getAnnotation(NestedType.class);
             final var nestedType = nestedTypeAnnotation != null ? nestedTypeAnnotation.value() : null;
             try {

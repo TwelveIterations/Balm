@@ -16,7 +16,7 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
     private final String comment;
     private final boolean synced;
     private final @Nullable Identifier customControl;
-    private final @Nullable ConfigValidator<T> validator;
+    protected final @Nullable ConfigValidator<?> validator;
 
     public AbstractConfigProperty(ConfigPropertyBuilder parent) {
         schema = parent.schema;
@@ -29,7 +29,7 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
     }
 
     @SuppressWarnings("unchecked")
-    private @Nullable ConfigValidator<T> createValidator(@Nullable Class<? extends ConfigValidator<?>> validatorClass) {
+    protected static <T> @Nullable ConfigValidator<T> createValidator(@Nullable Class<? extends ConfigValidator<?>> validatorClass) {
         if (validatorClass == null) {
             return null;
         }
@@ -72,7 +72,13 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
     }
 
     @Override
+    public boolean hasCustomValidator() {
+        return validator != null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public DataResult<T> validateValue(T value) {
-        return validator != null ? validator.validate(value) : DataResult.success(value);
+        return validator != null ? ((ConfigValidator<T>) validator).validate(value) : DataResult.success(value);
     }
 }
