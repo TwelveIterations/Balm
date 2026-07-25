@@ -54,6 +54,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
             final var defaultFallbackOrder = new LinkedHashSet<String>();
             defaultFallbackOrder.add("cloth-config");
             defaultFallbackOrder.add("configured");
+            defaultFallbackOrder.add(BalmConfig.BALM_CONFIG_SCREEN_PROVIDER_ID);
             defaultFallbackOrder.addAll(BalmConfigScreenProviders.getProviderIds());
             defaultFallbackOrder.remove(BalmConfig.DEFAULT_CONFIG_SCREEN_PROVIDER_ID);
             for (final var providerId : defaultFallbackOrder) {

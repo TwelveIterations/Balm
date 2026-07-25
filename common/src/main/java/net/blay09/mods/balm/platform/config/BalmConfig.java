@@ -100,4 +100,6 @@ public interface BalmConfig {
     String DEFAULT_CONFIG_SCREEN_PROVIDER_ID = "default";
 
     String BALM_CONFIG_SCREEN_PROVIDER_ID = "balm";
+
+    String BALM_NESTED_CONFIG_SCREEN_PROVIDER_ID = "balm-nested";
 }

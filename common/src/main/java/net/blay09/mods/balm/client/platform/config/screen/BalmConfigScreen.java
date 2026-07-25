@@ -6,7 +6,9 @@ import net.blay09.mods.balm.client.platform.config.screen.internal.*;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.schema.builder.ConfigCategory;
 import net.blay09.mods.balm.platform.config.util.ConfigLocalization;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -49,6 +51,25 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
 
     public static BalmConfigScreen forSchemas(@Nullable Screen parent, Component title, Collection<BalmConfigSchema> schemas) {
         return applySchemas(builder().title(title), schemas).build(parent);
+    }
+
+    public static BalmConfigScreen forModWithNesting(@Nullable Screen parent, String modId) {
+        return forSchemasWithNesting(parent, ConfigLocalization.componentForTitle(modId), Balm.config().getSchemasByNamespace(modId));
+    }
+
+    public static BalmConfigScreen forSchemaWithNesting(@Nullable Screen parent, BalmConfigSchema schema) {
+        return forSchemasWithNesting(parent, ConfigLocalization.componentForTitle(schema), List.of(schema));
+    }
+
+    public static BalmConfigScreen forSchemasWithNesting(@Nullable Screen parent, Component title, Collection<BalmConfigSchema> schemas) {
+        return applySchemasWithNesting(builder().title(title), schemas).build(parent);
+    }
+
+    public static BalmConfigScreen forCategory(@Nullable Screen parent, ConfigCategory category) {
+        return builder()
+                .title(Component.translatable(ConfigLocalization.forCategory(category)))
+                .section(Component.translatable(ConfigLocalization.forCategory(category)), section -> section.properties(category))
+                .build(parent);
     }
 
     public BalmConfigScreen(@Nullable Screen parent, Component title, List<BalmConfigScreenSection> sections) {
@@ -226,6 +247,27 @@ public class BalmConfigScreen extends Screen implements BalmConfigScreenContext 
                 final var categoryTitle = Component.translatable(ConfigLocalization.forCategory(category));
                 builder.section(categoryTitle, section -> section.properties(category));
             }
+        }
+        return builder;
+    }
+
+    private static BalmConfigScreenBuilder applySchemasWithNesting(BalmConfigScreenBuilder builder, Collection<BalmConfigSchema> schemas) {
+        for (final var schema : schemas) {
+            if (schema.rootProperties().isEmpty() && schema.categories().isEmpty()) {
+                continue;
+            }
+
+            final var schemaTitle = Component.translatable(ConfigLocalization.forTitle(schema));
+            builder.section(schemaTitle, section -> {
+                section.properties(schema.rootProperties());
+                for (final var category : schema.categories()) {
+                    section.button(Component.translatable(ConfigLocalization.forCategory(category)),
+                            Component.translatable(ConfigLocalization.forCategoryTooltip(category)),
+                            Component.translatable("gui.balm.configuration.open"),
+                            screen -> Minecraft.getInstance().gui.setScreen(forCategory(screen, category)),
+                            filter -> BalmConfigScreenSearch.categoryMatches(category, filter));
+                }
+            });
         }
         return builder;
     }

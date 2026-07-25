@@ -32,6 +32,10 @@ public abstract class CommonBalmClientRuntime<TLoadContext extends BalmRuntimeLo
             final var schemas = Balm.config().getSchemasByNamespace(modId);
             return schemas.isEmpty() ? null : parent -> BalmConfigScreen.forMod(parent, modId);
         });
+        BalmConfigScreenProviders.register(BalmConfig.BALM_NESTED_CONFIG_SCREEN_PROVIDER_ID, modId -> {
+            final var schemas = Balm.config().getSchemasByNamespace(modId);
+            return schemas.isEmpty() ? null : parent -> BalmConfigScreen.forModWithNesting(parent, modId);
+        });
     }
 
     @Override

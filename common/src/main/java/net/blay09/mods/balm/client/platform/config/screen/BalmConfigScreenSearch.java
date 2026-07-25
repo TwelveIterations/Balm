@@ -26,7 +26,8 @@ public class BalmConfigScreenSearch {
         return query.isEmpty()
                 || componentMatches(Component.translatable(ConfigLocalization.forCategory(category)), query)
                 || componentMatches(Component.translatable(ConfigLocalization.forCategoryTooltip(category)), query)
-                || category.name().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT));
+                || category.name().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))
+                || category.properties().stream().anyMatch(property -> propertyMatches(property, query));
     }
 
     public static List<BalmConfigScreenSection> filterSections(List<BalmConfigScreenSection> sections, String query, BalmConfigScreenContext context) {
