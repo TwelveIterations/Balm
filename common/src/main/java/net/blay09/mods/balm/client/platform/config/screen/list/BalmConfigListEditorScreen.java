@@ -9,6 +9,7 @@ import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredSet;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StringWidget;
@@ -95,6 +96,7 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
                 })
                 .size(SEARCH_BOX_HEIGHT, SEARCH_BOX_HEIGHT)
                 .tooltip(Tooltip.create(ADD_LABEL))
+                .createNarration(_ -> AbstractWidget.wrapDefaultNarrationMessage(ADD_LABEL))
                 .build());
 
         list = layout.addToContents(new BalmConfigListEditorEntryList<>(this));
