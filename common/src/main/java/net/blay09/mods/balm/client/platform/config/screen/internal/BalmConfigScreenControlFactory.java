@@ -17,6 +17,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
@@ -56,18 +57,10 @@ public class BalmConfigScreenControlFactory {
             return createEnumControl((ConfiguredEnum) enumProperty, label);
         } else if (property instanceof ConfiguredList<?> listProperty) {
             final var values = resolveCollectionValue(listProperty, rowState);
-            return Button.builder(Component.translatable("gui.balm.configuration.list.items", values.size()),
-                            _ -> Minecraft.getInstance().gui.setScreen(BalmConfigListEditorScreen.builder(screen, screen, state.bindingFor(listProperty))
-                                    .build()))
-                    .width(Button.DEFAULT_WIDTH)
-                    .build();
+            return createCollectionControl(screen, listProperty, label, values.size());
         } else if (property instanceof ConfiguredSet<?> setProperty) {
             final var values = resolveCollectionValue(setProperty, rowState);
-            return Button.builder(Component.translatable("gui.balm.configuration.list.items", values.size()),
-                            _ -> Minecraft.getInstance().gui.setScreen(BalmConfigListEditorScreen.builder(screen, screen, state.bindingFor(setProperty))
-                                    .build()))
-                    .width(Button.DEFAULT_WIDTH)
-                    .build();
+            return createCollectionControl(screen, setProperty, label, values.size());
         }
 
         return new BalmConfigScreenEditBox<>(font, (ConfiguredProperty) property, screen, rowState);
@@ -88,6 +81,16 @@ public class BalmConfigScreenControlFactory {
                 .displayOnlyValue()
                 .create(0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT, label,
                         (_, value) -> state.trySetValue(property, value));
+    }
+
+    private <T, C extends Collection<T>> AbstractWidget createCollectionControl(BalmConfigScreen screen, ConfiguredProperty<C> property, Component label, int size) {
+        final var message = Component.translatable("gui.balm.configuration.list.items", size);
+        return Button.builder(message,
+                        _ -> Minecraft.getInstance().gui.setScreen(BalmConfigListEditorScreen.builder(screen, screen, state.bindingFor(property))
+                                .build()))
+                .width(Button.DEFAULT_WIDTH)
+                .createNarration(it -> CommonComponents.joinForNarration(label, it.get()))
+                .build();
     }
 
     private Collection<?> resolveCollectionValue(ConfiguredProperty<?> property, BalmConfigScreenRowState rowState) {
