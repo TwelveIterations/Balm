@@ -31,12 +31,13 @@ public class BalmConfigScreenSearch {
     }
 
     public static List<BalmConfigScreenSection> filterSections(List<BalmConfigScreenSection> sections, String query, BalmConfigScreenContext context) {
+        final var normalizedQuery = query.trim();
         final var filteredSections = new ArrayList<BalmConfigScreenSection>();
         for (final var section : sections) {
-            final var sectionMatches = componentMatches(section.title(), query);
+            final var sectionMatches = componentMatches(section.title(), normalizedQuery);
             final var matchingRows = section.rows().stream()
                     .filter(row -> row.isVisible(context))
-                    .filter(row -> sectionMatches || row.matchesFilter(query))
+                    .filter(row -> sectionMatches || row.matchesFilter(normalizedQuery))
                     .toList();
             if (!matchingRows.isEmpty()) {
                 filteredSections.add(new BalmConfigScreenSection(section.title(), matchingRows));
