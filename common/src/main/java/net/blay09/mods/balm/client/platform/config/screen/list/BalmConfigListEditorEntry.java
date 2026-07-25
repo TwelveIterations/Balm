@@ -4,6 +4,8 @@ import com.mojang.serialization.DataResult;
 import net.blay09.mods.balm.client.platform.config.screen.list.internal.BalmConfigListDragHandleButton;
 import net.blay09.mods.balm.client.platform.config.screen.list.internal.BalmConfigListEditorValue;
 import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredList;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredSet;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -12,7 +14,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelectionList.Entry<BalmConfigListEditorEntry<T>> {
@@ -110,15 +111,17 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
             return DataResult.success(null);
         }
 
-        return binding.property().type() == Set.class
-                ? validateValue(binding, Set.of(value))
-                : validateValue(binding, List.of(value));
+        return validateElement(binding, value);
 
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private DataResult<?> validateValue(ConfigControlBinding<? extends Collection<T>> binding, Collection<T> value) {
-        return ((ConfigControlBinding) binding).validateValue(value);
+    protected DataResult<T> validateElement(ConfigControlBinding<? extends Collection<T>> binding, T value) {
+        return switch (binding.property()) {
+            case ConfiguredList<?> configuredList -> ((ConfiguredList<T>) configuredList).validateElement(value);
+            case ConfiguredSet<?> configuredSet -> ((ConfiguredSet<T>) configuredSet).validateElement(value);
+            default -> ((ConfigControlBinding) binding).validateValue(value);
+        };
     }
 
     private int getActionWidgetsWidth() {

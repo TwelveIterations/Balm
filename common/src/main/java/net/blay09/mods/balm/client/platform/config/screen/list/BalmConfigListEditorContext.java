@@ -24,5 +24,5 @@ public interface BalmConfigListEditorContext<T> {
 
     void delete(BalmConfigListEditorEntry<T> entry);
 
-    void commit();
+    boolean commit();
 }

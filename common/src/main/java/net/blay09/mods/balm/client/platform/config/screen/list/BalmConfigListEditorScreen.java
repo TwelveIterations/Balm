@@ -104,8 +104,9 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
         validationErrorWidget = footerLayout.addChild(new StringWidget(Component.empty(), font),
                 settings -> settings.align(0.5f, 0f).paddingTop(VALIDATION_ERROR_TOP_PADDING));
         doneButton = footerLayout.addChild(Button.builder(CommonComponents.GUI_DONE, _ -> {
-                    commit();
-                    onClose();
+                    if (commit()) {
+                        onClose();
+                    }
                 }).build(),
                 settings -> settings.align(0.5f, 1f).paddingBottom(FOOTER_BUTTON_BOTTOM_PADDING));
         layout.visitWidgets(this::addRenderableWidget);
@@ -222,15 +223,20 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
     }
 
     @Override
-    public void commit() {
-        final var rawValues = state.rawValues();
-        final var pendingCommitValues = binding.property() instanceof ConfiguredSet<?>
-                ? new LinkedHashSet<>(rawValues)
-                : List.copyOf(rawValues);
-        if (validateValues(pendingCommitValues).isSuccess()) {
-            setValues(pendingCommitValues);
-            refreshList();
+    public boolean commit() {
+        final var pendingCommitValues = pendingCommitValues();
+        final var result = validateValues(pendingCommitValues);
+        if (!result.isSuccess()) {
+            result.error().ifPresent(error -> context.setValidationError(binding.property(), Component.literal(error.message())));
+            updateWidgets();
+            return false;
         }
+
+        setValues(pendingCommitValues);
+        context.clearValidationError(binding.property());
+        refreshList();
+        updateWidgets();
+        return true;
     }
 
     private void refreshList() {
@@ -288,11 +294,26 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
                     .findFirst()
                     .ifPresentOrElse(
                             error -> context.setValidationError(binding.property(), Component.literal(error.message())),
-                            () -> context.clearValidationError(binding.property())
+                            this::revalidateValues
                     );
         }
 
         updateWidgets();
+    }
+
+    private void revalidateValues() {
+        final var result = validateValues(pendingCommitValues());
+        result.error().ifPresentOrElse(
+                error -> context.setValidationError(binding.property(), Component.literal(error.message())),
+                () -> context.clearValidationError(binding.property())
+        );
+    }
+
+    private Collection<T> pendingCommitValues() {
+        final var rawValues = state.rawValues();
+        return binding.property() instanceof ConfiguredSet<?>
+                ? new LinkedHashSet<>(rawValues)
+                : List.copyOf(rawValues);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
