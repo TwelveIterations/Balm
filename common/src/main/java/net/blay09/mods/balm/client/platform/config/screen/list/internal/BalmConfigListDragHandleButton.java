@@ -3,7 +3,8 @@ package net.blay09.mods.balm.client.platform.config.screen.list.internal;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -20,8 +21,8 @@ public class BalmConfigListDragHandleButton extends Button {
     private static final Identifier ICON = Identifier.fromNamespaceAndPath("balm", "widgets/drag_handle");
     private static final Identifier HIGHLIGHTED_ICON = Identifier.fromNamespaceAndPath("balm", "widgets/drag_handle_highlighted");
     private static final Component LABEL = Component.translatable("gui.balm.configuration.list.drag_handle");
-    private static final Component INACTIVE_TOOLTIP = Component.translatable("gui.balm.configuration.list.drag_to_reorder");
-    private static final Component ACTIVE_TOOLTIP = Component.translatable("gui.balm.configuration.list.drag_to_reorder.active");
+    private static final Component NARRATE_INACTIVE = Component.translatable("gui.balm.configuration.list.narration.reorder");
+    private static final Component NARRATE_ACTIVE = Component.translatable("gui.balm.configuration.list.narration.reorder.active");
 
     private final BalmConfigListDragController list;
     private final Object entry;
@@ -32,7 +33,6 @@ public class BalmConfigListDragHandleButton extends Button {
         }, defaultNarration -> CommonComponents.joinForNarration(message.get(), defaultNarration.get()));
         this.list = list;
         this.entry = entry;
-        updateTooltip();
     }
 
     @Override
@@ -59,7 +59,6 @@ public class BalmConfigListDragHandleButton extends Button {
     public boolean keyPressed(KeyEvent event) {
         if (event.key() == InputConstants.KEY_SPACE || event.key() == InputConstants.KEY_RETURN) {
             keyboardDragActive = !keyboardDragActive;
-            updateTooltip();
             return true;
         }
 
@@ -98,17 +97,18 @@ public class BalmConfigListDragHandleButton extends Button {
         super.setFocused(focused);
         if (!focused) {
             keyboardDragActive = false;
-            updateTooltip();
         }
+    }
+
+    @Override
+    public void updateWidgetNarration(NarrationElementOutput output) {
+        super.updateWidgetNarration(output);
+        output.add(NarratedElementType.USAGE, keyboardDragActive ? NARRATE_ACTIVE : NARRATE_INACTIVE);
     }
 
     @Override
     protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         final var icon = list.isDragging(entry) || keyboardDragActive || isHoveredOrFocused() ? HIGHLIGHTED_ICON : ICON;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, icon, getX(), getY() + 2, WIDTH, 16);
-    }
-
-    private void updateTooltip() {
-        setTooltip(Tooltip.create(keyboardDragActive ? ACTIVE_TOOLTIP : INACTIVE_TOOLTIP));
     }
 }
