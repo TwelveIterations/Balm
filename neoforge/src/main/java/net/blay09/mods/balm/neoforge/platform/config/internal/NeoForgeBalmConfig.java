@@ -55,12 +55,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             case ConfiguredInt configuredInt -> configuredInt.hasCustomValidator()
                     ? spec.define(configuredInt.name(), configuredInt.defaultValue(), it -> validatePropertyValue(configuredInt, it))
                     : spec.defineInRange(configuredInt.name(), configuredInt.defaultValue(), configuredInt.minValue().orElse(Integer.MIN_VALUE), configuredInt.maxValue().orElse(Integer.MAX_VALUE));
-            case ConfiguredList<?> configuredList -> configuredList.hasCustomCollectionValidator()
-                    ? spec.defineListAllowEmpty(configuredList.name(),
-                    mapConfigCollectionToNeoForge(configuredList.defaultValue()),
-                    () -> newListElement(configuredList),
-                    it -> validatePropertyValue(configuredList, it))
-                    : spec.defineListAllowEmpty(configuredList.name(),
+            case ConfiguredList<?> configuredList -> spec.defineListAllowEmpty(configuredList.name(),
                     mapConfigCollectionToNeoForge(configuredList.defaultValue()),
                     () -> newListElement(configuredList),
                     it -> validateListElement(configuredList, it));
@@ -70,12 +65,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
             case ConfiguredIdentifier configuredIdentifier -> configuredIdentifier.hasCustomValidator()
                     ? spec.define(configuredIdentifier.name(), configuredIdentifier.defaultValue().toString(), it -> validatePropertyValue(configuredIdentifier, it))
                     : spec.define(configuredIdentifier.name(), configuredIdentifier.defaultValue().toString());
-            case ConfiguredSet<?> configuredSet -> configuredSet.hasCustomCollectionValidator()
-                    ? spec.defineListAllowEmpty(configuredSet.name(),
-                    mapConfigCollectionToNeoForge(configuredSet.defaultValue()),
-                    () -> newSetElement(configuredSet),
-                    it -> validatePropertyValue(configuredSet, it))
-                    : spec.defineListAllowEmpty(configuredSet.name(),
+            case ConfiguredSet<?> configuredSet -> spec.defineListAllowEmpty(configuredSet.name(),
                     mapConfigCollectionToNeoForge(configuredSet.defaultValue()),
                     () -> newSetElement(configuredSet),
                     it -> validateSetElement(configuredSet, it));
