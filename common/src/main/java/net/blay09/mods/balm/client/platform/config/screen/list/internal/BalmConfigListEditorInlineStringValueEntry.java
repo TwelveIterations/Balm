@@ -41,15 +41,19 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
         this.label = label;
         editButton = Button.builder(EDIT_LABEL, this::onEditButton)
                 .size(ACTION_BUTTON_WIDTH, ACTION_BUTTON_HEIGHT)
+                .createNarration(it -> CommonComponents.joinForNarration(label, it.get()))
                 .build();
         doneButton = Button.builder(CommonComponents.GUI_DONE, this::onDoneButton)
                 .size(ACTION_BUTTON_WIDTH, ACTION_BUTTON_HEIGHT)
+                .createNarration(it -> CommonComponents.joinForNarration(label, it.get()))
                 .build();
         deleteButton = Button.builder(DELETE_LABEL, this::onDeleteButton)
                 .size(ACTION_BUTTON_WIDTH, ACTION_BUTTON_HEIGHT)
+                .createNarration(it -> CommonComponents.joinForNarration(label, it.get()))
                 .build();
         resetButton = Button.builder(RESET_LABEL, this::onResetButton)
                 .size(ACTION_BUTTON_WIDTH, ACTION_BUTTON_HEIGHT)
+                .createNarration(it -> CommonComponents.joinForNarration(label, it.get()))
                 .build();
         addActionWidget(editButton);
         addActionWidget(doneButton);
