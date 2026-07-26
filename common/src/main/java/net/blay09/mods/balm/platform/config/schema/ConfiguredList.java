@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.platform.config.schema;
 
+import com.mojang.serialization.DataResult;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
@@ -7,6 +8,10 @@ import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import java.util.List;
 
 public interface ConfiguredList<T> extends ConfiguredProperty<List<T>>, NestedTypeHolder<T> {
+    boolean hasCustomCollectionValidator();
+
+    DataResult<T> validateElement(T value);
+
     default List<T> get(LoadedConfig config) {
         return getRaw(config);
     }

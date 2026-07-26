@@ -38,31 +38,42 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
         spec.translation(ConfigLocalization.forProperty(property));
 
         return switch (property) {
-            case ConfiguredBoolean configuredBoolean -> spec.define(configuredBoolean.name(), configuredBoolean.defaultValue().booleanValue());
-            case ConfiguredDouble configuredDouble -> configuredDouble.minValue().isPresent() || configuredDouble.maxValue().isPresent()
-                    ? spec.defineInRange(configuredDouble.name(), configuredDouble.defaultValue(), configuredDouble.minValue().orElse(Double.NEGATIVE_INFINITY), configuredDouble.maxValue().orElse(Double.POSITIVE_INFINITY))
-                    : spec.define(configuredDouble.name(), configuredDouble.defaultValue());
+            case ConfiguredBoolean configuredBoolean -> configuredBoolean.hasCustomValidator()
+                    ? spec.define(configuredBoolean.name(), configuredBoolean.defaultValue(), it -> validatePropertyValue(configuredBoolean, it))
+                    : spec.define(configuredBoolean.name(), configuredBoolean.defaultValue().booleanValue());
+            case ConfiguredDouble configuredDouble -> configuredDouble.hasCustomValidator()
+                    ? spec.define(configuredDouble.name(), configuredDouble.defaultValue(), it -> validatePropertyValue(configuredDouble, it))
+                    : spec.defineInRange(configuredDouble.name(), configuredDouble.defaultValue(), configuredDouble.minValue().orElse(Double.NEGATIVE_INFINITY), configuredDouble.maxValue().orElse(Double.POSITIVE_INFINITY));
             case ConfiguredEnum<?> configuredEnum -> defineEnum(spec, configuredEnum);
-            case ConfiguredFloat configuredFloat -> configuredFloat.minValue().isPresent() || configuredFloat.maxValue().isPresent()
-                    ? spec.defineInRange(configuredFloat.name(), configuredFloat.defaultValue().doubleValue(), (double) configuredFloat.minValue().orElse(Float.NEGATIVE_INFINITY), (double) configuredFloat.maxValue().orElse(Float.POSITIVE_INFINITY))
-                    : spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue());
-            case ConfiguredInt configuredInt -> configuredInt.minValue().isPresent() || configuredInt.maxValue().isPresent()
-                    ? spec.defineInRange(configuredInt.name(), configuredInt.defaultValue(), configuredInt.minValue().orElse(Integer.MIN_VALUE), configuredInt.maxValue().orElse(Integer.MAX_VALUE))
-                    : spec.define(configuredInt.name(), configuredInt.defaultValue());
+            case ConfiguredFloat configuredFloat -> configuredFloat.hasCustomValidator()
+                    ? spec.define(configuredFloat.name(), configuredFloat.defaultValue().doubleValue(), it -> validatePropertyValue(configuredFloat, it))
+                    : spec.defineInRange(configuredFloat.name(), configuredFloat.defaultValue().doubleValue(), (double) configuredFloat.minValue().orElse(Float.NEGATIVE_INFINITY), (double) configuredFloat.maxValue().orElse(Float.POSITIVE_INFINITY));
+            case ConfiguredInt configuredInt -> configuredInt.hasCustomValidator()
+                    ? spec.define(configuredInt.name(), configuredInt.defaultValue(), it -> validatePropertyValue(configuredInt, it))
+                    : spec.defineInRange(configuredInt.name(), configuredInt.defaultValue(), configuredInt.minValue().orElse(Integer.MIN_VALUE), configuredInt.maxValue().orElse(Integer.MAX_VALUE));
             case ConfiguredList<?> configuredList -> spec.defineListAllowEmpty(configuredList.name(),
                     mapConfigCollectionToNeoForge(configuredList.defaultValue()),
-                    (it) -> validateListElement(configuredList, it));
-            case ConfiguredLong configuredLong -> configuredLong.minValue().isPresent() || configuredLong.maxValue().isPresent()
-                    ? spec.defineInRange(configuredLong.name(), configuredLong.defaultValue(), configuredLong.minValue().orElse(Long.MIN_VALUE), configuredLong.maxValue().orElse(Long.MAX_VALUE))
-                    : spec.define(configuredLong.name(), configuredLong.defaultValue());
-            case ConfiguredIdentifier configuredIdentifier ->
-                    spec.define(configuredIdentifier.name(), configuredIdentifier.defaultValue().toString());
+                    it -> validateListElement(configuredList, it));
+            case ConfiguredLong configuredLong -> configuredLong.hasCustomValidator()
+                    ? spec.define(configuredLong.name(), configuredLong.defaultValue(), it -> validatePropertyValue(configuredLong, it))
+                    : spec.defineInRange(configuredLong.name(), configuredLong.defaultValue(), configuredLong.minValue().orElse(Long.MIN_VALUE), configuredLong.maxValue().orElse(Long.MAX_VALUE));
+            case ConfiguredIdentifier configuredIdentifier -> configuredIdentifier.hasCustomValidator()
+                    ? spec.define(configuredIdentifier.name(), configuredIdentifier.defaultValue().toString(), it -> validatePropertyValue(configuredIdentifier, it))
+                    : spec.define(configuredIdentifier.name(), configuredIdentifier.defaultValue().toString());
             case ConfiguredSet<?> configuredSet -> spec.defineListAllowEmpty(configuredSet.name(),
                     mapConfigCollectionToNeoForge(configuredSet.defaultValue()),
-                    (it) -> validateSetElement(configuredSet, it));
-            case ConfiguredString configuredString -> spec.define(configuredString.name(), configuredString.defaultValue());
+                    it -> validateSetElement(configuredSet, it));
+            case ConfiguredString configuredString -> configuredString.hasCustomValidator()
+                    ? spec.define(configuredString.name(), configuredString.defaultValue(), it -> validatePropertyValue(configuredString, it))
+                    : spec.define(configuredString.name(), configuredString.defaultValue());
             default -> throw new IllegalStateException("Unexpected value: " + property);
         };
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> boolean validatePropertyValue(ConfiguredProperty<T> property, Object value) {
+        final var mappedValue = (T) mapConfigValueFromNeoForge(property, value);
+        return property.validateValue(mappedValue).isSuccess();
     }
 
     public static List<?> mapConfigCollectionToNeoForge(Collection<?> values) {
@@ -110,14 +121,26 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     }
 
     private static <T> boolean validateListElement(ConfiguredList<T> configuredList, Object value) {
-        return validateCollectionElement(configuredList.nestedType(), value);
+        return validateCollectionElementType(configuredList.nestedType(), value) && validateCollectionElement(configuredList, value);
     }
 
     private static <T> boolean validateSetElement(ConfiguredSet<T> configuredSet, Object value) {
-        return validateCollectionElement(configuredSet.nestedType(), value);
+        return validateCollectionElementType(configuredSet.nestedType(), value) && validateCollectionElement(configuredSet, value);
     }
 
-    private static <T> boolean validateCollectionElement(Class<T> nestedType, Object value) {
+    @SuppressWarnings("unchecked")
+    private static <T> boolean validateCollectionElement(ConfiguredList<T> configuredList, Object value) {
+        final var mappedValue = (T) mapConfigValueFromNeoForge(configuredList.nestedType(), value);
+        return configuredList.validateElement(mappedValue).isSuccess();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> boolean validateCollectionElement(ConfiguredSet<T> configuredSet, Object value) {
+        final var mappedValue = (T) mapConfigValueFromNeoForge(configuredSet.nestedType(), value);
+        return configuredSet.validateElement(mappedValue).isSuccess();
+    }
+
+    private static <T> boolean validateCollectionElementType(Class<T> nestedType, Object value) {
         if (nestedType == Boolean.class) {
             return value instanceof Boolean || ("true".equals(value) || "false".equals(value));
         } else if (nestedType == Double.class) {
@@ -184,7 +207,7 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
     }
 
     private static <T extends Enum<T>> ForgeConfigSpec.ConfigValue<T> defineEnum(ForgeConfigSpec.Builder spec, ConfiguredEnum<T> configuredEnum) {
-        return spec.defineEnum(configuredEnum.name(), configuredEnum.defaultValue(), EnumGetMethod.NAME_IGNORECASE);
+        return spec.defineEnum(configuredEnum.name(), configuredEnum.defaultValue(), EnumGetMethod.NAME_IGNORECASE, it -> validatePropertyValue(configuredEnum, it));
     }
 
     @Override

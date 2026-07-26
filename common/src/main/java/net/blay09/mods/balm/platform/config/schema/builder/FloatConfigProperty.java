@@ -35,6 +35,7 @@ public class FloatConfigProperty extends AbstractConfigProperty<Float> implement
         this.defaultValue = defaultValue;
         this.minValue = minValue;
         this.maxValue = maxValue;
+        validateValue(defaultValue).getOrThrow();
     }
 
     @Override
@@ -75,6 +76,6 @@ public class FloatConfigProperty extends AbstractConfigProperty<Float> implement
         if (maxValue != null && value > maxValue) {
             return DataResult.error(() -> "Value for " + name() + " is above maximum " + maxValue + ": " + value);
         }
-        return DataResult.success(value);
+        return super.validateValue(value);
     }
 }

@@ -23,6 +23,8 @@ public interface ConfiguredProperty<T> {
 
     Optional<Identifier> customControl();
 
+    boolean hasCustomValidator();
+
     Class<?> type();
 
     Codec<T> codec();

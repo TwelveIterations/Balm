@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 public class ClothConfigSupport {
     private static final Logger logger = LoggerFactory.getLogger(ClothConfigSupport.class);
+    private static final Component INVALID_IDENTIFIER_ERROR = Component.translatable("gui.balm.configuration.validation.invalid_identifier");
 
     public ClothConfigSupport() {
         BalmConfigScreenProviders.register("cloth-config", ClothConfigSupport::getConfigScreenFactory);
@@ -80,6 +81,7 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startStrField(label, stringProperty.get(config))
                             .setDefaultValue(stringProperty.defaultValue())
                             .setTooltip(tooltip)
+                            .setErrorSupplier(value -> validateOrError(stringProperty, value))
                             .setSaveConsumer(value -> stringProperty.set(config, value))
                             .build()
             );
@@ -87,6 +89,7 @@ public class ClothConfigSupport {
                 var fieldBuilder = builder.entryBuilder().startIntField(label, intProperty.get(config))
                         .setDefaultValue(intProperty.defaultValue())
                         .setTooltip(tooltip)
+                        .setErrorSupplier(value -> validateOrError(intProperty, value))
                         .setSaveConsumer(value -> intProperty.set(config, value));
                 fieldBuilder = intProperty.minValue().map(fieldBuilder::setMin).orElse(fieldBuilder);
                 fieldBuilder = intProperty.maxValue().map(fieldBuilder::setMax).orElse(fieldBuilder);
@@ -96,6 +99,7 @@ public class ClothConfigSupport {
                 var fieldBuilder = builder.entryBuilder().startFloatField(label, floatProperty.get(config))
                         .setDefaultValue(floatProperty.defaultValue())
                         .setTooltip(tooltip)
+                        .setErrorSupplier(value -> validateOrError(floatProperty, value))
                         .setSaveConsumer(value -> floatProperty.set(config, value));
                 fieldBuilder = floatProperty.minValue().map(fieldBuilder::setMin).orElse(fieldBuilder);
                 fieldBuilder = floatProperty.maxValue().map(fieldBuilder::setMax).orElse(fieldBuilder);
@@ -105,6 +109,7 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startBooleanToggle(label, booleanProperty.get(config))
                             .setDefaultValue(booleanProperty.defaultValue())
                             .setTooltip(tooltip)
+                            .setErrorSupplier(value -> validateOrError(booleanProperty, value))
                             .setSaveConsumer(value -> booleanProperty.set(config, value))
                             .build()
             );
@@ -113,6 +118,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startStrList(label, (List<String>) listProperty.get(config))
                             .setDefaultValue((List<String>) listProperty.defaultValue())
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateListElementOrError((ConfiguredList<String>) listProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredList<String>) listProperty, value))
                             .setSaveConsumer(value -> ((ConfiguredList<String>) listProperty).set(config, value))
                             .build()
             );
@@ -120,6 +127,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startIntList(label, (List<Integer>) listProperty.get(config))
                             .setDefaultValue((List<Integer>) listProperty.defaultValue())
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateListElementOrError((ConfiguredList<Integer>) listProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredList<Integer>) listProperty, value))
                             .setSaveConsumer(value -> ((ConfiguredList<Integer>) listProperty).set(config, value))
                             .build()
             );
@@ -127,6 +136,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startLongList(label, (List<Long>) listProperty.get(config))
                             .setDefaultValue((List<Long>) listProperty.defaultValue())
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateListElementOrError((ConfiguredList<Long>) listProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredList<Long>) listProperty, value))
                             .setSaveConsumer(value -> ((ConfiguredList<Long>) listProperty).set(config, value))
                             .build()
             );
@@ -134,6 +145,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startFloatList(label, (List<Float>) listProperty.get(config))
                             .setDefaultValue((List<Float>) listProperty.defaultValue())
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateListElementOrError((ConfiguredList<Float>) listProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredList<Float>) listProperty, value))
                             .setSaveConsumer(value -> ((ConfiguredList<Float>) listProperty).set(config, value))
                             .build()
             );
@@ -141,6 +154,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startDoubleList(label, (List<Double>) listProperty.get(config))
                             .setDefaultValue((List<Double>) listProperty.defaultValue())
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateListElementOrError((ConfiguredList<Double>) listProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredList<Double>) listProperty, value))
                             .setSaveConsumer(value -> ((ConfiguredList<Double>) listProperty).set(config, value))
                             .build()
             );
@@ -148,6 +163,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startStrList(label, listProperty.get(config).stream().map(Objects::toString).toList())
                             .setDefaultValue(listProperty.defaultValue().stream().map(Objects::toString).toList())
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateIdentifierListElementOrError((ConfiguredList<Identifier>) listProperty, value))
+                            .setErrorSupplier(value -> validateIdentifierListOrError((ConfiguredList<Identifier>) listProperty, value))
                             .setSaveConsumer(value -> ((ConfiguredList<Identifier>) listProperty).set(config, value.stream().map(Identifier::tryParse).filter(Objects::nonNull).collect(Collectors.toList())))
                             .build()
             );
@@ -155,6 +172,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startStrList(label, new ArrayList<>((Set<String>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<String>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateSetElementOrError((ConfiguredSet<String>) setProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredSet<String>) setProperty, new HashSet<>(value)))
                             .setSaveConsumer(value -> ((ConfiguredSet<String>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
@@ -162,6 +181,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startIntList(label, new ArrayList<>((Set<Integer>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Integer>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateSetElementOrError((ConfiguredSet<Integer>) setProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredSet<Integer>) setProperty, new HashSet<>(value)))
                             .setSaveConsumer(value -> ((ConfiguredSet<Integer>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
@@ -169,6 +190,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startLongList(label, new ArrayList<>((Set<Long>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Long>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateSetElementOrError((ConfiguredSet<Long>) setProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredSet<Long>) setProperty, new HashSet<>(value)))
                             .setSaveConsumer(value -> ((ConfiguredSet<Long>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
@@ -176,6 +199,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startFloatList(label, new ArrayList<>((Set<Float>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Float>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateSetElementOrError((ConfiguredSet<Float>) setProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredSet<Float>) setProperty, new HashSet<>(value)))
                             .setSaveConsumer(value -> ((ConfiguredSet<Float>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
@@ -183,6 +208,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startDoubleList(label, new ArrayList<>((Set<Double>) setProperty.get(config)))
                             .setDefaultValue(new ArrayList<>((Set<Double>) setProperty.defaultValue()))
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateSetElementOrError((ConfiguredSet<Double>) setProperty, value))
+                            .setErrorSupplier(value -> validateOrError((ConfiguredSet<Double>) setProperty, new HashSet<>(value)))
                             .setSaveConsumer(value -> ((ConfiguredSet<Double>) setProperty).set(config, new HashSet<>(value)))
                             .build()
             );
@@ -190,6 +217,8 @@ public class ClothConfigSupport {
                     builder.entryBuilder().startStrList(label, setProperty.get(config).stream().map(Objects::toString).toList())
                             .setDefaultValue(setProperty.defaultValue().stream().map(Objects::toString).toList())
                             .setTooltip(tooltip)
+                            .setCellErrorSupplier(value -> validateIdentifierSetElementOrError((ConfiguredSet<Identifier>) setProperty, value))
+                            .setErrorSupplier(value -> validateIdentifierSetOrError((ConfiguredSet<Identifier>) setProperty, value))
                             .setSaveConsumer(value -> ((ConfiguredSet<Identifier>) setProperty).set(config, value.stream().map(Identifier::tryParse).filter(Objects::nonNull).collect(Collectors.toSet())))
                             .build()
             );
@@ -236,8 +265,55 @@ public class ClothConfigSupport {
                         .startEnumSelector(displayName, (Class<T>) property.type(), property.get(config))
                         .setDefaultValue(property.defaultValue())
                         .setTooltip(tooltip)
+                        .setErrorSupplier(value -> validateOrError(property, value))
                         .setSaveConsumer(value -> property.set(config, value))
                         .build()
         );
+    }
+
+    private static <T> Optional<Component> validateOrError(ConfiguredProperty<T> property, T value) {
+        return property.validateValue(value).error().map(error -> Component.literal(error.message()));
+    }
+
+    private static <T> Optional<Component> validateListElementOrError(ConfiguredList<T> property, T value) {
+        return property.validateElement(value).error().map(error -> Component.literal(error.message()));
+    }
+
+    private static <T> Optional<Component> validateSetElementOrError(ConfiguredSet<T> property, T value) {
+        return property.validateElement(value).error().map(error -> Component.literal(error.message()));
+    }
+
+    private static Optional<Component> validateIdentifierListElementOrError(ConfiguredList<Identifier> property, String value) {
+        final var identifier = Identifier.tryParse(value);
+        return identifier != null ? validateListElementOrError(property, identifier) : Optional.of(INVALID_IDENTIFIER_ERROR);
+    }
+
+    private static Optional<Component> validateIdentifierListOrError(ConfiguredList<Identifier> property, List<String> value) {
+        final var identifiers = new ArrayList<Identifier>();
+        for (final var stringValue : value) {
+            final var identifier = Identifier.tryParse(stringValue);
+            if (identifier == null) {
+                return Optional.of(INVALID_IDENTIFIER_ERROR);
+            }
+            identifiers.add(identifier);
+        }
+        return validateOrError(property, identifiers);
+    }
+
+    private static Optional<Component> validateIdentifierSetElementOrError(ConfiguredSet<Identifier> property, String value) {
+        final var identifier = Identifier.tryParse(value);
+        return identifier != null ? validateSetElementOrError(property, identifier) : Optional.of(INVALID_IDENTIFIER_ERROR);
+    }
+
+    private static Optional<Component> validateIdentifierSetOrError(ConfiguredSet<Identifier> property, List<String> value) {
+        final var identifiers = new HashSet<Identifier>();
+        for (final var stringValue : value) {
+            final var identifier = Identifier.tryParse(stringValue);
+            if (identifier == null) {
+                return Optional.of(INVALID_IDENTIFIER_ERROR);
+            }
+            identifiers.add(identifier);
+        }
+        return validateOrError(property, identifiers);
     }
 }

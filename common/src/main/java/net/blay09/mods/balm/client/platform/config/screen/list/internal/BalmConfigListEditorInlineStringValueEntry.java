@@ -5,7 +5,9 @@ import net.blay09.mods.balm.client.platform.config.screen.list.BalmConfigListEdi
 import net.blay09.mods.balm.client.platform.config.screen.list.BalmConfigListEditorEntry;
 import net.blay09.mods.balm.platform.config.internal.PrimitiveConfigCodecs;
 import net.blay09.mods.balm.platform.config.schema.ConfigControlBinding;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredList;
 import net.blay09.mods.balm.platform.config.schema.ConfiguredProperty;
+import net.blay09.mods.balm.platform.config.schema.ConfiguredSet;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -97,7 +99,7 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
     @Override
     public DataResult<?> validate(ConfigControlBinding<? extends Collection<T>> binding) {
         if (valueHolder.entryState() instanceof EditState(String value)) {
-            return parseValue(value);
+            return parseValue(value).flatMap(parsedValue -> validateElement(binding, parsedValue));
         }
 
         return super.validate(binding);
@@ -105,7 +107,7 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
 
     public void setValue(String value) {
         valueHolder.entryState(new EditState(value));
-        parseValue(value).ifSuccess(validValue -> {
+        validatePendingValue(value).ifSuccess(validValue -> {
             valueHolder.value(validValue);
             context.revalidate();
         }).ifError(error -> context.setValidationError(this, Component.literal(error.message())));
@@ -176,12 +178,21 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
     }
 
     public boolean canCommit() {
-        return parseValue(getPendingValue()).isSuccess();
+        return validatePendingValue(getPendingValue()).isSuccess();
     }
 
     @SuppressWarnings("unchecked")
     private DataResult<T> parseValue(String value) {
         return PrimitiveConfigCodecs.parse((ConfiguredProperty<T>) context.property(), value);
+    }
+
+    @SuppressWarnings("unchecked")
+    private DataResult<T> validatePendingValue(String value) {
+        return parseValue(value).flatMap(parsedValue -> switch (context.property()) {
+            case ConfiguredList<?> configuredList -> ((ConfiguredList<T>) configuredList).validateElement(parsedValue);
+            case ConfiguredSet<?> configuredSet -> ((ConfiguredSet<T>) configuredSet).validateElement(parsedValue);
+            default -> ((ConfiguredProperty<T>) context.property()).validateValue(parsedValue);
+        });
     }
 
     protected void onDoneButton(Button button) {

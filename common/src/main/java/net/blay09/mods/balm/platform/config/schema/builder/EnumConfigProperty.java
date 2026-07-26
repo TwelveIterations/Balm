@@ -26,6 +26,7 @@ public class EnumConfigProperty<T extends Enum<T> & StringRepresentable> extends
         final var byIdMapper = ByIdMap.continuous(Enum::ordinal, enumConstants, ByIdMap.OutOfBoundsStrategy.ZERO);
         this.codec = LenientEnumCodecs.fromValues(() -> enumConstants);
         this.streamCodec = ByteBufCodecs.idMapper(byIdMapper, Enum::ordinal).cast();
+        validateValue(defaultValue).getOrThrow();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class EnumConfigProperty<T extends Enum<T> & StringRepresentable> extends
 
     @Override
     public Codec<T> codec() {
-        return codec;
+        return codec.validate(this::validateValue);
     }
 
     @Override

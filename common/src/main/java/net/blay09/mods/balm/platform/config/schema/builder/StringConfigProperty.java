@@ -12,6 +12,7 @@ public class StringConfigProperty extends AbstractConfigProperty<String> impleme
     public StringConfigProperty(ConfigPropertyBuilder parent, String defaultValue) {
         super(parent);
         this.defaultValue = defaultValue;
+        validateValue(defaultValue).getOrThrow();
     }
 
     @Override
@@ -21,7 +22,7 @@ public class StringConfigProperty extends AbstractConfigProperty<String> impleme
 
     @Override
     public Codec<String> codec() {
-        return Codec.STRING;
+        return Codec.STRING.validate(this::validateValue);
     }
 
     @Override

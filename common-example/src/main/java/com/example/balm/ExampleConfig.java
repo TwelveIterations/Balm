@@ -1,10 +1,14 @@
 package com.example.balm;
 
+import com.mojang.serialization.DataResult;
+import net.blay09.mods.balm.platform.config.schema.ConfigValidator;
 import net.blay09.mods.balm.platform.config.reflection.CustomControl;
 import net.blay09.mods.balm.platform.config.reflection.Comment;
 import net.blay09.mods.balm.platform.config.reflection.Config;
 import net.blay09.mods.balm.platform.config.reflection.NestedType;
 import net.blay09.mods.balm.platform.config.reflection.Range;
+import net.blay09.mods.balm.platform.config.reflection.ValidateCollectionWith;
+import net.blay09.mods.balm.platform.config.reflection.ValidateWith;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
@@ -22,6 +26,7 @@ public class ExampleConfig {
     public boolean fancyBoolean;
 
     @Comment("Example string config value.")
+    @ValidateWith(WelcomeMessageValidator.class)
     public String welcomeMessage = "Hello from Balm!";
 
     @Comment("Example identifier config value.")
@@ -32,6 +37,8 @@ public class ExampleConfig {
 
     @Comment("Example list config value.")
     @NestedType(String.class)
+    @ValidateWith(FavoriteItemValidator.class)
+    @ValidateCollectionWith(FavoriteItemsValidator.class)
     public List<String> favoriteItems = List.of("minecraft:apple", "minecraft:bread");
 
     @Comment("Example set config value.")
@@ -83,5 +90,39 @@ public class ExampleConfig {
 
         @Comment("Example child screen number.")
         public int number = 987;
+    }
+
+    public static class WelcomeMessageValidator implements ConfigValidator<String> {
+        @Override
+        public DataResult<String> validate(String value) {
+            if (value.isBlank()) {
+                return DataResult.error(() -> "Welcome message must not be blank");
+            }
+
+            return DataResult.success(value);
+        }
+    }
+
+    public static class FavoriteItemValidator implements ConfigValidator<String> {
+        @Override
+        public DataResult<String> validate(String value) {
+            try {
+                final var identifier = Identifier.parse(value);
+                return identifier.getNamespace().equals("minecraft") ? DataResult.success(value) : DataResult.error(() -> "must be of minecraft namespace");
+            } catch (Exception e) {
+                return DataResult.error(() -> "Favorite item must be a valid identifier in the minecraft namespace");
+            }
+        }
+    }
+
+    public static class FavoriteItemsValidator implements ConfigValidator<List<String>> {
+        @Override
+        public DataResult<List<String>> validate(List<String> value) {
+            if (value.size() > 3) {
+                return DataResult.error(() -> "Favorite items must not have more than 3 items");
+            }
+
+            return DataResult.success(value);
+        }
     }
 }
