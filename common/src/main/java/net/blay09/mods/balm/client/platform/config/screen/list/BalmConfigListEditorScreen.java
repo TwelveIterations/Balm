@@ -303,10 +303,8 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
 
     private void revalidateValues() {
         final var result = validateValues(pendingCommitValues());
-        result.error().ifPresentOrElse(
-                error -> context.setValidationError(binding.property(), Component.literal(error.message())),
-                () -> context.clearValidationError(binding.property())
-        );
+        result.ifSuccess(_ -> context.clearValidationError(binding.property()))
+                .ifError(error -> context.setValidationError(binding.property(), Component.literal(error.message())));
     }
 
     private Collection<T> pendingCommitValues() {
