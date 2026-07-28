@@ -1,9 +1,9 @@
 [versions]
-minecraft = "26.3-snapshot-5"
-neoForm = "26.3-snapshot-5-1"
+minecraft = "26.3-snapshot-6"
+neoForm = "26.3-snapshot-6-1"
 neoForge = "26.2.0.0-beta"
 forge = "64.0.4"
-fabricApi = "0.155.3+26.3"
+fabricApi = "0.156.1+26.3"
 fabricLoader = "0.19.3"
 kuma = "26.3.0.1-SNAPSHOT"
 ftbUltimine = "26.1.0.1-SNAPSHOT"
@@ -47,7 +47,7 @@ theOneProbe = { module = "curse.maven:the-one-probe-245211", version = "6106996"
 
 [plugins]
 fabricLoom = { id = "net.fabricmc.fabric-loom", version = "1.17-SNAPSHOT" }
-modDevGradle = { id = "net.neoforged.moddev", version = "2.0.142" }
+modDevGradle = { id = "net.neoforged.moddev", version = "2.0.143" }
 forgeGradle = { id = "net.minecraftforge.gradle", version = "[7,8)" }
 forgeJarJar = { id = "net.minecraftforge.jarjar", version = "0.2.3" }
 mixin = { id = "org.spongepowered.mixin", version = "0.7-SNAPSHOT" }
