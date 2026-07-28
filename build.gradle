@@ -1,12 +1,13 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT' apply(false)
-    id 'net.neoforged.moddev' version '0.1.110' apply(false)
+    id 'net.fabricmc.fabric-loom' version '1.14-SNAPSHOT' apply(false)
+    id 'net.neoforged.moddev' version '2.0.142' apply(false)
+    id 'net.minecraftforge.jarjar' version '0.2.3' apply(false)
     id 'net.darkhax.curseforgegradle' version '1.1.26' apply(false)
     id "com.modrinth.minotaur" version "2.+" apply(false)
 }
 
 subprojects {
-    configurations.all {
+    configurations.configureEach {
         resolutionStrategy {
             cacheChangingModulesFor 60, 'seconds'
             cacheDynamicVersionsFor 60, 'seconds'

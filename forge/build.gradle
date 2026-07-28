@@ -1,61 +1,28 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id 'multiloader-loader'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+    id 'net.minecraftforge.gradle' version '7.0.31'
+    id 'net.minecraftforge.jarjar'
     id 'net.darkhax.curseforgegradle'
     id "com.modrinth.minotaur"
 }
 
-mixin {
-    add(sourceSets.main, "${mod_id}.refmap.json")
-
-    config("${mod_id}.mixins.json")
-    config("${mod_id}.forge.mixins.json")
-}
-
-jarJar.enable()
-build.dependsOn tasks.jarJar
+jarJar.register()
 
 minecraft {
     mappings channel: 'official', version: minecraft_version
 
-    reobf = false
-
-    copyIdeResources = true
-
-    // Automatically enable forge AccessTransformers if the file exists
-    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
-    if (at.exists()) {
-        accessTransformer = at
-    }
-
     runs {
-        client {
-            workingDirectory file('runs/client')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName "Client"
-
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                modClientRun {
-                    source sourceSets.main
-                }
-            }
+        configureEach {
+            workingDir.convention layout.projectDirectory.dir('runs')
+            args "--mixin.config=${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
         }
-
-        server {
-            workingDirectory file('runs/server')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName "Server"
-
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                modServerRun {
-                    source sourceSets.main
-                }
-            }
+        register('client') {
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+        }
+        register('server') {
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
         }
     }
 }
@@ -63,29 +30,26 @@ minecraft {
 sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
+    implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
 }
 
 apply from: rootProject.file('repositories.gradle')
+repositories {
+    maven minecraft.mavenizer
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+}
 apply from: 'dependencies.gradle'
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            fg.component(it)
-        }
-    }
-}
-
-task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+tasks.register('curseforge', TaskPublishCurseForge) {
     dependsOn('build')
     description = 'Publishes the Forge build to CurseForge.'
     group = 'publishing'
 
     apiToken = project.findProperty("curseforge.api_key") ?: System.getenv("CURSEFORGE_TOKEN") ?: "none"
 
-    def mainFile = upload(curseforge_forge_project_id, file("${project.buildDir}/libs/${archivesBaseName}-${version}-all.jar"))
+    def mainFile = upload(curseforge_forge_project_id, tasks.named('jarJar', Jar).get().archiveFile.get().asFile)
     mainFile.changelog = rootProject.file('CHANGELOG.md').text
     project.minecraft_versions.split(',').toList().each { mainFile.addGameVersion(it) }
     mainFile.releaseType = "release"
@@ -97,7 +61,7 @@ modrinth {
     projectId = project.modrinth_project_id
     versionType = project.modrinth_release_type
     versionNumber = project.version + "+forge-" + project.minecraft_version
-    uploadFile = jar.outputs.getFiles().asPath.replace(".jar", "-all.jar")
+    uploadFile = tasks.named('jarJar', Jar)
     changelog = rootProject.file("CHANGELOG.md").text
     gameVersions = project.minecraft_versions.split(',').toList()
     syncBodyFrom = rootProject.file("modpage.md").text
