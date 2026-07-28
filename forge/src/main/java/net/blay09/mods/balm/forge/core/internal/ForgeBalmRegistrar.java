@@ -5,6 +5,7 @@ import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.CustomRegistryBuilder;
 import net.blay09.mods.balm.core.DeferredHolder;
 import net.blay09.mods.balm.core.DynamicRegistryBuilder;
+import net.blay09.mods.balm.forge.platform.event.internal.ModBusEventRegisters;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -35,7 +36,7 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
 
     @Override
     public <T> void addAlias(ResourceKey<? extends Registry<T>> registryKey, Identifier oldId, Identifier newId) {
-        DeferredRegisters.addAlias(newId.getNamespace(), registryKey, oldId, newId);
+        ModBusEventRegisters.getRegistrations(newId.getNamespace(), ForgeRegistryAliasRemapper.class).addAlias(registryKey, oldId, newId);
     }
 
     @Override
@@ -62,12 +63,13 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
 
         @Override
         public void addAlias(String oldName, String newName) {
-            DeferredRegisters.addAlias(
-                    namespace,
-                    registryKey,
-                    Identifier.fromNamespaceAndPath(namespace, oldName),
-                    Identifier.fromNamespaceAndPath(namespace, newName)
-            );
+            addAlias(Identifier.fromNamespaceAndPath(namespace, oldName), Identifier.fromNamespaceAndPath(namespace, newName));
         }
+
+        @Override
+        public void addAlias(Identifier oldId, Identifier newId) {
+            ModBusEventRegisters.getRegistrations(namespace, ForgeRegistryAliasRemapper.class).addAlias(registryKey, oldId, newId);
+        }
+
     }
 }

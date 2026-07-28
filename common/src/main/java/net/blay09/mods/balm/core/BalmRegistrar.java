@@ -79,5 +79,7 @@ public interface BalmRegistrar {
         Holder<T> register(String name, Function<Identifier, T> resourceFunction);
 
         void addAlias(String oldName, String newName);
+
+        void addAlias(Identifier oldId, Identifier newId);
     }
 }
