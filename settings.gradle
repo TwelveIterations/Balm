@@ -1,9 +1,14 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
+        mavenCentral()
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'Forge'
+            url = 'https://maven.minecraftforge.net/'
         }
         maven {
             name = 'Sponge Snapshots'
@@ -13,5 +18,9 @@ pluginManagement {
 }
 
 include("common", "shared-bridge")
-include("fabric")
-include("forge")
+if (include_fabric) {
+    include("fabric")
+}
+if (include_forge) {
+    include("forge")
+}
