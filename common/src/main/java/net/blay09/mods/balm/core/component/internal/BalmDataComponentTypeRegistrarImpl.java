@@ -31,6 +31,23 @@ public class BalmDataComponentTypeRegistrarImpl implements BalmDataComponentType
     }
 
     @Override
+    public void addAlias(ResourceLocation oldId, ResourceLocation newId) {
+        registrar.addAlias(
+                Registries.DATA_COMPONENT_TYPE,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                ResourceLocation.fromNamespaceAndPath(namespace, oldName),
+                ResourceLocation.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
+    @Override
     public <T> DataComponentType.Builder<T> createBuilder() {
         return DataComponentType.builder();
     }

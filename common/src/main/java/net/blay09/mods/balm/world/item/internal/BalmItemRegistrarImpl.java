@@ -39,6 +39,23 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
     }
 
     @Override
+    public void addAlias(ResourceLocation oldId, ResourceLocation newId) {
+        registrar.addAlias(
+                Registries.ITEM,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                ResourceLocation.fromNamespaceAndPath(namespace, oldName),
+                ResourceLocation.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
+    @Override
     public <T> BalmDiscriminatedItemRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, Item.Properties, Item> constructor, BiFunction<T, Item.Properties, Item.Properties> propertiesFunction) {
         final var map = new BalmDiscriminatedItemRegistrationImpl<T>();
         for (final var value : values) {

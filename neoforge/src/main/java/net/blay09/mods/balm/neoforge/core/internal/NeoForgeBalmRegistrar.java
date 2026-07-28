@@ -1,11 +1,7 @@
 package net.blay09.mods.balm.neoforge.core.internal;
 
 import com.mojang.serialization.Codec;
-import net.blay09.mods.balm.core.AbstractDynamicRegistryBuilder;
-import net.blay09.mods.balm.core.BalmRegistrar;
-import net.blay09.mods.balm.core.AbstractCustomRegistryBuilder;
-import net.blay09.mods.balm.core.CustomRegistryBuilder;
-import net.blay09.mods.balm.core.DynamicRegistryBuilder;
+import net.blay09.mods.balm.core.*;
 import net.blay09.mods.balm.neoforge.DeferredRegisters;
 import net.blay09.mods.balm.neoforge.ModBusEventRegisters;
 import net.minecraft.core.Holder;
@@ -43,6 +39,11 @@ public class NeoForgeBalmRegistrar implements BalmRegistrar {
     }
 
     @Override
+    public <T> void addAlias(ResourceKey<? extends Registry<T>> registryKey, ResourceLocation oldId, ResourceLocation newId) {
+        DeferredRegisters.get(registryKey, newId.getNamespace()).addAlias(oldId, newId);
+    }
+
+    @Override
     public <T> BalmRegistrar.Scoped<T> scoped(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
         return new Scoped<>(registryKey, namespace);
     }
@@ -61,6 +62,17 @@ public class NeoForgeBalmRegistrar implements BalmRegistrar {
         public Holder<T> register(String name, Function<ResourceLocation, T> resourceFunction) {
             final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
             return deferredRegister.register(name, resourceFunction);
+        }
+
+        @Override
+        public void addAlias(String oldName, String newName) {
+            addAlias(ResourceLocation.fromNamespaceAndPath(namespace, oldName), ResourceLocation.fromNamespaceAndPath(namespace, newName));
+        }
+
+        @Override
+        public void addAlias(ResourceLocation oldId, ResourceLocation newId) {
+            final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
+            deferredRegister.addAlias(oldId, newId);
         }
     }
 

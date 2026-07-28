@@ -38,6 +38,23 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
     }
 
     @Override
+    public void addAlias(ResourceLocation oldId, ResourceLocation newId) {
+        registrar.addAlias(
+                Registries.BLOCK,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                ResourceLocation.fromNamespaceAndPath(namespace, oldName),
+                ResourceLocation.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
+    @Override
     public <T> BalmDiscriminatedBlockRegistration<T> registerDiscriminated(Set<T> values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, BiFunction<T, BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesFunction) {
         final var map = new BalmDiscriminatedBlockRegistrationImpl<T>();
         for (final var value : values) {

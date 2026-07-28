@@ -34,6 +34,7 @@ public class ForgeBalm {
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
         DeferredRegisters.register("balm", modEventBus);
+        DeferredRegisters.registerAliasRemapper();
         ModBusEventRegisters.register("balm", modEventBus);
 
         ForgeBalmWorldGen.initializeBalmBiomeModifiers(modEventBus);

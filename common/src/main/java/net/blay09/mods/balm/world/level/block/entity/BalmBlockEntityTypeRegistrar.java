@@ -2,6 +2,7 @@ package net.blay09.mods.balm.world.level.block.entity;
 
 import net.blay09.mods.balm.world.level.block.BlockLike;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,6 +17,10 @@ public interface BalmBlockEntityTypeRegistrar {
     <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Iterable<? extends BlockLike> blocks);
 
     <T extends BlockEntity> BalmBlockEntityTypeRegistration<T> register(String name, BlockEntitySupplier<T> constructor, Supplier<Set<Block>> blocksSupplier);
+
+    void addAlias(ResourceLocation oldId, ResourceLocation newId);
+
+    void addAlias(String oldName, String newName);
 
     <T extends BlockEntity> BlockEntityType<T> createBlockEntityType(BlockEntitySupplier<T> constructor, Set<Block> blocks);
 

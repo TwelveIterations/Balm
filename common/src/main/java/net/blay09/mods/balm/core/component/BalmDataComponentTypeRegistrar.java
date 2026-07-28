@@ -28,5 +28,9 @@ public interface BalmDataComponentTypeRegistrar {
 
     <T> BalmDataComponentTypeRegistration<T> register(String name, BiFunction<ResourceLocation, DataComponentType.Builder<T>, DataComponentType.Builder<T>> constructor);
 
+    void addAlias(ResourceLocation oldId, ResourceLocation newId);
+
+    void addAlias(String oldName, String newName);
+
     <T> DataComponentType.Builder<T> createBuilder();
 }

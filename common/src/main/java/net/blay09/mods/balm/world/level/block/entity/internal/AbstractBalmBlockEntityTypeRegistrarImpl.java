@@ -51,6 +51,23 @@ public abstract class AbstractBalmBlockEntityTypeRegistrarImpl implements BalmBl
         return new BalmBlockEntityTypeRegistrationImpl<>(holder);
     }
 
+    @Override
+    public void addAlias(ResourceLocation oldId, ResourceLocation newId) {
+        registrar.addAlias(
+                Registries.BLOCK_ENTITY_TYPE,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                ResourceLocation.fromNamespaceAndPath(namespace, oldName),
+                ResourceLocation.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
     private static final class BalmBlockEntityTypeRegistrationImpl<T extends BlockEntity> implements BalmBlockEntityTypeRegistration<T>, Supplier<BlockEntityType<T>> {
         private final Holder<BlockEntityType<T>> holder;
 

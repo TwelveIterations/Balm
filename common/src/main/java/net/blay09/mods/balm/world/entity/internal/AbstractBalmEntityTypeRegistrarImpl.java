@@ -38,6 +38,23 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
         return new BalmEntityTypeRegistrationImpl<>(holder);
     }
 
+    @Override
+    public void addAlias(ResourceLocation oldId, ResourceLocation newId) {
+        registrar.addAlias(
+                Registries.ENTITY_TYPE,
+                oldId,
+                newId
+        );
+    }
+
+    @Override
+    public void addAlias(String oldName, String newName) {
+        addAlias(
+                ResourceLocation.fromNamespaceAndPath(namespace, oldName),
+                ResourceLocation.fromNamespaceAndPath(namespace, newName)
+        );
+    }
+
     private class BalmEntityTypeRegistrationImpl<T extends Entity> implements BalmEntityTypeRegistration<T> {
         private final Holder<EntityType<T>> holder;
 

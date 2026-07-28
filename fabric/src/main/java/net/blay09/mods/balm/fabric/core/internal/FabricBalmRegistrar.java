@@ -1,14 +1,10 @@
 package net.blay09.mods.balm.fabric.core.internal;
 
 import com.mojang.serialization.Codec;
-import net.blay09.mods.balm.core.AbstractDynamicRegistryBuilder;
-import net.blay09.mods.balm.core.CustomRegistryBuilder;
-import net.blay09.mods.balm.core.AbstractCustomRegistryBuilder;
-import net.blay09.mods.balm.core.DynamicRegistryBuilder;
+import net.blay09.mods.balm.core.*;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
-import net.blay09.mods.balm.core.BalmRegistrar;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -69,6 +65,14 @@ public class FabricBalmRegistrar implements BalmRegistrar {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <T> void addAlias(ResourceKey<? extends Registry<T>> registryKey, ResourceLocation oldId, ResourceLocation newId) {
+        final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.get(registryKey.location());
+        Objects.requireNonNull(registry);
+        registry.addAlias(oldId, newId);
+    }
+
+    @Override
     public <T> Scoped<T> scoped(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
         return new Scoped<>(registryKey, namespace);
     }
@@ -90,6 +94,19 @@ public class FabricBalmRegistrar implements BalmRegistrar {
             Objects.requireNonNull(registry);
             final var resourceKey = ResourceKey.create(registryKey, ResourceLocation.fromNamespaceAndPath(namespace, name));
             return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.location())));
+        }
+
+        @Override
+        public void addAlias(String oldName, String newName) {
+            addAlias(ResourceLocation.fromNamespaceAndPath(namespace, oldName), ResourceLocation.fromNamespaceAndPath(namespace, newName));
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void addAlias(ResourceLocation oldId, ResourceLocation newId) {
+            final var registry = (Registry<T>) BuiltInRegistries.REGISTRY.get(registryKey.location());
+            Objects.requireNonNull(registry);
+            registry.addAlias(oldId, newId);
         }
     }
 

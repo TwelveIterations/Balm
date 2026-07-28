@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.world.level.block;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -20,6 +21,10 @@ public interface BalmBlockRegistrar {
     }
 
     BalmBlockRegistration register(String name, Function<BlockBehaviour.Properties, Block> constructor, Supplier<BlockBehaviour.Properties> propertiesSupplier);
+
+    void addAlias(ResourceLocation oldId, ResourceLocation newId);
+
+    void addAlias(String oldName, String newName);
 
     default <T> BalmDiscriminatedBlockRegistration<T> registerDiscriminated(T[] values, Function<T, String> nameFunction, BiFunction<T, BlockBehaviour.Properties, Block> constructor, Function<BlockBehaviour.Properties, BlockBehaviour.Properties> propertiesSupplier) {
         return registerDiscriminated(Set.of(values), nameFunction, constructor, propertiesSupplier);

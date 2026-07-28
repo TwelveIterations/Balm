@@ -13,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ForgeBalmRegistrar implements BalmRegistrar {
 
@@ -32,6 +31,11 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
         final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.location().getNamespace());
         deferredRegister.register(resourceKey.location().getPath(), () -> resourceFunction.apply(resourceKey.location()));
         return new DeferredHolder<>(resourceKey);
+    }
+
+    @Override
+    public <T> void addAlias(ResourceKey<? extends Registry<T>> registryKey, ResourceLocation oldId, ResourceLocation newId) {
+        DeferredRegisters.addAlias(registryKey, oldId, newId);
     }
 
     @Override
@@ -54,6 +58,16 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
             final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
             final var registryObject = deferredRegister.register(name, () -> resourceFunction.apply(ResourceLocation.fromNamespaceAndPath(namespace, name)));
             return new DeferredHolder<>(registryObject.getKey());
+        }
+
+        @Override
+        public void addAlias(String oldName, String newName) {
+            addAlias(ResourceLocation.fromNamespaceAndPath(namespace, oldName), ResourceLocation.fromNamespaceAndPath(namespace, newName));
+        }
+
+        @Override
+        public void addAlias(ResourceLocation oldId, ResourceLocation newId) {
+            DeferredRegisters.addAlias(registryKey, oldId, newId);
         }
     }
 }
