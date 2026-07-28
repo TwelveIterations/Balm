@@ -1,11 +1,9 @@
 package net.blay09.mods.balm.forge;
 
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.EmptyLoadContext;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.common.BalmLoadContexts;
-import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.capability.ForgeCommonCapabilities;
 import net.blay09.mods.balm.forge.client.ForgeBalmClient;
@@ -20,7 +18,6 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
@@ -35,6 +32,7 @@ public class ForgeBalm {
         Balm.registerModule(new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
 
+        DeferredRegisters.registerAliasRemapper();
         DeferredRegisters.register("balm", modEventBus);
         ModBusEventRegisters.register("balm", modEventBus);
 

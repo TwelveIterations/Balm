@@ -118,4 +118,6 @@ public interface BalmRegistries {
     Fluid getMilkFluid();
 
     <T> DeferredObject<T> register(Registry<T> registryId, Function<ResourceLocation, T> supplier, ResourceLocation identifier);
+
+    <T> void addAlias(Registry<T> registry, ResourceLocation oldId, ResourceLocation newId);
 }

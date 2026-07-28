@@ -28,4 +28,9 @@ public class ForgeBalmRegistries implements BalmRegistries {
         final var registryObject = register.register(identifier.getPath(), () -> supplier.apply(identifier));
         return new DeferredObject<>(identifier, registryObject, registryObject::isPresent);
     }
+
+    @Override
+    public <T> void addAlias(Registry<T> registry, ResourceLocation oldId, ResourceLocation newId) {
+        DeferredRegisters.addAlias(registry.key(), oldId, newId);
+    }
 }

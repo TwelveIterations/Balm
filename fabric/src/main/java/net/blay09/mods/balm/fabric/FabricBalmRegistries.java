@@ -26,4 +26,9 @@ public class FabricBalmRegistries implements BalmRegistries {
         return new DeferredObject<>(identifier,
                 () -> Registry.register(registry, identifier, supplier.apply(identifier))).resolveImmediately();
     }
+
+    @Override
+    public <T> void addAlias(Registry<T> registry, ResourceLocation oldId, ResourceLocation newId) {
+        registry.addAlias(oldId, newId);
+    }
 }
