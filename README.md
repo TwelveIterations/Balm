@@ -26,7 +26,7 @@ dependencies {
     // Replace ${balm_file_id} with the id of the file you want to depend on.
     // You can find it in the URL of the file on CurseForge (e.g. 3914527).
     // Forge: implementation fg.deobf("curse.maven:balm-531761:${balm_file_id}")
-    // Fabric: modImplementation "curse.maven:balm-fabric-500525:${balm_file_id}"
+    // Fabric: modImplementation "curse.maven:balm-531761:${balm_file_id}"
 }
 ```
 
@@ -62,4 +62,3 @@ If you're interested in contributing to the mod, you can check out [issues label
 When it comes to new features, it's best to confer with me first to ensure we share the same vision. You can join us on [Discord](https://discord.gg/VAfZ2Nau6j) if you'd like to talk.
 
 Contributions must be done through pull requests. I will not be able to accept translations, code or other assets through any other channels.
-
