@@ -6,15 +6,10 @@ This is a library mod that allows Blay's mods to be built for both Forge and Fab
 
 - [Modpack Permissions](https://mods.twelveiterations.com/permissions)
 
-#### Forge
+#### Downloads
 
 [![Versions](http://cf.way2muchnoise.eu/versions/531761_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/balm)
 [![Downloads](http://cf.way2muchnoise.eu/full_531761_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/balm)
-
-#### Fabric
-
-[![Versions](http://cf.way2muchnoise.eu/versions/500525_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/balm-fabric)
-[![Downloads](http://cf.way2muchnoise.eu/full_500525_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/balm-fabric)
 
 ## Adding Balm to a development environment
 
@@ -31,7 +26,7 @@ dependencies {
     // Replace ${balm_file_id} with the id of the file you want to depend on.
     // You can find it in the URL of the file on CurseForge (e.g. 3914527).
     // Forge: implementation fg.deobf("curse.maven:balm-531761:${balm_file_id}")
-    // Fabric: modImplementation "curse.maven:balm-fabric-500525:${balm_file_id}"
+    // Fabric: modImplementation "curse.maven:balm-531761:${balm_file_id}"
 }
 ```
 
