@@ -1,2 +1,4 @@
-- Fixed connection failure when trying to join a server with mods that modify compostables (e.g. Pantry for Blockheads)
-- API: Added support for specifying custom controls on config properties
+- API: Added missing `Identifier` overloads for `BalmRegistrar.Scoped#addAlias`
+- API: Added `@ValidateWith` and `.validateWith` to configs
+- Added inbuilt config screen
+  - This is opt-in for mods by setting their preferred configuration screen to either `balm` or `balm-nested`
