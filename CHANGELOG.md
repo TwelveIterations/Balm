@@ -1,1 +1,1 @@
-- Fixed preventing screen overrides from other mods (like Catalogue) from being applied when Balm's `OpenScreenEvent` was used
+- API: Added `BalmRegistrar#addAlias` for migrating registry entries
