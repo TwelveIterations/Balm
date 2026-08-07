@@ -94,7 +94,7 @@ public class FabricBalmSupplementalEvents {
         for (final var listener : listeners) {
             newDamageAmount = listener.computeDamage(entity, damageSource, newDamageAmount);
         }
-        return newDamageAmount;
+        return Math.max(0, newDamageAmount);
     });
 
     public static final Event<LivingEntityCallback.Heal.Before> LIVING_HEAL = EventFactory.createArrayBacked(LivingEntityCallback.Heal.Before.class, (listeners) -> (entity, amount) -> {
