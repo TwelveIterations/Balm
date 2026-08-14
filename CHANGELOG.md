@@ -1,1 +1,1 @@
-- API: Added missing `Identifier` overloads for `BalmRegistrar.Scoped#addAlias`
+- Fixed crash when incoming damage is negative or when event consumers make it negative in `LivingEntityCallback.Damage.Before`
