@@ -1,4 +1,1 @@
-- API: Added missing `Identifier` overloads for `BalmRegistrar.Scoped#addAlias`
-- API: Added `@ValidateWith` and `.validateWith` to configs
-- Added inbuilt config screen
-  - This is opt-in for mods by setting their preferred configuration screen to either `balm` or `balm-nested`
+- Fixed crash when incoming damage is negative or when event consumers make it negative in `LivingEntityCallback.Damage.Before`
