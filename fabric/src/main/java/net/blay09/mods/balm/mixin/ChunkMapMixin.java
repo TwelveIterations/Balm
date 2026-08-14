@@ -17,7 +17,7 @@ public class ChunkMapMixin {
 
     @Inject(method = "markChunkPendingToSend(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/chunk/LevelChunk;)V", at = @At(value = "HEAD"))
     private static void markChunkPendingToSend(ServerPlayer player, LevelChunk chunk, CallbackInfo callbackInfo) {
-        Balm.getEvents().fireEvent(new ChunkTrackingEvent.Stop((ServerLevel) chunk.getLevel(), player, chunk.getPos()));
+        Balm.getEvents().fireEvent(new ChunkTrackingEvent.Start((ServerLevel) chunk.getLevel(), player, chunk.getPos()));
     }
 
     @Inject(method = "dropChunk(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/ChunkPos;)V", at = @At(value = "HEAD"))
