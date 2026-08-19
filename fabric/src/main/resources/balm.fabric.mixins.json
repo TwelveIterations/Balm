@@ -24,7 +24,7 @@
     "EntityModelSetAccessor",
     "GuiMixin",
     "HudMixin",
-    "ItemInHandRendererMixin",
+    "FirstPersonHandsAndItemsRendererMixin",
     "KeyboardHandlerMixin",
     "MinecraftMixin",
     "PlayerTabOverlayMixin",
