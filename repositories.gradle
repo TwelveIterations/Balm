@@ -17,7 +17,7 @@ repositories {
 
     maven {
         name = 'CurseMaven'
-        url = 'https://cursemaven.twelveiterations.com'
+        url = 'https://cursemaven.com'
         content {
             includeGroup 'curse.maven'
         }
