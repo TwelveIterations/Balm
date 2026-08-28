@@ -1,1 +1,1 @@
-- Fixed crash when incoming damage is negative or when event consumers make it negative in `LivingEntityCallback.Damage.Before`
+- Fixed `RecipeManagerAccessor` access crashing on dedicated servers
