@@ -4,7 +4,8 @@
   "package": "net.blay09.mods.balm.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "SlotAccessor"
+    "SlotAccessor",
+    "RecipeManagerAccessor"
   ],
   "client": [
     "AbstractContainerScreenAccessor",
@@ -12,8 +13,7 @@
     "ImageButtonAccessor",
     "KeyMappingAccessor",
     "MouseHandlerAccessor",
-    "ScreenAccessor",
-    "RecipeManagerAccessor"
+    "ScreenAccessor"
   ],
   "server": [
   ],
