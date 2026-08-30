@@ -67,7 +67,9 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
 
         bindSimple(RenderCallback.UpdateFov.EVENT, ComputeFovModifierEvent.class, (event, it) -> {
             final var newFov = it.computeFov(event.getPlayer(), event.getFovModifier());
-            event.setNewFovModifier(Mth.lerp(event.getFovScale(), 1f, newFov));
+            if (newFov != event.getFovModifier()) {
+                event.setNewFovModifier(Mth.lerp(event.getFovScale(), 1f, newFov));
+            }
         });
         bindCancelable(RenderCallback.Hand.EVENT, RenderHandEvent.class, (event, it) -> !it.shouldRender(event.getHand(), event.getItemStack(), event.getSwingProgress()));
         bindCancelable(RenderCallback.Gui.BEFORE, RenderGuiEvent.Pre.class, (event, it) -> !it.shouldRender(event.getGuiGraphics(), Minecraft.getInstance().getWindow()));
