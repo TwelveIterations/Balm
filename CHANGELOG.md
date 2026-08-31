@@ -1,1 +1,2 @@
-- Fixed `RecipeManagerAccessor` access crashing on dedicated servers
+- Fixed `ComputeFovModifierEvent` being hijacked on NeoForge even if no change is being applied
+- API: Fixed `RecipeManagerAccessor` access crashing on dedicated servers
