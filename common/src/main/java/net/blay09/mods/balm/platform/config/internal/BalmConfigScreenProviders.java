@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class BalmConfigScreenProviders {
@@ -65,5 +66,13 @@ public final class BalmConfigScreenProviders {
 
     public static Set<Map.Entry<String, BalmConfigScreenFactory>> getModOverrides() {
         return modOverrides.entrySet();
+    }
+
+    public static Set<String> getConfigurableModIds() {
+        final var result = new TreeSet<String>();
+        Balm.config().getSchemas().forEach(schema -> result.add(schema.identifier().getNamespace()));
+        result.addAll(modOverrides.keySet());
+        result.removeIf(modId -> getFactory(modId) == null);
+        return result;
     }
 }
