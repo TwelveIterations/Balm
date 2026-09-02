@@ -26,7 +26,7 @@ public abstract class AbstractBalmMenuTypeRegistrarImpl implements BalmMenuTypeR
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.MENU, identifier);
         final var holder = registrar.register(resourceKey, id -> createMenuType(factory));
-        return new BalmMenuTypeRegistrationImpl<>(holder);
+        return new BalmMenuTypeRegistrationImpl<>(holder.asHolder());
     }
 
     private static class BalmMenuTypeRegistrationImpl<T extends AbstractContainerMenu> implements BalmMenuTypeRegistration<T> {

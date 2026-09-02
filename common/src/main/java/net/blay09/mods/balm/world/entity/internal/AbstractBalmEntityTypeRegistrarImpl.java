@@ -50,7 +50,7 @@ public abstract class AbstractBalmEntityTypeRegistrarImpl implements BalmEntityT
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.ENTITY_TYPE, identifier);
         final var holder = registrar.register(resourceKey, id -> builder.get().build(resourceKey));
-        return new BalmEntityTypeRegistrationImpl<>(holder);
+        return new BalmEntityTypeRegistrationImpl<>(holder.asHolder());
     }
 
     private class BalmEntityTypeRegistrationImpl<T extends Entity> implements BalmEntityTypeRegistration<T> {

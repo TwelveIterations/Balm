@@ -42,7 +42,7 @@ public class NeoForgeBalmDataAttachmentTypeRegistrar implements BalmDataAttachme
         }
         final var resourceKey = ResourceKey.create(NeoForgeRegistries.ATTACHMENT_TYPES.key(), identifier);
         final var holder = registrar.register(resourceKey, (ignored) -> neoForgeBuilder.build());
-        return new NeoForgeBalmDataAttachmentTypeRegistration<>(holder);
+        return new NeoForgeBalmDataAttachmentTypeRegistration<>(holder.asHolder());
     }
 
 }

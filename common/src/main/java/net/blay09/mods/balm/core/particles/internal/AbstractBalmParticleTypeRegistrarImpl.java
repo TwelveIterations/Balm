@@ -28,14 +28,14 @@ public abstract class AbstractBalmParticleTypeRegistrarImpl implements BalmParti
         final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.PARTICLE_TYPE, id);
         final var holder = registrar.register(key, constructor::apply);
-        return new BalmParticleTypeRegistrationImpl<>(holder);
+        return new BalmParticleTypeRegistrationImpl<>(holder.asHolder());
     }
 
     public BalmParticleTypeRegistration<SimpleParticleType> register(String name, boolean overrideLimiter) {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.PARTICLE_TYPE, identifier);
         final var holder = registrar.register(key, (id) -> createSimple(overrideLimiter));
-        return new BalmParticleTypeRegistrationImpl<>(holder);
+        return new BalmParticleTypeRegistrationImpl<>(holder.asHolder());
     }
 
     private static class BalmParticleTypeRegistrationImpl<TOptions extends ParticleOptions, TType extends ParticleType<TOptions>> implements BalmParticleTypeRegistration<TType> {

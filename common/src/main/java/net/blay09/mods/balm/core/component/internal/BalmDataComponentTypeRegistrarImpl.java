@@ -43,7 +43,7 @@ public class BalmDataComponentTypeRegistrarImpl implements BalmDataComponentType
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.DATA_COMPONENT_TYPE, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(id, createBuilder()).build());
-        return new BalmDataComponentTypeRegistrationImpl<>(holder);
+        return new BalmDataComponentTypeRegistrationImpl<>(holder.asHolder());
     }
 
     @Override

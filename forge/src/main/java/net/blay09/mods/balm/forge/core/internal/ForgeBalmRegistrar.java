@@ -2,11 +2,11 @@ package net.blay09.mods.balm.forge.core.internal;
 
 import com.mojang.serialization.Codec;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.BalmHolderRegistration;
 import net.blay09.mods.balm.core.CustomRegistryBuilder;
 import net.blay09.mods.balm.core.DeferredHolder;
 import net.blay09.mods.balm.core.DynamicRegistryBuilder;
 import net.blay09.mods.balm.forge.platform.event.internal.ModBusEventRegisters;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -27,10 +27,11 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
     }
 
     @Override
-    public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
+    public <T> BalmHolderRegistration<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
         final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.identifier().getNamespace());
         deferredRegister.register(resourceKey.identifier().getPath(), () -> resourceFunction.apply(resourceKey.identifier()));
-        return new DeferredHolder<>(resourceKey);
+        final var holder = new DeferredHolder<>(resourceKey);
+        return () -> holder;
     }
 
 
@@ -55,10 +56,11 @@ public class ForgeBalmRegistrar implements BalmRegistrar {
         }
 
         @Override
-        public Holder<T> register(String name, Function<Identifier, T> resourceFunction) {
+        public BalmHolderRegistration<T> register(String name, Function<Identifier, T> resourceFunction) {
             final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
             final var registryObject = deferredRegister.register(name, () -> resourceFunction.apply(Identifier.fromNamespaceAndPath(namespace, name)));
-            return new DeferredHolder<>(registryObject.getKey());
+            final var holder = new DeferredHolder<T>(registryObject.getKey());
+            return () -> holder;
         }
 
         @Override

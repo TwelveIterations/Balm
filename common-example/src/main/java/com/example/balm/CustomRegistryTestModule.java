@@ -31,7 +31,7 @@ public class CustomRegistryTestModule implements BalmModule {
         SPELLS = registrar.createCustomRegistry(SPELL_REGISTRY_KEY);
 
         final var spells = registrar.scoped(SPELL_REGISTRY_KEY, BalmExample.MOD_ID);
-        SPARK = spells.register("spark", id -> new ExampleSpell("Spark"));
+        SPARK = spells.register("spark", id -> new ExampleSpell("Spark")).asHolder();
     }
 
     @Override

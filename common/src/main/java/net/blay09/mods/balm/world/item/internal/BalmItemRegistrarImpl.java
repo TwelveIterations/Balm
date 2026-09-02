@@ -53,7 +53,7 @@ public class BalmItemRegistrarImpl implements BalmItemRegistrar {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.ITEM, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(properties.get().setId(resourceKey)));
-        return new BalmItemRegistrationImpl(holder);
+        return new BalmItemRegistrationImpl(holder.asHolder());
     }
 
     @Override

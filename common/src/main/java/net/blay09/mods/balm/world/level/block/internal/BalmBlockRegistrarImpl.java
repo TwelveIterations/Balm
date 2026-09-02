@@ -52,7 +52,7 @@ public class BalmBlockRegistrarImpl implements BalmBlockRegistrar {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.BLOCK, identifier);
         final var holder = registrar.register(resourceKey, (_) -> constructor.apply(properties.get().setId(resourceKey)));
-        return new BalmBlockRegistrationImpl(namespace, registrar, holder);
+        return new BalmBlockRegistrationImpl(namespace, registrar, holder.asHolder());
     }
 
     @Override
