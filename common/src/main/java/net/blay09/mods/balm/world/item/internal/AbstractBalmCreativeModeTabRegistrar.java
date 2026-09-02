@@ -26,7 +26,7 @@ public abstract class AbstractBalmCreativeModeTabRegistrar implements BalmCreati
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.CREATIVE_MODE_TAB, identifier);
         final var holder = registrar.register(resourceKey, (id) -> constructor.apply(id, createBuilder()).build());
-        return new BalmCreativeModeTabRegistrationImpl(holder);
+        return new BalmCreativeModeTabRegistrationImpl(holder.asHolder());
     }
 
     private record BalmCreativeModeTabRegistrationImpl(Holder<CreativeModeTab> holder) implements BalmCreativeModeTabRegistration {

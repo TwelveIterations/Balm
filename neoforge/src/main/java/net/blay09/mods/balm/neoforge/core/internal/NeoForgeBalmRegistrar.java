@@ -3,11 +3,11 @@ package net.blay09.mods.balm.neoforge.core.internal;
 import com.mojang.serialization.Codec;
 import net.blay09.mods.balm.core.AbstractDynamicRegistryBuilder;
 import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.core.BalmHolderRegistration;
 import net.blay09.mods.balm.core.CustomRegistryBuilder;
 import net.blay09.mods.balm.core.AbstractCustomRegistryBuilder;
 import net.blay09.mods.balm.core.DynamicRegistryBuilder;
 import net.blay09.mods.balm.neoforge.platform.event.internal.ModBusEventRegisters;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -36,9 +36,10 @@ public class NeoForgeBalmRegistrar implements BalmRegistrar {
     }
 
     @Override
-    public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
+    public <T> BalmHolderRegistration<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
         final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.identifier().getNamespace());
-        return deferredRegister.register(resourceKey.identifier().getPath(), () -> resourceFunction.apply(resourceKey.identifier()));
+        final var holder = deferredRegister.register(resourceKey.identifier().getPath(), () -> resourceFunction.apply(resourceKey.identifier()));
+        return () -> holder;
     }
 
     @Override
@@ -62,9 +63,10 @@ public class NeoForgeBalmRegistrar implements BalmRegistrar {
         }
 
         @Override
-        public Holder<T> register(String name, Function<Identifier, T> resourceFunction) {
+        public BalmHolderRegistration<T> register(String name, Function<Identifier, T> resourceFunction) {
             final var deferredRegister = DeferredRegisters.get(registryKey, namespace);
-            return deferredRegister.register(name, resourceFunction);
+            final var holder = deferredRegister.register(name, resourceFunction);
+            return () -> holder;
         }
 
         @Override

@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.blay09.mods.balm.core.BalmRegistrar;
-import net.minecraft.core.Holder;
+import net.blay09.mods.balm.core.BalmHolderRegistration;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -70,9 +70,10 @@ public class FabricBalmRegistrar implements BalmRegistrar {
     }
 
     @Override
-    public <T> Holder<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
+    public <T> BalmHolderRegistration<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
         final var registry = getRegistry(resourceKey.registryKey());
-        return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));
+        final var holder = registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));
+        return () -> holder;
     }
 
     @Override
@@ -96,10 +97,11 @@ public class FabricBalmRegistrar implements BalmRegistrar {
         }
 
         @Override
-        public Holder<T> register(String name, Function<Identifier, T> resourceFunction) {
+        public BalmHolderRegistration<T> register(String name, Function<Identifier, T> resourceFunction) {
             final var registry = getRegistry(registryKey);
             final var resourceKey = ResourceKey.create(registryKey, Identifier.fromNamespaceAndPath(namespace, name));
-            return registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));
+            final var holder = registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));
+            return () -> holder;
         }
 
         @Override

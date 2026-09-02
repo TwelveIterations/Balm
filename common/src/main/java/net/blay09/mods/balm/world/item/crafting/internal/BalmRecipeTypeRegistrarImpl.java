@@ -32,7 +32,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.RECIPE_TYPE, identifier);
         final var holder = registrar.register(resourceKey, constructor::apply);
-        return new RecipeTypeRegistrationImpl<>(this, holder);
+        return new RecipeTypeRegistrationImpl<>(this, holder.asHolder());
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.RECIPE_SERIALIZER, id);
         final var holder = registrar.register(key, constructor::apply);
-        return new RecipeSerializerRegistrationImpl<>(holder);
+        return new RecipeSerializerRegistrationImpl<>(holder.asHolder());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.RECIPE_BOOK_CATEGORY, id);
         final var holder = registrar.register(key, constructor);
-        return new RecipeBookCategoryRegistrationImpl(holder);
+        return new RecipeBookCategoryRegistrationImpl(holder.asHolder());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.RECIPE_DISPLAY, id);
         final var holder = registrar.register(key, constructor::apply);
-        return new RecipeDisplayTypeRegistrationImpl<>(holder);
+        return new RecipeDisplayTypeRegistrationImpl<>(holder.asHolder());
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BalmRecipeTypeRegistrarImpl implements BalmRecipeTypeRegistrar {
         final var id = Identifier.fromNamespaceAndPath(namespace, name);
         final var key = ResourceKey.create(Registries.SLOT_DISPLAY, id);
         final var holder = registrar.register(key, constructor::apply);
-        return new SlotDisplayTypeRegistrationImpl<>(holder);
+        return new SlotDisplayTypeRegistrationImpl<>(holder.asHolder());
     }
 
     private static class DeferredRecipeTypeImpl<TRecipeInput extends RecipeInput, TRecipe extends Recipe<TRecipeInput>> implements DeferredRecipeType<TRecipeInput, TRecipe> {

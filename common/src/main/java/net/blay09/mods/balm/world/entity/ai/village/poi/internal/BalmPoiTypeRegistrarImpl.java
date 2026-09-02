@@ -25,6 +25,6 @@ public class BalmPoiTypeRegistrarImpl implements BalmPoiTypeRegistrar {
     public <T extends PoiType> Holder<T> register(String name, Supplier<T> supplier) {
         final var identifier = Identifier.fromNamespaceAndPath(namespace, name);
         final var resourceKey = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, identifier);
-        return (Holder<T>) registrar.register(resourceKey, id -> supplier.get());
+        return (Holder<T>) registrar.register(resourceKey, id -> supplier.get()).asHolder();
     }
 }
