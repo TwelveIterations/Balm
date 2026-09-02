@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMultimap;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClient;
 import net.blay09.mods.balm.client.platform.internal.BalmClientSafeClientAccess;
+import net.blay09.mods.balm.fabric.client.internal.config.FabricModListButton;
 import net.blay09.mods.balm.fabric.client.internal.platform.runtime.internal.FabricBalmClientRuntime;
 import net.blay09.mods.balm.fabric.internal.mixin.RecipeMapAccessor;
 import net.blay09.mods.balm.fabric.network.internal.FabricBalmNetworking;
@@ -21,6 +22,8 @@ public class FabricBalmClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ((FabricBalmClientRuntime) BalmClient.getRuntime()).initializeRuntime();
+
+        FabricModListButton.initialize();
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> FabricBalmNetworking.initializeClientHandlers());
 
