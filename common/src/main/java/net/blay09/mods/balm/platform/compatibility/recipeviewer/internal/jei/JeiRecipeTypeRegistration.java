@@ -6,11 +6,14 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerDisplayBuilder;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerDisplaySlotsBuilder;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.RecipeViewerRecipeTypeRegistration;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
@@ -24,6 +27,7 @@ class JeiRecipeTypeRegistration<T> implements RecipeViewerRecipeTypeRegistration
     protected final IRecipeType<T> jeiRecipeType;
     private final List<ItemStack> craftingStations = new ArrayList<>();
     private final List<T> recipes = new ArrayList<>();
+    private final List<ResourceKey<? extends Registry<T>>> dynamicRegistries = new ArrayList<>();
 
     private Component title = Component.empty();
     private int width;
@@ -63,6 +67,12 @@ class JeiRecipeTypeRegistration<T> implements RecipeViewerRecipeTypeRegistration
     }
 
     @Override
+    public RecipeViewerRecipeTypeRegistration<T> withDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey) {
+        dynamicRegistries.add(registryKey);
+        return this;
+    }
+
+    @Override
     public void buildDisplay(Consumer<RecipeViewerDisplayBuilder<T>> builder) {
         builder.accept(new JeiRecipeViewerDisplayBuilder());
     }
@@ -85,6 +95,14 @@ class JeiRecipeTypeRegistration<T> implements RecipeViewerRecipeTypeRegistration
     public void registerRecipes(IRecipeRegistration registration) {
         if (!recipes.isEmpty()) {
             registration.addRecipes(jeiRecipeType, recipes);
+        }
+
+        final var player = Balm.safeClientAccess().getClientPlayer();
+        if (player != null) {
+            for (final var registryKey : dynamicRegistries) {
+                player.registryAccess().lookup(registryKey).ifPresent(registry ->
+                        registration.addRecipes(jeiRecipeType, registry.stream().toList()));
+            }
         }
     }
 

@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.platform.compatibility.recipeviewer;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -16,6 +18,8 @@ public interface RecipeViewerRecipeTypeRegistration<T> {
     RecipeViewerRecipeTypeRegistration<T> withRecipe(T recipe);
 
     RecipeViewerRecipeTypeRegistration<T> withRecipes(Collection<T> recipes);
+
+    RecipeViewerRecipeTypeRegistration<T> withDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey);
 
     void buildDisplay(Consumer<RecipeViewerDisplayBuilder<T>> builder);
 }
