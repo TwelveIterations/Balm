@@ -58,7 +58,7 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
                 final var interactionResult = result.interactionResult().orElse(null);
                 if (interactionResult != null) {
                     event.setSwingHand(interactionResult instanceof InteractionResult.Success success
-                            && success.swingSource() == InteractionResult.SwingSource.CLIENT);
+                            && success.swingSource() == InteractionResult.SwingSource.PREDICTED);
                     return true;
                 }
             }
