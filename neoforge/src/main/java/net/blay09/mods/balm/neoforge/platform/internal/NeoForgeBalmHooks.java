@@ -5,26 +5,16 @@ import net.blay09.mods.balm.platform.BalmHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class NeoForgeBalmHooks implements BalmHooks {
-
-    public final Map<Item, Integer> burnTimes = new ConcurrentHashMap<>();
 
     @Override
     public boolean growCrop(ItemStack itemStack, Level level, BlockPos pos, @Nullable Player player) {
@@ -78,11 +68,6 @@ public class NeoForgeBalmHooks implements BalmHooks {
     @Override
     public void firePlayerCraftingEvent(Player player, ItemStack crafted, Container craftMatrix) {
         EventHooks.firePlayerCraftingEvent(player, crafted, craftMatrix);
-    }
-
-    @Override
-    public boolean useFluidTank(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return FluidUtil.interactWithFluidHandler(player, hand, level, pos, hitResult.getDirection());
     }
 
     @Override
