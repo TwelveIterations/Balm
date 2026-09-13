@@ -31,11 +31,11 @@ public record NeoForgeBiomeModificationBuilder(
 
     @Override
     public void addSpawn(MobCategory spawnGroup, MobSpawnSettings.SpawnerData spawnEntry, int weight) {
-        builder.getMobSpawnSettings().addSpawn(spawnGroup, weight, spawnEntry);
+        builder.getMobSpawnSettings().addSpawn(spawnEntry.type(), spawnGroup, weight, spawnEntry.count());
     }
 
     @Override
     public void setSpawnCost(EntityType<?> entityType, double mass, double gravityLimit) {
-        builder.getMobSpawnSettings().addMobCharge(entityType, mass, gravityLimit);
+        builder.getMobSpawnSettings().addMobSpawnCost(entityType, mass, gravityLimit);
     }
 }
