@@ -135,9 +135,9 @@ public class FabricBalmSupplementalClientEvents {
         return InteractionEventResult.DEFAULT;
     });
 
-    public static final Event<ClientInputCallback.Keyboard> KEYBOARD_INPUT = EventFactory.createArrayBacked(ClientInputCallback.Keyboard.class, (listeners) -> (key, scanCode, action, modifiers) -> {
+    public static final Event<ClientInputCallback.Keyboard> KEYBOARD_INPUT = EventFactory.createArrayBacked(ClientInputCallback.Keyboard.class, (listeners) -> (key, keycode, action, modifiers) -> {
         for (final var listener : listeners) {
-            listener.handle(key, scanCode, action, modifiers);
+            listener.handle(key, keycode, action, modifiers);
         }
     });
 

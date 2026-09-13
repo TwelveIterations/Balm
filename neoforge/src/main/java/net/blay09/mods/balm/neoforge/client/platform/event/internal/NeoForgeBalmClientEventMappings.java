@@ -50,7 +50,7 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
         bindSimple(ScreenCallback.MouseScroll.Before.EVENT, ScreenEvent.MouseScrolled.Pre.class, (event, it) -> it.mouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY()));
         bindSimple(ScreenCallback.MouseScroll.After.EVENT, ScreenEvent.MouseScrolled.Post.class, (event, it) -> it.afterMouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY(), false));
 
-        bindSimple(ClientInputCallback.Keyboard.EVENT, InputEvent.Key.class, (event, it) -> it.handle(event.getKey(), event.getScanCode(), event.getAction(), event.getModifiers()));
+        bindSimple(ClientInputCallback.Keyboard.EVENT, InputEvent.Key.class, (event, it) -> it.handle(event.getKey(), event.getKeycode(), event.getAction(), event.getModifiers()));
 
         bindCancelable(ClientItemCallback.Use.EVENT, InputEvent.InteractionKeyMappingTriggered.class, (event, it) -> {
             if (event.isUseItem() && Minecraft.getInstance().player != null) {

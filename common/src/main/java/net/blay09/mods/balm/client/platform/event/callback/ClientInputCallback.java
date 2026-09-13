@@ -6,7 +6,7 @@ public interface ClientInputCallback {
 
     @FunctionalInterface
     interface Keyboard {
-        void handle(int key, int scanCode, int action, int modifiers);
+        void handle(int key, int keycode, int action, int modifiers);
 
         /**
          * Fired on the client when a key input event occurs, such as pressing, releasing, or repeating a key while held.

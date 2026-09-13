@@ -73,7 +73,7 @@ public class ForgeBalmClientEventMappings extends ForgeBalmEventMappings {
         });
         bindCancelable(RenderCallback.Hand.EVENT, RenderHandEvent.BUS, (event, it) -> !it.shouldRender(event.getHand(), event.getItemStack(), event.getSwingProgress()));
 
-        bindSimple(ClientInputCallback.Keyboard.EVENT, InputEvent.Key.BUS, (event, it) -> it.handle(event.getKey(), event.getScanCode(), event.getAction(), event.getModifiers()));
+        bindSimple(ClientInputCallback.Keyboard.EVENT, InputEvent.Key.BUS, (event, it) -> it.handle(event.getKey(), event.getKeycode(), event.getAction(), event.getModifiers()));
 
         bindCancelable(ClientItemCallback.Use.EVENT, InputEvent.InteractionKeyMappingTriggered.BUS, (event, it) -> {
             if (event.isUseItem() && Minecraft.getInstance().player != null) {
