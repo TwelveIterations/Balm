@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -31,6 +33,10 @@ public final class FabricModListButton {
     }
 
     private static void addToScreen(Minecraft client, Screen screen, int screenWidth) {
+        if (!(screen instanceof TitleScreen) && !(screen instanceof PauseScreen)) {
+            return;
+        }
+
         final var iconButtons = locateButtonRow(screen);
         if (iconButtons.isEmpty()) {
             return;
