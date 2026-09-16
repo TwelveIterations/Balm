@@ -3,6 +3,7 @@ package net.blay09.mods.balm.fabric.world.level.block.entity.internal;
 import net.blay09.mods.balm.world.level.block.entity.OnLoadHandler;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -35,6 +36,14 @@ public class BlockEntityOnLoadCallback {
             }
             scope.freshBlockEntities.clear();
             scope.onLoadRunning = false;
+        }
+    }
+
+    public static void onClientLevelChanged(@Nullable Level newLevel) {
+        synchronized (levelBlockEntities) {
+            // The client only has one level at a time, so any other client level in here is gone for good. Its scope has to be
+            // removed explicitly since the block entities it holds reference the level, which keeps the weak key alive.
+            levelBlockEntities.keySet().removeIf(level -> level.isClientSide() && level != newLevel);
         }
     }
 
