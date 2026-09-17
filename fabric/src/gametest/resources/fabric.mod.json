@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "balm-test",
+  "version": "1.0.0",
+  "name": "Balm Game Tests",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+      "net.blay09.mods.balm.fabric.gametest.BlockEntityOnLoadGameTest"
+    ]
+  }
+}
