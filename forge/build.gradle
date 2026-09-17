@@ -207,6 +207,8 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     def mainFile = upload(curseforge_forge_project_id, file("${project.buildDir}/libs/${base.archivesName.get()}-${version}.jar"))
     mainFile.changelog = rootProject.file('CHANGELOG.md').text
     project.minecraft_versions.split(',').toList().each { mainFile.addGameVersion(it) }
+    mainFile.addModLoader('Forge')
+    mainFile.addEnvironment('Server', 'Client')
     mainFile.releaseType = "release"
 }
 
