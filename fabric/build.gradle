@@ -17,6 +17,16 @@ dependencies {
 apply from: rootProject.file('repositories.gradle')
 apply from: 'dependencies.gradle'
 
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = "balm-test"
+        enableGameTests = true
+        enableClientGameTests = false
+        eula = true
+    }
+}
+
 loom {
     def aw = project(":common").file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) {
