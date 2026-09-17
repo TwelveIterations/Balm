@@ -26,13 +26,13 @@ public class LevelChunkMixin {
 
     @Inject(method = "registerAllBlockEntitiesAfterLevelLoad", at = @At("HEAD"))
     private void registerAllBlockEntitiesAfterLevelLoad(CallbackInfo callbackInfo) {
-        BlockEntityOnLoadCallback.scheduleOnLoad(level, ((LevelChunk) (Object) this).getBlockEntities().values());
+        ((BlockEntityOnLoadCallback) level).balm$scheduleBlockEntityOnLoad(((LevelChunk) (Object) this).getBlockEntities().values());
     }
 
     @Inject(method = "addAndRegisterBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V", at = @At("RETURN"))
     private void addAndRegisterBlockEntity(BlockEntity blockEntity, CallbackInfo callbackInfo) {
         if ((this.loaded || this.level.isClientSide()) && blockEntity instanceof OnLoadHandler) {
-            BlockEntityOnLoadCallback.scheduleOnLoad(level, List.of(blockEntity));
+            ((BlockEntityOnLoadCallback) level).balm$scheduleBlockEntityOnLoad(List.of(blockEntity));
         }
     }
 
