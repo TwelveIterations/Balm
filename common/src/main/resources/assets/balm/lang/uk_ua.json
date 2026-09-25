@@ -36,7 +36,6 @@
   "balm.configuration.exampleMultilineString": "Приклад багатолінійного рядка",
   "balm.configuration.exampleEnum": "Приклад підрахунку",
   "balm.configuration.exampleStringList": "Приклад списку рядків",
-  "balm.configuration.exampleResourceLocationSet": "Приклад набору розташування ресурсу",
   "balm.configuration.exampleIntList": "Приклад списку цілого",
   "balm.configuration.exampleEnumList": "Приклад списку підрахунку",
   "balm.configuration.exampleCategory.innerField": "Приклад унутрішнього поля",
@@ -47,5 +46,5 @@
   "disconnect.balm.mod_version_mismatch": "Невідповідність версій для %s. Сервер очікує версії %s, але наразі у вас встановлено %s. Установіть правильну версію.",
   "config.jade.plugin_balm.jade": "Balm",
   "modmenu.descriptionTranslation.balm": "Рівень абстракції (але не зовсім) для багатоплатформових модів Blay.",
-  "fml.menu.mods.info.description.balm": "Рівень абстракції (але не зовсім) для багатоплатформових модів Blay."
+  "neoforge.screen.mods.info.description.balm": "Рівень абстракції (але не зовсім) для багатоплатформових модів Blay."
 }
