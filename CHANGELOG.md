@@ -1,1 +1,1 @@
-- Fixed custom recipe types not being registered for syncing
+- Fixed memory leak in `BlockEntityOnLoadCallback`
