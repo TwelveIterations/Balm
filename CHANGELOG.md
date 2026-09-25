@@ -1,1 +1,3 @@
-- Updated to Minecraft 26.3
+- Fixed memory leak in `BlockEntityOnLoadCallback`
+- Fixed mod list button to only be injected in main and pause screen
+- Fixed outdated i18n key on NeoForge
