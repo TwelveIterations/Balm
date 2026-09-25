@@ -1,11 +1,11 @@
 [versions]
 minecraft = "26.2"
 neoForm = "26.2-1"
-neoForge = "26.2.0.0-beta"
+neoForge = "26.2.0.72"
 forge = "65.0.3"
 fabricApi = "0.152.1+26.2"
 fabricLoader = "0.19.3"
-kuma = "26.2.0.1"
+kuma = "26.2.0.3"
 ftbUltimine = "26.1.0.1-SNAPSHOT"
 
 [libraries]
