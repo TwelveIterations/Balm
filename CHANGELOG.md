@@ -1,1 +1,1 @@
-- API: Fixed `ChunkTrackingEvent.Start` never firing on Fabric, fix `ChunkTrackingEvent.Stop` being fired in place of `.Start`
+- Fixed memory leak in `BlockEntityOnLoadCallback`
