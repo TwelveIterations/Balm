@@ -70,6 +70,11 @@ public class FabricBalmRegistrar implements BalmRegistrar {
     }
 
     @Override
+    public <T> void createReloadableDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec) {
+        DynamicRegistries.registerReloadable(registryKey, codec);
+    }
+
+    @Override
     public <T> BalmHolderRegistration<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
         final var registry = getRegistry(resourceKey.registryKey());
         final var holder = registry.wrapAsHolder(Registry.register(registry, resourceKey, resourceFunction.apply(resourceKey.identifier())));

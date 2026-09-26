@@ -64,6 +64,16 @@ public interface BalmRegistrar {
      */
     <T> void createDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec, Consumer<DynamicRegistryBuilder<T>> builderConsumer);
 
+    /**
+     * Creates a custom reloadable dynamic registry loaded from datapacks. Unlike registries created by
+     * {@link #createDynamicRegistry(ResourceKey, Codec)}, its contents are refreshed when datapacks are reloaded.
+     * Reloadable registries are server-only and cannot be synchronized to clients.
+     *
+     * @param registryKey the registry key to create.
+     * @param codec       the codec used to load registry entries from datapacks.
+     */
+    <T> void createReloadableDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec);
+
     default <T> BalmHolderRegistration<T> register(ResourceKey<T> resourceKey, Supplier<T> resourceSupplier) {
         return register(resourceKey, (id) -> resourceSupplier.get());
     }

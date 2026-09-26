@@ -12,14 +12,22 @@ import java.util.List;
 
 public class NeoForgeDynamicRegistryRegistrar {
     private final List<DynamicRegistryData<?>> registries = new ArrayList<>();
+    private final List<ReloadableRegistryData<?>> reloadableRegistries = new ArrayList<>();
 
     public <T> void add(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec, AbstractDynamicRegistryBuilder<T> builder) {
         registries.add(new DynamicRegistryData<>(registryKey, codec, builder));
     }
 
+    public <T> void addReloadable(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec) {
+        reloadableRegistries.add(new ReloadableRegistryData<>(registryKey, codec));
+    }
+
     @SubscribeEvent
     public void registerRegistries(NewDatapackRegistryEvent event) {
         for (final var registry : registries) {
+            registry.register(event);
+        }
+        for (final var registry : reloadableRegistries) {
             registry.register(event);
         }
     }
@@ -29,6 +37,13 @@ public class NeoForgeDynamicRegistryRegistrar {
         public void register(NewDatapackRegistryEvent event) {
             final var networkCodec = builder.shouldSync() ? builder.getNetworkCodec() : null;
             event.worldRegistry((ResourceKey<Registry<T>>) registryKey, codec, networkCodec != null ? networkCodec : (builder.shouldSync() ? codec : null));
+        }
+    }
+
+    private record ReloadableRegistryData<T>(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec) {
+        @SuppressWarnings("unchecked")
+        public void register(NewDatapackRegistryEvent event) {
+            event.reloadableRegistry((ResourceKey<Registry<T>>) registryKey, codec);
         }
     }
 }

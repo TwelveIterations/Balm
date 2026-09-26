@@ -36,6 +36,11 @@ public class NeoForgeBalmRegistrar implements BalmRegistrar {
     }
 
     @Override
+    public <T> void createReloadableDynamicRegistry(ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec) {
+        ModBusEventRegisters.getRegistrations(registryKey.identifier().getNamespace(), NeoForgeDynamicRegistryRegistrar.class).addReloadable(registryKey, codec);
+    }
+
+    @Override
     public <T> BalmHolderRegistration<T> register(ResourceKey<T> resourceKey, Function<Identifier, T> resourceFunction) {
         final var deferredRegister = DeferredRegisters.get(resourceKey.registryKey(), resourceKey.identifier().getNamespace());
         final var holder = deferredRegister.register(resourceKey.identifier().getPath(), () -> resourceFunction.apply(resourceKey.identifier()));
