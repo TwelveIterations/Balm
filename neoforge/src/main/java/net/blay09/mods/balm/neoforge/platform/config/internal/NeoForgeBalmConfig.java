@@ -300,12 +300,12 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
         final var stringType = schema.identifier().getPath();
         final var configType = switch (stringType) {
-            case "common" -> ModConfig.Type.COMMON;
+            case "common", "local" -> ModConfig.Type.LOCAL;
             case "client" -> ModConfig.Type.CLIENT;
-            case "server" -> ModConfig.Type.SERVER;
+            case "server", "synced" -> ModConfig.Type.SYNCED;
             case "startup" -> ModConfig.Type.STARTUP;
             default ->
-                    throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'common', 'client' and 'startup' are supported.");
+                    throw new IllegalArgumentException("Unsupported config type: " + stringType + " - only 'local', 'synced', 'client' and 'startup' are supported.");
         };
         final var mappedConfigSpec = mapToConfigSpec(schema);
         properties.put(schema.identifier(), mappedConfigSpec.getSecond());
