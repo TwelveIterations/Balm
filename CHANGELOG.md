@@ -1,3 +1,2 @@
-- Fixed memory leak in `BlockEntityOnLoadCallback`
-- Fixed mod list button to only be injected in main and pause screen
-- Fixed outdated i18n key on NeoForge
+- Updated for several breaking changes in NeoForge
+- API: Added `BalmRegistrar#createReloadableDynamicRegistry`
