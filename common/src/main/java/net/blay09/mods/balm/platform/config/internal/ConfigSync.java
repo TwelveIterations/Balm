@@ -14,7 +14,8 @@ import net.minecraft.resources.Identifier;
 public class ConfigSync implements BalmModule {
 
     public static boolean hasImplicitSync(BalmConfigSchema schema) {
-        return schema.identifier().getPath().equals("server");
+        final var configType = schema.identifier().getPath();
+        return configType.equals("server") || configType.equals("synced");
     }
 
     public static boolean hasSyncedProperties(BalmConfigSchema schema) {

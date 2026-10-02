@@ -13,7 +13,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -33,7 +32,7 @@ public class BalmNeoForgeConfigurationScreen extends ConfigurationScreen.Configu
 
     public BalmNeoForgeConfigurationScreen(Screen parent, ModConfig.Type type, ModConfig modConfig, Component title) {
         super(parent, type, modConfig, title);
-        schema = Balm.config().getSchema(Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension()));
+        schema = NeoForgeBalmConfig.findSchema(Balm.config(), modConfig);
     }
 
     private BalmNeoForgeConfigurationScreen(Context parentContext, Screen parent, @Nullable BalmConfigSchema schema, UnmodifiableConfig valueSpecs, String key, UnmodifiableConfig subsection, Component title) {

@@ -5,6 +5,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.neoforge.client.platform.config.internal.NeoForgeBalmConfigScreenProviders;
+import net.blay09.mods.balm.platform.config.BalmConfig;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.internal.AbstractBalmConfig;
 import net.blay09.mods.balm.platform.config.schema.*;
@@ -18,6 +19,7 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,34 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
     private static final Map<Identifier, Table<String, String, ModConfigSpec.ConfigValue<?>>> properties = new ConcurrentHashMap<>();
     private static final Map<Identifier, ModConfig> modConfigs = new ConcurrentHashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(NeoForgeBalmConfig.class);
+
+    public static @Nullable BalmConfigSchema findSchema(BalmConfig config, ModConfig modConfig) {
+        final var identifier = Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
+        final var schema = config.getSchema(identifier);
+        if (schema != null) {
+            return schema;
+        }
+
+        final var legacyType = switch (modConfig.getType()) {
+            case LOCAL -> "common";
+            case SYNCED -> "server";
+            default -> null;
+        };
+        return legacyType != null ? config.getSchema(Identifier.fromNamespaceAndPath(modConfig.getModId(), legacyType)) : null;
+    }
+
+    private static boolean matchesSchema(BalmConfigSchema schema, ModConfig modConfig) {
+        if (!schema.identifier().getNamespace().equals(modConfig.getModId())) {
+            return false;
+        }
+
+        final var schemaType = schema.identifier().getPath();
+        return switch (modConfig.getType()) {
+            case LOCAL -> schemaType.equals("local") || schemaType.equals("common");
+            case SYNCED -> schemaType.equals("synced") || schemaType.equals("server");
+            default -> schemaType.equals(modConfig.getType().extension());
+        };
+    }
 
     private static ModConfigSpec.ConfigValue<?> addPropertyToSpec(ConfiguredProperty<?> property, ModConfigSpec.Builder spec) {
         if (!property.comment().isBlank()) {
@@ -266,8 +296,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
 
         eventBus.addListener((ModConfigEvent.Loading event) -> {
             final var modConfig = event.getConfig();
-            final var identifier = Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
-            if (schema.identifier().equals(identifier)) {
+            if (matchesSchema(schema, modConfig)) {
                 modConfigs.put(schema.identifier(), modConfig);
                 final var modConfigProperties = properties.get(schema.identifier());
                 if (modConfigProperties == null) {
@@ -283,8 +312,7 @@ public class NeoForgeBalmConfig extends AbstractBalmConfig {
         });
         eventBus.addListener((ModConfigEvent.Reloading event) -> {
             final var modConfig = event.getConfig();
-            final var identifier = Identifier.fromNamespaceAndPath(modConfig.getModId(), modConfig.getType().extension());
-            if (schema.identifier().equals(identifier)) {
+            if (matchesSchema(schema, modConfig)) {
                 modConfigs.put(schema.identifier(), modConfig);
                 final var modConfigProperties = properties.get(schema.identifier());
                 if (modConfigProperties == null) {
