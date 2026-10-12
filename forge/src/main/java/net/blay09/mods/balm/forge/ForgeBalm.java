@@ -9,6 +9,7 @@ import net.blay09.mods.balm.common.CommonCapabilities;
 import net.blay09.mods.balm.forge.capability.ForgeBalmCapabilities;
 import net.blay09.mods.balm.forge.capability.ForgeCommonCapabilities;
 import net.blay09.mods.balm.forge.client.ForgeBalmClient;
+import net.blay09.mods.balm.forge.loot.ForgeBalmLootModifier;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.balm.forge.world.ForgeBalmWorldGen;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +22,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod("balm")
 public class ForgeBalm {
@@ -32,6 +34,8 @@ public class ForgeBalm {
 
         Balm.registerModule(new ForgeCommonCapabilities());
         ((ForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
+        DeferredRegisters.get(ForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS.getKey(), "balm")
+                .register("loot_modifiers", () -> ForgeBalmLootModifier.CODEC);
 
         DeferredRegisters.register("balm", modEventBus);
         DeferredRegisters.registerAliasRemapper();

@@ -12,6 +12,7 @@ import net.blay09.mods.balm.neoforge.capability.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.compat.hudinfo.TheOneProbeModCompat;
 import net.blay09.mods.balm.neoforge.energy.NeoForgeEnergyStorage;
 import net.blay09.mods.balm.neoforge.fluid.NeoForgeFluidTank;
+import net.blay09.mods.balm.neoforge.loot.NeoForgeBalmLootModifier;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.balm.neoforge.world.NeoForgeBalmWorldGen;
 import net.minecraft.core.Direction;
@@ -28,6 +29,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.function.BiFunction;
 
@@ -48,6 +50,8 @@ public class NeoForgeBalm {
         BalmLoadContexts.register("balm", new NeoForgeLoadContext(modBus));
 
         ((NeoForgeBalmRuntime) Balm.getRuntime()).initializeRuntime();
+        DeferredRegisters.get(NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS, "balm")
+                .register("loot_modifiers", () -> NeoForgeBalmLootModifier.CODEC);
 
         DeferredRegisters.register("balm", modBus);
         ModBusEventRegisters.register("balm", modBus);
