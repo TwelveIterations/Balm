@@ -18,6 +18,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public class EntityMixin implements BalmDataHolder {
 
+    @Inject(method = "rideTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
+    private void rideTickBefore(CallbackInfo callbackInfo) {
+        final var entity = (Entity) (Object) this;
+        if (!entity.level().isClientSide()) {
+            FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_PRE.invoker().handle(entity);
+        }
+    }
+
+    @Inject(method = "rideTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V", shift = At.Shift.AFTER))
+    private void rideTickAfter(CallbackInfo callbackInfo) {
+        final var entity = (Entity) (Object) this;
+        if (!entity.level().isClientSide()) {
+            FabricBalmSupplementalEvents.SERVER_ENTITY_TICK_POST.invoker().handle(entity);
+        }
+    }
+
     @Unique
     private CompoundTag balmData = new CompoundTag();
     @Unique

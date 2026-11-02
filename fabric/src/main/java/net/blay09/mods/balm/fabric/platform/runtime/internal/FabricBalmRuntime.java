@@ -9,7 +9,6 @@ import net.blay09.mods.balm.fabric.network.internal.FabricBalmNetworking;
 import net.blay09.mods.balm.fabric.platform.capabilities.internal.FabricBalmCapabilities;
 import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmEventMappings;
 import net.blay09.mods.balm.fabric.platform.internal.FabricBalmHooks;
-import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.blay09.mods.balm.fabric.stats.internal.FabricBalmCustomStatRegistrar;
 import net.blay09.mods.balm.fabric.world.level.levelgen.internal.FabricBalmWorldGen;
@@ -74,7 +73,6 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
             .buildLazily();
 
     public FabricBalmRuntime() {
-        FabricBalmSupplementalEvents.initialize();
         FabricBalmEventMappings.bind();
     }
 

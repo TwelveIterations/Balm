@@ -3,7 +3,6 @@ package net.blay09.mods.balm.fabric.platform.event.internal;
 import net.blay09.mods.balm.platform.event.Event;
 import net.blay09.mods.balm.platform.event.EventFactory;
 import net.blay09.mods.balm.platform.event.callback.*;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 import java.util.Objects;
 
@@ -155,20 +154,4 @@ public class FabricBalmSupplementalEvents {
         return true;
     });
 
-    public static void initialize() {
-        ServerTickEvents.START_LEVEL_TICK.register(level -> {
-            if (SERVER_ENTITY_TICK_PRE.hasHandlers()) {
-                for (final var entity : level.getAllEntities()) {
-                    SERVER_ENTITY_TICK_PRE.invoker().handle(entity);
-                }
-            }
-        });
-        ServerTickEvents.END_LEVEL_TICK.register(level -> {
-            if (SERVER_ENTITY_TICK_POST.hasHandlers()) {
-                for (final var entity : level.getAllEntities()) {
-                    SERVER_ENTITY_TICK_POST.invoker().handle(entity);
-                }
-            }
-        });
-    }
 }
