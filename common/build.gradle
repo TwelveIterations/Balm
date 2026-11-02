@@ -39,6 +39,10 @@ configurations {
 }
 
 sourceSets {
+    test {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.compileClasspath
+    }
     generated {
         resources {
             srcDir 'src/generated/resources'
