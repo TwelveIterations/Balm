@@ -157,21 +157,6 @@ public class FabricBalmSupplementalEvents {
 
     public static void initialize() {
         ServerTickEvents.START_LEVEL_TICK.register(level -> {
-            if (SERVER_PLAYER_TICK_PRE.hasHandlers()) {
-                for (final var player : level.players()) {
-                    SERVER_PLAYER_TICK_PRE.invoker().handle(player);
-                }
-            }
-        });
-        ServerTickEvents.END_LEVEL_TICK.register(level -> {
-            if (SERVER_PLAYER_TICK_POST.hasHandlers()) {
-                for (final var player : level.players()) {
-                    SERVER_PLAYER_TICK_POST.invoker().handle(player);
-                }
-            }
-        });
-
-        ServerTickEvents.START_LEVEL_TICK.register(level -> {
             if (SERVER_ENTITY_TICK_PRE.hasHandlers()) {
                 for (final var entity : level.getAllEntities()) {
                     SERVER_ENTITY_TICK_PRE.invoker().handle(entity);
