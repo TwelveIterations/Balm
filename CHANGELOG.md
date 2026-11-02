@@ -1,1 +1,1 @@
-- Fixed memory leak in `BlockEntityOnLoadCallback`
+- API: Backported support for `lootTableId` parameter in `BalmLootModifier`
