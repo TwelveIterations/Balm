@@ -25,7 +25,7 @@ public class ConfigReflection {
         final var rootDataFields = rootFields.stream().filter(it -> !ConfigReflection.isCategoryField(it)).toList();
         final var identifier = getIdentifier(configDataClass);
         final var schema = BalmConfigSchema.create(identifier);
-        buildFieldsIntoSchema(schema, configDataClass, rootDataFields);
+        buildFieldsIntoSchema(schema, configDataClass, rootDataFields, identifier.getNamespace());
         final var categoryFields = rootFields.stream().filter(ConfigReflection::isCategoryField).toList();
         for (final var categoryField : categoryFields) {
             final var fields = getAllFields(categoryField.getType());
@@ -34,13 +34,13 @@ public class ConfigReflection {
             if (commentAnnotation != null) {
                 category.comment(commentAnnotation.value());
             }
-            buildFieldsIntoSchema(category, categoryField.getType(), fields);
+            buildFieldsIntoSchema(category, categoryField.getType(), fields, identifier.getNamespace());
         }
         return schema;
     }
 
     @SuppressWarnings("unchecked")
-    private static void buildFieldsIntoSchema(PropertyHolderBuilder builder, Class<?> clazz, List<Field> fields) {
+    private static void buildFieldsIntoSchema(PropertyHolderBuilder builder, Class<?> clazz, List<Field> fields, String namespace) {
         final var defaults = createInstance(clazz);
         for (final var field : fields) {
             final var property = builder.property(field.getName());
@@ -53,7 +53,7 @@ public class ConfigReflection {
             }
             final var controlAnnotation = field.getAnnotation(CustomControl.class);
             if (controlAnnotation != null) {
-                property.customControl(parseDefaultedIdentifier(controlAnnotation.value(), getIdentifier(clazz).getNamespace()));
+                property.customControl(parseDefaultedIdentifier(controlAnnotation.value(), namespace));
             }
             final var validateWithAnnotation = field.getAnnotation(ValidateWith.class);
             if (validateWithAnnotation != null) {
