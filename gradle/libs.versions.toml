@@ -5,7 +5,7 @@ neoForge = "26.3.0.37-beta"
 forge = "64.0.4"
 fabricApi = "0.160.5+26.3"
 fabricLoader = "0.19.5"
-kuma = "26.3.0.1"
+kuma = "26.3.0.2"
 ftbUltimine = "26.1.0.1-SNAPSHOT"
 
 [libraries]
