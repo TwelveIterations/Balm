@@ -72,6 +72,10 @@ public class ForgeBalmConfig extends AbstractBalmConfig {
 
     @SuppressWarnings("unchecked")
     private static <T> boolean validatePropertyValue(ConfiguredProperty<T> property, Object value) {
+        if (value == null) {
+            return false;
+        }
+
         final var mappedValue = (T) mapConfigValueFromNeoForge(property, value);
         return property.validateValue(mappedValue).isSuccess();
     }
