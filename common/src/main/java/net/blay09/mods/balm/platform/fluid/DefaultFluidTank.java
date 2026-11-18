@@ -43,7 +43,7 @@ public class DefaultFluidTank implements FluidTank {
             return 0;
         }
 
-        if (this.fluid.isSame(Fluids.EMPTY)) {
+        if (this.fluid == Fluids.EMPTY) {
             this.fluid = fluid;
         }
 
@@ -126,7 +126,7 @@ public class DefaultFluidTank implements FluidTank {
             return false;
         }
 
-        return (this.fluid.isSame(fluid) || this.fluid.isSame(Fluids.EMPTY)) && maxDrain > 0;
+        return (this.fluid == fluid || this.fluid == Fluids.EMPTY) && maxDrain > 0;
     }
 
     @Override
@@ -135,7 +135,7 @@ public class DefaultFluidTank implements FluidTank {
             return false;
         }
 
-        return (this.fluid.isSame(fluid) || this.fluid.isSame(Fluids.EMPTY)) && maxFill > 0;
+        return (this.fluid == fluid || this.fluid == Fluids.EMPTY) && maxFill > 0;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class DefaultFluidTank implements FluidTank {
             return true;
         }
 
-        return amount <= 0 || fluid.isSame(Fluids.EMPTY);
+        return amount <= 0 || fluid == Fluids.EMPTY;
     }
 
     @Override
