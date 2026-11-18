@@ -4,7 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.blay09.mods.balm.client.commands.BalmClientCommands;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -18,7 +18,7 @@ public class ClientCommandTestModule implements BalmClientModule {
     @Override
     public void registerClientCommands(BalmClientCommands commands) {
         commands.register(dispatcher -> dispatcher.register(
-                LiteralArgumentBuilder.<SharedSuggestionProvider>literal("balm_client_test")
+                LiteralArgumentBuilder.<SuggestionContext>literal("balm_client_test")
                         .executes(context -> {
                             final var player = Minecraft.getInstance().player;
                             if (player != null) {
