@@ -128,10 +128,10 @@ public class FabricModListScreen extends Screen {
         }
 
         @Override
-        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+        public void extractContent(GuiGraphicsExtractor graphics, boolean hovered) {
             button.setPosition(getContentX(), getContentY());
             button.setWidth(getContentWidth());
-            button.extractRenderState(graphics, mouseX, mouseY, partialTick);
+            button.extractRenderState(graphics);
         }
     }
 }

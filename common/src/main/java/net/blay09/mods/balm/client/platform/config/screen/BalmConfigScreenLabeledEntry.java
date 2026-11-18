@@ -51,12 +51,12 @@ public abstract class BalmConfigScreenLabeledEntry extends BalmConfigScreenEntry
     }
 
     @Override
-    public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+    public void extractContent(GuiGraphicsExtractor graphics, boolean hovered) {
         final var entryX = getEntryX();
         extractLabel(graphics, entryX, getContentY());
 
         final var controlX = entryX + LABEL_WIDTH + LABEL_MARGIN_X;
-        extractControl(graphics, controlX, getContentY(), mouseX, mouseY, partialTick);
+        extractControl(graphics, controlX, getContentY());
 
         final var error = getValidationError();
         if (error != null) {
@@ -64,11 +64,11 @@ public abstract class BalmConfigScreenLabeledEntry extends BalmConfigScreenEntry
         }
     }
 
-    private void extractControl(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, float partialTick) {
+    private void extractControl(GuiGraphicsExtractor graphics, int x, int y) {
         control.setX(x);
         control.setY(y);
         control.setTooltip(Tooltip.create(Objects.requireNonNullElse(getValidationError(), tooltip)));
-        control.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        control.extractRenderState(graphics);
     }
 
     private int getEntryX() {

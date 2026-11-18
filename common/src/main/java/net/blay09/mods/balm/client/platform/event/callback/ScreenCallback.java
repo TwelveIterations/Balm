@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
 public interface ScreenCallback {
     @FunctionalInterface
     interface Render {
-        void render(Screen screen, GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float tickDelta);
+        void render(Screen screen, GuiGraphicsExtractor guiGraphics);
 
         EventMapper<Render> BEFORE = EventMapper.createUnbound("ScreenCallback.Render.Before");
         EventMapper<Render> AFTER_BACKGROUND = EventMapper.createUnbound("ScreenCallback.Render.AfterBackground");

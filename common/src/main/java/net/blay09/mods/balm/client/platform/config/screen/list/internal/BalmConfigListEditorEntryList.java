@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BalmConfigListEditorEntryList<T> extends ContainerObjectSelectionList<BalmConfigListEditorEntry<T>> implements BalmConfigListDragController {
     private final BalmConfigListEditorScreen<T> screen;
@@ -197,13 +196,13 @@ public class BalmConfigListEditorEntryList<T> extends ContainerObjectSelectionLi
     }
 
     @Override
-    protected void extractListItems(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractListItems(GuiGraphicsExtractor graphics) {
         extractingDraggedEntry = false;
-        super.extractListItems(graphics, mouseX, mouseY, partialTick);
+        super.extractListItems(graphics);
 
         if (draggedEntry != null) {
             extractingDraggedEntry = true;
-            extractItem(graphics, mouseX, mouseY, partialTick, draggedEntry);
+            extractItem(graphics, draggedEntry);
             extractingDraggedEntry = false;
         }
     }

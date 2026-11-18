@@ -36,7 +36,7 @@ public class BalmConfigScreenHeadingEntry extends BalmConfigScreenEntry {
     }
 
     @Override
-    public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+    public void extractContent(GuiGraphicsExtractor graphics, boolean hovered) {
         this.hovered = hovered;
         graphics.centeredText(context.font(), title, getContentXMiddle(), getContentY() + 5, 0xFFFFFFFF);
     }

@@ -56,7 +56,7 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
     }
 
     @Override
-    public final void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+    public void extractContent(GuiGraphicsExtractor graphics, boolean b) {
         if (context instanceof BalmConfigListEditorScreen<T> screen && screen.isDragging(this)) {
             final var list = screen.list();
             if (list == null || !list.isExtractingDraggedEntry()) {
@@ -66,24 +66,24 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
             final var pose = graphics.pose();
             pose.pushMatrix();
             pose.translate(0, (float) list.draggedEntryYOffset(this));
-            extractEntryContent(graphics, mouseX, mouseY, hovered, partialTick);
-            extractActions(graphics, mouseX, mouseY, partialTick);
+            extractEntryContent(graphics);
+            extractActions(graphics);
             pose.popMatrix();
             return;
         }
 
-        extractEntryContent(graphics, mouseX, mouseY, hovered, partialTick);
-        extractActions(graphics, mouseX, mouseY, partialTick);
+        extractEntryContent(graphics);
+        extractActions(graphics);
     }
 
-    protected abstract void extractEntryContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick);
+    protected abstract void extractEntryContent(GuiGraphicsExtractor graphics);
 
-    private void extractActions(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    private void extractActions(GuiGraphicsExtractor graphics) {
         layoutActions();
         if (context.canReorderValues()) {
-            dragHandleButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
+            dragHandleButton.extractRenderState(graphics);
         }
-        actionWidgets.forEach(widget -> widget.extractRenderState(graphics, mouseX, mouseY, partialTick));
+        actionWidgets.forEach(widget -> widget.extractRenderState(graphics));
     }
 
     protected int getContentLeftAfterDragHandle() {

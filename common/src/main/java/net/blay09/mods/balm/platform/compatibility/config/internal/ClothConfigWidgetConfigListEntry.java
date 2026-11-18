@@ -60,6 +60,6 @@ public class ClothConfigWidgetConfigListEntry<T> extends AbstractConfigListEntry
         super.extractRenderState(graphicsExtractor, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, delta);
         widget.setX(x + entryWidth - widget.getWidth());
         widget.setY(y + Math.max(0, (entryHeight - widget.getHeight()) / 2));
-        widget.extractRenderState(graphicsExtractor, mouseX, mouseY, delta);
+        widget.extractRenderState(graphicsExtractor);
     }
 }

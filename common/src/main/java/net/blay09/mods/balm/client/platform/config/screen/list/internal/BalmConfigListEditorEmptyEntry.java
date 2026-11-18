@@ -13,7 +13,7 @@ public class BalmConfigListEditorEmptyEntry<T> extends BalmConfigListEditorEntry
     }
 
     @Override
-    protected void extractEntryContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+    protected void extractEntryContent(GuiGraphicsExtractor graphics) {
         graphics.text(context.font(), LABEL, getContentLeftAfterDragHandle(), getContentY() + 5, 0xFFFFFFFF);
     }
 }

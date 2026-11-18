@@ -137,9 +137,9 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
     }
 
     @Override
-    protected void extractEntryContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+    protected void extractEntryContent(GuiGraphicsExtractor graphics) {
         if (isEditing()) {
-            ensureEditBox().extractRenderState(graphics, mouseX, mouseY, partialTick);
+            ensureEditBox().extractRenderState(graphics);
         } else {
             final var x = getContentLeftAfterDragHandle();
             final var maxWidth = getContentRightBeforeActions() - x;

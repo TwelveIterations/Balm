@@ -34,9 +34,9 @@ public class NeoForgeBalmClientEventMappings extends NeoForgeBalmEventMappings {
         ScreenCallback.Init.After.EVENT.configureMapping(NeoForgeBalmSupplementalClientEvents.SCREEN_INIT_POST::register);
         bindSimple(ScreenCallback.Opening.EVENT, ScreenEvent.Opening.class, (event, it) -> event.setNewScreen(it.modifyScreen(event.getNewScreen())));
 
-        bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
-        bindSimple(ScreenCallback.Render.AFTER_BACKGROUND, ScreenEvent.Render.Background.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
-        bindSimple(ScreenCallback.Render.AFTER, ScreenEvent.Render.Post.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick()));
+        bindSimple(ScreenCallback.Render.BEFORE, ScreenEvent.Render.Pre.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics()));
+        bindSimple(ScreenCallback.Render.AFTER_BACKGROUND, ScreenEvent.Render.Background.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics()));
+        bindSimple(ScreenCallback.Render.AFTER, ScreenEvent.Render.Post.class, (event, it) -> it.render(event.getScreen(), event.getGuiGraphics()));
         bindCancelable(ScreenCallback.KeyPress.Before.EVENT, ScreenEvent.KeyPressed.Pre.class, (event, it) -> it.keyPressed(event.getScreen(), event.getKeyEvent()));
         bindSimple(ScreenCallback.KeyPress.After.EVENT, ScreenEvent.KeyPressed.Post.class, (event, it) -> it.afterKeyPressed(event.getScreen(), event.getKeyEvent()));
         bindCancelable(ScreenCallback.KeyRelease.Before.EVENT, ScreenEvent.KeyReleased.Pre.class, (event, it) -> it.keyReleased(event.getScreen(), event.getKeyEvent()));
