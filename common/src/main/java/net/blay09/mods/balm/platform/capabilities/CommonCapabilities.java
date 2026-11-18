@@ -5,7 +5,6 @@ import net.blay09.mods.balm.platform.fluid.FluidTank;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.Block;
-import org.jspecify.annotations.Nullable;
 
 public class CommonCapabilities {
     @SuppressWarnings("NotNullFieldNotInitialized")

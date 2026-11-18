@@ -9,7 +9,6 @@ import net.minecraft.resources.Identifier;
 
 import java.util.function.BiFunction;
 
-@SuppressWarnings("UnstableApiUsage")
 public class FabricBalmDataAttachmentTypeRegistrar implements BalmDataAttachmentTypeRegistrar {
 
     private final String namespace;

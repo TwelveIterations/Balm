@@ -6,7 +6,6 @@ import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
 import net.blay09.mods.balm.platform.config.internal.AbstractBalmConfig;
 import net.blay09.mods.balm.platform.event.callback.ServerLifecycleCallback;
-import net.blay09.mods.balm.fabric.platform.event.internal.FabricBalmSupplementalEvents;
 import net.blay09.mods.balm.platform.event.internal.BalmSupplementalEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;

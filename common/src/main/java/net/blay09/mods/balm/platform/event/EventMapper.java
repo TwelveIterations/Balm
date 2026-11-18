@@ -1,7 +1,6 @@
 package net.blay09.mods.balm.platform.event;
 
 import net.blay09.mods.balm.Balmstrap;
-import net.blay09.mods.balm.platform.event.callback.ConfigCallback;
 import net.blay09.mods.balm.platform.event.internal.EventMapperImpl;
 import net.minecraft.resources.Identifier;
 

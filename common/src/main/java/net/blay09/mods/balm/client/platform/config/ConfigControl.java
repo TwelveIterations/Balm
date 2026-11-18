@@ -42,7 +42,7 @@ public class ConfigControl<T> {
 
     public static final class Builder<T> {
         private ElementFactory<T> elementFactory = ConfigControl::noElement;
-        private BiFunction<ConfigControlBinding<T>, T, DataResult<T>> validator = (context, value) -> context.validateValue(value);
+        private BiFunction<ConfigControlBinding<T>, T, DataResult<T>> validator = ConfigControlBinding::validateValue;
         private Function<ConfigControlBinding<T>, Optional<Component>> validationHint = _ -> Optional.empty();
 
         public Builder<T> element(ElementFactory<T> elementFactory) {

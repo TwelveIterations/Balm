@@ -2,7 +2,6 @@ package net.blay09.mods.balm.world.item;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.function.BiFunction;

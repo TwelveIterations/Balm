@@ -27,12 +27,9 @@ public class MiscTestModule implements BalmModule {
 
     @Override
     public void registerLootTables(BalmLootTables lootTables) {
-        lootTables.registerLootModifier(BalmExample.id("loot_modifier"), new BalmLootModifier() {
-            @Override
-            public void apply(LootContext context, List<ItemStack> loot, @Nullable ResourceKey<LootTable> lootTableId) {
-                if (lootTableId != null && lootTableId.identifier().equals(Identifier.withDefaultNamespace("blocks/grass_block"))) {
-                    loot.add(new ItemStack(Items.DIAMOND));
-                }
+        lootTables.registerLootModifier(BalmExample.id("loot_modifier"), (context, loot, lootTableId) -> {
+            if (lootTableId != null && lootTableId.identifier().equals(Identifier.withDefaultNamespace("blocks/grass_block"))) {
+                loot.add(new ItemStack(Items.DIAMOND));
             }
         });
     }

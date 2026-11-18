@@ -3,11 +3,11 @@ loaderVersion="*"
 license="${license}"
 issueTrackerURL="https://github.com/TwelveIterations/Balm/issues"
 [[mods]]
-modId="${mod_id}"
+modId="balm"
 version="${version}"
 displayName="${mod_name}"
 displayURL="https://balm.twelveiterations.com/"
-logoFile="${mod_id}.png"
+logoFile="balm.png"
 credits="BlayTheNinth"
 authors="BlayTheNinth"
 description='''${description}'''
@@ -17,13 +17,13 @@ config = "${mod_id}.mixins.json"
 config = "${mod_id}.api.mixins.json"
 [[mixins]]
 config = "${mod_id}.forge.mixins.json"
-[[dependencies.${mod_id}]]
+[[dependencies.balm]]
     modId="forge"
     mandatory=true
     versionRange="[${forge_version},)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.balm]]
     modId="minecraft"
     mandatory=true
     versionRange="${minecraft_version_range}"

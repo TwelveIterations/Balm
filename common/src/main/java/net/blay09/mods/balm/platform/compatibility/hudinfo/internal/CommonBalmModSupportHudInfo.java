@@ -2,7 +2,6 @@ package net.blay09.mods.balm.platform.compatibility.hudinfo.internal;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.Multimaps;
 import com.mojang.datafixers.util.Pair;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.BalmModSupportHudInfo;

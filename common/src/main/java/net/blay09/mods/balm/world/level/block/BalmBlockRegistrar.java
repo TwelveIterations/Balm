@@ -3,7 +3,6 @@ package net.blay09.mods.balm.world.level.block;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.function.*;

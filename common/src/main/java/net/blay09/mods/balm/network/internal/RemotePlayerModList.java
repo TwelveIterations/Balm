@@ -20,7 +20,7 @@ public class RemotePlayerModList {
 
     public record RemotePlayerModListReceived(ServerPlayer player, Map<String, NetworkVersions> modList) {}
 
-    public static BidirectionalEventMapper<Consumer<RemotePlayerModListReceived>> RECEIVED = EventMapper.createBound(RemotePlayerModListReceived.class);
+    public static final BidirectionalEventMapper<Consumer<RemotePlayerModListReceived>> RECEIVED = EventMapper.createBound(RemotePlayerModListReceived.class);
     
     private RemotePlayerModList() {
     }

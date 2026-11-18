@@ -31,7 +31,7 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
     protected BalmConfigListEditorEntry(BalmConfigListEditorContext<T> context, BalmConfigListEditorValue<T> valueHolder) {
         this.context = context;
         this.valueHolder = valueHolder;
-        dragHandleButton = new BalmConfigListDragHandleButton(context.dragController(), this, () -> getMessage());
+        dragHandleButton = new BalmConfigListDragHandleButton(context.dragController(), this, this::getMessage);
         if (context.canReorderValues()) {
             children.add(dragHandleButton);
         }

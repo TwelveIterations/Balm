@@ -4,7 +4,6 @@ import net.blay09.mods.balm.platform.attachment.BalmDataAttachmentTypeRegistrati
 import net.blay09.mods.balm.platform.attachment.DataAttachmentLookup;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
-@SuppressWarnings("UnstableApiUsage")
 public class FabricBalmDataAttachmentTypeRegistration<T> implements BalmDataAttachmentTypeRegistration<T> {
     private final DataAttachmentLookup<T> lookup;
 

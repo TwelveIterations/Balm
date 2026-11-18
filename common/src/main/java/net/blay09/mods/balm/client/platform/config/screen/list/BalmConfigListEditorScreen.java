@@ -53,7 +53,6 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
     private @Nullable BalmConfigListEditorEntryList<T> list;
     private @Nullable FrameLayout footerLayout;
     private @Nullable StringWidget validationErrorWidget;
-    private @Nullable Button addButton;
     private @Nullable Button doneButton;
 
     public BalmConfigListEditorScreen(@Nullable Screen parent,
@@ -90,11 +89,12 @@ public class BalmConfigListEditorScreen<T> extends Screen implements BalmConfigL
                 list.setScrollAmount(0);
             }
         });
-        addButton = searchRow.addChild(Button.builder(ADD_BUTTON_LABEL, _ -> {
+        final var squareButtonSize = SEARCH_BOX_HEIGHT;
+        searchRow.addChild(Button.builder(ADD_BUTTON_LABEL, _ -> {
                     final var entryText = searchBox != null ? searchBox.getValue().trim() : "";
                     addEntry(entryText);
                 })
-                .size(SEARCH_BOX_HEIGHT, SEARCH_BOX_HEIGHT)
+                .size(squareButtonSize, squareButtonSize)
                 .tooltip(Tooltip.create(ADD_LABEL))
                 .createNarration(_ -> AbstractWidget.wrapDefaultNarrationMessage(ADD_LABEL))
                 .build());

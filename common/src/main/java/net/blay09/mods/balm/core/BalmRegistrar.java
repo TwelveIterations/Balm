@@ -28,9 +28,7 @@ public interface BalmRegistrar {
      * @return the created registry.
      */
     default <T> Registry<T> createCustomRegistry(ResourceKey<? extends Registry<T>> registryKey, Identifier defaultKey) {
-        return createCustomRegistry(registryKey, builder -> {
-            builder.defaultKey(defaultKey);
-        });
+        return createCustomRegistry(registryKey, builder -> builder.defaultKey(defaultKey));
     }
 
     /**

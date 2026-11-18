@@ -9,7 +9,6 @@ import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar
 import net.blay09.mods.balm.client.BalmKeyMappingRegistrar;
 import net.blay09.mods.balm.client.platform.BalmClientHooks;
 import net.blay09.mods.balm.client.platform.config.BalmConfigScreenRegistrar;
-import net.blay09.mods.balm.client.platform.config.internal.BalmConfigScreenRegistrarImpl;
 import net.blay09.mods.balm.client.platform.config.internal.BalmCustomConfigControlRegistrarImpl;
 import net.blay09.mods.balm.client.renderer.block.model.BalmBlockStateModelRegistrar;
 import net.blay09.mods.balm.client.model.geom.BalmModelLayerRegistrar;

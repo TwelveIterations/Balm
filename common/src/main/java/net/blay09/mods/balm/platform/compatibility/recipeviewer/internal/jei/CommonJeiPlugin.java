@@ -25,7 +25,6 @@ public class CommonJeiPlugin implements IModPlugin {
 
     private final JeiRecipeViewerRegistrar registrar = new JeiRecipeViewerRegistrar();
     private boolean registrarsInitialized;
-    private boolean runtimeInitialized;
 
     private void ensureInitialized() {
         if (!registrarsInitialized) {
@@ -111,15 +110,13 @@ public class CommonJeiPlugin implements IModPlugin {
     }
 
     private <TMenu extends AbstractContainerMenu> void registerRecipeTransferHandler(IRecipeTransferRegistration registration, IdentifiableRecipeTypeTransferRegistration<TMenu> entry) {
-        registration.getJeiHelpers().getRecipeType(entry.recipeTypeId()).ifPresent(recipeType -> {
-            registration.addRecipeTransferHandler(entry.menuClass(),
-                    entry.menuType().value(),
-                    recipeType,
-                    entry.recipeSlotStart(),
-                    entry.recipeSlotCount(),
-                    entry.inventorySlotStart(),
-                    entry.inventorySlotCount());
-        });
+        registration.getJeiHelpers().getRecipeType(entry.recipeTypeId()).ifPresent(recipeType -> registration.addRecipeTransferHandler(entry.menuClass(),
+                entry.menuType().value(),
+                recipeType,
+                entry.recipeSlotStart(),
+                entry.recipeSlotCount(),
+                entry.inventorySlotStart(),
+                entry.inventorySlotCount()));
     }
 
     private <T extends AbstractContainerScreen<?>> void registerScreenOcclusion(IGuiHandlerRegistration registration, ScreenOcclusionRegistration<T> entry) {

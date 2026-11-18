@@ -9,7 +9,7 @@ public interface BalmClientHooks {
     /**
      * Finds the focused child element on the screen, if any.
      *
-     * @param parent the screen to check for focused elements
+     * @param screen the screen to check for focused elements
      * @return The deepest focused child element, or {@code null} if no child is focused.
      */
     @Nullable
