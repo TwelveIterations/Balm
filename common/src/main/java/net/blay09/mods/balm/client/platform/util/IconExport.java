@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.GuiRenderer;
 import net.minecraft.client.renderer.Projection;
 import net.minecraft.client.renderer.ProjectionMatrixBuffer;
+import net.minecraft.client.renderer.RenderPassLayouts;
 import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
@@ -29,8 +30,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Optional;
-import java.util.OptionalDouble;
 
 public class IconExport {
     private static final Logger logger = LoggerFactory.getLogger(IconExport.class);
@@ -117,10 +116,9 @@ public class IconExport {
                 try (final var frame = gameRenderer.featureRenderDispatcher().prepareFrame(submitNodeStorage);
                      final var renderPass = offscreenCommandEncoder.createRenderPass(
                              () -> "Balm icon export",
+                             RenderPassLayouts.COLOR_DEPTH,
                              colorTextureView,
-                             Optional.empty(),
-                             depthTextureView,
-                             OptionalDouble.empty())) {
+                             depthTextureView)) {
                     RenderSystem.bindDefaultUniforms(renderPass);
                     FeatureRenderDispatcher.renderAllFeatures(renderPass, frame);
                 }
@@ -150,9 +148,9 @@ public class IconExport {
                     colorTextureToRead,
                     bufferToRead,
                     0,
-                    () -> writeExportedImage(bufferToRead, colorTextureToDestroy, colorTextureViewToDestroy, depthTextureToDestroy, depthTextureViewToDestroy, targetFile),
                     0);
             offscreenCommandEncoder.submit();
+            RenderSystem.queueFencedTask(() -> writeExportedImage(bufferToRead, colorTextureToDestroy, colorTextureViewToDestroy, depthTextureToDestroy, depthTextureViewToDestroy, targetFile));
         } catch (Exception e) {
             if (screenshotBuffer != null) {
                 screenshotBuffer.close();
