@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric.client.internal.renderer.entity;
 
 import net.blay09.mods.balm.client.renderer.entity.BalmEntityRendererRegistrar;
+import net.minecraft.client.core.registries.BuiltInClientRegistries;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.Holder;
@@ -15,11 +16,11 @@ public class FabricBalmEntityRendererRegistrar implements BalmEntityRendererRegi
 
     @Override
     public <T extends Entity> void register(Holder<? extends EntityType<? extends T>> entityTypeHolder, EntityRendererProvider<? super T> provider) {
-        EntityRenderers.register(entityTypeHolder.value(), provider);
+        EntityRenderers.register(BuiltInClientRegistries.ENTITY_RENDERER, entityTypeHolder.value(), provider);
     }
 
     @Override
     public <T extends Entity> void register(String name, Supplier<? extends EntityType<? extends T>> entityTypeSupplier, EntityRendererProvider<? super T> provider) {
-        EntityRenderers.register(entityTypeSupplier.get(), provider);
+        EntityRenderers.register(BuiltInClientRegistries.ENTITY_RENDERER, entityTypeSupplier.get(), provider);
     }
 }

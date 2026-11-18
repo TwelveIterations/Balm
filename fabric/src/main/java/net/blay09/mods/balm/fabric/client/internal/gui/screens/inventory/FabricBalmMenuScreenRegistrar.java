@@ -2,10 +2,12 @@ package net.blay09.mods.balm.fabric.client.internal.gui.screens.inventory;
 
 import net.blay09.mods.balm.client.gui.screens.BalmScreenFactory;
 import net.blay09.mods.balm.client.gui.screens.inventory.BalmMenuScreenRegistrar;
+import net.minecraft.client.core.registries.BuiltInClientRegistries;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.core.Holder;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
@@ -17,11 +19,11 @@ public class FabricBalmMenuScreenRegistrar implements BalmMenuScreenRegistrar {
 
     @Override
     public <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void register(Holder<MenuType<TMenu>> menuTypeHolder, BalmScreenFactory<TMenu, TScreen> screenFactory) {
-        MenuScreens.register(menuTypeHolder.value(), screenFactory::create);
+        MenuScreens.register((WritableRegistry<MenuScreens.ScreenConstructor<?, ?>>) BuiltInClientRegistries.MENU_SCREEN, menuTypeHolder.value(), screenFactory::create);
     }
 
     @Override
     public <TMenu extends AbstractContainerMenu, TScreen extends Screen & MenuAccess<TMenu>> void register(String name, Supplier<MenuType<? extends TMenu>> menuTypeSupplier, BalmScreenFactory<TMenu, TScreen> screenFactory) {
-        MenuScreens.register(menuTypeSupplier.get(), screenFactory::create);
+        MenuScreens.register((WritableRegistry<MenuScreens.ScreenConstructor<?, ?>>) BuiltInClientRegistries.MENU_SCREEN, menuTypeSupplier.get(), screenFactory::create);
     }
 }
