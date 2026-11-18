@@ -3,10 +3,11 @@ package net.blay09.mods.balm.commands.internal;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.blay09.mods.balm.Balm;
-import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.client.platform.util.IconExport;
+import net.blay09.mods.balm.commands.BalmCommands;
 import net.blay09.mods.balm.platform.config.util.ConfigJsonExport;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandPermissionLevels;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -40,7 +41,8 @@ public final class InternalsCommand {
 
         dispatcher.register(Commands.literal("balm")
                 .then(Commands.literal("dev")
-                        .requires(BalmCommands.requirePermission(PERMISSION_BALM_DEV))
+                        .requires(Commands.hasPermission(CommandPermissionLevels.LEVEL_OWNERS))
+                        // TODO .requires(BalmCommands.requirePermission(PERMISSION_BALM_DEV))
                         .executes(context -> {
                             balmDevCounter++;
                             if (Balm.platform().isDevelopmentEnvironment() || balmDevCounter >= 3) {
@@ -81,9 +83,10 @@ public final class InternalsCommand {
                             return 0;
                         }))
                 .then(Commands.literal("export")
-                        .requires(BalmCommands.requireAnyPermission(PERMISSION_BALM_EXPORT_CONFIG, PERMISSION_BALM_EXPORT_ICONS))
+                        // TODO .requires(BalmCommands.requireAnyPermission(PERMISSION_BALM_EXPORT_CONFIG, PERMISSION_BALM_EXPORT_ICONS))
                         .then(Commands.literal("config")
-                                .requires(BalmCommands.requirePermission(PERMISSION_BALM_EXPORT_CONFIG))
+                                .requires(Commands.hasPermission(CommandPermissionLevels.LEVEL_OWNERS))
+                                // TODO .requires(BalmCommands.requirePermission(PERMISSION_BALM_EXPORT_CONFIG))
                                 .then(Commands.argument("mod", StringArgumentType.string()).executes(context -> {
                                             final var mod = context.getArgument("mod", String.class);
                                             final var schemas = Balm.config().getSchemasByNamespace(mod);
@@ -98,7 +101,8 @@ public final class InternalsCommand {
                                             return 0;
                                         })
                                 )).then(Commands.literal("icons")
-                                .requires(BalmCommands.requirePermission(PERMISSION_BALM_EXPORT_ICONS))
+                                .requires(Commands.hasPermission(CommandPermissionLevels.LEVEL_OWNERS))
+                                // TODO .requires(BalmCommands.requirePermission(PERMISSION_BALM_EXPORT_ICONS))
                                 .then(Commands.argument("filter", StringArgumentType.greedyString()).executes(context -> {
                                     final var filter = context.getArgument("filter", String.class);
                                     if (Balm.safeClientAccess().isClient()) {

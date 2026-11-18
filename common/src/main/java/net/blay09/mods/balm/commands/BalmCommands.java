@@ -6,9 +6,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.permissions.Permission;
 
-import java.util.Arrays;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public interface BalmCommands {
     static void registerPermission(Identifier identifier, Permission permission) {
@@ -16,6 +14,8 @@ public interface BalmCommands {
                 (context) -> context.getCommandSource().map(it -> it.permissions().hasPermission(permission)).orElse(false));
     }
 
+    /* TODO Disabling permission system helpers for now, since Vanilla expects a specific type of Predicate at runtime
+            Will have to see what mod loaders do regarding permissions.
     static Predicate<CommandSourceStack> requirePermission(Identifier identifier) {
         return (source) -> Balm.permissions().hasPermission(source, identifier);
     }
@@ -26,7 +26,7 @@ public interface BalmCommands {
 
     static Predicate<CommandSourceStack> requireAllPermissions(Identifier... identifiers) {
         return (source) -> Arrays.stream(identifiers).allMatch(it -> Balm.permissions().hasPermission(source, it));
-    }
+    } */
 
     void register(Consumer<CommandDispatcher<CommandSourceStack>> initializer);
 }
