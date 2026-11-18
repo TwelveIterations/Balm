@@ -4,7 +4,7 @@ import net.blay09.mods.balm.server.packs.resources.BalmResourceCondition;
 import net.blay09.mods.balm.server.packs.resources.internal.ResourceConditionContextImpl;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditionType;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
@@ -18,7 +18,7 @@ public record FabricBalmResourceCondition<T extends BalmResourceCondition>(Ident
     }
 
     @Override
-    public boolean test(RegistryOps.@Nullable RegistryInfoLookup registryInfoLookup) {
-        return delegate.test(new ResourceConditionContextImpl(registryInfoLookup));
+    public boolean test(HolderGetter.@Nullable Provider registryInfo) {
+        return delegate.test(new ResourceConditionContextImpl(registryInfo));
     }
 }
