@@ -1,2 +1,1 @@
-- Updated for several breaking changes in NeoForge
-- API: Added `BalmRegistrar#createReloadableDynamicRegistry`
+- Updated to Minecraft 26.4
