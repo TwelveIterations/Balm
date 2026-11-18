@@ -2,8 +2,7 @@ package net.blay09.mods.balm.fabric.platform.compatibility.milk.internal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.references.ItemIds;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
@@ -15,13 +14,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SimpleMilkFluid extends Fluid {
-    @Override
-    public Item getBucket() {
-        return Items.MILK_BUCKET;
+
+    public SimpleMilkFluid() {
+        super(Fluid.Properties.of().bucketItem(ItemIds.MILK_BUCKET));
     }
 
     @Override
-    protected boolean canBeReplacedWith(FluidState fluidState, BlockGetter blockGetter, BlockPos blockPos, Fluid fluid, Direction direction) {
+    protected boolean canBeReplacedWith(FluidState state, BlockGetter level, BlockPos pos, FluidState other, Direction direction) {
         return true;
     }
 
@@ -32,11 +31,6 @@ public class SimpleMilkFluid extends Fluid {
 
     @Override
     public int getTickDelay(LevelReader levelReader) {
-        return 0;
-    }
-
-    @Override
-    protected float getExplosionResistance() {
         return 0;
     }
 
@@ -58,6 +52,11 @@ public class SimpleMilkFluid extends Fluid {
     @Override
     public boolean isSource(FluidState fluidState) {
         return true;
+    }
+
+    @Override
+    public boolean isFalling(FluidState fluidState) {
+        return false;
     }
 
     @Override
