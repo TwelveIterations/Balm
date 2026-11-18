@@ -83,9 +83,13 @@ public class IconExport {
         GpuBuffer screenshotBuffer = null;
         try {
             final var device = RenderSystem.getDevice();
-            colorTexture = device.createTexture(() -> "balm_icon_export_color", 13, GpuFormat.RGBA8_UNORM, EXPORT_SIZE, EXPORT_SIZE, 1, 1);
+            colorTexture = device.createTexture(() -> "balm_icon_export_color",
+                    GpuTexture.USAGE_COPY_DST | GpuTexture.USAGE_COPY_SRC | GpuTexture.USAGE_TEXTURE_BINDING | GpuTexture.USAGE_RENDER_ATTACHMENT,
+                    GpuFormat.RGBA8_UNORM, EXPORT_SIZE, EXPORT_SIZE, 1, 1);
             colorTextureView = device.createTextureView(colorTexture);
-            depthTexture = device.createTexture(() -> "balm_icon_export_depth", 9, GpuFormat.D32_FLOAT, EXPORT_SIZE, EXPORT_SIZE, 1, 1);
+            depthTexture = device.createTexture(() -> "balm_icon_export_depth",
+                    GpuTexture.USAGE_COPY_DST | GpuTexture.USAGE_RENDER_ATTACHMENT,
+                    GpuFormat.D32_FLOAT, EXPORT_SIZE, EXPORT_SIZE, 1, 1);
             depthTextureView = device.createTextureView(depthTexture);
 
             final var offscreenCommandEncoder = RenderSystem.getDevice().createCommandEncoder();
@@ -139,11 +143,6 @@ public class IconExport {
             final var depthTextureToDestroy = depthTexture;
             final var depthTextureViewToDestroy = depthTextureView;
             final var colorTextureToRead = colorTexture;
-            colorTexture = null;
-            colorTextureView = null;
-            depthTexture = null;
-            depthTextureView = null;
-            screenshotBuffer = null;
             offscreenCommandEncoder.copyTextureToBuffer(
                     colorTextureToRead,
                     bufferToRead,
@@ -151,6 +150,11 @@ public class IconExport {
                     0);
             offscreenCommandEncoder.submit();
             RenderSystem.queueFencedTask(() -> writeExportedImage(bufferToRead, colorTextureToDestroy, colorTextureViewToDestroy, depthTextureToDestroy, depthTextureViewToDestroy, targetFile));
+            colorTexture = null;
+            colorTextureView = null;
+            depthTexture = null;
+            depthTextureView = null;
+            screenshotBuffer = null;
         } catch (Exception e) {
             if (screenshotBuffer != null) {
                 screenshotBuffer.close();
