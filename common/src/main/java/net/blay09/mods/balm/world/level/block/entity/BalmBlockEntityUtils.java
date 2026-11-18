@@ -2,6 +2,7 @@ package net.blay09.mods.balm.world.level.block.entity;
 
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -33,7 +34,7 @@ public class BalmBlockEntityUtils {
         return ClientboundBlockEntityDataPacket.create(blockEntity, BlockEntity::getUpdateTag);
     }
 
-    public static CompoundTag createUpdateTag(HolderLookup.Provider registries, Consumer<ValueOutput> outputConsumer) {
+    public static CompoundTag createUpdateTag(HolderGetter.Provider registries, Consumer<ValueOutput> outputConsumer) {
         final var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registries);
         outputConsumer.accept(output);
         return output.buildResult();
