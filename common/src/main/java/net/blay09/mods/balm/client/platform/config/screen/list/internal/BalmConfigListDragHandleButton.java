@@ -108,7 +108,7 @@ public class BalmConfigListDragHandleButton extends Button {
 
     @Override
     protected void extractContents(GuiGraphicsExtractor graphics) {
-        final var icon = list.isDragging(entry) || keyboardDragActive || isHoveredOrFocused() ? HIGHLIGHTED_ICON : ICON;
+        final var icon = list.isDragging(entry) || keyboardDragActive || isHighlighted() ? HIGHLIGHTED_ICON : ICON;
         graphics.blitSprite(GuiPipeline.TEXTURED, icon, getX(), getY() + 2, WIDTH, 16);
     }
 }
