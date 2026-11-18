@@ -19,8 +19,7 @@ public final class FabricModListButton {
             Component.translatable("options.accessibility"),
             Component.translatable("gui.friends.open"),
             Component.translatable("menu.reportBugs"),
-            Component.translatable("menu.sendFeedback"),
-            Component.translatable("menu.playerReporting")
+            Component.translatable("menu.sendFeedback")
     );
 
     private FabricModListButton() {
