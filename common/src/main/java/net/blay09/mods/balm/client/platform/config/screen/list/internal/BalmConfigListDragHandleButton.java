@@ -2,12 +2,12 @@ package net.blay09.mods.balm.client.platform.config.screen.list.internal;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -109,6 +109,6 @@ public class BalmConfigListDragHandleButton extends Button {
     @Override
     protected void extractContents(GuiGraphicsExtractor graphics) {
         final var icon = list.isDragging(entry) || keyboardDragActive || isHoveredOrFocused() ? HIGHLIGHTED_ICON : ICON;
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, icon, getX(), getY() + 2, WIDTH, 16);
+        graphics.blitSprite(GuiPipeline.TEXTURED, icon, getX(), getY() + 2, WIDTH, 16);
     }
 }

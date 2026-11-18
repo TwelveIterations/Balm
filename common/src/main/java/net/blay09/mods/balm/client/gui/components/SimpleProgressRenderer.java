@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.client.gui.components;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.resources.Identifier;
 
 public class SimpleProgressRenderer implements ProgressRenderer {
@@ -83,27 +83,27 @@ public class SimpleProgressRenderer implements ProgressRenderer {
             case HORIZONTAL -> {
                 final var progressWidth = (int) (progress * width);
                 if (progressWidth > 0) {
-                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, renderX, renderY, textureU, textureV, progressWidth, height, textureWidth, textureHeight);
+                    guiGraphics.blit(GuiPipeline.TEXTURED, texture, renderX, renderY, textureU, textureV, progressWidth, height, textureWidth, textureHeight);
                 }
             }
             case VERTICAL -> {
                 final var progressHeight = (int) (progress * height);
                 if (progressHeight > 0) {
-                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, renderX, renderY, textureU, textureV, width, progressHeight, textureWidth, textureHeight);
+                    guiGraphics.blit(GuiPipeline.TEXTURED, texture, renderX, renderY, textureU, textureV, width, progressHeight, textureWidth, textureHeight);
                 }
             }
             case REVERSE_HORIZONTAL -> {
                 final var progressWidth = (int) (progress * width);
                 if (progressWidth > 0) {
                     int startX = renderX + width - progressWidth;
-                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, startX, renderY, textureU + width - progressWidth, textureV, progressWidth, height, textureWidth, textureHeight);
+                    guiGraphics.blit(GuiPipeline.TEXTURED, texture, startX, renderY, textureU + width - progressWidth, textureV, progressWidth, height, textureWidth, textureHeight);
                 }
             }
             case REVERSE_VERTICAL -> {
                 final var progressHeight = (int) (progress * height);
                 if (progressHeight > 0) {
                     int startY = renderY + height - progressHeight;
-                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, renderX, startY, textureU, textureV + height - progressHeight, width, progressHeight, textureWidth, textureHeight);
+                    guiGraphics.blit(GuiPipeline.TEXTURED, texture, renderX, startY, textureU, textureV + height - progressHeight, width, progressHeight, textureWidth, textureHeight);
                 }
             }
         }
