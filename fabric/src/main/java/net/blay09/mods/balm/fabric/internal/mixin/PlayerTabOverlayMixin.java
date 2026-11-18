@@ -4,8 +4,6 @@ import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalC
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
-import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.Scoreboard;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,15 +18,15 @@ public class PlayerTabOverlayMixin {
     @Shadow
     private Minecraft minecraft;
 
-    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;ILnet/minecraft/world/scores/Scoreboard;Lnet/minecraft/world/scores/Objective;)V", at = @At("HEAD"), cancellable = true)
-    public void extractRenderStatePre(GuiGraphicsExtractor guiGraphics, int width, Scoreboard scoreboard, Objective objective, CallbackInfo callbackInfo) {
-        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_PLAYER_LIST_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
-            callbackInfo.cancel();
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"), cancellable = true)
+    public void extractRenderStatePre(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_PLAYER_LIST_PRE.invoker().shouldRender(graphics, minecraft.getWindow())) {
+            ci.cancel();
         }
     }
 
-    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;ILnet/minecraft/world/scores/Scoreboard;Lnet/minecraft/world/scores/Objective;)V", at = @At("TAIL"))
-    public void extractRenderStatePost(GuiGraphicsExtractor guiGraphics, int width, Scoreboard scoreboard, Objective objective, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalClientEvents.RENDER_GUI_PLAYER_LIST_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("TAIL"))
+    public void extractRenderStatePost(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+        FabricBalmSupplementalClientEvents.RENDER_GUI_PLAYER_LIST_POST.invoker().afterRender(graphics, minecraft.getWindow());
     }
 }

@@ -1,7 +1,6 @@
 package net.blay09.mods.balm.fabric.internal.mixin;
 
 import net.blay09.mods.balm.fabric.client.internal.event.FabricBalmSupplementalClientEvents;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
@@ -19,16 +18,16 @@ public class HudMixin {
     @Shadow
     private Minecraft minecraft;
 
-    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V", at = @At("HEAD"), cancellable = true)
-    public void extractRenderStatePre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo callbackInfo) {
-        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
-            callbackInfo.cancel();
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"), cancellable = true)
+    public void extractRenderStatePre(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_PRE.invoker().shouldRender(graphics, minecraft.getWindow())) {
+            ci.cancel();
         }
     }
 
-    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V", at = @At("TAIL"))
-    public void extractRenderStatePost(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalClientEvents.RENDER_GUI_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("TAIL"))
+    public void extractRenderStatePost(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+        FabricBalmSupplementalClientEvents.RENDER_GUI_POST.invoker().afterRender(graphics, minecraft.getWindow());
     }
 
     @Inject(method = "extractPlayerHealth(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"), cancellable = true)
