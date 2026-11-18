@@ -1,11 +1,9 @@
 package net.blay09.mods.balm.neoforge.platform.runtime.internal;
 
 import net.blay09.mods.balm.commands.BalmCommands;
-import net.blay09.mods.balm.commands.BalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.core.particles.BalmParticleTypeRegistrar;
-import net.blay09.mods.balm.neoforge.commands.internal.NeoForgeBalmArgumentTypeRegistrar;
 import net.blay09.mods.balm.neoforge.commands.internal.NeoForgeBalmCommands;
 import net.blay09.mods.balm.neoforge.core.internal.DeferredRegisters;
 import net.blay09.mods.balm.neoforge.core.internal.NeoForgeBalmRegistrar;
@@ -51,10 +49,8 @@ import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistra
 import net.blay09.mods.balm.world.level.levelgen.BalmWorldGen;
 import net.blay09.mods.balm.world.level.storage.loot.BalmLootTables;
 import net.blay09.mods.balm.world.level.storage.loot.internal.CommonBalmLootTables;
-import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
-import net.neoforged.neoforge.registries.datamaps.DataMapsUpdatedEvent;
 
 import java.util.function.Consumer;
 
@@ -169,11 +165,6 @@ public class NeoForgeBalmRuntime extends CommonBalmRuntime<NeoForgeLoadContext> 
     @Override
     public void customStats(String namespace, Consumer<BalmCustomStatRegistrar> initializer) {
         initializer.accept(new NeoForgeBalmCustomStatRegistrar(registrar(), namespace));
-    }
-
-    @Override
-    public void argumentTypes(String namespace, Consumer<BalmArgumentTypeRegistrar> initializer) {
-        initializer.accept(new NeoForgeBalmArgumentTypeRegistrar(namespace));
     }
 
     @Override
