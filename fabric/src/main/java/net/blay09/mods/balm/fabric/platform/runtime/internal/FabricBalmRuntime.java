@@ -66,7 +66,7 @@ public class FabricBalmRuntime extends CommonBalmRuntime<FabricLoadContext> {
     private final BalmModSupport modSupport = new FabricBalmModSupport(this);
     private final BalmPlatform platform = new FabricBalmPlatform();
     private final Supplier<BalmPermissions> permissions = this.<BalmPermissions>modProxy(Identifier.fromNamespaceAndPath("balm", "permissions"))
-            .with("fabric-permissions-api-v0", "[0.7,)", "net.blay09.mods.balm.fabric.platform.compatibility.permissions.internal.FabricPermissionsAPIIntegration")
+            // TODO .with("fabric-permissions-api-v0", "[0.7,)", "net.blay09.mods.balm.fabric.platform.compatibility.permissions.internal.FabricPermissionsAPIIntegration")
             .withFallback(new CommonBalmPermissions())
             .buildLazily();
 
