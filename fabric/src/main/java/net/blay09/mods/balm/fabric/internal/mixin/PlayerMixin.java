@@ -36,9 +36,9 @@ public class PlayerMixin implements BalmForcedPoseHolder {
         }
     }
 
-    @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setAbsorptionAmount(F)V"), argsOnly = true)
-    private float actuallyHurt(float damageAmount, ServerLevel level, DamageSource damageSource) {
-        return FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().computeDamage((Player) (Object) this, damageSource, damageAmount);
+    @ModifyVariable(method = "actuallyHurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setAbsorptionAmount(F)V"), argsOnly = true, name = "dmg")
+    private float actuallyHurt(float dmg, ServerLevel level, DamageSource source) {
+        return FabricBalmSupplementalEvents.LIVING_DAMAGE.invoker().computeDamage((Player) (Object) this, source, dmg);
     }
 
     @Inject(method = "updatePlayerPose()V", at = @At("HEAD"), cancellable = true)

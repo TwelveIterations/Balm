@@ -19,17 +19,17 @@ public class DebugScreenOverlayMixin {
     private Minecraft minecraft;
 
     @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"), cancellable = true)
-    public void extractRenderStatePre(GuiGraphicsExtractor guiGraphics, CallbackInfo callbackInfo) {
+    public void extractRenderStatePre(GuiGraphicsExtractor graphics, CallbackInfo callbackInfo) {
         final var window = minecraft.getWindow();
         if (!BalmSupplementalClientEvents.RENDER_GUI_DEBUG_PRE.invoker()
-                .shouldRender(guiGraphics, window)) {
+                .shouldRender(graphics, window)) {
             callbackInfo.cancel();
         }
     }
 
     @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("TAIL"))
-    public void extractRenderStatePost(GuiGraphicsExtractor guiGraphics, CallbackInfo callbackInfo) {
+    public void extractRenderStatePost(GuiGraphicsExtractor graphics, CallbackInfo callbackInfo) {
         final var window = minecraft.getWindow();
-        BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST.invoker().afterRender(guiGraphics, window);
+        BalmSupplementalClientEvents.RENDER_GUI_DEBUG_POST.invoker().afterRender(graphics, window);
     }
 }

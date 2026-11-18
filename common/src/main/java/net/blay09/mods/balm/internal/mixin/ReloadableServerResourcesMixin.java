@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 public class ReloadableServerResourcesMixin {
 
     @Inject(method = "loadResources(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/core/LayeredRegistryAccess;Ljava/util/List;Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/commands/Commands$CommandSelection;Lnet/minecraft/server/permissions/PermissionSet;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;", at = @At("RETURN"))
-    private static void loadResources(ResourceManager resourceManager, LayeredRegistryAccess<RegistryLayer> registryAccess, List<Registry.PendingTags<?>> pendingTags, FeatureFlagSet featureFlagSet, Commands.CommandSelection commandSelection, PermissionSet permissionSet, Executor e1, Executor e2, CallbackInfoReturnable<CompletableFuture<ReloadableServerResources>> callbackInfo) {
+    private static void loadResources(ResourceManager resourceManager, LayeredRegistryAccess<RegistryLayer> contextLayers, List<Registry.PendingTags<?>> updatedContextTags, FeatureFlagSet enabledFeatures, Commands.CommandSelection commandSelection, PermissionSet functionCompilationPermissions, Executor backgroundExecutor, Executor mainThreadExecutor, CallbackInfoReturnable<CompletableFuture<ReloadableServerResources>> callbackInfo) {
         callbackInfo.getReturnValue().thenAccept(it -> BalmSupplementalEvents.SERVER_RELOADING.invoker().handle(Objects.requireNonNull(Balm.platform().server()), it));
     }
 

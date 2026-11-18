@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 public class MinecraftServerMixin {
 
     @Inject(method = "reloadResources(Ljava/util/Collection;)Ljava/util/concurrent/CompletableFuture;", at = @At("RETURN"))
-    private void reloadResources(Collection<String> p_129862_, CallbackInfoReturnable<CompletableFuture<Void>> callbackInfo) {
+    private void reloadResources(Collection<String> packsToEnable, CallbackInfoReturnable<CompletableFuture<Void>> callbackInfo) {
         callbackInfo.getReturnValue().thenAccept(_ -> BalmSupplementalEvents.SERVER_RELOADED.invoker().handle((MinecraftServer) (Object) this));
     }
 

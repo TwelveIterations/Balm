@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ChestRenderer.class)
 public class ChestRendererMixin {
     @ModifyVariable(method = "submit*", at = @At("STORE"), name = "spriteId")
-    private static SpriteId chooseSprite(SpriteId material, ChestRenderState renderState) {
-        final var newMaterial = CustomChestMaterials.getMaterial(renderState);
-        return newMaterial != null ? newMaterial : material;
+    private static SpriteId chooseSprite(SpriteId spriteId, ChestRenderState state) {
+        final var newMaterial = CustomChestMaterials.getMaterial(state);
+        return newMaterial != null ? newMaterial : spriteId;
     }
 }

@@ -23,7 +23,7 @@ import java.util.OptionalInt;
 public class ServerPlayerMixin {
 
     @Inject(method = "openMenu(Lnet/minecraft/world/MenuProvider;)Ljava/util/OptionalInt;", at = @At("RETURN"))
-    public void openMenu(@Nullable MenuProvider menuProvider, CallbackInfoReturnable<OptionalInt> callbackInfo) {
+    public void openMenu(@Nullable MenuProvider provider, CallbackInfoReturnable<OptionalInt> callbackInfo) {
         ServerPlayer player = (ServerPlayer) (Object) this;
         FabricBalmSupplementalEvents.SERVER_PLAYER_OPEN_MENU.invoker().handle(player, player.containerMenu);
     }
@@ -52,7 +52,7 @@ public class ServerPlayerMixin {
     }
 
     @Inject(method = "drop(Z)V", at = @At("HEAD"), cancellable = true)
-    public void drop(boolean flag, CallbackInfo callbackInfo) {
+    public void drop(boolean all, CallbackInfo callbackInfo) {
         ServerPlayer player = (ServerPlayer) (Object) this;
         Inventory inventory = player.getInventory();
         ItemStack selected = inventory.getSelectedItem();

@@ -20,7 +20,7 @@ public class ChunkMapMixin {
     }
 
     @Inject(method = "dropChunk(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/ChunkPos;)V", at = @At(value = "HEAD"))
-    private static void dropChunk(ServerPlayer player, ChunkPos chunkPos, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalEvents.SERVER_PLAYER_CHUNK_TRACKING_STOP.invoker().handle(player.level(), player, chunkPos);
+    private static void dropChunk(ServerPlayer player, ChunkPos pos, CallbackInfo callbackInfo) {
+        FabricBalmSupplementalEvents.SERVER_PLAYER_CHUNK_TRACKING_STOP.invoker().handle(player.level(), player, pos);
     }
 }

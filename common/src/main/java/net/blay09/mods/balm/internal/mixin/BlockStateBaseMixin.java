@@ -14,11 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BlockStateBaseMixin {
 
     @Inject(method = "getDestroyProgress(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F", at = @At("RETURN"), cancellable = true)
-    public void getDestroyProgress(Player player, BlockGetter blockGetter, BlockPos blockPos, CallbackInfoReturnable<Float> cir) {
+    public void getDestroyProgress(Player player, BlockGetter level, BlockPos pos, CallbackInfoReturnable<Float> cir) {
         final var blockStateBase = (BlockBehaviour.BlockStateBase) (Object) this;
         final var digSpeed = cir.getReturnValueF();
         final var state = ((BlockStateBaseAccessor) blockStateBase).callAsState();
-        final var effectiveSpeed = BalmSupplementalEvents.BLOCK_DIG_SPEED.invoker().computeDigSpeed(blockGetter, blockPos, state, player, digSpeed);
+        final var effectiveSpeed = BalmSupplementalEvents.BLOCK_DIG_SPEED.invoker().computeDigSpeed(level, pos, state, player, digSpeed);
         cir.setReturnValue(effectiveSpeed);
     }
 }

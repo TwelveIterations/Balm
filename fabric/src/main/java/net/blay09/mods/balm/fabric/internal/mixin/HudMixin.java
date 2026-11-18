@@ -31,14 +31,14 @@ public class HudMixin {
     }
 
     @Inject(method = "extractPlayerHealth(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"), cancellable = true)
-    public void renderPlayerHealthPre(GuiGraphicsExtractor guiGraphics, CallbackInfo callbackInfo) {
-        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_HEALTH_PRE.invoker().shouldRender(guiGraphics, minecraft.getWindow())) {
+    public void renderPlayerHealthPre(GuiGraphicsExtractor graphics, CallbackInfo callbackInfo) {
+        if (!FabricBalmSupplementalClientEvents.RENDER_GUI_HEALTH_PRE.invoker().shouldRender(graphics, minecraft.getWindow())) {
             callbackInfo.cancel();
         }
     }
 
     @Inject(method = "extractPlayerHealth(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("TAIL"))
-    public void renderPlayerHealthPost(GuiGraphicsExtractor guiGraphics, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalClientEvents.RENDER_GUI_HEALTH_POST.invoker().afterRender(guiGraphics, minecraft.getWindow());
+    public void renderPlayerHealthPost(GuiGraphicsExtractor graphics, CallbackInfo callbackInfo) {
+        FabricBalmSupplementalClientEvents.RENDER_GUI_HEALTH_POST.invoker().afterRender(graphics, minecraft.getWindow());
     }
 }

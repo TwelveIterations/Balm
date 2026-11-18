@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(Gui.class)
 public class GuiMixin {
 
-    @ModifyVariable(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Gui;screen:Lnet/minecraft/client/gui/screens/Screen;", opcode = Opcodes.GETFIELD, shift = At.Shift.AFTER), argsOnly = true)
-    public @Nullable Screen modifyScreen(Screen screen) {
-        return FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().modifyScreen(screen);
+    @ModifyVariable(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Gui;screen:Lnet/minecraft/client/gui/screens/Screen;", opcode = Opcodes.GETFIELD, shift = At.Shift.AFTER), argsOnly = true, name = "newScreen")
+    public @Nullable Screen modifyScreen(Screen newScreen) {
+        return FabricBalmSupplementalClientEvents.SCREEN_OPEN.invoker().modifyScreen(newScreen);
     }
 
 }

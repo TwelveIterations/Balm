@@ -24,13 +24,13 @@ public class ResultSlotMixin {
     private Player player;
 
     @Inject(method = "onTake(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"))
-    public void onTake(Player player, ItemStack itemStack, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalEvents.ITEM_CRAFTED.invoker().afterCraft(player, itemStack, craftSlots);
+    public void onTake(Player player, ItemStack carried, CallbackInfo callbackInfo) {
+        FabricBalmSupplementalEvents.ITEM_CRAFTED.invoker().afterCraft(player, carried, craftSlots);
     }
 
     @Inject(method = "onQuickCraft(Lnet/minecraft/world/item/ItemStack;I)V", at = @At("HEAD"))
-    public void onQuickCraft(ItemStack itemStack, int i, CallbackInfo callbackInfo) {
-        FabricBalmSupplementalEvents.ITEM_CRAFTED.invoker().afterCraft(player, itemStack, craftSlots);
+    public void onQuickCraft(ItemStack picked, int count, CallbackInfo callbackInfo) {
+        FabricBalmSupplementalEvents.ITEM_CRAFTED.invoker().afterCraft(player, picked, craftSlots);
     }
 
 }

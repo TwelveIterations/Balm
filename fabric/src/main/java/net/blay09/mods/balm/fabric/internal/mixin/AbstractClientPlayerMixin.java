@@ -14,11 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class AbstractClientPlayerMixin {
 
     @Inject(method = "getFieldOfViewModifier(ZF)F", at = @At("TAIL"), cancellable = true)
-    private void getFieldOfViewModifier(boolean isFirstPerson, float fovEffectScale, CallbackInfoReturnable<Float> callbackInfo,
-                                        @Local(name = "modifier") float originalFov) {
-        final var effectiveFov = FabricBalmSupplementalClientEvents.UPDATE_FOV.invoker().computeFov((LivingEntity) (Object) this, originalFov);
-        if (effectiveFov != originalFov) {
-            callbackInfo.setReturnValue(Mth.lerp(fovEffectScale, 1f, effectiveFov));
+    private void getFieldOfViewModifier(boolean firstPerson, float effectScale, CallbackInfoReturnable<Float> callbackInfo,
+                                        @Local(name = "modifier") float modifier) {
+        final var effectiveFov = FabricBalmSupplementalClientEvents.UPDATE_FOV.invoker().computeFov((LivingEntity) (Object) this, modifier);
+        if (effectiveFov != modifier) {
+            callbackInfo.setReturnValue(Mth.lerp(effectScale, 1f, effectiveFov));
         }
     }
 

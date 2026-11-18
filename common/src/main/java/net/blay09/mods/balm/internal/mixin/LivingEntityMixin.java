@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
     @WrapOperation(method = "causeFallDamage(DFLnet/minecraft/world/damagesource/DamageSource;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;calculateFallDamage(DF)I"))
-    private int calculateFallDamage(LivingEntity self, double fallDistance, float multiplier, Operation<Integer> operation) {
-        float effectiveDamage = operation.call(self, fallDistance, multiplier);
+    private int calculateFallDamage(LivingEntity self, double fallDistance, float damageModifier, Operation<Integer> operation) {
+        float effectiveDamage = operation.call(self, fallDistance, damageModifier);
         effectiveDamage = BalmSupplementalEvents.LIVING_FALL.invoker().computeFallDamage(self, effectiveDamage);
         return Mth.floor(effectiveDamage);
     }

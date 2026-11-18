@@ -19,8 +19,8 @@ public class KeyboardHandlerMixin {
     private Minecraft minecraft;
 
     @Inject(method = "keyPress(JILnet/minecraft/client/input/KeyEvent;)V", at = @At("TAIL"))
-    public void keyPress(long window, int action, KeyEvent event, CallbackInfo callbackInfo) {
-        if (window == this.minecraft.getWindow().handle()) {
+    public void keyPress(long handle, int action, KeyEvent event, CallbackInfo callbackInfo) {
+        if (handle == this.minecraft.getWindow().handle()) {
             FabricBalmSupplementalClientEvents.KEYBOARD_INPUT.invoker().handle(event.key(), event.keycode(), action, event.modifiers());
         }
     }

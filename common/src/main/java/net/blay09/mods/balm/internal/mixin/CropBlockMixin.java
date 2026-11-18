@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class CropBlockMixin {
 
     @Inject(method = "mayPlaceOn(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z", at = @At("HEAD"), cancellable = true)
-    public void mayPlaceOn(BlockState state, BlockGetter blockGetter, BlockPos pos, CallbackInfoReturnable<Boolean> callbackInfo) {
+    public void mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos, CallbackInfoReturnable<Boolean> callbackInfo) {
         if (state.getBlock() instanceof CustomFarmBlock customFarmBlock) {
             callbackInfo.setReturnValue(customFarmBlock.canSustainPlant(state,
-                    blockGetter,
+                    level,
                     pos,
                     Direction.UP,
-                    blockGetter.getBlockState(pos.relative(Direction.UP)).getBlock()));
+                    level.getBlockState(pos.relative(Direction.UP)).getBlock()));
         }
     }
 
