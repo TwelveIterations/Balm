@@ -167,13 +167,13 @@ public class BalmConfigListEditorInlineStringValueEntry<T> extends BalmConfigLis
     @Override
     protected void updateActionWidgets() {
         final var editing = isEditing();
-        editButton.visible = !editing;
+        editButton.setVisible(!editing);
         editButton.active = !editing && canEdit();
-        doneButton.visible = editing;
+        doneButton.setVisible(editing);
         doneButton.active = editing && canCommit();
-        deleteButton.visible = !editing;
+        deleteButton.setVisible(!editing);
         deleteButton.active = !editing && canDelete();
-        resetButton.visible = editing;
+        resetButton.setVisible(editing);
         resetButton.active = editing && canReset();
     }
 

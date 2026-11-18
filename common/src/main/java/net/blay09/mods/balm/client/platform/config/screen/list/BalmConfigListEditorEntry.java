@@ -126,7 +126,7 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
     }
 
     private int getActionWidgetsWidth() {
-        return actionWidgets.stream().filter(widget -> widget.visible)
+        return actionWidgets.stream().filter(AbstractWidget::isVisible)
                 .mapToInt(AbstractWidget::getWidth)
                 .map(it -> it + ACTION_BUTTON_SPACING)
                 .sum();
@@ -142,7 +142,7 @@ public abstract class BalmConfigListEditorEntry<T> extends ContainerObjectSelect
         int x = getContentRight();
         for (int i = actionWidgets.size() - 1; i >= 0; i--) {
             final var widget = actionWidgets.get(i);
-            if (widget.visible) {
+            if (widget.isVisible()) {
                 x -= widget.getWidth();
                 widget.setX(x);
                 widget.setY(y);
