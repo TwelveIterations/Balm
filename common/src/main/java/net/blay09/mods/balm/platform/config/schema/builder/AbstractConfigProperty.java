@@ -25,20 +25,7 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
         comment = parent.comment;
         synced = parent.synced;
         customControl = parent.customControl;
-        validator = createValidator(parent.validatorClass);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected static <T> @Nullable ConfigValidator<T> createValidator(@Nullable Class<? extends ConfigValidator<?>> validatorClass) {
-        if (validatorClass == null) {
-            return null;
-        }
-
-        try {
-            return (ConfigValidator<T>) validatorClass.getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalArgumentException("Config validator " + validatorClass.getName() + " must have a public no-arg constructor", e);
-        }
+        validator = parent.validator;
     }
 
     @Override

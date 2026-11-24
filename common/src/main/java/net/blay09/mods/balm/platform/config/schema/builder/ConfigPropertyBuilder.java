@@ -16,8 +16,8 @@ public class ConfigPropertyBuilder {
     protected String comment = "";
     protected boolean synced;
     protected @Nullable Identifier customControl;
-    protected @Nullable Class<? extends ConfigValidator<?>> validatorClass;
-    protected @Nullable Class<? extends ConfigValidator<?>> collectionValidatorClass;
+    protected @Nullable ConfigValidator<?> validator;
+    protected @Nullable ConfigValidator<?> collectionValidator;
 
     public ConfigPropertyBuilder(ConfigSchemaImpl schema, String name) {
         this.schema = schema;
@@ -47,13 +47,29 @@ public class ConfigPropertyBuilder {
     }
 
     public ConfigPropertyBuilder validateWith(Class<? extends ConfigValidator<?>> validatorClass) {
-        this.validatorClass = validatorClass;
-        return this;
+        return validateWith(createValidator(validatorClass));
     }
 
     public ConfigPropertyBuilder validateCollectionWith(Class<? extends ConfigValidator<?>> validatorClass) {
-        this.collectionValidatorClass = validatorClass;
+        return validateCollectionWith(createValidator(validatorClass));
+    }
+
+    public ConfigPropertyBuilder validateWith(ConfigValidator<?> validator) {
+        this.validator = validator;
         return this;
+    }
+
+    public ConfigPropertyBuilder validateCollectionWith(ConfigValidator<?> validator) {
+        this.collectionValidator = validator;
+        return this;
+    }
+
+    private static ConfigValidator<?> createValidator(Class<? extends ConfigValidator<?>> validatorClass) {
+        try {
+            return validatorClass.getConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException("Config validator " + validatorClass.getName() + " must have a public no-arg constructor", e);
+        }
     }
 
     public BooleanConfigProperty boolOf(boolean defaultValue) {

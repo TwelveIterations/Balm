@@ -21,13 +21,14 @@ public class SetConfigProperty<T> extends AbstractConfigProperty<Set<T>> impleme
     private final StreamCodec<ByteBuf, List<T>> streamCodec;
     private final @Nullable ConfigValidator<Set<T>> setValidator;
 
+    @SuppressWarnings("unchecked")
     public SetConfigProperty(ConfigPropertyBuilder parent, Class<T> nestedType, Set<T> defaultValue) {
         super(parent);
         this.nestedType = nestedType;
         this.defaultValue = defaultValue;
         this.codec = PrimitiveConfigCodecs.codec(nestedType).listOf();
         this.streamCodec = ByteBufCodecs.collection(ArrayList::new, PrimitiveConfigCodecs.streamCodec(nestedType));
-        this.setValidator = createValidator(parent.collectionValidatorClass);
+        this.setValidator = (ConfigValidator<Set<T>>) parent.collectionValidator;
         validateValue(defaultValue).getOrThrow();
     }
 
