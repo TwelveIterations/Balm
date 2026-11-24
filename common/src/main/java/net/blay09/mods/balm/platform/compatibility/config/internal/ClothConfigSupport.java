@@ -247,8 +247,9 @@ public class ClothConfigSupport {
                 return true;
             }
             case AbstractWidget widget -> {
-                categoryInstance.addEntry(new ClothConfigWidgetConfigListEntry<>(binding, widget, context.label(property)));
-                return true;
+                // TODO categoryInstance.addEntry(new ClothConfigWidgetConfigListEntry<>(binding, widget, context.label(property)));
+                // TODO return true;
+                return false;
             }
             default -> {
                 logger.warn("Config control for {}/{}.{} must return AbstractConfigListEntry or AbstractWidget for Cloth Config, got {}. Falling back to default control.",
