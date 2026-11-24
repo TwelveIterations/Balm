@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.narration.NarrationTrigger;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class BalmConfigScreenHeadingEntry extends BalmConfigScreenEntry {
     private boolean hovered;
     private final NarratableEntry narration = new NarratableEntry() {
         @Override
-        public NarrationPriority narrationPriority() {
+        public NarrationPriority narrationPriority(NarrationTrigger narrationTrigger) {
             return hovered ? NarrationPriority.HOVERED : NarrationPriority.NONE;
         }
 
