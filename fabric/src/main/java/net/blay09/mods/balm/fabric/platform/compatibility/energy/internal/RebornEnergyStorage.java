@@ -17,14 +17,14 @@ public class RebornEnergyStorage extends SnapshotParticipant<Long> implements En
     public long insert(long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
         updateSnapshots(transaction);
-        return energyStorage.fill((int) maxAmount, false);
+        return energyStorage.fill(maxAmount, false);
     }
 
     @Override
     public long extract(long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
         updateSnapshots(transaction);
-        return energyStorage.drain((int) maxAmount, false);
+        return energyStorage.drain(maxAmount, false);
     }
 
     @Override
@@ -39,11 +39,11 @@ public class RebornEnergyStorage extends SnapshotParticipant<Long> implements En
 
     @Override
     protected Long createSnapshot() {
-        return (long) energyStorage.getEnergy();
+        return energyStorage.getEnergy();
     }
 
     @Override
     protected void readSnapshot(Long snapshot) {
-        energyStorage.setEnergy(snapshot.intValue());
+        energyStorage.setEnergy(snapshot);
     }
 }

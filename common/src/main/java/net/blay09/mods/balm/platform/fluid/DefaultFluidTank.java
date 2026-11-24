@@ -8,25 +8,25 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 public class DefaultFluidTank implements FluidTank {
-    private final int capacity;
-    private final int maxFill;
-    private final int maxDrain;
+    private final long capacity;
+    private final long maxFill;
+    private final long maxDrain;
     private Fluid fluid = Fluids.EMPTY;
-    private int amount;
+    private long amount;
 
-    public DefaultFluidTank(int capacity) {
+    public DefaultFluidTank(long capacity) {
         this(capacity, capacity, capacity, 0);
     }
 
-    public DefaultFluidTank(int capacity, int maxTransfer) {
+    public DefaultFluidTank(long capacity, long maxTransfer) {
         this(maxTransfer, capacity, maxTransfer, 0);
     }
 
-    public DefaultFluidTank(int capacity, int maxFill, int maxDrain) {
+    public DefaultFluidTank(long capacity, long maxFill, long maxDrain) {
         this(maxDrain, capacity, maxFill, 0);
     }
 
-    public DefaultFluidTank(int maxDrain, int capacity, int maxFill, int amount) {
+    public DefaultFluidTank(long maxDrain, long capacity, long maxFill, long amount) {
         this.capacity = capacity;
         this.maxFill = maxFill;
         this.maxDrain = maxDrain;
@@ -34,7 +34,7 @@ public class DefaultFluidTank implements FluidTank {
     }
 
     @Override
-    public int fill(int slot, Fluid fluid, int maxFill, boolean simulate) {
+    public long fill(int slot, Fluid fluid, long maxFill, boolean simulate) {
         if (slot != 0) {
             return 0;
         }
@@ -47,7 +47,7 @@ public class DefaultFluidTank implements FluidTank {
             this.fluid = fluid;
         }
 
-        int filled = Math.min(capacity - amount, Math.min(this.maxFill, maxFill));
+        long filled = Math.min(capacity - amount, Math.min(this.maxFill, maxFill));
         if (!simulate) {
             amount += filled;
             setChanged();
@@ -56,7 +56,7 @@ public class DefaultFluidTank implements FluidTank {
     }
 
     @Override
-    public int drain(int slot, Fluid fluid, int maxDrain, boolean simulate) {
+    public long drain(int slot, Fluid fluid, long maxDrain, boolean simulate) {
         if (slot != 0) {
             return 0;
         }
@@ -65,7 +65,7 @@ public class DefaultFluidTank implements FluidTank {
             return 0;
         }
 
-        int drained = Math.min(amount, Math.min(this.maxDrain, maxDrain));
+        long drained = Math.min(amount, Math.min(this.maxDrain, maxDrain));
         if (!simulate) {
             amount -= drained;
             setChanged();
@@ -83,7 +83,7 @@ public class DefaultFluidTank implements FluidTank {
     }
 
     @Override
-    public void setFluid(int slot, Fluid fluid, int amount) {
+    public void setFluid(int slot, Fluid fluid, long amount) {
         if (slot != 0) {
             return;
         }
@@ -94,7 +94,7 @@ public class DefaultFluidTank implements FluidTank {
     }
 
     @Override
-    public int getAmount(int slot) {
+    public long getAmount(int slot) {
         if (slot != 0) {
             return 0;
         }
@@ -103,7 +103,7 @@ public class DefaultFluidTank implements FluidTank {
     }
 
     @Override
-    public void setAmount(int slot, int amount) {
+    public void setAmount(int slot, long amount) {
         if (slot != 0) {
             return;
         }
@@ -112,7 +112,7 @@ public class DefaultFluidTank implements FluidTank {
     }
 
     @Override
-    public int getCapacity(int slot) {
+    public long getCapacity(int slot) {
         if (slot != 0) {
             return 0;
         }
@@ -154,12 +154,12 @@ public class DefaultFluidTank implements FluidTank {
 
     public void serialize(ValueOutput output) {
         output.putString("Fluid", BuiltInRegistries.FLUID.getKey(fluid).toString());
-        output.putInt("Amount", amount);
+        output.putLong("Amount", amount);
     }
 
     public void deserialize(ValueInput input) {
         fluid = input.getString("Fluid").map(Identifier::tryParse).map(BuiltInRegistries.FLUID::getValue).orElse(Fluids.EMPTY);
-        amount = input.getIntOr("Amount", 0);
+        amount = input.getLongOr("Amount", 0L);
     }
 
     public void setChanged() {

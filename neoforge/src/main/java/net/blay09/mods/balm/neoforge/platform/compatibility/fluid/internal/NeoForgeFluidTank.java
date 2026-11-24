@@ -1,7 +1,7 @@
 package net.blay09.mods.balm.neoforge.platform.compatibility.fluid.internal;
 
 import net.blay09.mods.balm.platform.fluid.FluidTank;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
@@ -67,7 +67,7 @@ public final class NeoForgeFluidTank implements ResourceHandler<FluidResource> {
         }
 
         fluidJournal.updateSnapshots(transaction);
-        return fluidTank.fill(i, fluidResource.getFluid(), amount, false);
+        return Math.toIntExact(fluidTank.fill(i, fluidResource.getFluid(), amount, false));
     }
 
     @Override
@@ -77,23 +77,26 @@ public final class NeoForgeFluidTank implements ResourceHandler<FluidResource> {
         }
 
         fluidJournal.updateSnapshots(transaction);
-        return fluidTank.drain(i, fluidResource.getFluid(), amount, false);
+        return Math.toIntExact(fluidTank.drain(i, fluidResource.getFluid(), amount, false));
     }
 
-    private class FluidJournal extends SnapshotJournal<List<FluidStack>> {
+    private record FluidSnapshot(Fluid fluid, long amount) {
+    }
+
+    private class FluidJournal extends SnapshotJournal<List<FluidSnapshot>> {
         @Override
-        protected List<FluidStack> createSnapshot() {
+        protected List<FluidSnapshot> createSnapshot() {
             return IntStream.range(0, NeoForgeFluidTank.this.fluidTank.getSlotCount())
-                    .mapToObj(slot -> new FluidStack(NeoForgeFluidTank.this.fluidTank.getFluid(slot), NeoForgeFluidTank.this.fluidTank.getAmount(slot)))
+                    .mapToObj(slot -> new FluidSnapshot(NeoForgeFluidTank.this.fluidTank.getFluid(slot), NeoForgeFluidTank.this.fluidTank.getAmount(slot)))
                     .toList();
         }
 
         @Override
-        protected void revertToSnapshot(@Nullable List<FluidStack> snapshot) {
+        protected void revertToSnapshot(@Nullable List<FluidSnapshot> snapshot) {
             if (snapshot != null) {
                 for (int i = 0; i < snapshot.size(); i++) {
-                    final var fluidStack = snapshot.get(i);
-                    NeoForgeFluidTank.this.fluidTank.setFluid(i, fluidStack.getFluid(), fluidStack.getAmount());
+                    final var fluidSnapshot = snapshot.get(i);
+                    NeoForgeFluidTank.this.fluidTank.setFluid(i, fluidSnapshot.fluid(), fluidSnapshot.amount());
                 }
             }
         }

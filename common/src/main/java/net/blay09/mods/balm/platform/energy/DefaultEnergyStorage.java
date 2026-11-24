@@ -5,36 +5,36 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 public class DefaultEnergyStorage implements EnergyStorage {
 
-    private final int capacity;
-    private final int maxFill;
-    private final int maxDrain;
-    private int energy;
+    private final long capacity;
+    private final long maxFill;
+    private final long maxDrain;
+    private long energy;
 
-    public DefaultEnergyStorage(int capacity) {
+    public DefaultEnergyStorage(long capacity) {
         this(capacity, capacity, capacity, 0);
     }
 
-    public DefaultEnergyStorage(int capacity, int maxTransfer) {
+    public DefaultEnergyStorage(long capacity, long maxTransfer) {
         this(maxTransfer, capacity, maxTransfer, 0);
     }
 
-    public DefaultEnergyStorage(int capacity, int maxFill, int maxDrain) {
+    public DefaultEnergyStorage(long capacity, long maxFill, long maxDrain) {
         this(maxDrain, capacity, maxFill, 0);
     }
 
-    public DefaultEnergyStorage(int maxDrain, int capacity, int maxFill, int amount) {
+    public DefaultEnergyStorage(long maxDrain, long capacity, long maxFill, long amount) {
         this.capacity = capacity;
         this.maxFill = maxFill;
         this.maxDrain = maxDrain;
         this.energy = Math.max(0, Math.min(capacity, amount));
     }
 
-    public int fill(int maxFill, boolean simulate) {
+    public long fill(long maxFill, boolean simulate) {
         if (!canFill()) {
             return 0;
         }
 
-        int filled = Math.min(capacity - energy, Math.min(this.maxFill, maxFill));
+        long filled = Math.min(capacity - energy, Math.min(this.maxFill, maxFill));
         if (!simulate) {
             energy += filled;
             setChanged();
@@ -42,12 +42,12 @@ public class DefaultEnergyStorage implements EnergyStorage {
         return filled;
     }
 
-    public int drain(int maxDrain, boolean simulate) {
+    public long drain(long maxDrain, boolean simulate) {
         if (!canDrain()) {
             return 0;
         }
 
-        int drained = Math.min(energy, Math.min(this.maxDrain, maxDrain));
+        long drained = Math.min(energy, Math.min(this.maxDrain, maxDrain));
         if (!simulate) {
             energy -= drained;
             setChanged();
@@ -55,16 +55,16 @@ public class DefaultEnergyStorage implements EnergyStorage {
         return drained;
     }
 
-    public int getEnergy() {
+    public long getEnergy() {
         return energy;
     }
 
-    public void setEnergy(int energy) {
+    public void setEnergy(long energy) {
         this.energy = energy;
         setChanged();
     }
 
-    public int getCapacity() {
+    public long getCapacity() {
         return capacity;
     }
 
@@ -77,11 +77,11 @@ public class DefaultEnergyStorage implements EnergyStorage {
     }
 
     public void serialize(ValueOutput output) {
-        output.putInt("Energy", energy);
+        output.putLong("Energy", energy);
     }
 
     public void deserialize(ValueInput input) {
-        energy = input.getIntOr("Energy", 0);
+        energy = input.getLongOr("Energy", 0L);
     }
 
     public void setChanged() {

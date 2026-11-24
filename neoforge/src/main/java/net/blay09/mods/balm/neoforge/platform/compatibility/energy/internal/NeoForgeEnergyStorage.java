@@ -26,21 +26,21 @@ public final class NeoForgeEnergyStorage implements EnergyHandler {
     @Override
     public int insert(int amount, TransactionContext context) {
         energyJournal.updateSnapshots(context);
-        return energyStorage.fill(amount, false);
+        return Math.toIntExact(energyStorage.fill(amount, false));
     }
 
     @Override
     public int extract(int amount, TransactionContext context) {
         energyJournal.updateSnapshots(context);
-        return energyStorage.drain(amount, false);
+        return Math.toIntExact(energyStorage.drain(amount, false));
     }
 
-    private class EnergyJournal extends SnapshotJournal<Integer> {
-        protected Integer createSnapshot() {
+    private class EnergyJournal extends SnapshotJournal<Long> {
+        protected Long createSnapshot() {
             return NeoForgeEnergyStorage.this.energyStorage.getEnergy();
         }
 
-        protected void revertToSnapshot(Integer snapshot) {
+        protected void revertToSnapshot(Long snapshot) {
             NeoForgeEnergyStorage.this.energyStorage.setEnergy(snapshot);
         }
     }

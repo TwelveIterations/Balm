@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.forge.platform.fluid.internal;
 
+import com.google.common.primitives.Ints;
 import net.blay09.mods.balm.platform.fluid.FluidTank;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -19,12 +20,12 @@ public class ForgeFluidTank implements IFluidHandler {
 
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return new FluidStack(fluidTank.getFluid(tank), fluidTank.getAmount(tank));
+        return new FluidStack(fluidTank.getFluid(tank), Ints.saturatedCast(fluidTank.getAmount(tank)));
     }
 
     @Override
     public int getTankCapacity(int tank) {
-        return fluidTank.getCapacity(tank);
+        return Ints.saturatedCast(fluidTank.getCapacity(tank));
     }
 
     @Override
@@ -41,7 +42,7 @@ public class ForgeFluidTank implements IFluidHandler {
             }
 
             if (fluidTank.canFill(i, resource.getFluid())) {
-                filled += fluidTank.fill(i, resource.getFluid(), resource.getAmount() - filled, action.simulate());
+                filled += Math.toIntExact(fluidTank.fill(i, resource.getFluid(), resource.getAmount() - filled, action.simulate()));
             }
         }
 
@@ -57,7 +58,7 @@ public class ForgeFluidTank implements IFluidHandler {
             }
 
             if (fluidTank.canDrain(i, resource.getFluid())) {
-                drained += fluidTank.drain(i, resource.getFluid(), resource.getAmount() - drained, action.simulate());
+                drained += Math.toIntExact(fluidTank.drain(i, resource.getFluid(), resource.getAmount() - drained, action.simulate()));
             }
         }
 
@@ -68,7 +69,7 @@ public class ForgeFluidTank implements IFluidHandler {
     public FluidStack drain(int maxDrain, FluidAction action) {
         for (int i = 0; i < fluidTank.getSlotCount(); i++) {
             final var fluid = fluidTank.getFluid(i);
-            int drained = fluidTank.drain(i, fluid, maxDrain, action.simulate());
+            int drained = Math.toIntExact(fluidTank.drain(i, fluid, maxDrain, action.simulate()));
             if (drained > 0) {
                 return new FluidStack(fluid, drained);
             }

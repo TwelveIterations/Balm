@@ -2,15 +2,15 @@ package net.blay09.mods.balm.platform.energy;
 
 public interface EnergyStorage {
 
-    int fill(int maxFill, boolean simulate);
+    long fill(long maxFill, boolean simulate);
 
-    int drain(int maxDrain, boolean simulate);
+    long drain(long maxDrain, boolean simulate);
 
-    int getEnergy();
+    long getEnergy();
 
-    void setEnergy(int energy);
+    void setEnergy(long energy);
 
-    int getCapacity();
+    long getCapacity();
 
     boolean canDrain();
 

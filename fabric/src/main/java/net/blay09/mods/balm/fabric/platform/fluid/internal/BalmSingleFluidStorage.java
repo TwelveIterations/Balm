@@ -1,6 +1,5 @@
 package net.blay09.mods.balm.fabric.platform.fluid.internal;
 
-import com.google.common.primitives.Ints;
 import net.blay09.mods.balm.platform.fluid.DefaultFluidTank;
 import net.blay09.mods.balm.platform.fluid.FluidTank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -26,14 +25,14 @@ public class BalmSingleFluidStorage extends SnapshotParticipant<ResourceAmount<F
 
         if (getAmount() == 0) {
             updateSnapshots(transaction);
-            return fluidTank.fill(slot, fluidVariant.getFluid(), Ints.saturatedCast(maxAmount), false);
+            return fluidTank.fill(slot, fluidVariant.getFluid(), maxAmount, false);
         }
 
         if (fluidVariant.isOf(getResource().getFluid())) {
             // Otherwise we can only accept the same fluid as the current one.
             long amountInserted = Math.min(maxAmount, getCapacity() - getAmount());
             updateSnapshots(transaction);
-            return fluidTank.fill(slot, fluidVariant.getFluid(), Ints.saturatedCast(amountInserted), false);
+            return fluidTank.fill(slot, fluidVariant.getFluid(), amountInserted, false);
         } else {
             return 0;
         }
@@ -47,7 +46,7 @@ public class BalmSingleFluidStorage extends SnapshotParticipant<ResourceAmount<F
             long currentLevel = getAmount();
             long amountExtracted = Math.min(maxAmount, currentLevel);
             updateSnapshots(transaction);
-            return fluidTank.drain(slot, fluidVariant.getFluid(), Ints.saturatedCast(amountExtracted), false);
+            return fluidTank.drain(slot, fluidVariant.getFluid(), amountExtracted, false);
         }
 
         return 0;
@@ -80,7 +79,7 @@ public class BalmSingleFluidStorage extends SnapshotParticipant<ResourceAmount<F
 
     @Override
     protected void readSnapshot(ResourceAmount<FluidVariant> snapshot) {
-        fluidTank.setFluid(slot, snapshot.resource().getFluid(), Ints.saturatedCast(snapshot.amount()));
+        fluidTank.setFluid(slot, snapshot.resource().getFluid(), snapshot.amount());
     }
 
     @Override
