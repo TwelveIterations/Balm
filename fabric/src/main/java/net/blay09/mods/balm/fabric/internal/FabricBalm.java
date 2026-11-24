@@ -1,16 +1,18 @@
 package net.blay09.mods.balm.fabric.internal;
 
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.fabric.platform.compatibility.transactionalstorage.internal.FabricBalmModSupportTransactionalStorage;
 import net.blay09.mods.balm.fabric.platform.fluid.internal.BalmFluidStorage;
+import net.blay09.mods.balm.fabric.platform.internal.FabricBalmPlatform;
 import net.blay09.mods.balm.fabric.platform.internal.FabricBalmProxy;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.blay09.mods.balm.fabric.platform.runtime.internal.FabricBalmRuntime;
-import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.nbt.BalmDataHolder;
+import net.blay09.mods.balm.platform.capabilities.CapabilityType;
+import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
 import net.blay09.mods.balm.platform.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.platform.runtime.internal.BalmLoadContexts;
-import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
-import net.blay09.mods.balm.fabric.platform.internal.FabricBalmPlatform;
+import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
@@ -24,17 +26,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricBalm implements ModInitializer {
 
     private static final Supplier<FabricBalmProxy> proxy = Balm.<FabricBalmProxy>sidedProxy("net.blay09.mods.balm.fabric.platform.internal.FabricBalmProxy",
-            "net.blay09.mods.balm.fabric.client.internal.platform.internal.FabricBalmClientProxy")
+                    "net.blay09.mods.balm.fabric.client.internal.platform.internal.FabricBalmClientProxy")
             .buildLazily();
 
     public static FabricBalmProxy getProxy() {
@@ -54,6 +58,11 @@ public class FabricBalm implements ModInitializer {
             CompoundTag data = ((BalmDataHolder) oldPlayer).balm$getFabricBalmData();
             ((BalmDataHolder) newPlayer).balm$setFabricBalmData(data);
         });
+
+        registerTransactionalStorage(ItemStorage.SIDED, CommonCapabilities.ITEM_STORAGE,
+                FabricBalmModSupportTransactionalStorage::wrapItems, FabricBalmModSupportTransactionalStorage::unwrap);
+        registerTransactionalStorage(FluidStorage.SIDED, CommonCapabilities.FLUID_STORAGE,
+                FabricBalmModSupportTransactionalStorage::wrapFluids, FabricBalmModSupportTransactionalStorage::unwrap);
 
         ItemStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
             private boolean running;
@@ -111,4 +120,47 @@ public class FabricBalm implements ModInitializer {
 
         Balm.initializeIfLoaded("team_reborn_energy", "net.blay09.mods.balm.fabric.platform.compatibility.energy.internal.RebornEnergy");
     }
+
+    public static <N, R> void registerTransactionalStorage(
+            BlockApiLookup<N, @Nullable Direction> nativeLookup,
+            CapabilityType<Block, R, Direction> type,
+            Function<N, R> wrap,
+            Function<R, N> unwrap) {
+        @SuppressWarnings("unchecked") final var balmLookup = (BlockApiLookup<R, Direction>) type.backingType();
+        balmLookup.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
+            private boolean running;
+
+            @Override
+            public @Nullable R find(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction side) {
+                if (running) {
+                    return null;
+                }
+                running = true;
+                try {
+                    final var storage = nativeLookup.find(level, pos, state, blockEntity, side);
+                    return storage != null ? wrap.apply(storage) : null;
+                } finally {
+                    running = false;
+                }
+            }
+        });
+        nativeLookup.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
+            private boolean running;
+
+            @Override
+            public @Nullable N find(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction side) {
+                if (running) {
+                    return null;
+                }
+                running = true;
+                try {
+                    final var storage = balmLookup.find(level, pos, state, blockEntity, side);
+                    return storage != null ? unwrap.apply(storage) : null;
+                } finally {
+                    running = false;
+                }
+            }
+        });
+    }
+
 }

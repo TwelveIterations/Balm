@@ -1,5 +1,7 @@
 package net.blay09.mods.balm.platform.capabilities.internal;
 
+import net.blay09.mods.balm.platform.transfer.TransactionalStorage;
+import net.blay09.mods.balm.platform.transfer.TransactionalEnergyStorage;
 import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
@@ -15,6 +17,9 @@ import net.minecraft.world.level.block.Block;
 public class CommonCapabilitiesImpl {
 
     public static void registerCapabilities(BalmCapabilities capabilities) {
+        CommonCapabilities.ITEM_STORAGE = capabilities.registerType(id("item_storage"), Block.class, TransactionalStorage.asClass(), Direction.class);
+        CommonCapabilities.FLUID_STORAGE = capabilities.registerType(id("fluid_storage"), Block.class, TransactionalStorage.asClass(), Direction.class);
+        CommonCapabilities.TRANSACTIONAL_ENERGY_STORAGE = capabilities.registerType(id("transactional_energy_storage"), Block.class, TransactionalEnergyStorage.class, Direction.class);
         CommonCapabilities.CONTAINER = capabilities.registerType(id("container"), Block.class, Container.class, Direction.class);
         CommonCapabilities.FLUID_TANK = capabilities.registerType(id("fluid_tank"), Block.class, FluidTank.class, Direction.class);
         CommonCapabilities.ENERGY_STORAGE = capabilities.registerType(id("energy_storage"), Block.class, EnergyStorage.class, Direction.class);

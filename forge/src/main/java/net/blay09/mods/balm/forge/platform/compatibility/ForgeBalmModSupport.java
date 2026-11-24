@@ -2,6 +2,7 @@ package net.blay09.mods.balm.forge.platform.compatibility;
 
 import net.blay09.mods.balm.forge.platform.compatibility.milk.ForgeBalmModSupportMilkFluid;
 import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
+import net.blay09.mods.balm.platform.compatibility.transactionalstorage.BalmModSupportTransactionalStorage;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.BalmModSupportHudInfo;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.internal.CommonBalmModSupportHudInfo;
 import net.blay09.mods.balm.platform.compatibility.milk.BalmModSupportMilkFluid;
@@ -42,6 +43,11 @@ public class ForgeBalmModSupport implements BalmModSupport {
                 .withMultiplexer(VRMultiplexer::new)
                 .withFallback(new NoopVR())
                 .buildLazily();
+    }
+
+    @Override
+    public BalmModSupportTransactionalStorage transactionalStorage() {
+        throw new UnsupportedOperationException("Transactional storage is not supported on Forge");
     }
 
     @Override

@@ -1,5 +1,9 @@
 package net.blay09.mods.balm.fabric.platform.compatibility.energy.internal;
 
+import net.blay09.mods.balm.platform.transfer.TransactionalEnergyStorage;
+import net.blay09.mods.balm.fabric.platform.transfer.internal.FabricTransactionalEnergyStorage;
+import net.blay09.mods.balm.fabric.internal.FabricBalm;
+import team.reborn.energy.api.base.SimpleEnergyStorage;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.platform.capabilities.CommonCapabilities;
@@ -11,11 +15,22 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
-
 import java.util.Objects;
 
 public class RebornEnergy {
+    public static TransactionalEnergyStorage createStorage(long capacity, Runnable onChange) {
+        return new FabricTransactionalEnergyStorage(
+                new SimpleEnergyStorage(capacity, capacity, capacity) {
+                    @Override
+                    protected void onFinalCommit() { onChange.run(); }
+                });
+    }
+
     public RebornEnergy() {
+        FabricBalm.registerTransactionalStorage(EnergyStorage.SIDED, CommonCapabilities.TRANSACTIONAL_ENERGY_STORAGE,
+                FabricTransactionalEnergyStorage::new,
+                FabricTransactionalEnergyStorage::unwrap);
+
         EnergyStorage.SIDED.registerFallback(new BlockApiLookup.BlockApiProvider<>() {
             private boolean running;
 
