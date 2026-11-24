@@ -12,6 +12,7 @@ import net.blay09.mods.balm.platform.config.reflection.ValidateWith;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
@@ -93,10 +94,16 @@ public class ExampleConfig {
     }
 
     public static class WelcomeMessageValidator implements ConfigValidator<String> {
+        private final Field field;
+
+        public WelcomeMessageValidator(Field field) {
+            this.field = field;
+        }
+
         @Override
         public DataResult<String> validate(String value) {
             if (value.isBlank()) {
-                return DataResult.error(() -> "Welcome message must not be blank");
+                return DataResult.error(() -> field.getName() + " must not be blank");
             }
 
             return DataResult.success(value);
