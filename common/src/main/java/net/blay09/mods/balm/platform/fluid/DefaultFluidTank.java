@@ -14,6 +14,22 @@ public class DefaultFluidTank implements FluidTank {
     private Fluid fluid = Fluids.EMPTY;
     private long amount;
 
+    public DefaultFluidTank(FluidAmount capacity) {
+        this(capacity.toPlatform());
+    }
+
+    public DefaultFluidTank(FluidAmount capacity, FluidAmount maxTransfer) {
+        this(capacity.toPlatform(), maxTransfer.toPlatform());
+    }
+
+    public DefaultFluidTank(FluidAmount capacity, FluidAmount maxFill, FluidAmount maxDrain) {
+        this(capacity.toPlatform(), maxFill.toPlatform(), maxDrain.toPlatform());
+    }
+
+    public DefaultFluidTank(FluidAmount maxDrain, FluidAmount capacity, FluidAmount maxFill, FluidAmount amount) {
+        this(maxDrain.toPlatform(), capacity.toPlatform(), maxFill.toPlatform(), amount.toPlatform());
+    }
+
     public DefaultFluidTank(long capacity) {
         this(capacity, capacity, capacity, 0);
     }
@@ -155,11 +171,13 @@ public class DefaultFluidTank implements FluidTank {
     public void serialize(ValueOutput output) {
         output.putString("Fluid", BuiltInRegistries.FLUID.getKey(fluid).toString());
         output.putLong("Amount", amount);
+        output.store("Unit", FluidAmount.Unit.CODEC, FluidAmount.Unit.platform());
     }
 
     public void deserialize(ValueInput input) {
         fluid = input.getString("Fluid").map(Identifier::tryParse).map(BuiltInRegistries.FLUID::getValue).orElse(Fluids.EMPTY);
-        amount = input.getLongOr("Amount", 0L);
+        final var unit = input.read("Unit", FluidAmount.Unit.CODEC).orElseGet(FluidAmount.Unit::platform);
+        amount = unit.convert(input.getLongOr("Amount", 0L), FluidAmount.Unit.platform());
     }
 
     public void setChanged() {

@@ -1,5 +1,6 @@
 package net.blay09.mods.balm.platform;
 
+import net.blay09.mods.balm.platform.fluid.FluidAmount;
 import net.blay09.mods.balm.platform.resources.ModResource;
 import net.blay09.mods.balm.platform.resources.ModResourceVisitor;
 import net.minecraft.server.MinecraftServer;
@@ -35,6 +36,11 @@ public interface BalmPlatform {
      * @see LoaderPlatforms
      */
     String name();
+
+    /**
+     * Returns the unit used by this platform's fluids; millibuckets on NeoForge and droplets on Fabric.
+     */
+    FluidAmount.Unit fluidUnit();
 
     /**
      * Returns the physical side Balm is currently running on - either <code>CLIENT</code> or <code>DEDICATED_SERVER</code>.

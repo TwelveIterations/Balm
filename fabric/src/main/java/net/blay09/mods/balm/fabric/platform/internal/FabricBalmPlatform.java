@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.fabric.platform.internal;
 
 import net.blay09.mods.balm.platform.BalmEnvironment;
+import net.blay09.mods.balm.platform.fluid.FluidAmount;
 import net.blay09.mods.balm.platform.LoaderPlatforms;
 import net.blay09.mods.balm.platform.resources.ModResource;
 import net.blay09.mods.balm.platform.resources.ModResourceVisitor;
@@ -55,6 +56,11 @@ public class FabricBalmPlatform implements BalmPlatform {
     @Override
     public Optional<ModInfo> getModInfo(String modId) {
         return FabricLoader.getInstance().getModContainer(modId).map(FabricModInfo::new);
+    }
+
+    @Override
+    public FluidAmount.Unit fluidUnit() {
+        return FluidAmount.Unit.DROPLETS;
     }
 
     @Override

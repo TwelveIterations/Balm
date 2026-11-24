@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.neoforge.platform.internal;
 
 import net.blay09.mods.balm.platform.BalmEnvironment;
+import net.blay09.mods.balm.platform.fluid.FluidAmount;
 import net.blay09.mods.balm.platform.BalmPlatform;
 import net.blay09.mods.balm.platform.LoaderPlatforms;
 import net.blay09.mods.balm.platform.ModInfo;
@@ -45,6 +46,11 @@ public class NeoForgeBalmPlatform implements BalmPlatform {
     @Override
     public @Nullable MinecraftServer server() {
         return ServerLifecycleHooks.getCurrentServer();
+    }
+
+    @Override
+    public FluidAmount.Unit fluidUnit() {
+        return FluidAmount.Unit.MILLIBUCKETS;
     }
 
     @Override
