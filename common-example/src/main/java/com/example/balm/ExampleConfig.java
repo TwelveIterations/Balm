@@ -1,14 +1,14 @@
 package com.example.balm;
 
 import com.mojang.serialization.DataResult;
-import net.blay09.mods.balm.platform.config.schema.ConfigValidator;
-import net.blay09.mods.balm.platform.config.reflection.CustomControl;
 import net.blay09.mods.balm.platform.config.reflection.Comment;
 import net.blay09.mods.balm.platform.config.reflection.Config;
+import net.blay09.mods.balm.platform.config.reflection.CustomControl;
 import net.blay09.mods.balm.platform.config.reflection.NestedType;
 import net.blay09.mods.balm.platform.config.reflection.Range;
 import net.blay09.mods.balm.platform.config.reflection.ValidateCollectionWith;
 import net.blay09.mods.balm.platform.config.reflection.ValidateWith;
+import net.blay09.mods.balm.platform.config.schema.ConfigValidator;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
@@ -23,7 +23,7 @@ public class ExampleConfig {
     public int rangedValue = 5;
 
     @Comment("Example custom widget config value.")
-    @CustomControl("fancy_button")
+    @CustomControl(value = "fancy_button", options = FancyButtonOptions.class)
     public boolean fancyBoolean;
 
     @Comment("Example string config value.")
@@ -51,6 +51,12 @@ public class ExampleConfig {
 
     @Comment("Example category shown as a child config screen.")
     public ChildScreen childScreen = new ChildScreen();
+
+    public record FancyButtonOptions(String label) {
+        public FancyButtonOptions(Field field) {
+            this(field.getName());
+        }
+    }
 
     public enum SpawnMode implements StringRepresentable {
         NEAR_PLAYER("near_player"),

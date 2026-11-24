@@ -109,7 +109,9 @@ public class ConfigScreenTestModule implements BalmClientModule {
 
         @Override
         public Component getMessage() {
-            return Component.literal("Custom: " + binding.get());
+            final var label = binding.options(ExampleConfig.FancyButtonOptions.class)
+                    .map(ExampleConfig.FancyButtonOptions::label).orElse("Custom");
+            return Component.literal(label + ": " + binding.get());
         }
     }
 }
