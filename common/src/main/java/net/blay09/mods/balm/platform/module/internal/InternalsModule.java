@@ -2,6 +2,10 @@ package net.blay09.mods.balm.platform.module.internal;
 
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.commands.BalmCommands;
+import net.blay09.mods.balm.core.BalmRegistrar;
+import net.blay09.mods.balm.util.valueproviders.FluidAmountFloatProvider;
+import net.blay09.mods.balm.util.valueproviders.FluidAmountIntProvider;
+import net.minecraft.core.registries.Registries;
 import net.blay09.mods.balm.commands.internal.InternalsCommand;
 import net.blay09.mods.balm.network.BalmNetworking;
 import net.blay09.mods.balm.network.internal.RemotePlayerModList;
@@ -49,6 +53,14 @@ public final class InternalsModule implements BalmModule {
     @Override
     public void registerCapabilities(BalmCapabilities capabilities) {
         CommonCapabilitiesImpl.registerCapabilities(capabilities);
+    }
+
+    @Override
+    public void registerAdditional(BalmRegistrar registrar) {
+        registrar.scoped(Registries.INT_PROVIDER_TYPE, MOD_ID).register("fluid_amount", _ -> FluidAmountIntProvider.MAP_CODEC);
+        registrar.scoped(Registries.FLOAT_PROVIDER_TYPE, MOD_ID).register("fluid_amount", _ -> FluidAmountFloatProvider.MAP_CODEC);
+        registrar.scoped(Registries.CONTEXT_INT_PROVIDER_TYPE, MOD_ID).register("fluid_amount", _ -> FluidAmountIntProvider.MAP_CODEC);
+        registrar.scoped(Registries.CONTEXT_FLOAT_PROVIDER_TYPE, MOD_ID).register("fluid_amount", _ -> FluidAmountFloatProvider.MAP_CODEC);
     }
 
     @Override
