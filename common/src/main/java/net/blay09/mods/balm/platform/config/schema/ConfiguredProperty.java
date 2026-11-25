@@ -23,6 +23,14 @@ public interface ConfiguredProperty<T> {
 
     Optional<Identifier> customControl();
 
+    default Optional<Object> customControlOptions() {
+        return Optional.empty();
+    }
+
+    default <O> Optional<O> customControlOptions(Class<O> optionsType) {
+        return customControlOptions().filter(optionsType::isInstance).map(optionsType::cast);
+    }
+
     boolean hasCustomValidator();
 
     Class<?> type();

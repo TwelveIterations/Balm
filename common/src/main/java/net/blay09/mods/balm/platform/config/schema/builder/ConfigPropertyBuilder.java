@@ -16,6 +16,7 @@ public class ConfigPropertyBuilder {
     protected String comment = "";
     protected boolean synced;
     protected @Nullable Identifier customControl;
+    protected @Nullable Object customControlOptions;
     protected @Nullable Class<? extends ConfigValidator<?>> validatorClass;
     protected @Nullable Class<? extends ConfigValidator<?>> collectionValidatorClass;
     protected @Nullable ConfigValidator<?> validator;
@@ -44,7 +45,12 @@ public class ConfigPropertyBuilder {
     }
 
     public ConfigPropertyBuilder customControl(Identifier customControlId) {
+        return customControl(customControlId, null);
+    }
+
+    public ConfigPropertyBuilder customControl(Identifier customControlId, @Nullable Object options) {
         this.customControl = customControlId;
+        this.customControlOptions = options;
         return this;
     }
 
