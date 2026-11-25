@@ -4,6 +4,7 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.config.LoadedConfig;
 import net.blay09.mods.balm.platform.config.reflection.*;
 import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
+import net.blay09.mods.balm.platform.config.schema.ConfigValidator;
 import net.blay09.mods.balm.platform.config.schema.builder.ConfigPropertyBuilder;
 import net.blay09.mods.balm.platform.config.schema.builder.PropertyHolderBuilder;
 import net.minecraft.resources.Identifier;
@@ -57,11 +58,11 @@ public class ConfigReflection {
             }
             final var validateWithAnnotation = field.getAnnotation(ValidateWith.class);
             if (validateWithAnnotation != null) {
-                property.validateWith(validateWithAnnotation.value());
+                property.validateWith(createValidator(validateWithAnnotation.value(), field));
             }
             final var validateCollectionWithAnnotation = field.getAnnotation(ValidateCollectionWith.class);
             if (validateCollectionWithAnnotation != null) {
-                property.validateCollectionWith(validateCollectionWithAnnotation.value());
+                property.validateCollectionWith(createValidator(validateCollectionWithAnnotation.value(), field));
             }
             final var rangeAnnotation = field.getAnnotation(Range.class);
             final var type = field.getType();
@@ -126,6 +127,21 @@ public class ConfigReflection {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("Error accessing config field " + field.getName() + " in class " + clazz.getName(), e);
             }
+        }
+    }
+
+    private static ConfigValidator<?> createValidator(Class<? extends ConfigValidator<?>> validatorClass, Field field) {
+        try {
+            try {
+                final var constructor = validatorClass.getConstructor(Field.class);
+                return constructor.newInstance(field);
+            } catch (NoSuchMethodException ignored) {
+            }
+            return validatorClass.getConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("Config validator " + validatorClass.getName() + " must have a public no-arg constructor", e);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Error instantiating config validator " + validatorClass.getName() + " for field " + field.getName(), e);
         }
     }
 

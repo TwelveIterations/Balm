@@ -20,13 +20,16 @@ public class ListConfigProperty<T> extends AbstractConfigProperty<List<T>> imple
     private final StreamCodec<ByteBuf, List<T>> streamCodec;
     private final @Nullable ConfigValidator<List<T>> listValidator;
 
+    @SuppressWarnings("unchecked")
     public ListConfigProperty(ConfigPropertyBuilder parent, Class<T> nestedType, List<T> defaultValue) {
         super(parent);
         this.nestedType = nestedType;
         this.defaultValue = defaultValue;
         this.codec = PrimitiveConfigCodecs.codec(nestedType).listOf();
         this.streamCodec = ByteBufCodecs.collection(ArrayList::new, PrimitiveConfigCodecs.streamCodec(nestedType));
-        this.listValidator = createValidator(parent.collectionValidatorClass);
+        this.listValidator = parent.collectionValidator != null
+                ? (ConfigValidator<List<T>>) parent.collectionValidator
+                : createValidator(parent.collectionValidatorClass);
         validateValue(defaultValue).getOrThrow();
     }
 
