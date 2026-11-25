@@ -54,7 +54,8 @@ public class ConfigReflection {
             }
             final var controlAnnotation = field.getAnnotation(CustomControl.class);
             if (controlAnnotation != null) {
-                property.customControl(parseDefaultedIdentifier(controlAnnotation.value(), namespace));
+                final var options = controlAnnotation.options() != Void.class ? createCustomControlOptions(controlAnnotation.options(), field) : null;
+                property.customControl(parseDefaultedIdentifier(controlAnnotation.value(), namespace), options);
             }
             final var validateWithAnnotation = field.getAnnotation(ValidateWith.class);
             if (validateWithAnnotation != null) {
@@ -127,6 +128,20 @@ public class ConfigReflection {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("Error accessing config field " + field.getName() + " in class " + clazz.getName(), e);
             }
+        }
+    }
+
+    private static Object createCustomControlOptions(Class<?> optionsClass, Field field) {
+        try {
+            try {
+                return optionsClass.getConstructor(Field.class).newInstance(field);
+            } catch (NoSuchMethodException ignored) {
+            }
+            return optionsClass.getConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("Custom control options " + optionsClass.getName() + " must have a public no-arg constructor", e);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Error instantiating custom control options " + optionsClass.getName() + " for field " + field.getName(), e);
         }
     }
 
