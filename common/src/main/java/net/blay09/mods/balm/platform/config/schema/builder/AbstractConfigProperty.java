@@ -25,7 +25,7 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
         comment = parent.comment;
         synced = parent.synced;
         customControl = parent.customControl;
-        validator = createValidator(parent.validatorClass);
+        validator = parent.validator != null ? parent.validator : createValidator(parent.validatorClass);
     }
 
     @SuppressWarnings("unchecked")

@@ -18,6 +18,8 @@ public class ConfigPropertyBuilder {
     protected @Nullable Identifier customControl;
     protected @Nullable Class<? extends ConfigValidator<?>> validatorClass;
     protected @Nullable Class<? extends ConfigValidator<?>> collectionValidatorClass;
+    protected @Nullable ConfigValidator<?> validator;
+    protected @Nullable ConfigValidator<?> collectionValidator;
 
     public ConfigPropertyBuilder(ConfigSchemaImpl schema, String name) {
         this.schema = schema;
@@ -48,11 +50,25 @@ public class ConfigPropertyBuilder {
 
     public ConfigPropertyBuilder validateWith(Class<? extends ConfigValidator<?>> validatorClass) {
         this.validatorClass = validatorClass;
+        this.validator = null;
         return this;
     }
 
     public ConfigPropertyBuilder validateCollectionWith(Class<? extends ConfigValidator<?>> validatorClass) {
         this.collectionValidatorClass = validatorClass;
+        this.collectionValidator = null;
+        return this;
+    }
+
+    public ConfigPropertyBuilder validateWith(ConfigValidator<?> validator) {
+        this.validator = validator;
+        this.validatorClass = null;
+        return this;
+    }
+
+    public ConfigPropertyBuilder validateCollectionWith(ConfigValidator<?> validator) {
+        this.collectionValidator = validator;
+        this.collectionValidatorClass = null;
         return this;
     }
 
