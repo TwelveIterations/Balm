@@ -91,7 +91,7 @@ public class FabricBalmClientRuntime extends CommonBalmClientRuntime<FabricLoadC
 
     @Override
     public void blockStateModels(String namespace, Consumer<BalmBlockStateModelRegistrar> initializer) {
-        initializer.accept(new MissingBalmBlockStateModelRegistrar());
+        MissingBalmBlockStateModelRegistrar.bootstrap(initializer);
         // TODO ModelLoadingPlugin.register(context -> initializer.accept(new FabricBalmBlockStateModelRegistrar(context)));
     }
 
