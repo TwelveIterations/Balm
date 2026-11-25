@@ -20,6 +20,10 @@ public record FluidAmount(long amount, Unit unit) {
         return new FluidAmount(amount, Unit.BUCKETS);
     }
 
+    public static FluidAmount bottles(long amount) {
+        return new FluidAmount(amount, Unit.BOTTLES);
+    }
+
     public static FluidAmount millibuckets(long amount) {
         return new FluidAmount(amount, Unit.MILLIBUCKETS);
     }
@@ -39,7 +43,13 @@ public record FluidAmount(long amount, Unit unit) {
     public enum Unit implements StringRepresentable {
         BUCKETS(1),
         MILLIBUCKETS(1000),
-        DROPLETS(81000);
+        DROPLETS(81000),
+        BOTTLES(0) {
+            @Override
+            protected long perBucket() {
+                return platform() == DROPLETS ? 3 : 4;
+            }
+        };
 
         public static final Codec<Unit> CODEC = StringRepresentable.fromEnum(Unit::values);
 
@@ -49,10 +59,18 @@ public record FluidAmount(long amount, Unit unit) {
             this.perBucket = perBucket;
         }
 
+        protected long perBucket() {
+            return perBucket;
+        }
+
         public long convert(long amount, Unit target) {
+            if (this == target) {
+                return amount;
+            }
+
             return BigInteger.valueOf(amount)
-                    .multiply(BigInteger.valueOf(target.perBucket))
-                    .divide(BigInteger.valueOf(perBucket))
+                    .multiply(BigInteger.valueOf(target.perBucket()))
+                    .divide(BigInteger.valueOf(perBucket()))
                     .longValueExact();
         }
 
