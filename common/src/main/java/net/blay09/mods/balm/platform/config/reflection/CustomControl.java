@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface CustomControl {
     String value();
+
+    Class<?> options() default Void.class;
 }

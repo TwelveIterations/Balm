@@ -14,6 +14,7 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
     private final String comment;
     private final boolean synced;
     private final @Nullable Identifier customControl;
+    private final @Nullable Object customControlOptions;
 
     public AbstractConfigProperty(ConfigPropertyBuilder parent) {
         schema = parent.schema;
@@ -22,6 +23,7 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
         comment = parent.comment;
         synced = parent.synced;
         customControl = parent.customControl;
+        customControlOptions = parent.customControlOptions;
     }
 
     @Override
@@ -52,5 +54,10 @@ public abstract class AbstractConfigProperty<T> implements ConfiguredProperty<T>
     @Override
     public Optional<Identifier> customControl() {
         return Optional.ofNullable(customControl);
+    }
+
+    @Override
+    public Optional<Object> customControlOptions() {
+        return Optional.ofNullable(customControlOptions);
     }
 }

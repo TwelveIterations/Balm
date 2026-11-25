@@ -3,6 +3,7 @@ package net.blay09.mods.balm.platform.config.schema;
 import com.mojang.serialization.DataResult;
 import net.blay09.mods.balm.platform.config.MutableLoadedConfig;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -38,6 +39,10 @@ public class ConfigControlBinding<T> {
 
     public Consumer<T> setter() {
         return setter;
+    }
+
+    public <O> Optional<O> options(Class<O> optionsType) {
+        return property.customControlOptions(optionsType);
     }
 
     public T defaultValue() {

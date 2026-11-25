@@ -15,6 +15,7 @@ public class ConfigPropertyBuilder {
     protected String comment = "";
     protected boolean synced;
     protected @Nullable Identifier customControl;
+    protected @Nullable Object customControlOptions;
 
     public ConfigPropertyBuilder(ConfigSchemaImpl schema, String name) {
         this.schema = schema;
@@ -39,7 +40,12 @@ public class ConfigPropertyBuilder {
     }
 
     public ConfigPropertyBuilder customControl(Identifier customControlId) {
+        return customControl(customControlId, null);
+    }
+
+    public ConfigPropertyBuilder customControl(Identifier customControlId, @Nullable Object options) {
         this.customControl = customControlId;
+        this.customControlOptions = options;
         return this;
     }
 
