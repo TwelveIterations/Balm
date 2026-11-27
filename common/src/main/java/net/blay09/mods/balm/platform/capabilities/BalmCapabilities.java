@@ -16,8 +16,15 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public interface BalmCapabilities {
+    @Nullable
     <TApi, TContext> TApi getCapability(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable TContext context, CapabilityType<Block, TApi, TContext> type);
 
+    @Nullable
+    default <TApi, TContext> TApi getCapability(Level level, BlockPos pos, @Nullable TContext context, CapabilityType<Block, TApi, TContext> type) {
+        return getCapability(level, pos, level.getBlockState(pos), null, context, type);
+    }
+
+    @Nullable
     <TApi, TContext> TApi getCapability(Entity entity, @Nullable TContext context, CapabilityType<Entity, TApi, TContext> type);
 
     <TScope, TApi, TContext> CapabilityType<TScope, TApi, TContext> registerType(Identifier identifier, Class<TScope> scopeClass, Class<TApi> apiClass, Class<TContext> contextClass);

@@ -7,6 +7,8 @@ import net.blay09.mods.balm.platform.compatibility.vr.internal.NoopVR;
 import net.blay09.mods.balm.platform.compatibility.vr.internal.VRMultiplexer;
 import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
 import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
+import net.blay09.mods.balm.platform.compatibility.transactionalstorage.BalmModSupportTransactionalStorage;
+import net.blay09.mods.balm.fabric.platform.compatibility.transactionalstorage.internal.FabricBalmModSupportTransactionalStorage;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.BalmModSupportHudInfo;
 import net.blay09.mods.balm.platform.compatibility.milk.BalmModSupportMilkFluid;
 import net.blay09.mods.balm.platform.compatibility.multiminers.BalmModSupportMultiMiners;
@@ -21,6 +23,7 @@ import net.blay09.mods.balm.fabric.platform.compatibility.milk.internal.FabricMo
 import java.util.function.Supplier;
 
 public class FabricBalmModSupport implements BalmModSupport {
+    private final BalmModSupportTransactionalStorage transactionalStorage = new FabricBalmModSupportTransactionalStorage();
     private final Supplier<BalmModSupportMultiMiners> multiminers;
     private final Supplier<BalmModSupportTrinkets> trinkets;
     private final Supplier<BalmModSupportVR> vr;
@@ -44,6 +47,11 @@ public class FabricBalmModSupport implements BalmModSupport {
                 .withMultiplexer(VRMultiplexer::new)
                 .withFallback(new NoopVR())
                 .buildLazily();
+    }
+
+    @Override
+    public BalmModSupportTransactionalStorage transactionalStorage() {
+        return transactionalStorage;
     }
 
     @Override

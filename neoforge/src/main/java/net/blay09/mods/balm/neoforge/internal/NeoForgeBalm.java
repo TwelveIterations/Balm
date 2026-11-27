@@ -1,6 +1,11 @@
 package net.blay09.mods.balm.neoforge.internal;
 
+import net.blay09.mods.balm.neoforge.platform.transfer.internal.NeoForgeTransactionalEnergyStorage;
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.neoforge.platform.compatibility.transactionalstorage.internal.NeoForgeBalmModSupportTransactionalStorage;
+import net.blay09.mods.balm.platform.capabilities.CapabilityType;
+import net.minecraft.world.level.block.Block;
+import java.util.function.Function;
 import net.blay09.mods.balm.neoforge.core.internal.DeferredRegisters;
 import net.blay09.mods.balm.neoforge.platform.capabilities.internal.NeoForgeBalmCapabilities;
 import net.blay09.mods.balm.neoforge.platform.compatibility.energy.internal.NeoForgeEnergyStorage;
@@ -57,8 +62,17 @@ public class NeoForgeBalm {
                 Capabilities.Item.BLOCK);
         final var nativeFluidHandler = capabilities.addExistingType(Identifier.fromNamespaceAndPath("neoforge", "fluid_handler"),
                 Capabilities.Fluid.BLOCK);
-        final var nativeEnergyStorage = capabilities.addExistingType(Identifier.fromNamespaceAndPath("neoforge", "energy_storage"),
+        final var nativeEnergyStorage = capabilities.addExistingType(Identifier.fromNamespaceAndPath("neoforge", "energy_handler"),
                 Capabilities.Energy.BLOCK);
+        capabilities.addExistingType(Identifier.fromNamespaceAndPath("neoforge", "energy_storage"), Capabilities.Energy.BLOCK);
+
+        registerTransactionalStorage(capabilities, "item_storage", nativeItemHandler, CommonCapabilities.ITEM_STORAGE,
+                NeoForgeBalmModSupportTransactionalStorage::wrapItems, NeoForgeBalmModSupportTransactionalStorage::unwrap);
+        registerTransactionalStorage(capabilities, "fluid_storage", nativeFluidHandler, CommonCapabilities.FLUID_STORAGE,
+                NeoForgeBalmModSupportTransactionalStorage::wrapFluids, NeoForgeBalmModSupportTransactionalStorage::unwrap);
+        registerTransactionalStorage(capabilities, "transactional_energy_storage", nativeEnergyStorage, CommonCapabilities.TRANSACTIONAL_ENERGY_STORAGE,
+                NeoForgeTransactionalEnergyStorage::new,
+                NeoForgeTransactionalEnergyStorage::unwrap);
 
         capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", "item_handler"),
                 nativeItemHandler,
@@ -151,6 +165,50 @@ public class NeoForgeBalm {
                         }
 
                         return null;
+                    }
+                });
+    }
+
+    private static <N, R> void registerTransactionalStorage(
+            NeoForgeBalmCapabilities capabilities, String name,
+            CapabilityType<Block, N, Direction> nativeType,
+            CapabilityType<Block, R, Direction> balmType,
+            Function<N, R> wrap,
+            Function<R, N> unwrap) {
+        capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", name + "_from_native"),
+                balmType, new BiFunction<>() {
+                    private boolean running;
+
+                    @Override
+                    public @Nullable R apply(BlockEntity entity, @Nullable Direction side) {
+                        if (running) {
+                            return null;
+                        }
+                        running = true;
+                        try {
+                            final var storage = capabilities.getCapability(entity, side, nativeType);
+                            return storage != null ? wrap.apply(storage) : null;
+                        } finally {
+                            running = false;
+                        }
+                    }
+                });
+        capabilities.registerFallbackBlockEntityProvider(Identifier.fromNamespaceAndPath("balm", name + "_to_native"),
+                nativeType, new BiFunction<>() {
+                    private boolean running;
+
+                    @Override
+                    public @Nullable N apply(BlockEntity entity, @Nullable Direction side) {
+                        if (running) {
+                            return null;
+                        }
+                        running = true;
+                        try {
+                            final var storage = capabilities.getCapability(entity, side, balmType);
+                            return storage != null ? unwrap.apply(storage) : null;
+                        } finally {
+                            running = false;
+                        }
                     }
                 });
     }

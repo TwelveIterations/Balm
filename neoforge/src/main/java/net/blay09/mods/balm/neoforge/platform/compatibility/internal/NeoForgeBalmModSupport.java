@@ -2,6 +2,8 @@ package net.blay09.mods.balm.neoforge.platform.compatibility.internal;
 
 import net.blay09.mods.balm.neoforge.platform.compatibility.milk.internal.NeoForgeBalmModSupportMilkFluid;
 import net.blay09.mods.balm.platform.compatibility.BalmModSupport;
+import net.blay09.mods.balm.platform.compatibility.transactionalstorage.BalmModSupportTransactionalStorage;
+import net.blay09.mods.balm.neoforge.platform.compatibility.transactionalstorage.internal.NeoForgeBalmModSupportTransactionalStorage;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.BalmModSupportHudInfo;
 import net.blay09.mods.balm.platform.compatibility.hudinfo.internal.CommonBalmModSupportHudInfo;
 import net.blay09.mods.balm.platform.compatibility.milk.BalmModSupportMilkFluid;
@@ -21,6 +23,7 @@ import net.blay09.mods.balm.platform.runtime.internal.BalmRuntime;
 import java.util.function.Supplier;
 
 public class NeoForgeBalmModSupport implements BalmModSupport {
+    private final BalmModSupportTransactionalStorage transactionalStorage = new NeoForgeBalmModSupportTransactionalStorage();
     private final Supplier<BalmModSupportMultiMiners> multiminers;
     private final Supplier<BalmModSupportTrinkets> trinkets;
     private final Supplier<BalmModSupportVR> vr;
@@ -45,6 +48,11 @@ public class NeoForgeBalmModSupport implements BalmModSupport {
                 .withMultiplexer(VRMultiplexer::new)
                 .withFallback(new NoopVR())
                 .buildLazily();
+    }
+
+    @Override
+    public BalmModSupportTransactionalStorage transactionalStorage() {
+        return transactionalStorage;
     }
 
     @Override

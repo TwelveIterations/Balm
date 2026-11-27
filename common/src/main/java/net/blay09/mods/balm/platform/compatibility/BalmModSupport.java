@@ -1,6 +1,7 @@
 package net.blay09.mods.balm.platform.compatibility;
 
 import net.blay09.mods.balm.platform.compatibility.hudinfo.BalmModSupportHudInfo;
+import net.blay09.mods.balm.platform.compatibility.transactionalstorage.BalmModSupportTransactionalStorage;
 import net.blay09.mods.balm.platform.compatibility.milk.BalmModSupportMilkFluid;
 import net.blay09.mods.balm.platform.compatibility.multiminers.BalmModSupportMultiMiners;
 import net.blay09.mods.balm.platform.compatibility.recipeviewer.BalmModSupportRecipeViewer;
@@ -8,6 +9,8 @@ import net.blay09.mods.balm.platform.compatibility.trinkets.BalmModSupportTrinke
 import net.blay09.mods.balm.platform.compatibility.vr.BalmModSupportVR;
 
 public interface BalmModSupport {
+
+    BalmModSupportTransactionalStorage transactionalStorage();
 
     BalmModSupportMilkFluid milkFluid();
 
